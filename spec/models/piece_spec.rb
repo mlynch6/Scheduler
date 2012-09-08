@@ -57,7 +57,7 @@ describe Piece, '.name' do
   end
 end
 
-describe Piece, '.active' do
+describe Piece, '.active?' do
 	it "should return true for active pieces" do
 		piece = FactoryGirl.create(:piece)
   	piece.active.should be_true
@@ -65,6 +65,7 @@ describe Piece, '.active' do
   
   it "should return false for inactive pieces" do
 		piece = Piece.new(:name => 'My Piece', :active => 0)
+		#piece = FactoryGirl.create(:piece_inactive)
 		piece.save
   	piece.active.should be_false
   end

@@ -1,10 +1,9 @@
 FactoryGirl.define do
 	factory :piece do
-		name		'Peter Pan'
-	end
+		sequence(:name)	{ |n| "Piece #{n}" }
   
-  factory :piece_inactive, :class => Piece do
-		name 		'Dracula'
-		active 	false
+	  factory :piece_inactive do
+			active 	false
+		end
 	end
 end

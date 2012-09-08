@@ -1,0 +1,38 @@
+<% provide(:title, 'All Pieces') %>
+<h1>All Pieces</h1>
+
+<div class="row-fluid">
+	<div class="span10"> <!-- body content -->
+		<table class="table table-striped">
+			<thead>
+		  	<tr><th>Name</th><th>Status</th><th>&nbsp;</th></tr>
+		  </thead>
+		  <tbody>
+		  	<% @pieces.each do |piece| %>
+					<tr>
+						<td><%= link_to piece.name, piece %></td>
+						<td><%= active_bool_to_text(piece.active) %></td>
+						<td>
+							<%= link_to icon_with_text('Edit', 'pencil'), edit_piece_path(piece) %>
+							&nbsp;
+							<%= link_to icon_with_text('Delete', 'trash'), piece, method: :delete, data: { confirm: "Delete?" } %>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+		
+		<% unless @pieces.length > 0 %>
+			<div class="alert">No records found</div>
+		<% end %>
+		
+		<%= will_paginate %>
+	</div> <!-- end body content -->
+	
+	<div class="span2"> <!-- sidebar -->
+		<div class="well well-small">
+			<h4>Actions</h4>
+			<%= link_to icon_with_text('Add Piece', 'plus'), new_piece_path %>
+		</div>
+	</div> <!-- end sidebar -->
+</div>

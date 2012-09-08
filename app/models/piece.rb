@@ -13,5 +13,8 @@ class Piece < ActiveRecord::Base
 	attr_accessible :active, :name
 	
 	validates :name,	presence: true, length: { maximum: 50 }
-	validates :active, presence: true
+	validates :active, :inclusion => { :in => [true, false] }
+	
+	#scope :active, where(:active => true)
+	#scope :inactive, where(:active => false)
 end
