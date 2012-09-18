@@ -7,18 +7,21 @@ class PiecesController < ApplicationController
 	
 	def show
 		@piece = Piece.find(params[:id])
+		@scenes = @piece.scenes.paginate(page: params[:page])
+		@newScene = Scene.new
 	end
 	
 	def new
 		form_setup
 		@piece = Piece.new
+		3.times { @piece.scenes.build }
 	end
 	
 	def create
 		@piece = Piece.new(params[:piece])
 		if @piece.save
 			flash[:success] = "Piece created"
-			redirect_to @piece
+			redirect_to piece_scenes_path(@piece)
 		else
 			form_setup
 			render 'new'
@@ -34,7 +37,7 @@ class PiecesController < ApplicationController
 		@piece = Piece.find(params[:id])
 		if @piece.update_attributes(params[:piece])
 			flash[:success] = "Piece saved"
-			redirect_to @piece
+			redirect_to piece_scenes_path(@piece)
 		else
 			form_setup
 			render 'edit'

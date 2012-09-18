@@ -10,11 +10,15 @@
 #
 
 class Piece < ActiveRecord::Base
-	attr_accessible :active, :name
+	attr_accessible :active, :name, :scenes_attributes
+	
+	has_many :scenes, dependent: :destroy
+	accepts_nested_attributes_for :scenes, :reject_if => lambda { |a| a[:name].blank? }, :allow_destroy => true
 	
 	validates :name,	presence: true, length: { maximum: 50 }
 	validates :active, :inclusion => { :in => [true, false] }
 	
+	default_scope order: 'pieces.name ASC'
 	#scope :active, where(:active => true)
 	#scope :inactive, where(:active => false)
 end

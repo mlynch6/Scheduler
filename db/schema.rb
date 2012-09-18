@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120828035220) do
+ActiveRecord::Schema.define(:version => 20120909143929) do
 
   create_table "pieces", :force => true do |t|
     t.string   "name",       :limit => 50,                   :null => false
@@ -19,5 +19,15 @@ ActiveRecord::Schema.define(:version => 20120828035220) do
     t.datetime "created_at",                                 :null => false
     t.datetime "updated_at",                                 :null => false
   end
+
+  create_table "scenes", :force => true do |t|
+    t.string   "name",       :limit => 100, :null => false
+    t.integer  "order_num",                 :null => false
+    t.integer  "piece_id",                  :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "scenes", ["piece_id"], :name => "index_scenes_on_piece_id"
 
 end

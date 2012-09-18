@@ -1,5 +1,11 @@
 Scheduler::Application.routes.draw do
-	resources :pieces
+	resources :pieces, :only => [:new, :create, :edit, :update, :index, :destroy] do
+		resources :scenes, :only => [:new, :create, :edit, :update, :index]
+	end
+	resources :scenes, :only => [:show, :destroy]
+		
+	match 'login' => 'pieces#index'
+	match 'dashboard' => 'pieces#index'
 	
   # The priority is based upon order of creation:
   # first created -> highest priority.

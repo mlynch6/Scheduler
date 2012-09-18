@@ -1,0 +1,5 @@
+<% provide(:title, "#{@piece.name} | New Scene") %>
+
+<%= render 'pieces/detail', :piece => @piece %>
+
+<%= render 'form', :action_text => 'Create' %>

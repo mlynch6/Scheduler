@@ -1,24 +1,17 @@
 <% provide(:title, @piece.name) %>
-<h1><%= @piece.name %></h1>
+<%= render 'detail', :piece => @piece %>
 
-<div class="row-fluid">
-	<div class="span9"> <!-- body content -->
-		<dl class="dl-horizontal">
-			<dt>Name</dt>
-			<dd><%= @piece.name %></dd>
-		
-			<dt>Status</dt>
-			<dd><%= active_bool_to_text(@piece.active) %></dd>
-		</dl>
-	</div> <!-- end body content -->
-	
-	<div class="span3"> <!-- sidebar -->
-		<div class="well well-small">
-			<h4>Actions</h4>
+<%= render 'nav_subtabs', :active_tab => "" %>
+
+<div class="row">
+	<div class="span6">
+		<h3>Scenes (<%= @piece.scenes.count %>)</h3>
+		<% if @piece.scenes.any? %>
 			<ul class="unstyled">
-				<li><i class="icon-pencil"></i> <%= link_to "Edit", edit_piece_path(@piece) %></li>
-				<li><i class="icon-list"></i> <%= link_to "All Pieces", pieces_path %></li>
+				<%= render @scenes %>
 			</ul>
-		</div>
-	</div> <!-- end sidebar -->
+			<%= will_paginate @scenes %>
+		<% end %>
+		<%= link_to "New Scene", new_piece_scene_path(@piece) %>
+	</div>
 </div>

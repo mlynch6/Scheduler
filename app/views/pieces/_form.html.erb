@@ -1,8 +1,32 @@
-<%= render :partial => 'layouts/error_messages', :locals => { :object => @piece } %>
+<%= form_for @piece, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= render 'shared/error_messages', :object => f.object %>
+	<fieldset>
+		<div class="control-group">
+			<%= f.label :name, :class => 'control-label' %>
+			<div class="controls">
+				<%= f.text_field :name %>
+			</div>
+		</div>
 
-<div class="control-group">
-	<%= f.label :name, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :name %>
+<% if !f.object.new_record? %>
+		<div class="control-group">
+			<%= f.label :active, "Status", :class => 'control-label' %>
+			<div class="controls">
+				<%= f.select :active, options_for_select({ "Active" => "1", "Inactive" => "0" }) %>
+			</div>
+		</div>
+	</fieldset>
+<% end %>
+	
+	<fieldset>
+		<legend>Scenes</legend>
+		<%= f.fields_for :scenes do |scene_f| %>
+			<%= render 'scene_fields', :f => scene_f %>
+		<% end %>
+	</fieldset>
+
+	<div class="form-actions">
+		<%= f.submit action_text, :class => 'btn btn-primary' %>
+		<%= link_to 'Cancel', pieces_path, :class => 'btn' %>
 	</div>
-</div>
+<% end %>

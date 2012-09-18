@@ -1,23 +1,4 @@
-<% provide(:title, 'Add Piece') %>
-<h1>Add Piece</h1>
+<% provide(:title, 'New Piece') %>
+<h1>New Piece</h1>
 
-<div class="row-fluid">
-	<div class="span10"> <!-- body content -->
-		<%= form_for @piece, :html => { :class => 'form-horizontal' } do |f| %>
-			<%= render :partial => 'form', :locals => { :f => f } %>
-			
-			<div class="control-group">
-				<div class="controls">
-					<%= f.submit 'Save', :class => 'btn btn-primary' %>
-				</div>
-			</div>
-		<% end %>
-	</div> <!-- end body content -->
-	
-	<div class="span2"> <!-- sidebar -->
-		<div class="well well-small">
-			<h4>Actions</h4>
-			<i class="icon-list"></i> <%= link_to "All Pieces", pieces_path %>
-		</div>
-	</div> <!-- end sidebar -->
-</div>
+<%= render 'form', :action_text => 'Create' %>
