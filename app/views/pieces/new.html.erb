@@ -1,4 +1,38 @@
 <% provide(:title, 'New Piece') %>
 <h1>New Piece</h1>
-
-<%= render 'form', :action_text => 'Create' %>
+<%= form_for @piece, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= render 'shared/error_messages', :object => f.object %>
+	
+	<div class="row">
+		<div class="span8">
+			<%= render 'form', :f => f %>
+		</div>
+		<div class="span4">
+			<div class="alert alert-info">
+				Add Scenes and Roles to your piece now if you know them. You can always add or update these later.
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<fieldset class="span6">
+			<legend>Scenes</legend>
+			<%= f.fields_for :scenes do |scene_f| %>
+				<%= render 'scene_fields', :f => scene_f %>
+			<% end %>
+			
+			<%= link_to icon_with_text('Add Scene','plus'), '#', :class => 'btn btn-mini btn-success' %>
+		</fieldset>
+		
+		<fieldset class="span6">
+			<legend>Roles</legend>
+			<%= f.fields_for :roles do |role_f| %>
+				<%= render 'role_fields', :f => role_f %>
+			<% end %>
+			
+			<%= link_to icon_with_text('Add Role','plus'), '#', :class => 'btn btn-mini btn-success' %>
+		</fieldset>
+	</div>
+	
+	<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
+<% end %>

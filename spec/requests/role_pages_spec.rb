@@ -1,21 +1,21 @@
 require 'spec_helper'
 
-describe "Scene Pages:" do
-  subject { page }
+describe "Role Pages:" do
+	subject { page }
   let(:piece) { FactoryGirl.create(:piece) }
   
   describe "index" do
   	before do
-  		visit piece_scenes_path(piece)
+  		visit piece_roles_path(piece)
   	end
   	
 		context "page" do
 			it { should have_selector('title', text: piece.name) }
-	    it { should have_selector('title', text: 'Scenes') }
+	    it { should have_selector('title', text: 'Roles') }
 	    it { should have_selector('h1', text: piece.name) }
 	    
 	    it "has a 'New' link" do
-	    	should have_link('New', href: new_piece_scene_path(piece))
+	    	should have_link('New', href: new_piece_role_path(piece))
 	    end
 	    
 			describe "has sub navigation" do
@@ -34,7 +34,7 @@ describe "Scene Pages:" do
 	  end
     
 		context "without records" do
-			before(:all) { piece.scenes.delete_all }
+			before(:all) { piece.roles.delete_all }
     	
     	it "shows 'No Records' message" do
     		should have_selector('div.alert', text: "No records found")
@@ -51,14 +51,13 @@ describe "Scene Pages:" do
 		
 		context "with records" do
 			before(:all) do
-    		31.times { FactoryGirl.create(:scene, piece: piece) }
+    		31.times { FactoryGirl.create(:role, piece: piece) }
     	end
-    	after(:all)  { piece.scenes.delete_all }
+    	after(:all)  { piece.roles.delete_all }
     	
-    	it "lists each scene" do
-    		piece.scenes.paginate(page: 1).each do |scene|
-    			should have_selector('td', text: scene.name)
-    			should have_selector('td', text: scene.order_num.to_s)
+    	it "lists each role" do
+    		piece.roles.paginate(page: 1).each do |role|
+    			should have_selector('td', text: role.name)
     		end
     	end
     	
@@ -66,28 +65,24 @@ describe "Scene Pages:" do
 	    	should have_selector('div.pagination')
 	    end
 	    
-	    it "has a 'Show' link" do
-	    	should have_link(piece.scenes.first.name, href: piece_scene_path(piece, piece.scenes.first))
-	    end
-	    
 	    it "has an 'Edit' link" do
-	    	should have_link('Edit', href: edit_piece_scene_path(piece, piece.scenes.first))
+	    	should have_link('Edit', href: edit_piece_role_path(piece, piece.roles.first))
 	    end
 	    
 	    it "has a 'Delete' link" do
-	    	should have_link('Delete', href: piece_scene_path(piece, piece.scenes.first))
+	    	should have_link('Delete', href: piece_role_path(piece, piece.roles.first))
 	    end
     end
   end
   
   describe "destroy" do
   	before do
-  		FactoryGirl.create(:scene, piece: piece)
-  		visit piece_scenes_path(piece)
+  		FactoryGirl.create(:role, piece: piece)
+  		visit piece_roles_path(piece)
   	end
   			
-    it "deletes a scene" do
-    	expect { click_link 'Delete' }.to change(Scene, :count).by(-1)
+    it "deletes a role" do
+    	expect { click_link 'Delete' }.to change(Role, :count).by(-1)
     end
 		  	
   	describe "shows success message" do
@@ -95,27 +90,27 @@ describe "Scene Pages:" do
 			it { should have_selector('div.alert-success') }
     end
 	    
-    describe "redirects to scene index page" do
+    describe "redirects to role index" do
     	before { click_link 'Delete' }
-			it { should have_selector('title', text: 'Scenes') }
+			it { should have_selector('title', text: 'Roles') }
 		end
   end
   
   describe "new" do
   	let(:submit) { "Create" }
   	before do
-  		visit new_piece_scene_path(piece)
+  		visit new_piece_role_path(piece)
   	end
   	
   	context "page" do
-	    it { should have_selector('title', text: 'New Scene') }
+	    it { should have_selector('title', text: 'New Role') }
 	    it { should have_selector('h1', text: piece.name) }
-	    it { should have_selector('legend', text: 'New Scene') }
+	    it { should have_selector('legend', text: 'New Role') }
 	  end
     
     context "with invalid info" do   	
-    	it "does NOT create a scene" do
-    		expect { click_button submit }.not_to change(Scene, :count)
+    	it "does NOT create a role" do
+    		expect { click_button submit }.not_to change(Role, :count)
     	end
     	
     	describe "shows error message" do
@@ -125,14 +120,13 @@ describe "Scene Pages:" do
     end
     
     context "with valid info" do
-    	let(:new_name) { "New Name" }
+    	let(:new_name) { "New Role" }
     	before do
     		fill_in "Name", with: new_name
-    		fill_in "Order", with: 1
     	end
     	
-    	it "creates a scene" do
-    		expect { click_button submit }.to change(Scene, :count).by(1)
+    	it "creates a role" do
+    		expect { click_button submit }.to change(Role, :count).by(1)
     	end
     	
     	describe "shows success message" do
@@ -140,39 +134,39 @@ describe "Scene Pages:" do
     		it { should have_selector('div.alert-success') }
     	end
     	
-    	describe "redirects to the scene index for the piece" do
+    	describe "redirects to the role index" do
     		before { click_button submit }
-    		it { should have_selector('title', text: 'Scenes') }
+    		it { should have_selector('title', text: 'Roles') }
     	end
     end
   end
   
   describe "edit" do
-  	let(:scene) { FactoryGirl.create(:scene, piece: piece) }
+  	let(:role) { FactoryGirl.create(:role, piece: piece) }
   	let(:submit) { "Update" }
   	before do
-  		visit edit_piece_scene_path(piece, scene)
+  		visit edit_piece_role_path(piece, role)
   	end
   	
   	context "page" do
-	    it { should have_selector('title', text: 'Edit Scene') }
+	    it { should have_selector('title', text: 'Edit Role') }
 	    it { should have_selector('h1', text: piece.name) }
-	    it { should have_selector('legend', text: 'Edit Scene') }
+	    it { should have_selector('legend', text: 'Edit Role') }
     end
-    
+  	
     context "with invalid URL" do
-  		describe "invalid scene ID" do
-  			#before { visit edit_piece_scene_path(piece, 0) }
+  		describe "invalid role ID" do
+  			#before { visit edit_piece_role_path(piece, 0) }
   			it "redirects to ??" do
     			pending
-    			#should have_selector('title', text: 'Scenes')
+    			#should have_selector('title', text: 'Roles')
     		end
     	end
     	
     	describe "invalid piece ID" do
-  			before { visit edit_piece_scene_path(0, scene) }
-  			it "shows the scene edit page" do
-  				should have_selector('title', text: 'Edit Scene')
+  			before { visit edit_piece_role_path(0, role) }
+  			it "shows the role edit page" do
+  				should have_selector('title', text: 'Edit Role')
     		end
     	end
   	end
@@ -180,7 +174,6 @@ describe "Scene Pages:" do
     context "with invalid info" do
 			before do
     		fill_in "Name", with: ""
-    		fill_in "Order", with: ""
     		click_button submit 
     	end
     		
@@ -191,10 +184,8 @@ describe "Scene Pages:" do
     
     context "with valid info" do
     	let(:new_name) { "Updated Name" }
-    	let(:new_order) { 15 }
     	before do
     		fill_in "Name", with: new_name
-    		fill_in "Order", with: new_order
     		click_button submit
     	end
     	
@@ -203,17 +194,12 @@ describe "Scene Pages:" do
     	end
     	
     	it "updates the record" do
-    		scene.reload.name.should == new_name
-    		scene.reload.order_num.should == new_order
+    		role.reload.name.should == new_name
     	end
     	
-    	it "redirects to the scene index" do
-    		should have_selector('title', text: 'Scenes')
+    	it "redirects to the role index" do
+    		should have_selector('title', text: 'Roles')
     	end
     end
-  end
-  
-  describe "show" do
-  	pending
   end
 end

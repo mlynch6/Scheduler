@@ -49,7 +49,7 @@ describe "Piece Pages:" do
 	    	should have_selector('div.pagination')
 	    end
 	    
-	    it "has a 'Show' link" do
+	    it "has a 'Show' link on name" do
 	    	should have_link(Piece.first.name, href: piece_scenes_path(Piece.first))
 	    end
 	    
@@ -59,6 +59,32 @@ describe "Piece Pages:" do
 	    
 	    it "has a 'Delete' link" do
 	    	should have_link('Delete', href: piece_path(Piece.first))
+	    end
+    end
+    
+    context "filters" do
+    	it "has an 'Active' filter" do
+	    	should have_link('Active', href: pieces_path(:status => 'active'))
+	    end
+	    
+	    it "shows only active records for the 'Active' filter" do
+	    	pending
+	    end
+	    
+	    it "has an 'Inactive' filter" do
+	    	should have_link('Inactive', href: pieces_path(:status => 'inactive'))
+	    end
+	    
+	    it "shows only inactive records for the 'Inactive' filter" do
+	    	pending
+	    end
+	    
+	    it "has an 'All' filter" do
+	    	should have_link('All', href: pieces_path)
+	    end
+	    
+	    it "shows active and inactive records for the 'All' filter" do
+	    	pending
 	    end
     end
   end
@@ -78,9 +104,8 @@ describe "Piece Pages:" do
 			it { should have_selector('div.alert-success') }
     end
 	    
-    describe "redirects to show piece page" do
+    describe "redirects to pieces#index" do
     	before { click_link 'Delete' }
-    	#specify { response.should redirect_to(pieces_path) }
 			it { should have_selector('h1', text: 'All Pieces') }
 		end
   end
@@ -95,9 +120,33 @@ describe "Piece Pages:" do
 	    it { should have_selector('title', text: 'New Piece') }
 	    it { should have_selector('h1', text: 'New Piece') }
 	    
-	    it "has Cancel button back to index" do
-	    	should have_link('Cancel', href: pieces_path)
-	    end
+		  context "Scenes section" do
+		  	it "has a Scenes section" do
+		    	should have_content('Scenes')
+		    end
+		    
+		    it "has 'Add Scene' button" do
+		    	should have_link('Add Scene')
+		    end
+		    
+		    it "clicking 'Add Scene' button adds new row of form inputs" do
+		    	pending
+		    end
+		  end
+		  
+		  context "Roles section" do
+		  	it "has a Roles section" do
+		    	should have_content('Roles')
+		    end
+		    
+		    it "has 'Add Role' button" do
+		    	should have_link('Add Role')
+		    end
+		    
+		    it "clicking 'Add Role' button adds new row of form inputs" do
+		    	pending
+		    end
+		  end
 	  end
     
     context "with invalid info" do   	
@@ -118,15 +167,21 @@ describe "Piece Pages:" do
     		fill_in "piece_scenes_attributes_0_name", with: "Scene 1"
     		fill_in "piece_scenes_attributes_0_order_num", with: "1"
     		fill_in "piece_scenes_attributes_1_name", with: "Scene 2"
-    		fill_in "piece_scenes_attributes_1_order_num", with: "1"
+    		fill_in "piece_scenes_attributes_1_order_num", with: "2"
+    		fill_in "piece_roles_attributes_0_name", with: "Role 1"
+    		fill_in "piece_roles_attributes_1_name", with: "Role 2"
     	end
     	
     	it "creates a piece"do
     		expect { click_button submit }.to change(Piece, :count).by(1)
     	end
     	
-    	it "creates associated scenes"do
+    	it "creates associated scenes" do
     		expect { click_button submit }.to change(Scene, :count).by(2)
+    	end
+    	
+    	it "creates associated roles" do
+    		expect { click_button submit }.to change(Role, :count).by(2)
     	end
     	
     	describe "shows success message" do
@@ -134,10 +189,10 @@ describe "Piece Pages:" do
     		it { should have_selector('div.alert-success') }
     	end
     	
-    	describe "redirects to the piece scenes page" do
+    	describe "redirects to piece#show" do
     		before { click_button submit }
     		it { should have_selector('title', text: new_name) }
-    		it { should have_selector('title', text: 'Scenes') }
+    		it { should have_selector('title', text: 'Performances') }
     	end
     end
   end
@@ -153,12 +208,14 @@ describe "Piece Pages:" do
 	    it { should have_selector('title', text: 'Edit Piece') }
 	    it { should have_selector('h1', text: 'Edit Piece') }
     end
-    
-    context "with invalid record" do
-  		before { visit edit_piece_path(0) }
-  		
-  		it "redirects to the list (index)" do
-    		should have_selector('title', text: 'All Pieces')
+  	
+  	context "with invalid URL" do
+  		describe "having invalid piece ID" do
+  			#before { edit_piece_path(0) }
+  			it "redirects to pieces#index" do
+    			pending
+    			#should have_selector('title', text: 'All Pieces')
+    		end
     	end
   	end
     
@@ -190,10 +247,74 @@ describe "Piece Pages:" do
     		piece.reload.active.should be_false
     	end
     	
-    	describe "redirects to the piece scenes page" do
+    	describe "redirects to piece#show" do
     		it { should have_selector('title', text: new_name) }
-    		it { should have_selector('title', text: 'Scenes') }
+    		it { should have_selector('title', text: 'Performances') }
     	end
     end
   end
+  
+	describe "show" do
+		let(:piece) { FactoryGirl.create(:piece) }
+  	before do
+  		visit piece_path(piece)
+  	end
+  	
+  	context "page" do
+	    it { should have_selector('title', text: piece.name) }
+	    it { should have_selector('title', text: 'Performances') }
+	    it { should have_selector('h1', text: piece.name) }
+	    
+	    describe "has sub navigation" do
+		    it "has a 'Performances' link" do
+	    		should have_link('Performances', href: piece_path(piece))
+	    	end
+	    	
+	    	it "has a 'Scenes' link" do
+	    		should have_link('Scenes', href: pieces_scenes_path(piece))
+	    	end
+	    	
+	    	it "has a 'Roles' link" do
+	    		should have_link('Roles', href: pieces_roles_path(piece))
+	    	end
+	    end
+    end
+    
+    context "without Performance records" do
+    	before(:all) { Piece.performances.delete_all }
+    	
+    	it "shows 'No Records' message" do
+    		should have_selector('div.alert', text: "No records found")
+    	end
+
+			it "shows NO records" do
+				should_not have_selector('td')
+			end
+    	
+    	it "has NO pagination" do
+	    	should_not have_selector('div.pagination')
+	    end
+    end
+    
+    context "with Performance records" do
+    	before(:all) do
+    		31.times { FactoryGirl.create(:performance, piece: piece) }
+    	end
+    	after(:all)  { Piece.performances.delete_all }
+    	
+    	it "lists each performance" do
+    		Piece.performances.paginate(page: 1).each do |perf|
+    			should have_selector('td', text: perf.name)
+    		end
+    	end
+    	
+    	it "has pagination" do
+	    	should have_selector('div.pagination')
+	    end
+	    
+	    it "has 'Show' link on performance name" do
+	    	should have_link(Piece.performances.first.name, href: performances_path(Piece.performances.first))
+	    end
+    end
+	end
 end

@@ -12,7 +12,12 @@ module ApplicationHelper
 	
 	#Returns HTML for a bootstrap icon followed by text
 	def icon_with_text(text, icon)
-		content_tag(:i, "", :class => "icon-#{icon}")+text
+		content_tag(:i, "", :class => "icon-#{icon}")+" "+text
+	end
+	
+	#Returns hash for Status Values: Active, Inactive
+	def status_dropdown_values()
+		{ "Active" => 1, "Inactive" => 0 }
 	end
 	
 	#Returns 'Active' if true, 'Inactive' if false

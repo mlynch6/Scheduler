@@ -20,7 +20,17 @@ end
 
 describe ApplicationHelper, 'icon_with_text' do	
 	it "has the HTML for bootstrap icon and text" do
-		icon_with_text("Delete", 'trash').should == '<i class="icon-trash"></i>Delete'
+		icon_with_text("Delete", 'trash').should == '<i class="icon-trash"></i> Delete'
+	end
+end
+
+describe ApplicationHelper, 'status_dropdown_values' do
+	it "has 'Active' status" do
+		status_dropdown_values['Active'].should == 1
+	end
+	
+	it "has 'Inactive' status" do
+		status_dropdown_values['Inactive'].should == 0
 	end
 end
 

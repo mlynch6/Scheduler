@@ -1,9 +1,7 @@
 class ScenesController < ApplicationController
-	rescue_from ActiveRecord::RecordNotFound, :with => :not_found
-	
 	def index
 		@piece = Piece.find(params[:piece_id])
-		@scenes = @piece.scenes.paginate(page: params[:page])
+		@scenes = @piece.scenes.paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
 	def show
@@ -19,9 +17,10 @@ class ScenesController < ApplicationController
 	def create
 		@piece = Piece.find(params[:piece_id])
 		@scene = @piece.scenes.build(params[:scene])
+		
 		if @scene.save
 			flash[:success] = "Scene created"
-			redirect_to scene_url(@scene)
+			redirect_to piece_scenes_url(@piece)
 		else
 			form_setup
 			render 'new'
@@ -29,19 +28,20 @@ class ScenesController < ApplicationController
 	end
 	
 	def edit
-		@piece = Piece.find(params[:piece_id])
-		@scene = @piece.scenes.find(params[:id])
+		@scene = Scene.includes(:piece).find(params[:id])
+		@piece = @scene.piece
 		form_setup
 	end
 	
 	def update
-		@piece = Piece.find(params[:piece_id])
-		@scene = @piece.scenes.find(params[:id])
+		@scene = Scene.includes(:piece).find(params[:id])
+		
 		if @scene.update_attributes(params[:scene])
 			flash[:success] = "Scene saved"
-			redirect_to piece_scenes_url(@piece)
+			redirect_to piece_scenes_url(@scene.piece)
 		else
 			form_setup
+			@piece = @scene.piece
 			render 'edit'
 		end
 	end
@@ -58,8 +58,4 @@ class ScenesController < ApplicationController
 	#setup for form - dropdowns, etc
 	def form_setup
 	end
-  
-  def not_found
-    redirect_to piece_scenes_url(@piece)
-  end
 end

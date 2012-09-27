@@ -1,8 +1,8 @@
 Scheduler::Application.routes.draw do
-	resources :pieces, :only => [:new, :create, :edit, :update, :index, :destroy] do
-		resources :scenes, :only => [:new, :create, :edit, :update, :index]
+	resources :pieces do
+		resources :scenes
+		resources :roles, :except => :show
 	end
-	resources :scenes, :only => [:show, :destroy]
 		
 	match 'login' => 'pieces#index'
 	match 'dashboard' => 'pieces#index'

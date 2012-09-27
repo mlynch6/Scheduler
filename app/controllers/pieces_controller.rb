@@ -1,27 +1,25 @@
 class PiecesController < ApplicationController
-	rescue_from ActiveRecord::RecordNotFound, :with => :not_found
-	
 	def index
-		@pieces = Piece.paginate(page: params[:page])
+		@pieces = Piece.paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
 	def show
 		@piece = Piece.find(params[:id])
-		@scenes = @piece.scenes.paginate(page: params[:page])
-		@newScene = Scene.new
+		@performances = @piece.performances.paginate(page: params[:page])
 	end
 	
 	def new
 		form_setup
 		@piece = Piece.new
 		3.times { @piece.scenes.build }
+		3.times { @piece.roles.build }
 	end
 	
 	def create
 		@piece = Piece.new(params[:piece])
 		if @piece.save
 			flash[:success] = "Piece created"
-			redirect_to piece_scenes_path(@piece)
+			redirect_to piece_path(@piece)
 		else
 			form_setup
 			render 'new'
@@ -37,7 +35,7 @@ class PiecesController < ApplicationController
 		@piece = Piece.find(params[:id])
 		if @piece.update_attributes(params[:piece])
 			flash[:success] = "Piece saved"
-			redirect_to piece_scenes_path(@piece)
+			redirect_to piece_path(@piece)
 		else
 			form_setup
 			render 'edit'
@@ -55,8 +53,4 @@ class PiecesController < ApplicationController
 	#setup for form - dropdowns, etc
 	def form_setup
 	end
-  
-  def not_found
-    redirect_to :action => :index
-  end
 end

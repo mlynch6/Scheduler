@@ -1,4 +1,4 @@
-<% provide(:title, @piece.name+' | Scenes') %>
+<% provide(:title, "#{@piece.name} | Scenes") %>
 
 <%= render 'pieces/detail', :piece => @piece %>
 
@@ -8,7 +8,7 @@
 	<thead>
   	<tr>
   		<th>#</th>
-  		<th>Name</th>
+  		<th>Scene</th>
   		<th>Actions</th>
   	</tr>
   </thead>
@@ -16,20 +16,29 @@
   	<% @scenes.each do |scene| %>
 			<tr>
 				<td><%= scene.order_num %></td>
-				<td><%= link_to scene.name, scene %></td>
+				<td><%= link_to scene.name, piece_scene_path(@piece, scene) %></td>
 				<td>
 					<%= link_to 'Edit', edit_piece_scene_path(@piece, scene), :class => 'btn btn-mini' %>
 					&nbsp;
-					<%= link_to 'Delete', scene_path(scene), method: :delete, confirm: "Delete?", :class => 'btn btn-mini btn-danger' %>
+					<%= link_to 'Delete', piece_scene_path(@piece, scene), method: :delete, confirm: "Delete?", :class => 'btn btn-mini btn-danger' %>
 				</td>
 			</tr>
 		<% end %>
 	</tbody>
 </table>
 
-<% unless @piece.scenes.length > 0 %>
+<% unless @scenes.length > 0 %>
 	<div class="alert">No records found</div>
 <% end %>
 
-<%= will_paginate %>
-<%= link_to 'New', new_piece_scene_path(@piece), :class => 'btn btn-mini btn-primary' %>
+<div class="row">
+	<div class="span2">
+		<%= link_to 'New', new_piece_scene_path(@piece), :class => 'btn btn-mini btn-primary' %>
+	</div>
+	<div class="span10">
+		<%= will_paginate(class: 'pagination',
+					previous_label: "&laquo;",
+		    	next_label: "&raquo;"
+				)%>
+	</div>
+</div>

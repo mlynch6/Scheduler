@@ -25,9 +25,9 @@ class Scene < ActiveRecord::Base
   
   
   def update_scene_order
-  	scenes = Scene.where(:piece_id => self.piece_id, :order_num => self.order_num).limit(1)
+  	scenes = Scene.where(:piece_id => self.piece_id, :order_num => self.order_num)
   	scenes.each do |s|
-	  	s.update_attribute(:order_num, self.order_num + 1)
+	  	s.update_attribute(:order_num, self.order_num + 1) unless s.id == self.id
 	  end
 	end
 end

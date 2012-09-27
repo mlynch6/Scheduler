@@ -1,13 +1,6 @@
 <div class="control-group">
-	<%= f.label :name, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :name %>
-	</div>
-</div>
-
-<div class="control-group">
-	<%= f.label :order_num, "Order", :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :order_num, :class => 'span1' %>
-	</div>
+	<%= f.text_field :order_num, :class => 'input-mini inline', :placeholder =>"#" %>
+	<%= f.text_field :name, :placeholder =>"Scene Name" %>
+	&nbsp;
+	<%= link_to 'remove', '#' %>
 </div>

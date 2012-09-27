@@ -21,32 +21,33 @@ describe Piece do
 	context "accessible attributes" do
 		it { should respond_to(:name) }
   	it { should respond_to(:active) }
-  	it { should respond_to(:scenes) }    
+  	it { should respond_to(:scenes) }
+  	it { should respond_to(:roles) }    
   end
 	
   context "(Valid)" do  	
-  	it "should be valid with minimum attributes" do
+  	it "with minimum attributes" do
   		should be_valid
   	end
   	
-  	it "should be created as active" do
+  	it "created as active" do
   		@piece.save
   		@piece.active.should be_true
   	end
   end
   
   context "(Invalid)" do
-  	describe "should be invalid when name is blank" do
+  	describe "when name is blank" do
   		before {@piece.name = " " }
   		it { should_not be_valid }
   	end
   	
-  	describe "should be invalid when name is too long" do
+  	describe "when name is too long" do
   		before { @piece.name = "a"*51 }
   		it { should_not be_valid }
   	end
   	
-  	describe "should be invalid when active is blank" do
+  	describe "when active is blank" do
   		before { @piece.active = "" }
   		it { should_not be_valid }
   	end
@@ -61,7 +62,7 @@ describe Piece do
 			@piece.scenes.should == [first_scene, second_scene]
 		end
 		
-		it "should delete associated scenes" do
+		it "deletes associated scenes" do
 			scenes = @piece.scenes
 			@piece.destroy
 			scenes.each do |scene|
@@ -69,12 +70,40 @@ describe Piece do
 			end
 		end
 	end
+	
+	describe "role associations" do
+		before { @piece.save }
+		let!(:second_role) { FactoryGirl.create(:role, piece: @piece, name: 'Beat Role') }
+		let!(:first_role) { FactoryGirl.create(:role, piece: @piece, name: 'Alpha Role') }
+
+		it "has the roles in alphabetical order" do
+			@piece.roles.should == [first_role, second_role]
+		end
+		
+		it "deletes associated roles" do
+			roles = @piece.roles
+			@piece.destroy
+			roles.each do |role|
+				Role.find_by_id(role.id).should be_nil
+			end
+		end
+	end
+	
+	describe "performance associations" do
+		it "has the performances in order" do
+			pending
+		end
+		
+		it "deletes associated performances" do
+			pending
+		end
+	end
 end
 
 describe Piece, '.name' do
 	let(:piece) { FactoryGirl.create(:piece, :name => 'My Piece') }
 	
-	it "should return correct value" do
+	it "returns correct value" do
   	piece.reload.name.should == 'My Piece'
   end
 end
@@ -83,11 +112,11 @@ describe Piece, '.active?' do
 	let(:piece_active) { FactoryGirl.create(:piece) }
 	let(:piece_inactive) { FactoryGirl.create(:piece_inactive) }
 	
-	it "returns true for active pieces" do
+	it "returns true when active" do
   	piece_active.reload.active.should be_true
   end
   
-  it "returns false for inactive pieces" do
+  it "returns false when inactive" do
   	piece_inactive.reload.active.should be_false
   end
 end
@@ -97,7 +126,7 @@ describe Piece, "default_scope" do
 	let!(:second_piece) { FactoryGirl.create(:piece, name: "Beta") }
 	let!(:first_piece) { FactoryGirl.create(:piece, name: "Alpha") }
 	
-	it "returns the pieces in order of name" do
+	it "returns the pieces in alphabetical order" do
 		Piece.all.should == [first_piece, second_piece]
 	end
 end

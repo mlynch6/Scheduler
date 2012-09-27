@@ -1,6 +1,14 @@
 <% provide(:title, 'All Pieces') %>
 <h1>All Pieces</h1>
 
+<div class="filter-group span10 offset2">
+	<%= link_to 'All', pieces_path, :class => 'filter' %>
+	<span class="divider-vertical"></span>
+	<%= link_to 'Active', pieces_path(:status => 'active'), :class => 'filter' %>
+	<span class="divider-vertical"></span>
+	<%= link_to 'Inactive', pieces_path(:status => 'inactive'), :class => 'filter' %>
+</div>
+
 <table class="table table-striped">
 	<thead>
   	<tr>
@@ -16,7 +24,6 @@
 				<td><%= active_bool_to_text(piece.active) %></td>
 				<td>
 					<%= link_to 'Edit', edit_piece_path(piece), :class => 'btn btn-mini' %>
-					&nbsp;
 					<%= link_to 'Delete', piece, method: :delete, confirm: "Delete?", :class => 'btn btn-mini btn-danger' %>
 				</td>
 			</tr>
@@ -28,5 +35,14 @@
 	<div class="alert">No records found</div>
 <% end %>
 
-<%= will_paginate %>
-<%= link_to 'New', new_piece_path, :class => 'btn btn-mini btn-primary' %>
+<div class="row">
+	<div class="span2">
+		<%= link_to 'New', new_piece_path, :class => 'btn btn-mini btn-primary' %>
+	</div>
+	<div class="span10">
+		<%= will_paginate(class: 'pagination',
+					previous_label: "&laquo;",
+		    	next_label: "&raquo;"
+				)%>
+	</div>
+</div>

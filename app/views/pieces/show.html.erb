@@ -1,17 +1,36 @@
-<% provide(:title, @piece.name) %>
+<% provide(:title, "#{@piece.name} | Performances") %>
 <%= render 'detail', :piece => @piece %>
 
-<%= render 'nav_subtabs', :active_tab => "" %>
+<%= render 'nav_subtabs', :active_tab => "Performances" %>
+
+<table class="table table-striped">
+	<thead>
+  	<tr>
+  		<th>Name</th>
+  		<th>Rehersal Start</th>
+  		<th>Performance Dates</th>
+  	</tr>
+  </thead>
+  <tbody>
+  	<%= @@performances.each do |perf| %>
+			<tr>
+				<td><%= link_to perf.name, performances_path(perf) %></td>
+				<td><%= perf.rehearsal_start_dt("%e-%b-%Y") %></td>
+				<td><%= perf.performance_start_dt("%e-%b-%Y") %> to <%= perf.performance_end_dt.strftime("%e-%b-%Y") %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<% unless @performances.length > 0 %>
+	<div class="alert">No records found</div>
+<% end %>
 
 <div class="row">
-	<div class="span6">
-		<h3>Scenes (<%= @piece.scenes.count %>)</h3>
-		<% if @piece.scenes.any? %>
-			<ul class="unstyled">
-				<%= render @scenes %>
-			</ul>
-			<%= will_paginate @scenes %>
-		<% end %>
-		<%= link_to "New Scene", new_piece_scene_path(@piece) %>
+	<div class="span10 offset2">
+		<%= will_paginate(class: 'pagination',
+					previous_label: "&laquo;",
+		    	next_label: "&raquo;"
+				)%>
 	</div>
 </div>

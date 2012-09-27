@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120909143929) do
+ActiveRecord::Schema.define(:version => 20120918222349) do
 
   create_table "pieces", :force => true do |t|
     t.string   "name",       :limit => 50,                   :null => false
@@ -19,6 +19,15 @@ ActiveRecord::Schema.define(:version => 20120909143929) do
     t.datetime "created_at",                                 :null => false
     t.datetime "updated_at",                                 :null => false
   end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name",       :limit => 30, :null => false
+    t.integer  "piece_id",                 :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "roles", ["piece_id"], :name => "index_roles_on_piece_id"
 
   create_table "scenes", :force => true do |t|
     t.string   "name",       :limit => 100, :null => false
