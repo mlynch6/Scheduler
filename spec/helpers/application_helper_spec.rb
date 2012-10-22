@@ -43,3 +43,13 @@ describe ApplicationHelper, 'active_bool_to_text' do
 		active_bool_to_text(false).should == 'Inactive'
 	end
 end
+
+describe ApplicationHelper, 'formatted_date' do
+	it "formats date in default format" do
+		formatted_date('2012-10-09').should == ' 9-Oct-2012'
+	end
+	
+	it "formats date in specified format" do
+		formatted_date('2012-10-09', '%m/%d/%Y').should == '10/09/2012'
+	end
+end

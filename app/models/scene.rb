@@ -14,6 +14,7 @@ class Scene < ActiveRecord::Base
   attr_accessible :name, :order_num
   
   belongs_to :piece
+  #has_and_belongs_to_many :roles
   
   validates :name, presence: true, length: { maximum: 100 }
   validates :order_num, presence: true, :numericality => {:only_integer => true, :greater_than => 0 }

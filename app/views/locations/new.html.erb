@@ -1,0 +1,19 @@
+<% provide(:title, 'New Location') %>
+<h1>New Location</h1>
+<%= form_for @location, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= render 'shared/error_messages', :object => f.object %>
+	
+	<div class="row">
+		<div class="span8">
+			<%= render 'form', :f => f %>
+		</div>
+		<div class="span4">
+			<div class="alert alert-info">
+				Add the locations of your rehearsals, performances, and costume fittings. <br />
+				Examples: Studio A, Apollo Theater, Wardrobe
+			</div>
+		</div>
+	</div>
+	
+	<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
+<% end %>

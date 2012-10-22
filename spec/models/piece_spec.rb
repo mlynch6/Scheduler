@@ -21,8 +21,11 @@ describe Piece do
 	context "accessible attributes" do
 		it { should respond_to(:name) }
   	it { should respond_to(:active) }
+  	
   	it { should respond_to(:scenes) }
-  	it { should respond_to(:roles) }    
+  	it { should respond_to(:roles) }
+  	#it { should respond_to(:performances) }
+  	#it { should respond_to(:events) }
   end
 	
   context "(Valid)" do  	
@@ -90,13 +93,11 @@ describe Piece do
 	end
 	
 	describe "performance associations" do
-		it "has the performances in order" do
-			pending
-		end
-		
-		it "deletes associated performances" do
-			pending
-		end
+		pending
+	end
+	
+	describe "event associations" do
+		pending
 	end
 end
 
@@ -113,20 +114,35 @@ describe Piece, '.active?' do
 	let(:piece_inactive) { FactoryGirl.create(:piece_inactive) }
 	
 	it "returns true when active" do
-  	piece_active.reload.active.should be_true
+  	piece_active.reload.active?.should be_true
   end
   
   it "returns false when inactive" do
-  	piece_inactive.reload.active.should be_false
+  	piece_inactive.reload.active?.should be_false
   end
 end
 
-describe Piece, "default_scope" do
+describe Piece, "scopes" do
 	before { Piece.delete_all }
 	let!(:second_piece) { FactoryGirl.create(:piece, name: "Beta") }
 	let!(:first_piece) { FactoryGirl.create(:piece, name: "Alpha") }
+	let!(:piece_inactive) { FactoryGirl.create(:piece_inactive, name: "Inactive") }
+		
+	describe "default_scope" do
+		it "returns the records in alphabetical order" do
+			Piece.all.should == [first_piece, second_piece, piece_inactive]
+		end
+	end
 	
-	it "returns the pieces in alphabetical order" do
-		Piece.all.should == [first_piece, second_piece]
+	describe "active" do
+		it "returns active records" do
+			Piece.active.should == [first_piece, second_piece]
+		end
+	end
+	
+	describe "inactive" do
+		it "returns inactive records" do
+			Piece.inactive.should == [piece_inactive]
+		end
 	end
 end

@@ -5,7 +5,6 @@ class PiecesController < ApplicationController
 	
 	def show
 		@piece = Piece.find(params[:id])
-		@performances = @piece.performances.paginate(page: params[:page])
 	end
 	
 	def new

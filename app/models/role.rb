@@ -13,6 +13,7 @@ class Role < ActiveRecord::Base
   attr_accessible :name
   
   belongs_to :piece
+  #has_and_belongs_to_many :scenes
   
   validates :name, presence: true, length: { maximum: 30 }
   #validates :piece_id, presence: true

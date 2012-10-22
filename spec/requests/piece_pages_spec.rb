@@ -63,27 +63,15 @@ describe "Piece Pages:" do
     end
     
     context "filters" do
-    	it "has an 'Active' filter" do
-	    	should have_link('Active', href: pieces_path(:status => 'active'))
-	    end
-	    
-	    it "shows only active records for the 'Active' filter" do
+	    it "has 'Active' filter that shows only active records" do
 	    	pending
 	    end
 	    
-	    it "has an 'Inactive' filter" do
-	    	should have_link('Inactive', href: pieces_path(:status => 'inactive'))
-	    end
-	    
-	    it "shows only inactive records for the 'Inactive' filter" do
+	    it "has 'Inactive' filter that shows only inactive records" do
 	    	pending
 	    end
 	    
-	    it "has an 'All' filter" do
-	    	should have_link('All', href: pieces_path)
-	    end
-	    
-	    it "shows active and inactive records for the 'All' filter" do
+	    it "has 'All' filter that shows active and inactive records" do
 	    	pending
 	    end
     end
@@ -271,49 +259,12 @@ describe "Piece Pages:" do
 	    	end
 	    	
 	    	it "has a 'Scenes' link" do
-	    		should have_link('Scenes', href: pieces_scenes_path(piece))
+	    		should have_link('Scenes', href: piece_scenes_path(piece))
 	    	end
 	    	
 	    	it "has a 'Roles' link" do
-	    		should have_link('Roles', href: pieces_roles_path(piece))
+	    		should have_link('Roles', href: piece_roles_path(piece))
 	    	end
-	    end
-    end
-    
-    context "without Performance records" do
-    	before(:all) { Piece.performances.delete_all }
-    	
-    	it "shows 'No Records' message" do
-    		should have_selector('div.alert', text: "No records found")
-    	end
-
-			it "shows NO records" do
-				should_not have_selector('td')
-			end
-    	
-    	it "has NO pagination" do
-	    	should_not have_selector('div.pagination')
-	    end
-    end
-    
-    context "with Performance records" do
-    	before(:all) do
-    		31.times { FactoryGirl.create(:performance, piece: piece) }
-    	end
-    	after(:all)  { Piece.performances.delete_all }
-    	
-    	it "lists each performance" do
-    		Piece.performances.paginate(page: 1).each do |perf|
-    			should have_selector('td', text: perf.name)
-    		end
-    	end
-    	
-    	it "has pagination" do
-	    	should have_selector('div.pagination')
-	    end
-	    
-	    it "has 'Show' link on performance name" do
-	    	should have_link(Piece.performances.first.name, href: performances_path(Piece.performances.first))
 	    end
     end
 	end

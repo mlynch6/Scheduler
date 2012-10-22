@@ -20,19 +20,19 @@
 			<%= f.fields_for :scenes do |scene_f| %>
 				<%= render 'scene_fields', :f => scene_f %>
 			<% end %>
-			
+	
 			<%= link_to icon_with_text('Add Scene','plus'), '#', :class => 'btn btn-mini btn-success' %>
 		</fieldset>
-		
+
 		<fieldset class="span6">
 			<legend>Roles</legend>
 			<%= f.fields_for :roles do |role_f| %>
 				<%= render 'role_fields', :f => role_f %>
 			<% end %>
-			
+	
 			<%= link_to icon_with_text('Add Role','plus'), '#', :class => 'btn btn-mini btn-success' %>
 		</fieldset>
 	</div>
-	
+
 	<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
 <% end %>

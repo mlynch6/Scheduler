@@ -1,0 +1,6 @@
+<% status = params['status'].present? ? params['status'] : "active" %>
+<div class="filter-group span10 offset2">
+	<%= link_to 'Active', locations_path(), :class => 'filter'+( status == "active" ? " active" : "" ) %>
+	<span class="divider-vertical"></span>
+	<%= link_to 'Inactive', locations_path(:status => 'inactive'), :class => 'filter'+( status == "inactive" ? " active" : "" ) %>
+</div>

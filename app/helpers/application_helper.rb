@@ -28,4 +28,13 @@ module ApplicationHelper
 			"Inactive"
 		end
 	end
+	
+	#Formats date throughout Application
+	# %d-%m-%Y				=>	08-01-2012
+	# %-d-%-m-%Y			=>	8-2-2012
+	# %v OR %e-%b-%Y	=>	25-Aug-2012
+	def formatted_date(d, format="%v")
+		Date.strptime(d, '%Y-%m-%d').strftime(format)
+	end
+
 end

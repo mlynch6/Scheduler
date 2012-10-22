@@ -1,8 +1,12 @@
 Scheduler::Application.routes.draw do
+  get "locations/new"
+
 	resources :pieces do
 		resources :scenes
 		resources :roles, :except => :show
 	end
+	
+	resources :locations, :except => :show
 		
 	match 'login' => 'pieces#index'
 	match 'dashboard' => 'pieces#index'

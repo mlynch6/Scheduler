@@ -1,6 +1,6 @@
 <% txt = " class=""active""" %>
 <ul class="nav nav-pills sub-nav">
-	<li<%= txt if active_tab == "Performances" %>><%= link_to "Performances", piece_path(@piece) %></li>
-	<li<%= txt if active_tab == "Scenes" %>><%= link_to "Scenes", piece_scenes_path(@piece) %></li>
-	<li<%= txt if active_tab == "Roles" %>><%= link_to "Roles", piece_roles_path(@piece) %></li>
+	<li<%= txt if active_tab == "Performances" %>><%= link_to "Performances", piece_path(piece) %></li>
+	<li<%= txt if active_tab == "Scenes" %>><%= link_to "Scenes", piece_scenes_path(piece) %></li>
+	<li<%= txt if active_tab == "Roles" %>><%= link_to "Roles", piece_roles_path(piece) %></li>
 </ul>

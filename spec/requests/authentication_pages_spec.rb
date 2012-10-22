@@ -79,5 +79,23 @@ describe "Authentication" do
 				pending
 			end
 		end
+		
+		context "Locations " do
+			describe "index is only available to signed in users" do
+				pending
+			end
+			
+			describe "destroy is only available to signed in users" do
+				pending
+			end
+			
+			describe "new is only available to signed in users" do
+				pending
+			end
+			
+			describe "edit is only available to signed in users" do
+				pending
+			end
+		end
 	end
 end
