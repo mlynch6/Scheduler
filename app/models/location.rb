@@ -12,7 +12,7 @@
 class Location < ActiveRecord::Base
   attr_accessible :active, :name
 	
-	#has_many :events, dependent: :destroy
+	has_many :events, dependent: :destroy
 		
 	validates :name,	presence: true, length: { maximum: 50 }
 	validates :active, :inclusion => { :in => [true, false] }

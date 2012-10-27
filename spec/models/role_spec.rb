@@ -23,7 +23,6 @@ describe Role do
 		it { should respond_to(:name) }
   	
 		it { should respond_to(:piece) }
-		its(:piece) { should == piece }
   	
 		it "should NOT allow access to piece_id" do
 			expect do
@@ -54,14 +53,17 @@ describe Role do
   		it { should_not be_valid }
   	end
   end
-end
-
-describe Role, '.name' do
-	let(:piece) { FactoryGirl.create(:piece) }
-	let(:role) { FactoryGirl.create(:role, piece: piece, name: "My Role") }
-	
-	it "should return correct value" do
-		role.reload.name.should == 'My Role'
+  
+  context "correct value is returned for" do
+  	let(:role) { FactoryGirl.create(:role
+  									piece: piece,
+  									name: "My Role") }
+  	
+  	it ".name" do
+			role.reload.name.should == 'My Role'
+	  end
+	  
+	  its(:piece) { should == piece }
   end
 end
 

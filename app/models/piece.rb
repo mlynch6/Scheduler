@@ -17,6 +17,8 @@ class Piece < ActiveRecord::Base
 		
 	has_many :roles, dependent: :destroy
 	accepts_nested_attributes_for :roles, :reject_if => lambda { |a| a[:name].blank? }, :allow_destroy => true
+		
+	has_many :events, dependent: :destroy
 	
 	validates :name,	presence: true, length: { maximum: 50 }
 	validates :active, :inclusion => { :in => [true, false] }

@@ -22,7 +22,7 @@ describe Location do
 		it { should respond_to(:name) }
   	it { should respond_to(:active) }
   	
-  	#it { should respond_to(:events) }
+  	it { should respond_to(:events) }
   end
 	
   context "(Valid)" do  	
@@ -54,29 +54,39 @@ describe Location do
   end
   
   describe "event associations" do
-		pending
+		before { @location.save }
+		let!(:second_event) { FactoryGirl.create(:event, location: @location, start_at: 1.hour.ago) }
+		let!(:first_event) { FactoryGirl.create(:event, location: @location, start_at: 2.hours.ago) }
+
+		it "has the events in chronological order" do
+			@location.events.should == [first_event, second_event]
+		end
+		
+		it "deletes associated events" do
+			events = @location.events
+			@location.destroy
+			events.each do |event|
+				Event.find_by_id(event.id).should be_nil
+			end
+		end
 	end
-end
-
-describe Location, '.name' do
-	let(:location) { FactoryGirl.create(:location, :name => 'Studio A') }
 	
-	it "returns correct value" do
-  	location.reload.name.should == 'Studio A'
-  end
-end
-
-describe Location, '.active?' do
-	let(:location_active) { FactoryGirl.create(:location) }
-	let(:location_inactive) { FactoryGirl.create(:location_inactive) }
-	
-	it "returns true when active" do
-  	location_active.reload.active?.should be_true
-  end
-  
-  it "returns false when inactive" do
-  	location_inactive.reload.active?.should be_false
-  end
+	context "correct value is returned for" do
+		let(:location) { FactoryGirl.create(:location, :name => 'Studio A') }
+		let(:location_inactive) { FactoryGirl.create(:location_inactive) }
+		
+		it ".name" do
+	  	location.reload.name.should == 'Studio A'
+	  end
+	  
+	  it ".active? when active" do
+	  	location.reload.active?.should be_true
+	  end
+	  
+	  it ".active? when inactive" do
+	  	location_inactive.reload.active?.should be_false
+	  end
+	end
 end
 
 describe Location, "scopes" do

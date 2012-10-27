@@ -25,7 +25,6 @@ describe Scene do
   	it { should respond_to(:order_num) }
   	
   	it { should respond_to(:piece) }
-  	its(:piece) { should == piece }
   	
     it "should NOT allow access to piece_id" do
       expect do
@@ -71,33 +70,34 @@ describe Scene do
   		it { should_not be_valid }
   	end
   end
-end
-
-describe Scene, '.name' do
-	let(:piece) { FactoryGirl.create(:piece) }
-	let(:scene) { FactoryGirl.create(:scene, piece: piece, name: "My Scene") }
-	
-	it "returns correct value" do
-		scene.reload.name.should == 'My Scene'
+  
+  context "correct value is returned for" do
+  	let(:piece) { FactoryGirl.create(:piece) }
+		let(:scene) { FactoryGirl.create(:scene,
+											piece: piece,
+											name: "My Scene",
+											order_num: 1) }
+		it ".name" do
+			scene.reload.name.should == 'My Scene'
+		end
+		
+		it ".order_num" do
+			scene.reload.order_num.should == 1
+		end
+		
+		its(:piece) { should == piece }
   end
 end
 
-describe Scene, '.order_num' do
-	let(:piece) { FactoryGirl.create(:piece) }
-	let(:scene) { FactoryGirl.create(:scene, piece: piece, order_num: 1) }
-	
-		it "returns correct value" do
-		scene.reload.order_num.should == 1
-  end
-end
-
-describe Scene, "default_scope" do
+describe Scene, "scopes" do
 	let(:piece) { FactoryGirl.create(:piece) }
 	let!(:second_scene) { FactoryGirl.create(:scene, piece: piece, order_num: 2) }
 	let!(:first_scene) { FactoryGirl.create(:scene, piece: piece, order_num: 1) }
 	
-	it "returns the scenes in order_num" do
-		piece.scenes.should == [first_scene, second_scene]
+	describe "default_scope" do
+		it "returns the scenes in order_num" do
+			piece.scenes.should == [first_scene, second_scene]
+		end
 	end
 end
 

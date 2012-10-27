@@ -25,7 +25,7 @@ describe Piece do
   	it { should respond_to(:scenes) }
   	it { should respond_to(:roles) }
   	#it { should respond_to(:performances) }
-  	#it { should respond_to(:events) }
+  	it { should respond_to(:events) }
   end
 	
   context "(Valid)" do  	
@@ -97,29 +97,40 @@ describe Piece do
 	end
 	
 	describe "event associations" do
-		pending
+		before { @piece.save }
+		let(:location) { FactoryGirl.create(:location) }
+		let!(:second_event) { FactoryGirl.create(:event, location: location, piece: @piece, start_at: 1.hour.ago) }
+		let!(:first_event) { FactoryGirl.create(:event, location: location, piece: @piece, start_at: 2.hours.ago) }
+
+		it "has the events in chronological order" do
+			@piece.events.should == [first_event, second_event]
+		end
+		
+		it "deletes associated events" do
+			events = @piece.events
+			@piece.destroy
+			events.each do |event|
+				Event.find_by_id(event.id).should be_nil
+			end
+		end
 	end
-end
 
-describe Piece, '.name' do
-	let(:piece) { FactoryGirl.create(:piece, :name => 'My Piece') }
+	context "correct value is returned for" do
+		let(:piece) { FactoryGirl.create(:piece, :name => 'My Piece') }
+		let(:piece_inactive) { FactoryGirl.create(:piece_inactive) }
 	
-	it "returns correct value" do
-  	piece.reload.name.should == 'My Piece'
-  end
-end
-
-describe Piece, '.active?' do
-	let(:piece_active) { FactoryGirl.create(:piece) }
-	let(:piece_inactive) { FactoryGirl.create(:piece_inactive) }
-	
-	it "returns true when active" do
-  	piece_active.reload.active?.should be_true
-  end
+		it ".name" do
+	  	piece.reload.name.should == 'My Piece'
+	  end
+		
+		it ".active? when active" do
+	  	piece.reload.active?.should be_true
+	  end
   
-  it "returns false when inactive" do
-  	piece_inactive.reload.active?.should be_false
-  end
+	  it ".active? when inactive" do
+	  	piece_inactive.reload.active?.should be_false
+	  end
+	end
 end
 
 describe Piece, "scopes" do
