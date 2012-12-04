@@ -1,15 +1,25 @@
 Scheduler::Application.routes.draw do
-  get "locations/new"
+  root :to => 'static_pages#home'
+	match 'login' => 'sessions#new'	
+	match 'logout', :to =>'sessions#destroy', :via => :delete
+	match 'signup' => 'registrations#new'
+	
+	resources :registrations, :only => [:new, :create]
+	
+	resources :account, :only => [:new, :create]
+  resources :users, :only => [:new, :create]
+  resources :sessions, :only => [:new, :create, :destroy]
+  resources :locations, :except => :show
 
 	resources :pieces do
 		resources :scenes
 		resources :roles, :except => :show
 	end
 	
-	resources :locations, :except => :show
-		
-	match 'login' => 'pieces#index'
-	match 'dashboard' => 'pieces#index'
+	match 'dashboard' => 'static_pages#dashboard'
+	match 'features' => 'static_pages#features'   
+	match 'pricing' => 'static_pages#pricing' 
+	match 'contact' => 'static_pages#contact'
 	
   # The priority is based upon order of creation:
   # first created -> highest priority.
