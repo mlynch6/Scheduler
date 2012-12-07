@@ -5,3 +5,4 @@ require File.expand_path('../application', __FILE__)
 Scheduler::Application.initialize!
 Time::DATE_FORMATS[:mil_date] = "%d%b%Y"
 Time::DATE_FORMATS[:hr12] = "%I:%M %p"
+Faker::Config.locale = :en
