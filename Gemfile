@@ -10,7 +10,7 @@ group :development, :test do
   gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '~> 2.10.0'
   gem 'guard-rspec', '0.5.5'
-  gem 'faker', '1.0.1'
+  gem 'faker', '1.1.2'
 end
 
 # Gems used only for assets and not required
