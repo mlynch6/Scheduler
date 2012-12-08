@@ -11,7 +11,29 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121022135107) do
+ActiveRecord::Schema.define(:version => 20121207144539) do
+
+  create_table "accounts", :force => true do |t|
+    t.string   "name",       :limit => 100, :null => false
+    t.string   "main_phone", :limit => 13,  :null => false
+    t.string   "time_zone",  :limit => 100, :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  create_table "employees", :force => true do |t|
+    t.integer  "account_id",                                 :null => false
+    t.string   "first_name", :limit => 30,                   :null => false
+    t.string   "last_name",  :limit => 30,                   :null => false
+    t.boolean  "active",                   :default => true, :null => false
+    t.string   "job_title",  :limit => 50
+    t.string   "email",      :limit => 50
+    t.string   "phone",      :limit => 13
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+  end
+
+  add_index "employees", ["account_id"], :name => "index_employees_on_account_id"
 
   create_table "events", :force => true do |t|
     t.string   "title",       :limit => 30, :null => false
@@ -33,18 +55,6 @@ ActiveRecord::Schema.define(:version => 20121022135107) do
     t.datetime "created_at",                                 :null => false
     t.datetime "updated_at",                                 :null => false
   end
-
-  create_table "performances", :force => true do |t|
-    t.string   "name",                 :limit => 30, :null => false
-    t.integer  "piece_id",                           :null => false
-    t.date     "rehearsal_start_dt"
-    t.date     "performance_start_dt",               :null => false
-    t.date     "performance_end_dt",                 :null => false
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-  end
-
-  add_index "performances", ["piece_id"], :name => "index_performances_on_piece_id"
 
   create_table "pieces", :force => true do |t|
     t.string   "name",       :limit => 50,                   :null => false
@@ -71,5 +81,17 @@ ActiveRecord::Schema.define(:version => 20121022135107) do
   end
 
   add_index "scenes", ["piece_id"], :name => "index_scenes_on_piece_id"
+
+  create_table "users", :force => true do |t|
+    t.integer  "account_id",                    :null => false
+    t.string   "username",        :limit => 20, :null => false
+    t.string   "password_digest",               :null => false
+    t.string   "role",            :limit => 20, :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "users", ["account_id"], :name => "index_users_on_account_id"
+  add_index "users", ["username"], :name => "index_users_on_username", :unique => true
 
 end

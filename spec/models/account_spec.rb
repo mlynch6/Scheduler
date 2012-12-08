@@ -13,6 +13,10 @@
 require 'spec_helper'
 
 describe Account do
+	let(:account) { FactoryGirl.create(:account,
+										:name => 'Milwaukee Ballet',
+										:main_phone => '414-543-1000',
+										:time_zone => 'Eastern Time (US & Canada)') }
   before do
 		@account = FactoryGirl.build(:account)
 	end
@@ -24,6 +28,7 @@ describe Account do
 		it { should respond_to(:main_phone) }
   	it { should respond_to(:time_zone) }
   	
+  	it { should respond_to(:employees) }
   	it { should respond_to(:users) }
   end
 	
@@ -86,13 +91,29 @@ describe Account do
   	end
   end
   
+  describe "employee associations" do
+		let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown") }
+		let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
+
+		it "has the employees in order" do
+			account.employees.count.should == 2
+		end
+		
+		it "deletes associated employees" do
+			employees = account.employees
+			account.destroy
+			employees.each do |employee|
+				Employee.find_by_id(employee.id).should be_nil
+			end
+		end
+	end
+  
   describe "user associations" do
-		let(:account) { FactoryGirl.create(:account) }
 		let!(:second_user) { FactoryGirl.create(:user, account: account) }
 		let!(:first_user) { FactoryGirl.create(:user, account: account) }
 
 		it "has the users in order" do
-			account.users.should == [second_user, first_user]
+			account.users.count.should == 2
 		end
 		
 		it "deletes associated users" do
@@ -105,11 +126,6 @@ describe Account do
 	end
 	
 	context "correct value is returned for" do
-		let(:account) { FactoryGirl.create(:account,
-										:name => 'Milwaukee Ballet',
-										:main_phone => '414-543-1000',
-										:time_zone => 'Eastern Time (US & Canada)') }
-		
 		it ".name" do
 	  	account.reload.name.should == "Milwaukee Ballet"
 	  end

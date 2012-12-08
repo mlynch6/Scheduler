@@ -13,6 +13,8 @@
 class Account < ActiveRecord::Base
   attr_accessible :name, :main_phone, :time_zone, :users_attributes
   
+  has_many :employees, dependent: :destroy
+  
   has_many :users, dependent: :destroy
   accepts_nested_attributes_for :users
   
