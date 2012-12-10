@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(:version => 20121207144539) do
 
   create_table "users", :force => true do |t|
     t.integer  "account_id",                    :null => false
+    t.integer  "employee_id",                   :null => false
     t.string   "username",        :limit => 20, :null => false
     t.string   "password_digest",               :null => false
     t.string   "role",            :limit => 20, :null => false
@@ -92,6 +93,7 @@ ActiveRecord::Schema.define(:version => 20121207144539) do
   end
 
   add_index "users", ["account_id"], :name => "index_users_on_account_id"
+  add_index "users", ["employee_id"], :name => "index_users_on_employee_id"
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
 
 end

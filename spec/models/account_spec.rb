@@ -91,39 +91,41 @@ describe Account do
   	end
   end
   
-  describe "employee associations" do
-		let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown") }
-		let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
-
-		it "has the employees in order" do
-			account.employees.count.should == 2
-		end
-		
-		it "deletes associated employees" do
-			employees = account.employees
-			account.destroy
-			employees.each do |employee|
-				Employee.find_by_id(employee.id).should be_nil
+  context "(Associations)" do
+  	describe "employee" do
+			let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown") }
+			let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
+	
+			it "has the employees in order" do
+				account.employees.count.should == 2
+			end
+			
+			it "deletes associated employees" do
+				employees = account.employees
+				account.destroy
+				employees.each do |employee|
+					Employee.find_by_id(employee.id).should be_nil
+				end
 			end
 		end
-	end
-  
-  describe "user associations" do
-		let!(:second_user) { FactoryGirl.create(:user, account: account) }
-		let!(:first_user) { FactoryGirl.create(:user, account: account) }
-
-		it "has the users in order" do
-			account.users.count.should == 2
-		end
-		
-		it "deletes associated users" do
-			users = account.users
-			account.destroy
-			users.each do |user|
-				User.find_by_id(user.id).should be_nil
+	  
+	  describe "users" do
+			let!(:second_user) { FactoryGirl.create(:user, account: account) }
+			let!(:first_user) { FactoryGirl.create(:user, account: account) }
+	
+			it "has the users in order" do
+				account.users.count.should == 2
+			end
+			
+			it "deletes associated users" do
+				users = account.users
+				account.destroy
+				users.each do |user|
+					User.find_by_id(user.id).should be_nil
+				end
 			end
 		end
-	end
+  end
 	
 	context "correct value is returned for" do
 		it ".name" do

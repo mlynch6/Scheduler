@@ -18,6 +18,14 @@ require 'spec_helper'
 
 describe Employee do
 	let(:account) { FactoryGirl.create(:account) }
+	let(:employee) { FactoryGirl.create(:employee,
+										account: account,
+										first_name: 'Michael',
+										last_name: 'Pink',
+										active: false,
+										job_title: 'Artistic Director',
+										email: 'mpink@example.com',
+										phone: '414-555-1000') }
 	before do
 		@employee = FactoryGirl.build(:employee)
 	end
@@ -33,6 +41,7 @@ describe Employee do
   	it { should respond_to(:phone) }
   	
   	it { should respond_to(:account) }
+  	it { should respond_to(:user) }
   end
   
   context "(Valid)" do  	
@@ -115,20 +124,21 @@ describe Employee do
   	end
   end
   
-  context "correct value is returned for" do
-		let(:employee) { FactoryGirl.create(:employee,
+  context "(Associations)" do
+  	let(:user) { FactoryGirl.create(:user,
 										account: account,
-										first_name: 'Michael',
-										last_name: 'Pink',
-										active: false,
-										job_title: 'Artistic Director',
-										email: 'mpink@example.com',
-										phone: '414-555-1000') }
-		
-		it "account" do
+										employee: employee) }
+  	
+  	it "account" do
 			employee.reload.account.should == account
 		end
 		
+		it "user" do
+			employee.reload.user.should == user
+		end
+  end
+  
+  context "correct value is returned for" do		
 		it "first_name" do
 	  	employee.reload.first_name.should == "Michael"
 	  end

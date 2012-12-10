@@ -18,6 +18,7 @@ class Employee < ActiveRecord::Base
   attr_accessible :account_id, :active, :email, :first_name, :jb_title, :last_name, :phone
   
   belongs_to :account
+  has_one :user
   
   validates :first_name,	presence: true, length: { maximum: 30 }
   validates :last_name,	presence: true, length: { maximum: 30 }
