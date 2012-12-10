@@ -92,11 +92,11 @@ describe Account do
   end
   
   context "(Associations)" do
-  	describe "employee" do
+  	describe "employees" do
 			let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown") }
 			let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
 	
-			it "has the employees in order" do
+			it "has multiple employees" do
 				account.employees.count.should == 2
 			end
 			
@@ -110,19 +110,14 @@ describe Account do
 		end
 	  
 	  describe "users" do
-			let!(:second_user) { FactoryGirl.create(:user, account: account) }
-			let!(:first_user) { FactoryGirl.create(:user, account: account) }
+	  	let!(:second_employee) { FactoryGirl.create(:employee, account: account) }
+	  	let!(:second_user) { FactoryGirl.create(:user, employee: second_employee) }
+	  	
+			let!(:first_employee) { FactoryGirl.create(:employee, account: account) }
+			let!(:first_user) { FactoryGirl.create(:user, employee: first_employee) }
 	
-			it "has the users in order" do
+			it "has multiple users" do
 				account.users.count.should == 2
-			end
-			
-			it "deletes associated users" do
-				users = account.users
-				account.destroy
-				users.each do |user|
-					User.find_by_id(user.id).should be_nil
-				end
 			end
 		end
   end

@@ -14,9 +14,7 @@ class Account < ActiveRecord::Base
   attr_accessible :name, :main_phone, :time_zone, :users_attributes
   
   has_many :employees, dependent: :destroy
-  
-  has_many :users, dependent: :destroy
-  accepts_nested_attributes_for :users
+  has_many :users, through: :employees
   
   validates :name,	presence: true, length: { maximum: 100 }
   VALID_PHONE_REGEX = /\A[0-9]{3}[-. ]?[0-9]{3}[-. ]?[0-9]{4}\z/i

@@ -125,16 +125,26 @@ describe Employee do
   end
   
   context "(Associations)" do
-  	let(:user) { FactoryGirl.create(:user,
-										account: account,
+  	let!(:user) { FactoryGirl.create(:user,
 										employee: employee) }
+		let!(:employee_with_no_user) { FactoryGirl.create(:employee) }
   	
-  	it "account" do
+  	it "has one account" do
 			employee.reload.account.should == account
 		end
 		
-		it "user" do
+		it "has no user" do
+			employee_with_no_user.reload.user.should be_nil
+		end
+		
+		it "has one user" do
 			employee.reload.user.should == user
+		end
+		
+		it "deletes associated user" do
+			u = employee.user
+			employee.destroy
+			User.find_by_id(u.id).should be_nil
 		end
   end
   

@@ -3,7 +3,6 @@
 # Table name: users
 #
 #  id              :integer          not null, primary key
-#  account_id      :integer          not null
 #  employee_id     :integer          not null
 #  username        :string(20)       not null
 #  password_digest :string(255)      not null
@@ -15,14 +14,12 @@
 require 'spec_helper'
 
 describe User do
-	let(:account) { FactoryGirl.create(:account) }
-	let(:employee) { FactoryGirl.create(:employee, account: account) }
+	let(:employee) { FactoryGirl.create(:employee) }
 	let(:user) { FactoryGirl.create(:user,
-				account: account,
 				employee: employee,
 				username: 'TestUser') }
   before do
-		@user = FactoryGirl.build(:user, account: account)
+		@user = FactoryGirl.build(:user, employee: employee)
 	end
 	
 	subject { @user }
@@ -34,17 +31,10 @@ describe User do
   	it { should respond_to(:password_confirmation) }
   	it { should respond_to(:role) }
   	
-  	it { should respond_to(:account) }
   	it { should respond_to(:employee) }
   	
   	it { should respond_to(:authenticate) }
   	it { should respond_to(:set_admin_role) }
-  	
-  	it "should not allow access to account_id" do
-      expect do
-        User.new(account_id: account.id)
-      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end
     
     it "should not allow access to employee_id" do
       expect do
@@ -135,11 +125,7 @@ describe User do
   end
   
   context "(Associations)" do
-  	it "account" do
-	  	user.reload.account.should == account
-	  end
-	  
-	  it "employee" do
+  	it "employee" do
 	  	user.reload.employee.should == employee
 	  end
   end
@@ -152,13 +138,6 @@ describe User do
 	  it "role" do
 	  	user.reload.role.should == 'Employee'
 	  end
-	end
-	
-	describe "account_id cannot be changed" do
-		let(:new_account) { FactoryGirl.create(:account) }
-		before { user.update_attribute(:account_id, new_account.id) }
-		
-		it { user.reload.account_id.should == account.id }
 	end
 	
 	describe "employee_id cannot be changed" do

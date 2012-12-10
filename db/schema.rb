@@ -83,7 +83,6 @@ ActiveRecord::Schema.define(:version => 20121207144539) do
   add_index "scenes", ["piece_id"], :name => "index_scenes_on_piece_id"
 
   create_table "users", :force => true do |t|
-    t.integer  "account_id",                    :null => false
     t.integer  "employee_id",                   :null => false
     t.string   "username",        :limit => 20, :null => false
     t.string   "password_digest",               :null => false
@@ -92,7 +91,6 @@ ActiveRecord::Schema.define(:version => 20121207144539) do
     t.datetime "updated_at",                    :null => false
   end
 
-  add_index "users", ["account_id"], :name => "index_users_on_account_id"
   add_index "users", ["employee_id"], :name => "index_users_on_employee_id"
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
 

@@ -3,7 +3,6 @@
 # Table name: users
 #
 #  id              :integer          not null, primary key
-#  account_id      :integer          not null
 #  employee_id     :integer          not null
 #  username        :string(20)       not null
 #  password_digest :string(255)      not null
@@ -14,9 +13,8 @@
 
 FactoryGirl.define do
 	factory :user do
-		account
 		employee
-		sequence(:username)	{ |n| "#{Faker::Internet.user_name}#{n}" }
+		sequence(:username)	{ |n| "username#{n}" }
 	 	password 			"Password"
 		password_confirmation 	"Password"
 		
