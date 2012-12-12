@@ -4,9 +4,9 @@ Scheduler::Application.routes.draw do
 	match 'logout' =>'sessions#destroy'
 	match 'signup' => 'accounts#new'
 	
-	resources :accounts, :only => [:create]
-  resources :users, :only => [:new, :create]
-  resources :sessions, :only => [:new, :create, :destroy]
+	resources :accounts
+  resources :users
+  resources :sessions
   resources :locations, :except => :show
 
 	resources :pieces do

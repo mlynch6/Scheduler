@@ -1,0 +1,26 @@
+<% provide(:title, 'Sign In') %>
+<h1>Sign In</h1>
+
+<div class="hero-unit span3 offset4">
+<%= form_tag sessions_path do %>
+	<fieldset>
+		<div class="control-group">
+			<%= label_tag :username, nil, :class => 'control-label' %>
+			<div class="controls">
+				<%= text_field_tag :username, params[:username] %>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<%= label_tag :password, nil, :class => 'control-label' %>
+			<div class="controls">
+				<%= password_field_tag :password %>
+			</div>
+		</div>
+	</fieldset>
+	
+	<div class="form-actions">
+		<%= submit_tag "Sign In", :class => 'btn btn-large btn-success' %>
+	</div>
+<% end %>
+</div>

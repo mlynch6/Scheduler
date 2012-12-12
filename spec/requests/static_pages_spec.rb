@@ -13,6 +13,28 @@ describe "Static Pages:" do
 	    it { should have_selector('h1', text: 'Scheduler') }
 	  end
 	  
+	  describe "has Guest menu" do
+	    it "with a 'Home' link" do
+		   	should have_link('Home', href: root_path)
+		  end
+		    
+		  it "with a 'Features' link" do
+		  	should have_link('Features', href: features_path)
+		  end
+		    
+		  it "with a 'Pricing & Signup' link" do
+		  	should have_link('Pricing & Signup', href: pricing_path)
+		  end
+		    
+		  it "with a 'Contact Us' link" do
+		    should have_link('Contact Us', href: contact_path)
+		  end
+		    
+		  it "with a 'Sign In' link" do
+		    should have_link('Sign In', href: login_path)
+		   end
+    end
+	  
 	  describe "content of page" do
 	  	pending
 	  end
@@ -76,5 +98,13 @@ describe "Static Pages:" do
 	  describe "content of page" do
 	  	pending
 	  end
+  end
+  
+  describe "terms of service" do
+  	pending
+  end
+  
+  describe "privacy policy" do
+  	pending
   end
 end
