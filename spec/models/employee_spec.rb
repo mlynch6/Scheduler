@@ -42,6 +42,12 @@ describe Employee do
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:user) }
+  	
+  	it "should not allow access to account_id" do
+      expect do
+        Employee.new(account_id: account.id)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
   end
   
   context "(Valid)" do  	
@@ -64,42 +70,48 @@ describe Employee do
   			@employee.should be_valid
   		end
   	end
+  	
+  	it "when registering a new account and email is present" do
+			@employee.new_registration = true
+			@employee.email = Faker::Internet.free_email
+  		should be_valid
+  	end
   end
   
   context "(Invalid)" do
-  	describe "when first_name is blank" do
-  		before {@employee.first_name = " " }
-  		it { should_not be_valid }
+  	it "when first_name is blank" do
+  		@employee.first_name = " "
+  		should_not be_valid
   	end
   	
-  	describe "when first_name is too long" do
-  		before { @employee.first_name = "a"*31 }
-  		it { should_not be_valid }
+  	it "when first_name is too long" do
+  		@employee.first_name = "a"*31
+  		should_not be_valid
   	end
   	
-  	describe "when last_name is blank" do
-  		before {@employee.last_name = " " }
-  		it { should_not be_valid }
+  	it "when last_name is blank" do
+  		@employee.last_name = " "
+  		should_not be_valid
   	end
   	
-  	describe "when last_name is too long" do
-  		before { @employee.last_name = "a"*31 }
-  		it { should_not be_valid }
+  	it "when last_name is too long" do
+  		@employee.last_name = "a"*31
+  		should_not be_valid
   	end
   	
-  	describe "when active is blank" do
-  		before { @employee.active = "" }
-  		it { should_not be_valid }
+  	it "when active is blank" do
+  		@employee.active = ""
+  		should_not be_valid
   	end
   	
-  	describe "when job_title is too long" do
-  		before { @employee.job_title = "a"*51 }
-  		it { should_not be_valid }
+  	it "when job_title is too long" do
+  		@employee.job_title = "a"*51
+  		should_not be_valid
   	end
   	
-  	describe "when email is too long" do
-  		before { @employee.email = "a"*51 }
-  		it { should_not be_valid }
+  	it "when email is too long" do
+  		@employee.email = "a"*51
+  		should_not be_valid
   	end
   	
   	it "when email in invalid format" do
@@ -110,9 +122,15 @@ describe Employee do
   		end
   	end
   	
-  	describe "when phone is too long" do
-  		before { @employee.phone = "a"*14 }
-  		it { should_not be_valid }
+  	it "when registering a new account and email is blank" do
+			@employee.new_registration = true
+			@employee.email = " "
+  		should_not be_valid
+  	end
+  	
+  	it "when phone is too long" do
+  		@employee.phone = "a"*14
+  		should_not be_valid
   	end
   	
   	it "when phone in invalid format" do
@@ -172,6 +190,13 @@ describe Employee do
 	  it "phone" do
 	  	employee.reload.phone.should == '414-555-1000'
 	  end
+	end
+	
+	describe "account_id cannot be changed" do
+		let(:new_account) { FactoryGirl.create(:account) }
+		before { employee.update_attribute(:account_id, new_account.id) }
+		
+		it { employee.reload.account_id.should == account.id }
 	end
 end
 

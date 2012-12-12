@@ -1,0 +1,35 @@
+<% provide(:title, 'Create Account') %>
+<h1>Create an Account</h1>
+<div class="row">
+
+<%= form_for @account, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= render 'shared/error_messages', :object => f.object %>
+	
+	<div class="row">
+		<div class="span8">
+			<%= render 'form', :f => f %>
+			
+			<div class="form-actions">
+				<p><small>By clicking 'Create Account', you agree to the <a href="#">Terms of Service</a>
+					and <a href="#">Privacy Policy</a>.
+				</small></p>
+				<%= f.submit "Create Account", :class => 'btn btn-success' %>
+			</div>
+		</div>
+		
+		<div class="span4">
+			<div class="well">
+				<h3>Free 30 day trial</h3>
+				<p>There are no credit cards required for signup, 
+					and your account can be canelled at anytime.
+				</p>
+				
+				<h3>Privacy</h3>
+				<p>We will never share or sell your private information to anyone. 
+					Please review our <a href="#">privacy policy</a> for more details.
+				</p>
+			</div>
+		</div>
+	</div>
+<% end %>
+</div>

@@ -2,11 +2,9 @@ Scheduler::Application.routes.draw do
   root :to => 'static_pages#home'
 	match 'login' => 'sessions#new'
 	match 'logout' =>'sessions#destroy'
-	match 'signup' => 'registrations#new'
+	match 'signup' => 'accounts#new'
 	
-	resources :registrations, :only => [:new, :create]
-	
-	resources :account, :only => [:new, :create]
+	resources :accounts, :only => [:create]
   resources :users, :only => [:new, :create]
   resources :sessions, :only => [:new, :create, :destroy]
   resources :locations, :except => :show

@@ -1,0 +1,42 @@
+<div class="control-group required">
+	<%= f.label :first_name, 'First Name', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :first_name %>
+	</div>
+</div>
+	
+<div class="control-group required">
+	<%= f.label :last_name, 'Last Name', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :last_name %>
+	</div>
+</div>
+
+<div class="control-group">
+	<%= f.label :job_title, 'Job Title', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :job_title %>
+	</div>
+</div>
+
+<div class="control-group required">
+	<%= f.label :email, :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :email %>
+	</div>
+</div>
+
+<div class="control-group">
+	<%= f.label :phone, 'Phone #', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :phone, :class => 'input-small' %>
+		<span class="muted">Format: xxx-xxx-xxxx</span>
+	</div>
+</div>
+
+<fieldset>
+	<legend>3. Select your Username</legend>
+	<%= f.fields_for :user do |builder| %>
+		<%= render 'user_fields', :f =>  builder %>
+	<% end %>
+</fieldset>

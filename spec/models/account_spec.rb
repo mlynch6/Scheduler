@@ -29,7 +29,6 @@ describe Account do
   	it { should respond_to(:time_zone) }
   	
   	it { should respond_to(:employees) }
-  	it { should respond_to(:users) }
   end
 	
   context "(Valid)" do  	
@@ -106,18 +105,6 @@ describe Account do
 				employees.each do |employee|
 					Employee.find_by_id(employee.id).should be_nil
 				end
-			end
-		end
-	  
-	  describe "users" do
-	  	let!(:second_employee) { FactoryGirl.create(:employee, account: account) }
-	  	let!(:second_user) { FactoryGirl.create(:user, employee: second_employee) }
-	  	
-			let!(:first_employee) { FactoryGirl.create(:employee, account: account) }
-			let!(:first_user) { FactoryGirl.create(:user, employee: first_employee) }
-	
-			it "has multiple users" do
-				account.users.count.should == 2
 			end
 		end
   end
