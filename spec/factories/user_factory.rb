@@ -15,15 +15,15 @@ FactoryGirl.define do
 	factory :user do
 		employee
 		sequence(:username)	{ |n| "username#{n}" }
-	 	password 			"Password"
-		password_confirmation 	"Password"
+	 	password 							"Password"
+		password_confirmation	"Password"
 		
 		factory :admin do
 			role	"Administrator"
 		end
 		
 		factory :superadmin do
-			role	"Super Admin"
+			role	"Super Administrator"
 		end
 	end
 end

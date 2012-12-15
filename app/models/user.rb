@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   validates :password_confirmation,	presence: true
   
   before_validation(:on => :create) do
-    self.role = "Employee"
+    self.role ||= "Employee"
   end
   
   before_save { self.username.downcase! }
