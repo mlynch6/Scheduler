@@ -23,13 +23,13 @@ describe Permission, focus: true do
 		it { should allow(:accounts, :new) }
 		it { should allow(:accounts, :create) }
 
-#		it { should_not allow(:locations, :index) }
-#		it { should_not allow(:locations, :new) }
-#		it { should_not allow(:locations, :create) }
-#		it { should_not allow(:locations, :edit) }
-#		it { should_not allow(:locations, :update) }
-#		it { should_not allow(:locations, :destroy) }
-#		
+		it { should_not allow(:locations, :index) }
+		it { should_not allow(:locations, :new) }
+		it { should_not allow(:locations, :create) }
+		it { should_not allow(:locations, :edit) }
+		it { should_not allow(:locations, :update) }
+		it { should_not allow(:locations, :destroy) }
+		
 #		it { should_not allow(:pieces, :index) }
 #		it { should_not allow(:pieces, :new) }
 #		it { should_not allow(:pieces, :create) }
@@ -73,6 +73,13 @@ describe Permission, focus: true do
 		
 		it { should allow(:accounts, :new) }
 		it { should allow(:accounts, :create) }
+		
+		it { should allow(:locations, :index) }
+		it { should_not allow(:locations, :new) }
+		it { should_not allow(:locations, :create) }
+		it { should_not allow(:locations, :edit) }
+		it { should_not allow(:locations, :update) }
+		it { should_not allow(:locations, :destroy) }
 	end
 	
 	context "as Administrator" do
@@ -91,6 +98,13 @@ describe Permission, focus: true do
 		
 		it { should allow(:accounts, :new) }
 		it { should allow(:accounts, :create) }
+		
+		it { should allow(:locations, :index) }
+		it { should allow(:locations, :new) }
+		it { should allow(:locations, :create) }
+		it { should allow(:locations, :edit) }
+		it { should allow(:locations, :update) }
+		it { should allow(:locations, :destroy) }
 	end
 	
 	context "as Super Administrator" do
@@ -109,5 +123,12 @@ describe Permission, focus: true do
 		
 		it { should allow(:accounts, :new) }
 		it { should allow(:accounts, :create) }
+		
+		it { should allow(:locations, :index) }
+		it { should allow(:locations, :new) }
+		it { should allow(:locations, :create) }
+		it { should allow(:locations, :edit) }
+		it { should allow(:locations, :update) }
+		it { should allow(:locations, :destroy) }
 	end
 end

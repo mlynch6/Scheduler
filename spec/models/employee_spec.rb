@@ -200,7 +200,7 @@ describe Employee do
 	end
 end
 
-describe Employee, "scopes" do
+describe Employee, "(Scopes)" do
 	before { Employee.delete_all }
 	let!(:third_employee) { FactoryGirl.create(:employee, last_name: "Brown", first_name: "Brett") }
 	let!(:second_employee) { FactoryGirl.create(:employee, last_name: "Brown", first_name: "Andrew") }

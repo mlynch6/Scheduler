@@ -29,6 +29,7 @@ describe Account do
   	it { should respond_to(:time_zone) }
   	
   	it { should respond_to(:employees) }
+  	it { should respond_to(:locations) }
   end
 	
   context "(Valid)" do  	
@@ -107,6 +108,23 @@ describe Account do
 				end
 			end
 		end
+		
+		describe "locations" do
+			let!(:second_location) { FactoryGirl.create(:location, account: account, name: "Studio B") }
+			let!(:first_location) { FactoryGirl.create(:location, account: account, name: "Studio A") }
+	
+			it "has multiple locations" do
+				account.locations.count.should == 2
+			end
+			
+			it "deletes associated locations" do
+				locations = account.locations
+				account.destroy
+				locations.each do |location|
+					Location.find_by_id(location.id).should be_nil
+				end
+			end
+		end
   end
 	
 	context "correct value is returned for" do
@@ -124,7 +142,7 @@ describe Account do
 	end
 end
 
-describe Account, "scopes" do
+describe Account, "(Scopes)" do
 	before { Account.delete_all }
 	let!(:second_account) { FactoryGirl.create(:account, name: "Beta Account") }
 	let!(:first_account) { FactoryGirl.create(:account, name: "Alpha Account") }

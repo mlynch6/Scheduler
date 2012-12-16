@@ -6,10 +6,10 @@ class Permission
 		
 		if user
 			allow :static_pages, [:dashboard]
-			#allow [:locations, :pieces], [:index]
+			allow [:locations, :pieces], [:index]
 			
 			if user.role == "Administrator"
-				#allow :locations, [:new, :create, :edit, :update, :destroy]
+				allow :locations, [:new, :create, :edit, :update, :destroy]
 				#allow :pieces, [:new, :create, :edit, :update, :destroy, :show]
 			end
 			

@@ -16,6 +16,8 @@ class Account < ActiveRecord::Base
   has_many :employees, dependent: :destroy
   accepts_nested_attributes_for :employees
   
+  has_many :locations, dependent: :destroy
+  
   validates :name,	presence: true, length: { maximum: 100 }
   VALID_PHONE_REGEX = /\A[0-9]{3}[-. ]?[0-9]{3}[-. ]?[0-9]{4}\z/i
   validates :main_phone,	length: { maximum: 13 }, format: { with: VALID_PHONE_REGEX }
