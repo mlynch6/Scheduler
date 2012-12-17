@@ -104,7 +104,7 @@ describe Permission, focus: true do
 		it { should allow(:locations, :create) }
 		it { should allow(:locations, :edit) }
 		it { should allow(:locations, :update) }
-		it { should allow(:locations, :destroy) }
+		it { should_not allow(:locations, :destroy) }
 	end
 	
 	context "as Super Administrator" do
