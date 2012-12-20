@@ -25,6 +25,7 @@ gem 'jquery-rails', '2.0.2'
 
 group :development do
   gem 'annotate', '~> 2.5.0'
+  gem 'populator', '1.0.0'
 end
 
 group :test do
