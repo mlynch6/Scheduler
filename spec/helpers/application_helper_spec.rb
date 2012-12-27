@@ -24,16 +24,6 @@ describe ApplicationHelper, 'icon_with_text' do
 	end
 end
 
-describe ApplicationHelper, 'status_dropdown_values' do
-	it "has 'Active' status" do
-		status_dropdown_values['Active'].should == 1
-	end
-	
-	it "has 'Inactive' status" do
-		status_dropdown_values['Inactive'].should == 0
-	end
-end
-
 describe ApplicationHelper, 'active_bool_to_text' do	
 	it "returns 'Active' when true" do
 		active_bool_to_text(true).should == 'Active'
