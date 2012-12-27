@@ -39,6 +39,38 @@ namespace :db do
 			end
 		end
 		
+		#create Employee account
+		Employee.populate 1 do |employee|
+			employee.account_id = 1
+			employee.first_name = Faker::Name.first_name
+			employee.last_name = Faker::Name.last_name
+			employee.active = true
+			employee.email = "employee@example.com"
+
+			User.populate 1 do |user|
+				user.employee_id = employee.id
+				user.username = "testemp"
+				user.password_digest = "$2a$10$DwzOZBQY5I28pP14ZmAqlue3NM44cMByoVnWDFI9klMqvtGmKbHt2"
+				user.role = "Employee"
+			end
+		end
+		
+		#create Administrator account
+		Employee.populate 1 do |employee|
+			employee.account_id = 1
+			employee.first_name = Faker::Name.first_name
+			employee.last_name = Faker::Name.last_name
+			employee.active = true
+			employee.email = "admin@example.com"
+
+			User.populate 1 do |user|
+				user.employee_id = employee.id
+				user.username = "testadmin"
+				user.password_digest = "$2a$10$DwzOZBQY5I28pP14ZmAqlue3NM44cMByoVnWDFI9klMqvtGmKbHt2"
+				user.role = "Administrator"
+			end
+		end
+		
 		#create Super Admin account
 		Employee.populate 1 do |employee|
 			employee.account_id = 1

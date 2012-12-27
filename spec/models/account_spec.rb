@@ -47,24 +47,24 @@ describe Account do
   end
   
   context "(Invalid)" do
-  	describe "when name is blank" do
-  		before {@account.name = " " }
-  		it { should_not be_valid }
+  	it "when name is blank" do
+  		@account.name = " "
+  		should_not be_valid
   	end
   	
-  	describe "when name is too long" do
-  		before { @account.name = "a"*101 }
-  		it { should_not be_valid }
+  	it "when name is too long" do
+  		@account.name = "a"*101
+  		should_not be_valid
   	end
   	
-  	describe "when main_phone is blank" do
-  		before { @account.main_phone = "" }
-  		it { should_not be_valid }
+  	it "when main_phone is blank" do
+  		@account.main_phone = ""
+  		should_not be_valid
   	end
   	
-  	describe "when main_phone is too long" do
-  		before { @account.main_phone = "a"*14 }
-  		it { should_not be_valid }
+  	it "when main_phone is too long" do
+  		@account.main_phone = "a"*14
+  		should_not be_valid
   	end
   	
   	it "when main_phone in invalid format" do
@@ -75,19 +75,19 @@ describe Account do
   		end
   	end
   	
-  	describe "when time_zone is blank" do
-  		before { @account.time_zone = "" }
-  		it { should_not be_valid }
+  	it "when time_zone is blank" do
+  		@account.time_zone = ""
+  		should_not be_valid
   	end
   	
-  	describe "when time_zone is too long" do
-  		before { @account.time_zone = "a"*101 }
-  		it { should_not be_valid }
+  	it "when time_zone is too long" do
+  		@account.time_zone = "a"*101
+  		should_not be_valid
   	end
   	
-  	describe "when time_zone is invalid" do
-  		before { @account.time_zone = "invalid" }
-  		it { should_not be_valid }
+  	it "when time_zone is invalid" do
+  		@account.time_zone = "invalid"
+  		should_not be_valid
   	end
   end
   
@@ -110,6 +110,7 @@ describe Account do
 		end
 		
 		describe "locations" do
+			before { Account.current_id = account.id }
 			let!(:second_location) { FactoryGirl.create(:location, account: account, name: "Studio B") }
 			let!(:first_location) { FactoryGirl.create(:location, account: account, name: "Studio A") }
 	
@@ -128,16 +129,21 @@ describe Account do
   end
 	
 	context "correct value is returned for" do
-		it ".name" do
+		it "name" do
 	  	account.reload.name.should == "Milwaukee Ballet"
 	  end
 	  
-	  it ".main_phone" do
+	  it "main_phone" do
 	  	account.reload.main_phone.should == '414-543-1000'
 	  end
 	  
-	  it ".time_zone" do
+	  it "time_zone" do
 	  	account.reload.time_zone.should == 'Eastern Time (US & Canada)'
+	  end
+	  
+	  it "current_id" do
+	  	Account.current_id = account.id
+	  	Account.current_id.should == account.id
 	  end
 	end
 end

@@ -23,5 +23,13 @@ class Account < ActiveRecord::Base
   validates :main_phone,	length: { maximum: 13 }, format: { with: VALID_PHONE_REGEX }
   validates :time_zone,	presence: true, length: { maximum: 100 }, inclusion: { in: ActiveSupport::TimeZone.zones_map(&:name) }
   
-  default_scope order: 'accounts.name ASC'
+  default_scope order: 'name ASC'
+  
+  def self.current_id=(id)
+  	Thread.current[:account_id] = id
+  end
+  
+  def self.current_id
+  	Thread.current[:account_id]
+  end
 end
