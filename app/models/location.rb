@@ -11,7 +11,7 @@
 #
 
 class Location < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :active
 	
 	belongs_to :account
 	#has_many :events, dependent: :destroy
@@ -19,15 +19,7 @@ class Location < ActiveRecord::Base
 	validates :name,	presence: true, length: { maximum: 50 }
 	validates :active, :inclusion => { :in => [true, false] }
 	
-	default_scope order: 'locations.name ASC'
+	default_scope lambda { order('name ASC').where(:account_id => Account.current_id) }
 	scope :active, where(:active => true)
 	scope :inactive, where(:active => false)
-	
-	def activate
-  	self.update_attribute(:active, true)
-	end
-	
-	def inactivate
-  	self.update_attribute(:active, false)
-	end
 end

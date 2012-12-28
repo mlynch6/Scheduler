@@ -6,7 +6,7 @@ RSpec::Matchers.define :allow do |*args|
 	end
 end
 
-describe Permission, focus: true do
+describe Permission do
 	context "as guest" do
 		subject { Permission.new(nil) }
 		
@@ -83,8 +83,8 @@ describe Permission, focus: true do
 	end
 	
 	context "as Administrator" do
-		let(:admin) { FactoryGirl.create(:admin) }
-		subject { Permission.new(admin) }
+		let(:user) { FactoryGirl.create(:admin) }
+		subject { Permission.new(user) }
 		
 		it { should allow(:static_pages, :home) }
 		it { should allow(:static_pages, :features) }
@@ -108,8 +108,8 @@ describe Permission, focus: true do
 	end
 	
 	context "as Super Administrator" do
-		let(:superadmin) { FactoryGirl.create(:superadmin) }
-		subject { Permission.new(superadmin) }
+		let(:user) { FactoryGirl.create(:superadmin) }
+		subject { Permission.new(user) }
 		
 		it { should allow(:static_pages, :home) }
 		it { should allow(:static_pages, :features) }

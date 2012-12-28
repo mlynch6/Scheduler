@@ -53,8 +53,8 @@ class LocationsController < ApplicationController
 	def form_setup
 	end
 	
-	def redirect_index
-		flash[:error] = "Record Not Found"
-		redirect_to :action => :index
-	end
+#	def redirect_index
+#		flash[:error] = "Record Not Found"
+#		redirect_to :action => :index
+#	end
 end
