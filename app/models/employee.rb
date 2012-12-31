@@ -31,7 +31,7 @@ class Employee < ActiveRecord::Base
   validates :email,	presence: true, :if => :new_account_registration?
   validates :phone, allow_blank: true, phone: true,	length: { maximum: 13 }
   
-  default_scope order: 'employees.last_name ASC, employees.first_name ASC'
+  default_scope lambda { order('employees.last_name ASC, employees.first_name ASC').where(:account_id => Account.current_id) }
   
   # Used to require email for a new account registration
   def new_account_registration?

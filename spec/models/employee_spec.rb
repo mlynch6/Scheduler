@@ -27,6 +27,7 @@ describe Employee do
 										email: 'mpink@example.com',
 										phone: '414-555-1000') }
 	before do
+		Account.current_id = account.id
 		@employee = FactoryGirl.build(:employee)
 	end
 	
@@ -48,6 +49,13 @@ describe Employee do
         Employee.new(account_id: account.id)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
+    
+    describe "account_id cannot be changed" do
+			let(:new_account) { FactoryGirl.create(:account) }
+			before { employee.update_attribute(:account_id, new_account.id) }
+			
+			it { employee.reload.account_id.should == account.id }
+		end
   end
   
   context "(Valid)" do  	
@@ -192,23 +200,19 @@ describe Employee do
 	  end
 	end
 	
-	describe "account_id cannot be changed" do
-		let(:new_account) { FactoryGirl.create(:account) }
-		before { employee.update_attribute(:account_id, new_account.id) }
+	describe "(Scopes)" do
+		before do
+			account.employees.delete_all
+		end
+		let!(:third_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown", first_name: "Brett") }
+		let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown", first_name: "Andrew") }
+		let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
+		let!(:employee_wrong_acnt) { FactoryGirl.create(:employee) }
 		
-		it { employee.reload.account_id.should == account.id }
-	end
-end
-
-describe Employee, "(Scopes)" do
-	before { Employee.delete_all }
-	let!(:third_employee) { FactoryGirl.create(:employee, last_name: "Brown", first_name: "Brett") }
-	let!(:second_employee) { FactoryGirl.create(:employee, last_name: "Brown", first_name: "Andrew") }
-	let!(:first_employee) { FactoryGirl.create(:employee, last_name: "Anderson") }
-		
-	describe "default_scope" do
-		it "returns the records in alphabetical order by last_name then first_name" do
-			Employee.all.should == [first_employee, second_employee, third_employee]
+		describe "default_scope" do
+			it "returns the records for the account in alphabetical order by last_name then first_name" do
+				Employee.all.should == [first_employee, second_employee, third_employee]
+			end
 		end
 	end
 end
