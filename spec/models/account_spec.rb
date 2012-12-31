@@ -30,6 +30,8 @@ describe Account do
   	
   	it { should respond_to(:employees) }
   	it { should respond_to(:locations) }
+  	it { should respond_to(:pieces) }
+  	it { should respond_to(:events) }
   end
 	
   context "(Valid)" do  	
@@ -123,6 +125,42 @@ describe Account do
 				account.destroy
 				locations.each do |location|
 					Location.find_by_id(location.id).should be_nil
+				end
+			end
+		end
+		
+		describe "pieces" do
+			before { Account.current_id = account.id }
+			let!(:second_piece) { FactoryGirl.create(:piece, account: account, name: "Swan Lake") }
+			let!(:first_piece) { FactoryGirl.create(:piece, account: account, name: "Nutcracker") }
+	
+			it "has multiple pieces" do
+				account.pieces.count.should == 2
+			end
+			
+			it "deletes associated pieces" do
+				pieces = account.pieces
+				account.destroy
+				pieces.each do |piece|
+					Piece.find_by_id(piece.id).should be_nil
+				end
+			end
+		end
+		
+		describe "events" do
+			before { Account.current_id = account.id }
+			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, start_at: 1.hour.ago) }
+			let!(:first_event) { FactoryGirl.create(:rehearsal, account: account, start_at: 1.day.ago) }
+	
+			it "has multiple events" do
+				account.events.count.should == 2
+			end
+			
+			it "deletes associated events" do
+				events = account.events
+				account.destroy
+				events.each do |event|
+					Event.find_by_id(event.id).should be_nil
 				end
 			end
 		end

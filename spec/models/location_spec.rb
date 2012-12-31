@@ -18,6 +18,7 @@ describe Location do
 											account: account,
 											name: 'Studio A') }
 	before do
+		Account.current_id = account.id
 		@location = FactoryGirl.build(:location)
 	end
 	
@@ -28,7 +29,7 @@ describe Location do
 		it { should respond_to(:active) }
   	
   	it { should respond_to(:account) }
-  	#it { should respond_to(:events) }
+  	it { should respond_to(:events) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -75,6 +76,23 @@ describe Location do
   	it "has one account" do
 			location.reload.account.should == account
 		end
+		
+		describe "events" do
+			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, location: location) }
+			let!(:first_event) { FactoryGirl.create(:rehearsal, account: account, location: location) }
+	
+			it "has multiple events" do
+				location.events.count.should == 2
+			end
+			
+			it "deletes associated events" do
+				events = location.events
+				location.destroy
+				events.each do |event|
+					Event.find_by_id(event.id).should be_nil
+				end
+			end
+		end
   end
   
 	context "correct value is returned for" do
@@ -90,7 +108,6 @@ describe Location do
 	describe "(Scopes)" do
 		before do
 			account.locations.delete_all
-			Account.current_id = account.id
 		end
 		let!(:second_location) { FactoryGirl.create(:location, account: account, name: "Studio B") }
 		let!(:first_location) { FactoryGirl.create(:location, account: account, name: "Studio A") }

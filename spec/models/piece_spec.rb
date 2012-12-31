@@ -3,6 +3,7 @@
 # Table name: pieces
 #
 #  id         :integer          not null, primary key
+#  account_id :integer          not null
 #  name       :string(50)       not null
 #  active     :boolean          default(TRUE), not null
 #  created_at :datetime         not null
@@ -12,148 +13,125 @@
 require 'spec_helper'
 
 describe Piece do
+	let(:account) { FactoryGirl.create(:account) }
+	let(:piece) { FactoryGirl.create(:piece,
+											account: account,
+											name: 'Swan Lake') }
 	before do
+		Account.current_id = account.id
 		@piece = FactoryGirl.build(:piece)
 	end
 	
 	subject { @piece }
-	
+
 	context "accessible attributes" do
 		it { should respond_to(:name) }
-  	it { should respond_to(:active) }
+		it { should respond_to(:active) }
   	
-  	it { should respond_to(:scenes) }
-  	it { should respond_to(:roles) }
-  	#it { should respond_to(:performances) }
+  	it { should respond_to(:account) }
   	it { should respond_to(:events) }
+  	
+  	it "should not allow access to account_id" do
+      expect do
+        Piece.new(account_id: account.id)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+    
+    describe "account_id cannot be changed" do
+			let(:new_account) { FactoryGirl.create(:account) }
+			before { piece.update_attribute(:account_id, new_account.id) }
+			
+			it { piece.reload.account_id.should == account.id }
+		end
   end
-	
+
   context "(Valid)" do  	
   	it "with minimum attributes" do
   		should be_valid
   	end
   	
   	it "created as active" do
-  		@piece.save
-  		@piece.active.should be_true
+  		piece.active.should be_true
   	end
   end
   
   context "(Invalid)" do
-  	describe "when name is blank" do
-  		before {@piece.name = " " }
-  		it { should_not be_valid }
+  	it "when name is blank" do
+  		@piece.name = " "
+  		should_not be_valid
   	end
   	
-  	describe "when name is too long" do
-  		before { @piece.name = "a"*51 }
-  		it { should_not be_valid }
+  	it "when name is too long" do
+  		@piece.name = "a"*51
+  		should_not be_valid
   	end
   	
-  	describe "when active is blank" do
-  		before { @piece.active = "" }
-  		it { should_not be_valid }
+  	it "when active is blank" do
+  		@piece.active = ""
+  		should_not be_valid
   	end
   end
+
+	context "(Associations)" do
+  	it "has one account" do
+			piece.reload.account.should == account
+		end
+		
+		describe "events" do
+			before { Account.current_id = account.id }
+			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }
+			let!(:first_event) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }
+	
+			it "has multiple events" do
+				account.events.count.should == 2
+			end
+			
+			it "deletes associated events" do
+				events = piece.events
+				piece.destroy
+				events.each do |event|
+					Event.find_by_id(event.id).should be_nil
+				end
+			end
+		end
+  end
   
-  describe "scene associations" do
-		before { @piece.save }
-		let!(:second_scene) { FactoryGirl.create(:scene, piece: @piece, order_num: 2) }
-		let!(:first_scene) { FactoryGirl.create(:scene, piece: @piece, order_num: 1) }
-
-		it "has the scenes in order" do
-			@piece.scenes.should == [first_scene, second_scene]
-		end
-		
-		it "deletes associated scenes" do
-			scenes = @piece.scenes
-			@piece.destroy
-			scenes.each do |scene|
-				Scene.find_by_id(scene.id).should be_nil
-			end
-		end
-	end
-	
-	describe "role associations" do
-		before { @piece.save }
-		let!(:second_role) { FactoryGirl.create(:role, piece: @piece, name: 'Beat Role') }
-		let!(:first_role) { FactoryGirl.create(:role, piece: @piece, name: 'Alpha Role') }
-
-		it "has the roles in alphabetical order" do
-			@piece.roles.should == [first_role, second_role]
-		end
-		
-		it "deletes associated roles" do
-			roles = @piece.roles
-			@piece.destroy
-			roles.each do |role|
-				Role.find_by_id(role.id).should be_nil
-			end
-		end
-	end
-	
-	describe "performance associations" do
-		pending
-	end
-	
-	describe "event associations" do
-		before { @piece.save }
-		let(:location) { FactoryGirl.create(:location) }
-		let!(:second_event) { FactoryGirl.create(:event, location: location, piece: @piece, start_at: 1.hour.ago) }
-		let!(:first_event) { FactoryGirl.create(:event, location: location, piece: @piece, start_at: 2.hours.ago) }
-
-		it "has the events in chronological order" do
-			@piece.events.should == [first_event, second_event]
-		end
-		
-		it "deletes associated events" do
-			events = @piece.events
-			@piece.destroy
-			events.each do |event|
-				Event.find_by_id(event.id).should be_nil
-			end
-		end
-	end
-
 	context "correct value is returned for" do
-		let(:piece) { FactoryGirl.create(:piece, :name => 'My Piece') }
-		let(:piece_inactive) { FactoryGirl.create(:piece_inactive) }
-	
-		it ".name" do
-	  	piece.reload.name.should == 'My Piece'
+		it "name" do
+	  	piece.reload.name.should == 'Swan Lake'
 	  end
-		
-		it ".active? when active" do
+	  
+	  it "active?" do
 	  	piece.reload.active?.should be_true
 	  end
-  
-	  it ".active? when inactive" do
-	  	piece_inactive.reload.active?.should be_false
-	  end
 	end
-end
 
-describe Piece, "scopes" do
-	before { Piece.delete_all }
-	let!(:second_piece) { FactoryGirl.create(:piece, name: "Beta") }
-	let!(:first_piece) { FactoryGirl.create(:piece, name: "Alpha") }
-	let!(:piece_inactive) { FactoryGirl.create(:piece_inactive, name: "Inactive") }
+	describe "(Scopes)" do
+		before do
+			account.pieces.delete_all
+		end
+		let!(:second_piece) { FactoryGirl.create(:piece, account: account, name: "Nutcracker") }
+		let!(:first_piece) { FactoryGirl.create(:piece, account: account, name: "Giselle") }
+		let!(:piece_inactive) { FactoryGirl.create(:piece_inactive, account: account, name: "Rodeo") }
+		let!(:piece_wrong_acnt) { FactoryGirl.create(:piece) }
+		let!(:piece_wrong_acnt_inactive) { FactoryGirl.create(:piece_inactive) }
 		
-	describe "default_scope" do
-		it "returns the records in alphabetical order" do
-			Piece.all.should == [first_piece, second_piece, piece_inactive]
+		describe "default_scope" do
+			it "returns the records in alphabetical order" do
+				Piece.all.should == [first_piece, second_piece, piece_inactive]
+			end
 		end
-	end
-	
-	describe "active" do
-		it "returns active records" do
-			Piece.active.should == [first_piece, second_piece]
+		
+		describe "active" do
+			it "returns active records" do
+				Piece.active.should == [first_piece, second_piece]
+			end
 		end
-	end
-	
-	describe "inactive" do
-		it "returns inactive records" do
-			Piece.inactive.should == [piece_inactive]
+		
+		describe "inactive" do
+			it "returns inactive records" do
+				Piece.inactive.should == [piece_inactive]
+			end
 		end
 	end
 end

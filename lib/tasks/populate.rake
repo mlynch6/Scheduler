@@ -31,11 +31,27 @@ namespace :db do
 				end
 			end
 			
+			Piece.populate 10..25 do |piece|
+				piece.account_id = account.id
+				piece.name = Populator.words(1..3).titleize
+				piece.active = [true, false]
+				piece.created_at = 2.years.ago..Time.now
+			end
+			
 			Location.populate 1..5 do |location|
 				location.account_id = account.id
 				location.name = Populator.words(1..2).titleize
 				location.active = [true, false]
 				location.created_at = 2.years.ago..Time.now
+				
+				Rehearsal.populate 50..100 do |rehearsal|
+					rehearsal.account_id = account.id
+					rehearsal.location_id = location.id
+					rehearsal.title = Faker::Lorem.sentence
+					rehearsal.start_at= 2.years.ago..Time.now
+					rehearsal.end_at = rehearsal.start_at+1.hour
+					rehearsal.created_at = 2.years.ago..Time.now
+				end
 			end
 		end
 		
