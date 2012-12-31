@@ -12,6 +12,7 @@ class AccountsController < ApplicationController
   		user = @account.employees.first.user
   		user.set_admin_role
   		session[:user_id] = user.id
+  		session[:session_id] = @account.id
   		redirect_to dashboard_path
   	else
   		render "new"

@@ -20,7 +20,7 @@ private
 	helper_method :current_account
 	
 	def scope_current_account
-		Account.current_id = session[:account_id]  if session[:account_id]
+		Account.current_id = session[:account_id] if session[:account_id]
 		yield
 	ensure
 		Account.current_id = nil
