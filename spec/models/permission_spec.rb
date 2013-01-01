@@ -30,13 +30,12 @@ describe Permission do
 		it { should_not allow(:locations, :update) }
 		it { should_not allow(:locations, :destroy) }
 		
-#		it { should_not allow(:pieces, :index) }
-#		it { should_not allow(:pieces, :new) }
-#		it { should_not allow(:pieces, :create) }
-#		it { should_not allow(:pieces, :edit) }
-#		it { should_not allow(:pieces, :update) }
-#		it { should_not allow(:pieces, :destroy) }
-#		it { should_not allow(:pieces, :show) }
+		it { should_not allow(:pieces, :index) }
+		it { should_not allow(:pieces, :new) }
+		it { should_not allow(:pieces, :create) }
+		it { should_not allow(:pieces, :edit) }
+		it { should_not allow(:pieces, :update) }
+		it { should_not allow(:pieces, :destroy) }
 #
 #		it { should_not allow(:users, :new) }
 #		it { should_not allow(:users, :create) }
@@ -80,6 +79,13 @@ describe Permission do
 		it { should_not allow(:locations, :edit) }
 		it { should_not allow(:locations, :update) }
 		it { should_not allow(:locations, :destroy) }
+		
+		it { should allow(:pieces, :index) }
+		it { should_not allow(:pieces, :new) }
+		it { should_not allow(:pieces, :create) }
+		it { should_not allow(:pieces, :edit) }
+		it { should_not allow(:pieces, :update) }
+		it { should_not allow(:pieces, :destroy) }
 	end
 	
 	context "as Administrator" do
@@ -105,6 +111,13 @@ describe Permission do
 		it { should allow(:locations, :edit) }
 		it { should allow(:locations, :update) }
 		it { should_not allow(:locations, :destroy) }
+		
+		it { should allow(:pieces, :index) }
+		it { should allow(:pieces, :new) }
+		it { should allow(:pieces, :create) }
+		it { should allow(:pieces, :edit) }
+		it { should allow(:pieces, :update) }
+		it { should_not allow(:pieces, :destroy) }
 	end
 	
 	context "as Super Administrator" do
@@ -130,5 +143,12 @@ describe Permission do
 		it { should allow(:locations, :edit) }
 		it { should allow(:locations, :update) }
 		it { should allow(:locations, :destroy) }
+		
+		it { should allow(:pieces, :index) }
+		it { should allow(:pieces, :new) }
+		it { should allow(:pieces, :create) }
+		it { should allow(:pieces, :edit) }
+		it { should allow(:pieces, :update) }
+		it { should allow(:pieces, :destroy) }
 	end
 end

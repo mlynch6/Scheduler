@@ -1,6 +1,10 @@
 class PiecesController < ApplicationController
 	def index
-		@pieces = Piece.paginate(page: params[:page], per_page: params[:per_page])
+		if params[:status] == "inactive"
+			@pieces = Piece.inactive.paginate(page: params[:page], per_page: params[:per_page])
+		else
+			@pieces = Piece.active.paginate(page: params[:page], per_page: params[:per_page])
+		end
 	end
 	
 	def show
@@ -10,15 +14,13 @@ class PiecesController < ApplicationController
 	def new
 		form_setup
 		@piece = Piece.new
-		3.times { @piece.scenes.build }
-		3.times { @piece.roles.build }
 	end
 	
 	def create
 		@piece = Piece.new(params[:piece])
 		if @piece.save
 			flash[:success] = "Piece created"
-			redirect_to piece_path(@piece)
+			redirect_to :action => :index
 		else
 			form_setup
 			render 'new'
@@ -34,7 +36,7 @@ class PiecesController < ApplicationController
 		@piece = Piece.find(params[:id])
 		if @piece.update_attributes(params[:piece])
 			flash[:success] = "Piece saved"
-			redirect_to piece_path(@piece)
+			redirect_to :action => :index
 		else
 			form_setup
 			render 'edit'

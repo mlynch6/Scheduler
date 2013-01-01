@@ -73,67 +73,72 @@ describe "Location Pages:" do
 		end
 	end
 
-	it "new record with error" do
-		log_in
-		visit locations_path
-  	click_link 'New'
-
-		should have_selector('title', text: 'New Location')
-		should have_selector('h1', text: 'New Location')
-
-		expect { click_button 'Create' }.not_to change(Location, :count)
-		should have_selector('div.alert-error')
+	context "#new" do
+		it "record with error" do
+			log_in
+			visit locations_path
+	  	click_link 'New'
+	
+			should have_selector('title', text: 'New Location')
+			should have_selector('h1', text: 'New Location')
+	
+			expect { click_button 'Create' }.not_to change(Location, :count)
+			should have_selector('div.alert-error')
+		end
+	
+		it "record with valid info" do
+			log_in
+			visit locations_path
+	  	click_link 'New'
+	  	new_name = Faker::Lorem.word
+			fill_in "Name", with: new_name
+			click_button 'Create'
+	
+			#expect { click_button 'Create' }.to change(Location, :count).by(1)
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'All Locations')
+			should have_content(new_name)
+		end
 	end
 
-	it "new record with valid info" do
-		log_in
-		visit locations_path
-  	click_link 'New'
-  	new_name = Faker::Lorem.word
-		fill_in "Name", with: new_name
-		click_button 'Create'
-
-		#expect { click_button 'Create' }.to change(Location, :count).by(1)
-		should have_selector('div.alert-success')
-		should have_selector('title', text: 'All Locations')
-		should have_content(new_name)
-	end
-
-  it "edit record with error" do
-  	log_in
-  	location = FactoryGirl.create(:location, account: current_account)
-  	visit edit_location_path(location)
-  	fill_in "Name", with: ""
-  	click_button 'Update'
-
-		should have_selector('title', text: 'Edit Location')
-		should have_selector('h1', text: 'Edit Location')
-		should have_selector('div.alert-error')
-	end
-
-	it "edit with bad record in URL" do
-		pending
-		log_in
-		edit_location_path(0)
-
-		should have_content('Record Not Found')
-		should have_selector('div.alert-error', text: 'Record Not Found')
-		should have_selector('title', text: 'All Locations')
-	end
- 
-	it "edit with valid info" do
-		log_in
-		location = FactoryGirl.create(:location, account: current_account)
-		new_name = Faker::Lorem.word
-		visit locations_path
-		click_link "edit_#{location.id}"
-		fill_in "Name", with: new_name
-		select "Inactive", from: "Status"
-		click_button 'Update'
-
-		should have_selector('div.alert-success')
-		location.reload.name.should == new_name
-		should have_selector('title', text: 'All Locations')
+	context "#edit" do
+	  it "record with error" do
+	  	log_in
+	  	location = FactoryGirl.create(:location, account: current_account)
+	  	visit edit_location_path(location)
+	  	fill_in "Name", with: ""
+	  	click_button 'Update'
+	
+			should have_selector('title', text: 'Edit Location')
+			should have_selector('h1', text: 'Edit Location')
+			should have_selector('div.alert-error')
+		end
+	
+		it "with bad record in URL" do
+			pending
+			log_in
+			edit_location_path(0)
+	
+			should have_content('Record Not Found')
+			should have_selector('div.alert-error', text: 'Record Not Found')
+			should have_selector('title', text: 'All Locations')
+		end
+	 
+		it "with valid info" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			new_name = Faker::Lorem.word
+			visit locations_path
+			click_link "edit_#{location.id}"
+			fill_in "Name", with: new_name
+			select "Inactive", from: "Status"
+			click_button 'Update'
+	
+			should have_selector('div.alert-success')
+			location.reload.name.should == new_name
+			location.reload.active.should be_false
+			should have_selector('title', text: 'All Locations')
+		end
 	end
 	
 	it "destroy record", :js => true, :driver => :webkit do
