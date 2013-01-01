@@ -19,6 +19,7 @@ describe User do
 				employee: employee,
 				username: 'TestUser') }
   before do
+  	Account.current_id = employee.account_id
 		@user = FactoryGirl.build(:user, employee: employee)
 	end
 	
