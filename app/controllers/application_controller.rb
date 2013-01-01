@@ -14,6 +14,11 @@ private
 	end
 	helper_method :current_user
 	
+#	def current_account
+#		@current_account ||= Account.find(session[:account_id]) if session[:account_id]
+#	end
+#	helper_method :current_account
+	
 	def scope_current_account
 		Account.current_id = Employee.unscoped.find(current_user.employee_id).account_id if current_user
 		yield
