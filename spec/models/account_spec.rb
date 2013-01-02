@@ -95,6 +95,7 @@ describe Account do
   
   context "(Associations)" do
   	describe "employees" do
+  		before { Account.current_id = account.id }
 			let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown") }
 			let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
 	
