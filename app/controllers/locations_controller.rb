@@ -2,11 +2,11 @@ class LocationsController < ApplicationController
 	#rescue_from ActiveRecord::RecordNotFound, :with => :redirect_index
 
   def index
-  	if params[:status] == "inactive"
-			@locations = Location.inactive.paginate(page: params[:page], per_page: params[:per_page])
-		else
-			@locations = Location.active.paginate(page: params[:page], per_page: params[:per_page])
-		end
+  	@locations = Location.active.paginate(page: params[:page], per_page: params[:per_page])
+	end
+	
+	def inactive
+  	@locations = Location.inactive.paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
 	def new
@@ -44,6 +44,18 @@ class LocationsController < ApplicationController
 	def destroy
 		Location.find(params[:id]).destroy
 		flash[:success] = "Location deleted"
+		redirect_to :action => :index
+	end
+	
+	def activate
+		Location.find(params[:id]).activate
+		flash[:success] = "Location activated"
+		redirect_to :action => :inactive
+	end
+	
+	def inactivate
+		Location.find(params[:id]).inactivate
+		flash[:success] = "Location inactivated"
 		redirect_to :action => :index
 	end
 

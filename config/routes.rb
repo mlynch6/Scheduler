@@ -7,20 +7,14 @@ Scheduler::Application.routes.draw do
 	resources :accounts
   resources :users
   resources :sessions
-  resources :locations, :except => :show
   
-  resources :employees do
+  resources :locations, :pieces, :employees do
   	get 'inactive', on: :collection
   	member do
   		get 'activate'
   		get 'inactivate'
   	end
   end
-
-	resources :pieces do
-#		resources :scenes
-#		resources :roles, :except => :show
-	end
 	
 	match 'dashboard' => 'static_pages#dashboard'
 	match 'features' => 'static_pages#features'   

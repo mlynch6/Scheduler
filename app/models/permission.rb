@@ -9,9 +9,7 @@ class Permission
 			allow [:locations, :pieces, :employees], [:index]
 			
 			if user.role == "Administrator"
-				allow :locations, [:new, :create, :edit, :update]
-				allow :pieces, [:new, :create, :edit, :update]
-				allow :employees, [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
+				allow [:locations, :pieces, :employees], [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
 			end
 			
 			allow_all if user.role == "Super Administrator"

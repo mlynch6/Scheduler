@@ -36,6 +36,7 @@ describe "Employee Pages:" do
 			Employee.active.paginate(page: 1, per_page: 3).each do |employee|
 				should have_selector('td', text: employee.name)
 				should have_link('Edit', href: edit_employee_path(employee))
+				should have_link('Inactivate', href: inactivate_employee_path(employee))
 				should have_link('Delete', href: employee_path(employee))
 	    end
 		end
@@ -115,6 +116,7 @@ describe "Employee Pages:" do
 			Employee.inactive.paginate(page: 1, per_page: 3).each do |employee|
 				should have_selector('td', text: employee.name)
 				should have_link('Activate', href: activate_employee_path(employee))
+				should have_link('Delete', href: employee_path(employee))
 	    end
 		end
 		
@@ -184,27 +186,29 @@ describe "Employee Pages:" do
 			end
 		end
 	
-		it "record with valid info" do
-			log_in
-			visit employees_path
-	  	click_link 'New'
-	  	new_last_name = Faker::Name.last_name
-	  	new_first_name = Faker::Name.first_name
-	  	job_title = Faker::Name.title
-	  	email = Faker::Internet.free_email("#{new_first_name} #{new_last_name}")
-	  	fill_in "First Name", with: new_first_name
-			fill_in "Last Name", with: new_last_name
-			fill_in "Job Title", with: job_title
-			fill_in "Phone", with: '111-222-3333'
-			fill_in "Email", with: email
-			click_button 'Create'
-	
-			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Active Employees')
-			should have_content("#{new_last_name}, #{new_first_name}")
-			should have_content(job_title)
-			should have_content('111-222-3333')
-			should have_content(email)
+		context "with valid info" do
+			it "creates new Employee" do
+				log_in
+				visit employees_path
+		  	click_link 'New'
+		  	new_last_name = Faker::Name.last_name
+		  	new_first_name = Faker::Name.first_name
+		  	job_title = Faker::Name.title
+		  	email = Faker::Internet.free_email("#{new_first_name} #{new_last_name}")
+		  	fill_in "First Name", with: new_first_name
+				fill_in "Last Name", with: new_last_name
+				fill_in "Job Title", with: job_title
+				fill_in "Phone", with: '111-222-3333'
+				fill_in "Email", with: email
+				click_button 'Create'
+		
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Active Employees')
+				should have_content("#{new_last_name}, #{new_first_name}")
+				should have_content(job_title)
+				should have_content('111-222-3333')
+				should have_content(email)
+			end
 		end
 	end
 

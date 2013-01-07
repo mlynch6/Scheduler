@@ -104,6 +104,18 @@ describe Location do
 	  	location.reload.active?.should be_true
 	  end
 	end
+	
+	context "(Methods)" do		
+		it "activate" do
+			location.activate
+	  	location.reload.active?.should be_true
+	  end
+		
+		it "inactivate" do
+			location.inactivate
+	  	location.reload.active?.should be_false
+	  end
+	end
 
 	describe "(Scopes)" do
 		before do

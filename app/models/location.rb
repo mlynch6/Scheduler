@@ -22,4 +22,12 @@ class Location < ActiveRecord::Base
 	default_scope lambda { order('name ASC').where(:account_id => Account.current_id) }
 	scope :active, where(:active => true)
 	scope :inactive, where(:active => false)
+	
+	def activate
+		self.update_attribute(:active, true)
+	end
+	
+	def inactivate
+		self.update_attribute(:active, false)
+	end
 end

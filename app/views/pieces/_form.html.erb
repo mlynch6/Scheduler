@@ -5,13 +5,4 @@
 			<%= f.text_field :name %>
 		</div>
 	</div>
-
-	<% if !f.object.new_record? %>
-		<div class="control-group required">
-			<%= f.label :active, "Status", :class => 'control-label' %>
-			<div class="controls">
-				<%= f.select :active, options_for_select(Lovs::ACTIVE) %>
-			</div>
-		</div>
-	<% end %>
 </fieldset>

@@ -1,15 +1,15 @@
 class PiecesController < ApplicationController
 	def index
-		if params[:status] == "inactive"
-			@pieces = Piece.inactive.paginate(page: params[:page], per_page: params[:per_page])
-		else
-			@pieces = Piece.active.paginate(page: params[:page], per_page: params[:per_page])
-		end
+		@pieces = Piece.active.paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
-	def show
-		@piece = Piece.find(params[:id])
+	def inactive
+		@pieces = Piece.inactive.paginate(page: params[:page], per_page: params[:per_page])
 	end
+	
+#	def show
+#		@piece = Piece.find(params[:id])
+#	end
 	
 	def new
 		form_setup
@@ -46,6 +46,18 @@ class PiecesController < ApplicationController
 	def destroy
 		Piece.find(params[:id]).destroy
 		flash[:success] = "Piece deleted"
+		redirect_to :action => :index
+	end
+	
+	def activate
+		Piece.find(params[:id]).activate
+		flash[:success] = "Piece activated"
+		redirect_to :action => :inactive
+	end
+	
+	def inactivate
+		Piece.find(params[:id]).inactivate
+		flash[:success] = "Piece inactivated"
 		redirect_to :action => :index
 	end
 

@@ -105,6 +105,18 @@ describe Piece do
 	  	piece.reload.active?.should be_true
 	  end
 	end
+	
+	context "(Methods)" do		
+		it "activate" do
+			piece.activate
+	  	piece.reload.active?.should be_true
+	  end
+		
+		it "inactivate" do
+			piece.inactivate
+	  	piece.reload.active?.should be_false
+	  end
+	end
 
 	describe "(Scopes)" do
 		before do

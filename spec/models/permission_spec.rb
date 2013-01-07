@@ -29,6 +29,9 @@ describe Permission do
 		it { should_not allow(:locations, :edit) }
 		it { should_not allow(:locations, :update) }
 		it { should_not allow(:locations, :destroy) }
+		it { should_not allow(:locations, :inactive) }
+		it { should_not allow(:locations, :activate) }
+		it { should_not allow(:locations, :inactivate) }
 		
 		it { should_not allow(:pieces, :index) }
 		it { should_not allow(:pieces, :new) }
@@ -36,14 +39,17 @@ describe Permission do
 		it { should_not allow(:pieces, :edit) }
 		it { should_not allow(:pieces, :update) }
 		it { should_not allow(:pieces, :destroy) }
+		it { should_not allow(:pieces, :inactive) }
+		it { should_not allow(:pieces, :activate) }
+		it { should_not allow(:pieces, :inactivate) }
 		
 		it { should_not allow(:employees, :index) }
-		it { should_not allow(:employees, :inactive) }
 		it { should_not allow(:employees, :new) }
 		it { should_not allow(:employees, :create) }
 		it { should_not allow(:employees, :edit) }
 		it { should_not allow(:employees, :update) }
 		it { should_not allow(:employees, :destroy) }
+		it { should_not allow(:employees, :inactive) }
 		it { should_not allow(:employees, :activate) }
 		it { should_not allow(:employees, :inactivate) }
 #
@@ -89,6 +95,9 @@ describe Permission do
 		it { should_not allow(:locations, :edit) }
 		it { should_not allow(:locations, :update) }
 		it { should_not allow(:locations, :destroy) }
+		it { should_not allow(:locations, :inactive) }
+		it { should_not allow(:locations, :activate) }
+		it { should_not allow(:locations, :inactivate) }
 		
 		it { should allow(:pieces, :index) }
 		it { should_not allow(:pieces, :new) }
@@ -96,14 +105,17 @@ describe Permission do
 		it { should_not allow(:pieces, :edit) }
 		it { should_not allow(:pieces, :update) }
 		it { should_not allow(:pieces, :destroy) }
+		it { should_not allow(:pieces, :inactive) }
+		it { should_not allow(:pieces, :activate) }
+		it { should_not allow(:pieces, :inactivate) }
 		
 		it { should allow(:employees, :index) }
-		it { should_not allow(:employees, :inactive) }
 		it { should_not allow(:employees, :new) }
 		it { should_not allow(:employees, :create) }
 		it { should_not allow(:employees, :edit) }
 		it { should_not allow(:employees, :update) }
 		it { should_not allow(:employees, :destroy) }
+		it { should_not allow(:employees, :inactive) }
 		it { should_not allow(:employees, :activate) }
 		it { should_not allow(:employees, :inactivate) }
 	end
@@ -131,6 +143,9 @@ describe Permission do
 		it { should allow(:locations, :edit) }
 		it { should allow(:locations, :update) }
 		it { should_not allow(:locations, :destroy) }
+		it { should allow(:locations, :inactive) }
+		it { should allow(:locations, :activate) }
+		it { should allow(:locations, :inactivate) }
 		
 		it { should allow(:pieces, :index) }
 		it { should allow(:pieces, :new) }
@@ -138,14 +153,17 @@ describe Permission do
 		it { should allow(:pieces, :edit) }
 		it { should allow(:pieces, :update) }
 		it { should_not allow(:pieces, :destroy) }
+		it { should allow(:pieces, :inactive) }
+		it { should allow(:pieces, :activate) }
+		it { should allow(:pieces, :inactivate) }
 		
 		it { should allow(:employees, :index) }
-		it { should allow(:employees, :inactive) }
 		it { should allow(:employees, :new) }
 		it { should allow(:employees, :create) }
 		it { should allow(:employees, :edit) }
 		it { should allow(:employees, :update) }
 		it { should_not allow(:employees, :destroy) }
+		it { should allow(:employees, :inactive) }
 		it { should allow(:employees, :activate) }
 		it { should allow(:employees, :inactivate) }
 	end
@@ -173,6 +191,9 @@ describe Permission do
 		it { should allow(:locations, :edit) }
 		it { should allow(:locations, :update) }
 		it { should allow(:locations, :destroy) }
+		it { should allow(:locations, :inactive) }
+		it { should allow(:locations, :activate) }
+		it { should allow(:locations, :inactivate) }
 		
 		it { should allow(:pieces, :index) }
 		it { should allow(:pieces, :new) }
@@ -180,6 +201,9 @@ describe Permission do
 		it { should allow(:pieces, :edit) }
 		it { should allow(:pieces, :update) }
 		it { should allow(:pieces, :destroy) }
+		it { should allow(:pieces, :inactive) }
+		it { should allow(:pieces, :activate) }
+		it { should allow(:pieces, :inactivate) }
 		
 		it { should allow(:employees, :index) }
 		it { should allow(:employees, :inactive) }

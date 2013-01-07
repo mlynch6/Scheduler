@@ -1,7 +1,7 @@
-<% provide(:title, 'Active Pieces') %>
-<h1>Active Pieces</h1>
+<% provide(:title, 'Inactive Pieces') %>
+<h1>Inactive Pieces</h1>
 
-<%= render 'filter', :status => "active" %>
+<%= render 'filter', :status => "inactive" %>
 
 <table class="table table-striped">
 	<thead>
@@ -15,11 +15,8 @@
 			<tr>
 				<td><%= piece.name %></td>
 				<td>
-					<% if allow? "pieces", "edit" %>
-						<%= link_to 'Edit', edit_piece_path(piece), :class => 'btn btn-mini', :id => "edit_#{piece.id}" %>
-					<% end %>
-					<% if allow? "pieces", "inactivate" %>
-						<%= link_to 'Inactivate', inactivate_piece_path(piece), :class => 'btn btn-mini btn-warning', :id => "inactivate_#{piece.id}" %>
+					<% if allow? "pieces", "activate" %>
+						<%= link_to 'Activate', activate_piece_path(piece), :class => 'btn btn-mini btn-success', :id => "activate_#{piece.id}" %>
 					<% end %>
 					<% if allow? "pieces", "destroy" %>
 						<%= link_to 'Delete', piece, method: :delete, confirm: "Delete?", :class => 'btn btn-mini btn-danger', :id => "delete_#{piece.id}" %>
@@ -35,12 +32,7 @@
 <% end %>
 
 <div class="row">
-	<div class="span2">
-		<% if allow? "pieces", "new" %>
-			<%= link_to 'New', new_piece_path, :class => 'btn btn-mini btn-primary' %>
-		<% end %>
-	</div>
-	<div class="span10">
+	<div class="span10 offset2">
 		<%= will_paginate(class: 'pagination',
 					previous_label: "&laquo;",
 		    	next_label: "&raquo;"
