@@ -20,7 +20,7 @@ class Employee < ActiveRecord::Base
   attr_accessor :new_registration
   
   belongs_to :account
-  has_one :user, dependent: :destroy
+	has_one :user, dependent: :destroy
   accepts_nested_attributes_for :user
   
   validates :first_name,	presence: true, length: { maximum: 30 }
@@ -32,9 +32,23 @@ class Employee < ActiveRecord::Base
   validates :phone, allow_blank: true, phone: true,	length: { maximum: 13 }
   
   default_scope lambda { order('last_name ASC, first_name ASC').where(:account_id => Account.current_id) }
+  scope :active, where(:active => true)
+	scope :inactive, where(:active => false)
   
   # Used to require email for a new account registration
   def new_account_registration?
   	new_registration
+	end
+	
+	def name
+		"#{last_name}, #{first_name}"
+	end
+	
+	def activate
+		self.update_attribute(:active, true)
+	end
+	
+	def inactivate
+		self.update_attribute(:active, false)
 	end
 end

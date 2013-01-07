@@ -1,7 +1,14 @@
 <div class="nav-collapse">
 	<ul class="nav">
-		<li><%= link_to "Pieces", pieces_path %></li>
-		<li><%= link_to "Locations", locations_path %></li>
+		<% if allow? "pieces", "index" %>
+			<li><%= link_to "Pieces", pieces_path %></li>
+		<% end %>
+		<% if allow? "locations", "index" %>
+			<li><%= link_to "Locations", locations_path %></li>
+		<% end %>
+		<% if allow? "employees", "index" %>
+			<li><%= link_to "Employees", employees_path %></li>
+		<% end %>
 	</ul>
 </div>
 <ul class="nav pull-right">

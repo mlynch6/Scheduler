@@ -198,6 +198,22 @@ describe Employee do
 	  it "phone" do
 	  	employee.reload.phone.should == '414-555-1000'
 	  end
+	  
+	  it "name" do
+	  	employee.reload.name.should == 'Pink, Michael'
+	  end
+	end
+	
+	context "(Methods)" do		
+		it "activate" do
+			employee.activate
+	  	employee.reload.active?.should be_true
+	  end
+		
+		it "inactivate" do
+			employee.inactivate
+	  	employee.reload.active?.should be_false
+	  end
 	end
 	
 	describe "(Scopes)" do
@@ -207,11 +223,25 @@ describe Employee do
 		let!(:third_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown", first_name: "Brett") }
 		let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown", first_name: "Andrew") }
 		let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
+		let!(:employee_inactive) { FactoryGirl.create(:employee_inactive, account: account, last_name: "Cambell") }
 		let!(:employee_wrong_acnt) { FactoryGirl.create(:employee) }
+		let!(:employee_wrong_acnt_inactive) { FactoryGirl.create(:employee_inactive) }
 		
 		describe "default_scope" do
 			it "returns the records for the account in alphabetical order by last_name then first_name" do
-				Employee.all.should == [first_employee, second_employee, third_employee]
+				Employee.all.should == [first_employee, second_employee, third_employee, employee_inactive]
+			end
+		end
+		
+		describe "active" do
+			it "returns active records" do
+				Employee.active.should == [first_employee, second_employee, third_employee]
+			end
+		end
+		
+		describe "inactive" do
+			it "returns inactive records" do
+				Employee.inactive.should == [employee_inactive]
 			end
 		end
 	end

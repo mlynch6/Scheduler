@@ -139,6 +139,13 @@ describe User do
 	  it "role" do
 	  	user.reload.role.should == 'Employee'
 	  end
+	  
+	  it "superadmin?" do
+	  	@user.superadmin?.should be_false
+	  	
+	  	@user.role = "Super Administrator"
+	  	@user.superadmin?.should be_true
+	  end
 	end
 	
 	describe "employee_id cannot be changed" do

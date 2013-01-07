@@ -22,5 +22,9 @@ FactoryGirl.define do
 		#job_title			Faker::Name.title
 		#email					Faker::Internet.free_email
 	 	#phone 				Faker::PhoneNumber.phone_number
+	 	
+	 	factory :employee_inactive do
+			active 			false
+		end
 	end
 end

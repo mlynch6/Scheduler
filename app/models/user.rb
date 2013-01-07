@@ -31,4 +31,8 @@ class User < ActiveRecord::Base
   def set_admin_role
   	self.update_attribute(:role, "Administrator")
 	end
+	
+	def superadmin?
+  	self.role == "Super Administrator"
+	end
 end
