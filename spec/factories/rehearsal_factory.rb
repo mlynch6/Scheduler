@@ -19,8 +19,8 @@ FactoryGirl.define do
 		account
 		sequence(:title)	{ |n| "Rehearsal #{n}" }
 		location
-		start_at 1.hour.ago
-		end_at 1.hour.from_now
+		start_at	{ 5.minutes.ago }
+		end_at		{ 5.minutes.ago + 1.second }
 		piece
 	end
 end

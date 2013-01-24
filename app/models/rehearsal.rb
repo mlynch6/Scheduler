@@ -15,5 +15,7 @@
 #
 
 class Rehearsal < Event
+	attr_accessible :piece_id
+
 	belongs_to :piece
 end
