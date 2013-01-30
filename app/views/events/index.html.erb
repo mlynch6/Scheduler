@@ -1,0 +1,37 @@
+<% provide(:title, 'Events') %>
+<h1>Events</h1>
+
+<div id="events">
+	<div class="row">
+		<h2 class="center span8">
+			<%= link_to "<< ", date: @date.prev_day %>
+			<%= @date.to_s(:long) %>
+			<%= link_to ">> ", date: @date.next_day %>
+		</h2>
+	</div>
+	
+	<div class="row">
+		<div class="span8">			
+			<div class="cal-list">
+			
+				<div class="row-fluid dayofweek-header">
+					<%= @date.strftime('%A') %>
+				</div>
+				
+				<% @events.each do |event| %>
+					<%= render 'event', :event => event %>
+				<% end %>
+			</div>
+
+		</div>
+		
+		<div class="span4">
+			<% if allow? "rehearsals", "new" %>
+				<%= link_to 'New Rehearsal', new_rehearsal_path, :class => 'btn btn-mini' %>
+			<% end %>
+			
+			Navigation Calendar?
+		</div>
+	</div
+
+</div>

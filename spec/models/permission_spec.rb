@@ -52,6 +52,8 @@ describe Permission do
 		it { should_not allow(:employees, :inactive) }
 		it { should_not allow(:employees, :activate) }
 		it { should_not allow(:employees, :inactivate) }
+		
+		it { should_not allow(:events, :index) }
 #
 #		it { should_not allow(:users, :new) }
 #		it { should_not allow(:users, :create) }
@@ -118,6 +120,8 @@ describe Permission do
 		it { should_not allow(:employees, :inactive) }
 		it { should_not allow(:employees, :activate) }
 		it { should_not allow(:employees, :inactivate) }
+		
+		it { should allow(:events, :index) }
 	end
 	
 	context "as Administrator" do
@@ -166,6 +170,8 @@ describe Permission do
 		it { should allow(:employees, :inactive) }
 		it { should allow(:employees, :activate) }
 		it { should allow(:employees, :inactivate) }
+		
+		it { should allow(:events, :index) }
 	end
 	
 	context "as Super Administrator" do
@@ -214,5 +220,7 @@ describe Permission do
 		it { should allow(:employees, :destroy) }
 		it { should allow(:employees, :activate) }
 		it { should allow(:employees, :inactivate) }
+		
+		it { should allow(:events, :index) }
 	end
 end

@@ -1,0 +1,95 @@
+// Place all the styles related to the events controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+$eblue: #A5C6E4;
+$eyellow: #F5E7A1;
+$egreen: #B8DAA0;
+$elightgrey: #F2F2F2;
+$edarkgrey: #9B9B9B;
+
+#events {
+	min-height: 250px;
+
+	.cal-month {
+		border-collapse: collapse;
+		width: 100%;
+		width: 100%;
+		font-size: .9em;
+		margin:0 0 .4em;
+		
+		th, td {
+			border: 1px solid #999;
+			padding: 6px;
+		}
+		
+		th {
+			background: #DDD;
+			color: #666;
+			text-align: center;
+			width: 14.285%;
+		}
+		
+		td {
+			background: #FFF;
+			color: #777;
+			height: 80px;
+			vertical-align: top;
+		}
+		
+		.notmonth, .notmonth a { color: #CCC; }
+		.today { background-color: #D7F2FF; }
+	}
+	
+	.cal-list {
+		div.row-fluid,
+		div.row{
+			border-top: 1px solid #ddd;
+			border-left: 1px solid #ddd;
+			border-right: 1px solid #ddd;
+			padding: 3px;
+		}
+		div.row-fluid:last-child,
+		div.row:last-child {
+			border-bottom: 1px solid #ddd;
+		}
+		.event {	
+			min-height: 35px;
+		}
+		.dayofweek-header {
+			font-size: 1.2em; font-weight: bold;
+			text-align: center; vertical-align: middle;
+			background: $elightgrey;
+			color: $edarkgrey;
+		}
+		
+		.title, .location, .piece {
+			margin-left: 20px;
+		}
+		.title { font-weight: bold; }
+		.location { color: #999; }
+		.piece:before { content: 'Rehearsing: '}
+		.time {
+			text-align: right;
+			color: #999;
+			height: 35px;
+		}
+		
+		.Rehearsal, .Class, .Performance {
+			font-size: 1.8em; font-weight: bold;
+			float: left;
+		}
+		
+		.Rehearsal:before {
+			content: "R";
+			color: $egreen;
+		}
+		.Class:before {
+			content: "C";
+			color: $eblue;
+		}
+		.Performance:before {
+			content: "P";
+			color: $eyellow;
+		}
+	}
+}

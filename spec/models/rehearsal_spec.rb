@@ -274,6 +274,20 @@ describe Rehearsal do
 			end
 		end
 		
+		describe "for_daily_calendar" do
+			# For December 3, 2012
+			let!(:prev_day_bad) { FactoryGirl.create(:rehearsal, account: account, start_at: "2012-12-02 09:00:00") }
+			let!(:current_day_good) { FactoryGirl.create(:rehearsal, account: account, start_at: "2012-12-03 00:00:00") }
+			let!(:current_day_wrong_acnt) { FactoryGirl.create(:rehearsal, start_at: "2012-12-03 09:00:00") }
+			let!(:current_day_good2) { FactoryGirl.create(:rehearsal, account: account, start_at: "2012-12-03 15:00:00") }
+			let!(:current_day_good3) { FactoryGirl.create(:rehearsal, account: account, start_at: "2012-12-03 11:00:00") }
+			let!(:wrong_day_bad) { FactoryGirl.create(:rehearsal, account: account, start_at: "2013-01-06 09:00:00") }
+			
+			it "returns the records for the day" do
+				Rehearsal.for_daily_calendar(DateTime.parse("2012-12-3 01:00:00")).should == [current_day_good, current_day_good3, current_day_good2]
+			end
+		end
+		
 		describe "for_monthly_calendar" do
 			# Dates for December 2012
 			let!(:prev_month_bad) { FactoryGirl.create(:rehearsal, account: account, start_at: "2012-11-14 09:00:00") }

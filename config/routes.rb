@@ -15,6 +15,9 @@ Scheduler::Application.routes.draw do
   		get 'inactivate'
   	end
   end
+  
+  resources :events, :only => :index
+  resources :rehearsals, :only => [:new, :create]
 	
 	match 'dashboard' => 'static_pages#dashboard'
 	match 'features' => 'static_pages#features'   

@@ -1,5 +1,8 @@
 <div class="nav-collapse">
 	<ul class="nav">
+		<% if allow? "events", "index" %>
+			<li><%= link_to "Events", events_path %></li>
+		<% end %>
 		<% if allow? "pieces", "index" %>
 			<li><%= link_to "Pieces", pieces_path %></li>
 		<% end %>

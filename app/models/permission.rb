@@ -6,10 +6,11 @@ class Permission
 		
 		if user
 			allow :static_pages, [:dashboard]
-			allow [:locations, :pieces, :employees], [:index]
+			allow [:locations, :pieces, :employees, :events], [:index]
 			
 			if user.role == "Administrator"
 				allow [:locations, :pieces, :employees], [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
+				allow [:rehearsals], [:new, :create]
 			end
 			
 			allow_all if user.role == "Super Administrator"
