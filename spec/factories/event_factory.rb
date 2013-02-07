@@ -15,13 +15,13 @@
 #
 
 FactoryGirl.define do
-	factory :rehearsal do
+	factory :event do
 		account
-		sequence(:title)	{ |n| "Rehearsal #{n}" }
+		sequence(:title)	{ |n| "Event #{n}" }
 		location
+		type							"Event"
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"9AM"
 		end_time					"10AM"
-		piece
 	end
 end

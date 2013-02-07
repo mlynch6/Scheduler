@@ -36,9 +36,8 @@ describe "Event Pages:" do
 										piece: piece) }
 			visit events_path
 	
-			should have_selector('div.Rehearsal')
 			Event.for_daily_calendar(Time.zone.today).each do |event|
-				should have_selector('div', text: 'R')
+				should have_selector('div.Rehearsal', text: 'R')
 				should have_selector('div', text: event.title)
 				should have_selector('div', text: event.location.name)
 				should have_selector('div', text: event.piece.name)

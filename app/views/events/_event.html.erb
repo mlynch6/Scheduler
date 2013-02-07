@@ -3,7 +3,7 @@
 		<div class="<%= event.type %>"></div>
 		<div class="title"><%= event.title %></div>
 		<div class="location"><%= event.location.name %></div>
-		<div class="piece"><%= event.piece.name %></div>
+		<div class="piece"><%= event.piece.name if event.piece %></div>
 	</div>
 	<div class="span4">
 		<div class="time"><%= "#{event.start_at.to_s(:hr12)} to #{event.end_at.to_s(:hr12)}" %></div>

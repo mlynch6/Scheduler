@@ -18,4 +18,6 @@ class Rehearsal < Event
 	attr_accessible :piece_id
 
 	belongs_to :piece
+	
+	validates :piece_id,	presence: true
 end

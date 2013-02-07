@@ -3,7 +3,8 @@ namespace :db do
 	task :populate => :environment do
 		require 'populator'
 		
-		[Account, Employee, User, Location].each(&:delete_all)
+		[Account, Employee, User].each(&:delete_all)
+		[Location, Piece, Event].each(&:delete_all)
 		
 		Account.populate 15 do |account|
 			account.name = Faker::Company.name

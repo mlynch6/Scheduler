@@ -1,0 +1,36 @@
+<div class="control-group required">
+	<%= f.label :title, :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :title %>
+	</div>
+</div>
+
+<div class="control-group required">
+	<%= f.label :location_id, :class => 'control-label' %>
+	<div class="controls">
+		<%= f.select :location_id, @locations, { :include_blank => true } %>
+	</div>
+</div>
+
+<div class="control-group required">
+	<%= f.label :start_date, 'Date', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :start_date, :class => 'input-small', :placeholder => 'mm/dd/yyyy' %>
+	</div>
+</div>
+
+<div class="control-group required">
+	<%= f.label :start_time, 'From', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :start_time, :class => 'input-mini', :placeholder => '11:30 AM' %>
+		&nbsp to &nbsp;
+		<%= f.text_field :end_time, :class => 'input-mini', :placeholder => '1:00 PM' %>
+	</div>
+</div>
+
+<div class="control-group required">
+	<%= f.label :piece_id, :class => 'control-label' %>
+	<div class="controls">
+		<%= f.select :piece_id, @pieces, { :include_blank => true } %>
+	</div>
+</div>
