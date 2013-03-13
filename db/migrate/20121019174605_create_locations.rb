@@ -8,5 +8,6 @@ class CreateLocations < ActiveRecord::Migration
       t.timestamps
     end
     add_index :locations, :account_id
+    add_index :locations, [:account_id, :name], :unique => true
   end
 end

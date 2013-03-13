@@ -105,6 +105,22 @@ describe Location do
 	  end
 	end
 	
+	context "(Uniqueness)" do
+		describe "name" do
+			let(:location_diff_account) { FactoryGirl.create(:location) }
+			
+			it "is unique within Account" do
+	  		@location = location.dup
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "can be duplicated across Accounts" do
+	  		@location.name = location_diff_account.name
+	  		should be_valid
+	  	end
+	  end
+  end
+  
 	context "(Methods)" do		
 		it "activate" do
 			location.activate

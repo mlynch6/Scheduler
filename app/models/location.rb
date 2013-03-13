@@ -16,7 +16,7 @@ class Location < ActiveRecord::Base
 	belongs_to :account
 	has_many :events, dependent: :destroy
 		
-	validates :name,	presence: true, length: { maximum: 50 }
+	validates :name, presence: true, length: { maximum: 50 }, uniqueness: { scope: :account_id }
 	validates :active, :inclusion => { :in => [true, false] }
 	
 	default_scope lambda { order('name ASC').where(:account_id => Account.current_id) }

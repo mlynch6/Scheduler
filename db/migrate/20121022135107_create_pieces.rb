@@ -8,5 +8,6 @@ class CreatePieces < ActiveRecord::Migration
       t.timestamps
     end
     add_index :pieces, :account_id
+    add_index :pieces, [:account_id, :name], :unique => true
   end
 end

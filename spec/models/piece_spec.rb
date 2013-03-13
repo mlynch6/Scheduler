@@ -106,6 +106,22 @@ describe Piece do
 	  end
 	end
 	
+	context "(Uniqueness)" do
+		describe "name" do
+			let(:piece_diff_account) { FactoryGirl.create(:piece) }
+			
+			it "is unique within Account" do
+	  		@piece = piece.dup
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "can be duplicated across Accounts" do
+	  		@piece.name = piece_diff_account.name
+	  		should be_valid
+	  	end
+	  end
+  end
+  
 	context "(Methods)" do		
 		it "activate" do
 			piece.activate
