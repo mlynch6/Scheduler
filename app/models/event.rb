@@ -19,6 +19,8 @@ class Event < ActiveRecord::Base
 
 	belongs_to :account
 	belongs_to :location
+	has_many :invitations, dependent: :destroy
+	has_many :employees, through: :invitations
 
 	attr_writer :start_date, :start_time, :end_time
 	before_validation :save_start_at, :if => "@start_date.present? && @start_time.present?"

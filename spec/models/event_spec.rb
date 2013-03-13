@@ -271,6 +271,36 @@ describe Event do
 		it "has one location" do
 			event.reload.location.should == location
 		end
+		
+		describe "invitations" do
+			let(:employee1) { FactoryGirl.create(:employee, account: account) }
+			let(:employee2) { FactoryGirl.create(:employee, account: account) }
+			let!(:second_invite) { FactoryGirl.create(:invitation, event: event, employee: employee1) }
+			let!(:first_invite) { FactoryGirl.create(:invitation, event: event, employee: employee2) }
+	
+			it "has multiple invitations" do
+				event.invitations.count.should == 2
+			end
+			
+			it "deletes associated invitations" do
+				invitations = event.invitations
+				event.destroy
+				invitations.each do |invitation|
+					Invitation.find_by_id(invitation.id).should be_nil
+				end
+			end
+		end
+		
+		describe "employees" do
+			let(:employee1) { FactoryGirl.create(:employee, account: account) }
+			let(:employee2) { FactoryGirl.create(:employee, account: account) }
+			let!(:second_invite) { FactoryGirl.create(:invitation, event: event, employee: employee1) }
+			let!(:first_invite) { FactoryGirl.create(:invitation, event: event, employee: employee2) }
+	
+			it "has multiple employees" do
+				event.employees.count.should == 2
+			end
+		end
   end
   
 	context "correct value is returned for" do

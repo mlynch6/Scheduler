@@ -159,18 +159,39 @@ describe Employee do
 			employee.reload.account.should == account
 		end
 		
-		it "has no user" do
-			employee_with_no_user.reload.user.should be_nil
+		describe "user" do
+			it "has no user" do
+				employee_with_no_user.reload.user.should be_nil
+			end
+			
+			it "has one user" do
+				employee.reload.user.should == user
+			end
+			
+			it "deletes associated user" do
+				u = employee.user
+				employee.destroy
+				User.find_by_id(u.id).should be_nil
+			end
 		end
 		
-		it "has one user" do
-			employee.reload.user.should == user
-		end
-		
-		it "deletes associated user" do
-			u = employee.user
-			employee.destroy
-			User.find_by_id(u.id).should be_nil
+		describe "invitations" do
+			let(:event1) { FactoryGirl.create(:event, account: account) }
+			let(:event2) { FactoryGirl.create(:event, account: account) }
+			let!(:second_invite) { FactoryGirl.create(:invitation, event: event1, employee: employee) }
+			let!(:first_invite) { FactoryGirl.create(:invitation, event: event2, employee: employee) }
+	
+			it "has multiple invitations" do
+				employee.invitations.count.should == 2
+			end
+			
+			it "deletes associated invitations" do
+				invitations = employee.invitations
+				employee.destroy
+				invitations.each do |invitation|
+					Invitation.find_by_id(invitation.id).should be_nil
+				end
+			end
 		end
   end
   
