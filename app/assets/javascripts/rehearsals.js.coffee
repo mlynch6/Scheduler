@@ -5,3 +5,4 @@
 jQuery ->
 	$('#rehearsal_start_date').datepicker
 		dateFormat: 'mm/dd/yy'
+	$('#rehearsal_employee_ids').chosen()

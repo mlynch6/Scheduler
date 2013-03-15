@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20131207144539) do
     t.datetime "updated_at",                                 :null => false
   end
 
+  add_index "locations", ["account_id", "name"], :name => "index_locations_on_account_id_and_name", :unique => true
   add_index "locations", ["account_id"], :name => "index_locations_on_account_id"
 
   create_table "pieces", :force => true do |t|

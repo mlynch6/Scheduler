@@ -17,7 +17,7 @@ Scheduler::Application.routes.draw do
   end
   
   resources :events, :only => :index
-  resources :rehearsals, :only => [:new, :create]
+  resources :rehearsals, :only => [:new, :create, :show, :edit, :update]
 	
 	match 'dashboard' => 'static_pages#dashboard'
 	match 'features' => 'static_pages#features'   

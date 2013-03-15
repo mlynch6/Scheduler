@@ -68,10 +68,12 @@ $edarkgrey: #9B9B9B;
 		.title { font-weight: bold; }
 		.location { color: #999; }
 		.piece:before { content: 'Rehearsing: '}
-		.time {
+		.time, .invitees {
 			text-align: right;
 			color: #999;
-			height: 35px;
+		}
+		.actions {
+			text-align: right;
 		}
 		
 		.Rehearsal, .Class, .Performance {

@@ -45,6 +45,10 @@ class Employee < ActiveRecord::Base
 		"#{last_name}, #{first_name}"
 	end
 	
+	def full_name
+		"#{first_name} #{last_name}"
+	end
+	
 	def activate
 		self.update_attribute(:active, true)
 	end

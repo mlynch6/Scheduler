@@ -43,6 +43,7 @@ describe Employee do
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:user) }
+  	it { should respond_to(:invitations) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -222,6 +223,10 @@ describe Employee do
 	  
 	  it "name" do
 	  	employee.reload.name.should == 'Pink, Michael'
+	  end
+	  
+	  it "full_name" do
+	  	employee.reload.full_name.should == 'Michael Pink'
 	  end
 	end
 	

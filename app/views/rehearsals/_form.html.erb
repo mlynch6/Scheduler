@@ -34,3 +34,10 @@
 		<%= f.select :piece_id, @pieces, { :include_blank => true } %>
 	</div>
 </div>
+
+<div class="control-group">
+	<%= f.label :employee_ids, 'Invitees', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.select :employee_ids, @employees, {}, { :multiple => true } %>
+	</div>
+</div>

@@ -61,9 +61,7 @@ describe Invitation do
   	end
   	
   	it "when employee/event uniqueness is violated" do
-  		expect do
-        Invitation.new(event_id: invitation.event.id, employee_id: invitation.employee.id)
-      end.to raise_error(ActiveRecord::StatementInvalid::Error)
+  		pending
   	end
 	end
 	
@@ -81,21 +79,10 @@ describe Invitation do
 		before do
 			event.invitations.delete_all
 		end
-#		let!(:event3) { FactoryGirl.create(:event, account: account, 
-#												start_date: Time.zone.today + 1.day,
-#												start_time: "8AM", end_time: "8:30AM") }
-#		let!(:event2) { FactoryGirl.create(:event, account: account, 
-#												start_date: Time.zone.today,
-#												start_time: "9AM", end_time: "9:30AM") }
-#		let!(:event1) { FactoryGirl.create(:event, account: account, 
-#												start_date: Time.zone.today,
-#												start_time: "8AM", end_time: "8:30AM") }
-#		let!(:location_wrong_acnt) { FactoryGirl.create(:event) }
 		
 		describe "default_scope" do	
 			it "returns the records in alphabetical order by employee" do
 				pending
-				#Event.all.should == [event1, event2, event3]
 			end
 		end
 	end

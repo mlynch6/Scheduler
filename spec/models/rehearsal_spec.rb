@@ -45,7 +45,7 @@ describe Rehearsal do
     end
   end
 	
-  context "(Valid)" do  	
+  context "(Valid)" do
   	it "with minimum attributes" do
   		should be_valid
   	end

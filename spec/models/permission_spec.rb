@@ -54,6 +54,10 @@ describe Permission do
 		it { should_not allow(:employees, :inactivate) }
 		
 		it { should_not allow(:events, :index) }
+		
+		it { should_not allow(:rehearsals, :show) }
+		it { should_not allow(:rehearsals, :new) }
+		it { should_not allow(:rehearsals, :create) }
 #
 #		it { should_not allow(:users, :new) }
 #		it { should_not allow(:users, :create) }
@@ -122,6 +126,10 @@ describe Permission do
 		it { should_not allow(:employees, :inactivate) }
 		
 		it { should allow(:events, :index) }
+		
+		it { should allow(:rehearsals, :show) }
+		it { should_not allow(:rehearsals, :new) }
+		it { should_not allow(:rehearsals, :create) }
 	end
 	
 	context "as Administrator" do
@@ -172,6 +180,10 @@ describe Permission do
 		it { should allow(:employees, :inactivate) }
 		
 		it { should allow(:events, :index) }
+		
+		it { should allow(:rehearsals, :show) }
+		it { should allow(:rehearsals, :new) }
+		it { should allow(:rehearsals, :create) }
 	end
 	
 	context "as Super Administrator" do
@@ -222,5 +234,9 @@ describe Permission do
 		it { should allow(:employees, :inactivate) }
 		
 		it { should allow(:events, :index) }
+		
+		it { should allow(:rehearsals, :new) }
+		it { should allow(:rehearsals, :create) }
+		it { should allow(:rehearsals, :show) }
 	end
 end

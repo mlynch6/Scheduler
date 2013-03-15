@@ -7,6 +7,7 @@ class Permission
 		if user
 			allow :static_pages, [:dashboard]
 			allow [:locations, :pieces, :employees, :events], [:index]
+			allow [:rehearsals], [:show]
 			
 			if user.role == "Administrator"
 				allow [:locations, :pieces, :employees], [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
