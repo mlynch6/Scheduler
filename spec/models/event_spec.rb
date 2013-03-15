@@ -44,6 +44,10 @@ describe Event do
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:location) }
+  	it { should respond_to(:invitations) }
+  	it { should respond_to(:employees) }
+  	
+  	it { should respond_to(:employee_ids) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -77,23 +81,8 @@ describe Event do
     end
   end
 	
-  context "(Valid)" do  	
+  context "(Valid)" do
   	it "with minimum attributes" do
-  		should be_valid
-  	end
-  	
-  	it "directly before existing event" do
-  		@event.location = location
-  		@event.start_date = Time.zone.today
-			@event.start_time = "8AM"
-			@event.end_time = "9AM"
-  		should be_valid
-  	end
-  	it "directly after existing event" do
-  		@event.location = location
-  		@event.start_date = Time.zone.today
-			@event.start_time = "10AM"
-			@event.end_time = "11AM"
   		should be_valid
   	end
   end
@@ -153,11 +142,38 @@ describe Event do
 			@event.end_time = 2.hours.ago.to_s(:hr12)
 	  	should_not be_valid
 	  end
-	  
-	  describe "when location is already booked" do
-	  	let!(:existing_event) { FactoryGirl.create(:event, account: account, location: location, 
-	  															start_time: "2PM",
-	  															end_time: "4PM") }
+	end
+	
+	context "(Verify Location available)" do
+		let!(:existing_event) { FactoryGirl.create(:event, account: account, location: location, 
+																start_date: Time.zone.today,
+  															start_time: "2PM",
+  															end_time: "4PM") }
+  	let!(:e_loc) { FactoryGirl.create(:event, account: account,
+  															start_date: Time.zone.today,
+  															start_time: "2PM",
+  															end_time: "4PM") }
+		let!(:e) { FactoryGirl.create(:event, account: account, location: location,
+																start_date: Time.zone.today,
+  															start_time: "11AM",
+  															end_time: "12PM") }
+  	
+  	describe "when creating a new event" do
+			it "directly before existing event" do
+	  		@event.location = location
+	  		@event.start_date = Time.zone.today
+				@event.start_time = "1PM"
+				@event.end_time = "2PM"
+	  		should be_valid
+	  	end
+	  	
+	  	it "directly after existing event" do
+	  		@event.location = location
+	  		@event.start_date = Time.zone.today
+				@event.start_time = "4PM"
+				@event.end_time = "5PM"
+	  		should be_valid
+	  	end
 	  	
 	  	it "with overlap at beginning" do
 	  		@event.location = location
@@ -199,68 +215,55 @@ describe Event do
 		  	should_not be_valid
 		  end
 	  end
-	end
 	
-	context "(Updating)" do
-		let!(:existing_event) { FactoryGirl.create(:event, account: account, location: location, 
-																start_date: Time.zone.today,
-  															start_time: "2PM",
-  															end_time: "4PM") }
-  	let!(:e_loc) { FactoryGirl.create(:event, account: account,
-  															start_date: Time.zone.today,
-  															start_time: "2PM",
-  															end_time: "4PM") }
-		let!(:e) { FactoryGirl.create(:event, account: account, location: location,
-																start_date: Time.zone.today,
-  															start_time: "11AM",
-  															end_time: "12PM") }
-
-  	it "location to booked room is invalid" do
-  		e_loc.location = location
-	  	e_loc.should_not be_valid
-	  end
-	  
-	  it "times to overlap existing event at beginning is invalid" do
-  		e.start_time = "1PM"
-			e.end_time = "3PM"
-	  	e.should_not be_valid
-	  end
-	  
-	  it "times to overlap existing event at end is invalid" do
-	  	e.start_time = "3PM"
-			e.end_time = "5PM"
-	  	e.should_not be_valid
-	  end
-	  
-	  it "times to overlap entire existing event is invalid" do
-	  	e.start_time = "1PM"
-			e.end_time = "5PM"
-	  	e.should_not be_valid
-	  end
-	  
-	  it "times to overlap existing event as a subset is invalid" do
-	  	e.start_time = "3PM"
-			e.end_time = "3:30PM"
-	  	e.should_not be_valid
-	  end
-	  
-	  it "times to overlap of exactly is invalid" do
-			e.start_time = existing_event.start_time
-			e.end_time = existing_event.end_time
-	  	e.should_not be_valid
-	  end
-	  
-		it "times directly before existing event is valid" do
-	  	e.start_time = "1PM"
-			e.end_time = "2PM"
-	  	e.should be_valid
-	  end
-	  
-	  it "times directly after existing event is valid" do
-	  	e.start_time = "4PM"
-			e.end_time = "5PM"
-	  	e.should be_valid
-	  end
+		describe "when updating an existing event" do
+	  	it "location to booked room is invalid" do
+	  		e_loc.location = location
+		  	e_loc.should_not be_valid
+		  end
+		  
+		  it "times to overlap existing event at beginning is invalid" do
+	  		e.start_time = "1PM"
+				e.end_time = "3PM"
+		  	e.should_not be_valid
+		  end
+		  
+		  it "times to overlap existing event at end is invalid" do
+		  	e.start_time = "3PM"
+				e.end_time = "5PM"
+		  	e.should_not be_valid
+		  end
+		  
+		  it "times to overlap entire existing event is invalid" do
+		  	e.start_time = "1PM"
+				e.end_time = "5PM"
+		  	e.should_not be_valid
+		  end
+		  
+		  it "times to overlap existing event as a subset is invalid" do
+		  	e.start_time = "3PM"
+				e.end_time = "3:30PM"
+		  	e.should_not be_valid
+		  end
+		  
+		  it "times to overlap of exactly is invalid" do
+				e.start_time = existing_event.start_time
+				e.end_time = existing_event.end_time
+		  	e.should_not be_valid
+		  end
+		  
+			it "times directly before existing event is valid" do
+		  	e.start_time = "1PM"
+				e.end_time = "2PM"
+		  	e.should be_valid
+		  end
+		  
+		  it "times directly after existing event is valid" do
+		  	e.start_time = "4PM"
+				e.end_time = "5PM"
+		  	e.should be_valid
+		  end
+		end
 	end
 	
   context "(Associations)" do

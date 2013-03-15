@@ -16,6 +16,7 @@
 
 class Event < ActiveRecord::Base
 	attr_accessible :title, :start_date, :start_time, :end_time, :location_id
+	attr_accessible :employee_ids
 
 	belongs_to :account
 	belongs_to :location
@@ -56,12 +57,12 @@ class Event < ActiveRecord::Base
 	
 	def location_available
 		if id.nil?
-			cnt_begin = Event.where(:start_at => start_at..end_at, :location_id => location_id).count
-			cnt_end = Event.where(:end_at => start_at..end_at, :location_id => location_id).count
+			cnt_begin = Event.where("start_at < :etime AND end_at >= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
+			cnt_end = Event.where("end_at > :stime AND end_at <= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
 			cnt_subset = Event.where("start_at <= :stime AND end_at >= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
 		else
-			cnt_begin = Event.where("id <> :id", { :id => id }).where(:start_at => start_at...end_at, :location_id => location_id).count
-			cnt_end = Event.where("id <> :id", { :id => id }).where("end_at > :stime AND end_at <= :etime", { :stime => start_at, :etime => end_at }, :location_id => location_id).count
+			cnt_begin = Event.where("id <> :id", { :id => id }).where("start_at < :etime AND end_at >= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
+			cnt_end = Event.where("id <> :id", { :id => id }).where("end_at > :stime AND end_at <= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
 			cnt_subset = Event.where("id <> :id", { :id => id }).where("start_at <= :stime AND end_at >= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
 		end
 		
