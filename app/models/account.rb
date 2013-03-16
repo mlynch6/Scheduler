@@ -16,6 +16,7 @@ class Account < ActiveRecord::Base
   has_many :employees, dependent: :destroy
   accepts_nested_attributes_for :employees
   
+  has_one :agma_profile, dependent: :destroy
   has_many :locations, dependent: :destroy
   has_many :pieces, dependent: :destroy
   has_many :events, dependent: :destroy

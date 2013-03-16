@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207144539) do
+ActiveRecord::Schema.define(:version => 20131207144540) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",       :limit => 100, :null => false
@@ -20,6 +20,19 @@ ActiveRecord::Schema.define(:version => 20131207144539) do
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
   end
+
+  create_table "agma_profiles", :force => true do |t|
+    t.integer  "account_id",                 :null => false
+    t.time     "rehearsal_start",            :null => false
+    t.time     "rehearsal_end",              :null => false
+    t.integer  "rehearsal_max_hrs_per_week", :null => false
+    t.integer  "rehearsal_max_hrs_per_day",  :null => false
+    t.integer  "rehearsal_increment_min",    :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+  end
+
+  add_index "agma_profiles", ["account_id"], :name => "index_agma_profiles_on_account_id"
 
   create_table "employees", :force => true do |t|
     t.integer  "account_id",                                 :null => false
@@ -81,6 +94,7 @@ ActiveRecord::Schema.define(:version => 20131207144539) do
     t.datetime "updated_at",                                 :null => false
   end
 
+  add_index "pieces", ["account_id", "name"], :name => "index_pieces_on_account_id_and_name", :unique => true
   add_index "pieces", ["account_id"], :name => "index_pieces_on_account_id"
 
   create_table "roles", :force => true do |t|

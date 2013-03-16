@@ -28,6 +28,7 @@ describe Account do
 		it { should respond_to(:main_phone) }
   	it { should respond_to(:time_zone) }
   	
+  	it { should respond_to(:agma_profile) }
   	it { should respond_to(:employees) }
   	it { should respond_to(:locations) }
   	it { should respond_to(:pieces) }
@@ -94,6 +95,21 @@ describe Account do
   end
   
   context "(Associations)" do
+  	describe "agma_profile" do
+  		before { Account.current_id = account.id }
+			let!(:profile) { FactoryGirl.create(:agma_profile, account: account) }
+			
+			it "has one AGMA profile" do
+				account.reload.agma_profile.should == profile
+			end
+			
+			it "deletes associated AGMA profile" do
+				p = account.agma_profile
+				account.destroy
+				AgmaProfile.find_by_id(p.id).should be_nil
+			end
+		end
+  	
   	describe "employees" do
   		before { Account.current_id = account.id }
 			let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown") }
