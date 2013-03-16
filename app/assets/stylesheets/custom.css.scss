@@ -85,6 +85,17 @@ legend { margin-bottom: 8px; }
 	padding: 0;
 }
 
+/*** SHOW PAGES ***/
+.show-ui {
+	.row { margin-bottom: 5px; }
+	.label-ui {
+		font-weight: bold;
+		text-align: right;
+		&:after { content: ":"; }
+	}
+	.text-ui {}
+}
+
 /*** DESCRIPTION LISTS ***/
 dl { margin-bottom: 20px; }
 dt {
