@@ -52,6 +52,16 @@ footer {
 	a.active { color: $gray; }
 }
 
+/*** NAV LISTS ***/
+.nav-list > .active > a:hover {
+    background-color: #0088CC;
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+.nav-list > a:hover {
+    background-color: #EEEEEE;
+}
+
 /*** FORMS ***/
 form label {
 	font-weight: bold; 

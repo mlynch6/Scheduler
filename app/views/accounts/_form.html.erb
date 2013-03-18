@@ -1,31 +1,20 @@
-<fieldset>
-	<legend>1. Company Information</legend>
-	<div class="control-group required">
-		<%= f.label :name, 'Company', :class => 'control-label' %>
-		<div class="controls">
-			<%= f.text_field :name %>
-		</div>
+<div class="control-group required">
+	<%= f.label :name, 'Company', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :name %>
 	</div>
-	
-	<div class="control-group required">
-		<%= f.label :main_phone, 'Phone #', :class => 'control-label' %>
-		<div class="controls">
-			<%= f.text_field :main_phone, :class => 'input-small' %>
-			<span class="muted">Format: xxx-xxx-xxxx</span>
-		</div>
-	</div>
-		
-	<div class="control-group required">
-		<%= f.label :time_zone, :class => 'control-label' %>
-		<div class="controls">
-			<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %>
-		</div>
-	</div>
-</fieldset>
+</div>
 
-<fieldset>
-	<legend>2. Your Information</legend>
-	<%= f.fields_for :employees do |builder| %>
-		<%= render 'employee_fields', :f =>  builder %>
-	<% end %>
-</fieldset>
+<div class="control-group required">
+	<%= f.label :main_phone, 'Phone #', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :main_phone, :class => 'input-small', :placeholder => 'xxx-xxx-xxxx' %>
+	</div>
+</div>
+	
+<div class="control-group required">
+	<%= f.label :time_zone, :class => 'control-label' %>
+	<div class="controls">
+		<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, { :class => 'input-xlarge' } %>
+	</div>
+</div>

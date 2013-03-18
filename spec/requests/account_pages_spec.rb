@@ -72,4 +72,59 @@ describe "Account Pages:" do
     	end
     end
 	end
+	
+	context "#edit" do
+		it "has correct title" do
+			log_in
+			visit edit_account_path(current_account)
+	  	
+	  	should have_selector('title', text: 'Company Info')
+			should have_selector('h1', text: 'Company Info')
+		end
+		
+	  it "record with error" do
+	  	log_in
+			visit edit_account_path(current_account)
+	  	fill_in "Company", with: ""
+	  	click_button 'Update'
+	
+			should have_selector('div.alert-error')
+		end
+	
+		it "with bad record in URL shows current account" do
+			pending
+			log_in
+			visit edit_account_path(0)
+	
+			should have_selector('title', text: 'Company Info')
+			should have_content(current_account.name)
+		end
+		
+		it "record with wrong account shows current account" do
+			pending
+			wrong_account = FactoryGirl.create(:account)
+			log_in
+			visit edit_account_path(wrong_account)
+	
+			should have_selector('title', text: 'Company Info')
+			should have_content(current_account.name)
+		end
+	 
+		it "record with valid info saves account" do
+			log_in
+			new_name = Faker::Lorem.word
+			visit edit_account_path(current_account)
+			fill_in "Company", with: new_name
+    	fill_in "Phone #", with: "414-888-0000"
+    	select  "(GMT-10:00) Hawaii", from: "Time zone"
+			click_button 'Update'
+	
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'Company Info')
+			
+			current_account.reload.name.should == new_name
+			current_account.reload.main_phone.should == "414-888-0000"
+			current_account.reload.time_zone.should == "Hawaii"
+		end
+	end
 end

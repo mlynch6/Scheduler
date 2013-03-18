@@ -1,0 +1,9 @@
+<div class="well" style="padding: 8px 0;">
+	<ul class="nav nav-list">
+		<li class="nav-header">Settings</li>
+		<% if allow? "accounts", "edit" %>
+			<li class="active"><%= link_to "Company Info", edit_account_path %></li>
+			
+		<% end %>
+	</ul>
+</div>

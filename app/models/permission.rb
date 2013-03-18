@@ -10,6 +10,7 @@ class Permission
 			allow [:rehearsals], [:show]
 			
 			if user.role == "Administrator"
+				allow [:accounts], [:edit, :update]
 				allow [:locations, :pieces, :employees], [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
 				allow [:rehearsals], [:new, :create]
 			end

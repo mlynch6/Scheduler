@@ -7,7 +7,18 @@
 	
 	<div class="row">
 		<div class="span8">
+		<fieldset>
+			<legend>1. Company Information</legend>
 			<%= render 'form', :f => f %>
+		</fieldset>
+			
+			
+			<fieldset>
+				<legend>2. Your Information</legend>
+				<%= f.fields_for :employees do |builder| %>
+					<%= render 'employee_fields', :f =>  builder %>
+				<% end %>
+			</fieldset>
 			
 			<div class="form-actions">
 				<p><small>By clicking 'Create Account', you agree to the <a href="#">Terms of Service</a>
