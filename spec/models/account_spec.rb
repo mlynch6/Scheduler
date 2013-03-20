@@ -40,6 +40,10 @@ describe Account do
   		should be_valid
   	end
   	
+  	it "creates an AGMA profile" do
+  		account.agma_profile.should_not be_nil
+  	end
+  	
   	it "when main_phone in valid format" do
   		phones = ["111-222-3333","111.222.3333","111 222 3333","1112223333"]
   		phones.each do |valid_phone|
@@ -97,10 +101,9 @@ describe Account do
   context "(Associations)" do
   	describe "agma_profile" do
   		before { Account.current_id = account.id }
-			let!(:profile) { FactoryGirl.create(:agma_profile, account: account) }
 			
 			it "has one AGMA profile" do
-				account.reload.agma_profile.should == profile
+				account.agma_profile.should_not be_nil
 			end
 			
 			it "deletes associated AGMA profile" do

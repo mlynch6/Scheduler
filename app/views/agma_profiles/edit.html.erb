@@ -1,8 +1,9 @@
-<% provide(:title, 'Company Info') %>
-<h1>Company Info</h1>
+<% provide(:title, 'Rehearsal Week Settings') %>
+<h1>Rehearsal Week Settings</h1>
 <div class="row">
 
-<%= form_for @account, :html => { :class => 'form-horizontal' } do |f| %>
+<div class="span8">
+<%= form_for @agma_profile, :html => { :class => 'form-horizontal' } do |f| %>
 	<%= render 'shared/error_messages', :object => f.object %>
 	
 	<div class="row">
@@ -15,5 +16,6 @@
 		</div>
 	</div>
 <% end %>
+</div>
 
 </div>

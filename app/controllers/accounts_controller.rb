@@ -29,11 +29,15 @@ class AccountsController < ApplicationController
 		@account = Account.find(Account.current_id)
 		if @account.update_attributes(params[:account])
 			flash[:success] = "Company Info saved"
-			redirect_to edit_account_path(@account)
+			redirect_to account_path(@account)
 		else
 			form_setup
 			render 'edit'
 		end
+	end
+	
+	def show
+		@account = Account.joins(:agma_profile).find(Account.current_id)
 	end
 	
 	private

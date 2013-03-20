@@ -329,7 +329,7 @@ describe Event do
 	  
 	  it "start_at" do
 			event.reload.start_at.to_date.to_s(:db).should == "2012-01-01"
-			event.reload.start_at.to_s(:hr12).should == " 9:00 AM"
+			event.reload.start_at.to_s(:hr12).should == "9:00 AM"
 	  end
 	  
 	  it "end_at" do

@@ -104,6 +104,22 @@ legend { margin-bottom: 8px; }
 		&:after { content: ":"; }
 	}
 	.text-ui {}
+	h2 {
+		-moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: -moz-use-text-color -moz-use-text-color #EEEEEE;
+    border-image: none;
+    border-style: none none solid;
+    border-width: 0 0 1px;
+    display: block;
+    font-size: 1.5em; font-weight: normal;
+    line-height: 36px;
+    margin-bottom: 8px;
+    padding: 0;
+    width: 100%;
+	}
 }
 
 /*** DESCRIPTION LISTS ***/

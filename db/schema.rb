@@ -28,11 +28,12 @@ ActiveRecord::Schema.define(:version => 20131207144540) do
     t.integer  "rehearsal_max_hrs_per_week", :null => false
     t.integer  "rehearsal_max_hrs_per_day",  :null => false
     t.integer  "rehearsal_increment_min",    :null => false
+    t.integer  "class_break_min",            :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
   end
 
-  add_index "agma_profiles", ["account_id"], :name => "index_agma_profiles_on_account_id"
+  add_index "agma_profiles", ["account_id"], :name => "index_agma_profiles_on_account_id", :unique => true
 
   create_table "employees", :force => true do |t|
     t.integer  "account_id",                                 :null => false

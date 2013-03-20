@@ -24,6 +24,10 @@ describe Permission do
 		it { should allow(:accounts, :create) }
 		it { should_not allow(:accounts, :edit) }
 		it { should_not allow(:accounts, :update) }
+		it { should_not allow(:accounts, :show) }
+		
+		it { should_not allow(:agma_profiles, :edit) }
+		it { should_not allow(:agma_profiles, :update) }
 
 		it { should_not allow(:locations, :index) }
 		it { should_not allow(:locations, :new) }
@@ -98,6 +102,10 @@ describe Permission do
 		it { should allow(:accounts, :create) }
 		it { should_not allow(:accounts, :edit) }
 		it { should_not allow(:accounts, :update) }
+		it { should_not allow(:accounts, :show) }
+		
+		it { should_not allow(:agma_profiles, :edit) }
+		it { should_not allow(:agma_profiles, :update) }
 		
 		it { should allow(:locations, :index) }
 		it { should_not allow(:locations, :new) }
@@ -154,6 +162,10 @@ describe Permission do
 		it { should allow(:accounts, :create) }
 		it { should allow(:accounts, :edit) }
 		it { should allow(:accounts, :update) }
+		it { should allow(:accounts, :show) }
+		
+		it { should allow(:agma_profiles, :edit) }
+		it { should allow(:agma_profiles, :update) }
 		
 		it { should allow(:locations, :index) }
 		it { should allow(:locations, :new) }
@@ -210,6 +222,10 @@ describe Permission do
 		it { should allow(:accounts, :create) }
 		it { should allow(:accounts, :edit) }
 		it { should allow(:accounts, :update) }
+		it { should allow(:accounts, :show) }
+		
+		it { should allow(:agma_profiles, :edit) }
+		it { should allow(:agma_profiles, :update) }
 		
 		it { should allow(:locations, :index) }
 		it { should allow(:locations, :new) }

@@ -21,6 +21,8 @@ class Account < ActiveRecord::Base
   has_many :pieces, dependent: :destroy
   has_many :events, dependent: :destroy
   
+  after_create :create_profile
+  
   validates :name,	presence: true, length: { maximum: 100 }
   VALID_PHONE_REGEX = /\A[0-9]{3}[-. ]?[0-9]{3}[-. ]?[0-9]{4}\z/i
   validates :main_phone,	length: { maximum: 13 }, format: { with: VALID_PHONE_REGEX }
@@ -35,4 +37,18 @@ class Account < ActiveRecord::Base
   def self.current_id
   	Thread.current[:account_id]
   end
+  
+ protected
+  
+  def create_profile
+		p = AgmaProfile.new
+		p.account_id = id
+		p.rehearsal_start_time = '9 AM'
+		p.rehearsal_end_time = '6 PM'
+		p.rehearsal_max_hrs_per_week = 30
+		p.rehearsal_max_hrs_per_day = 6
+		p.rehearsal_increment_min = 30
+		p.class_break_min = 15
+		p.save
+	end
 end

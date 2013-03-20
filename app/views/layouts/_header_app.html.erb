@@ -17,7 +17,7 @@
 <ul class="nav pull-right">
 	<li class="divider-vertical"></li>
 	<% if allow? "accounts", "edit" %>
-		<li><a href="<%= edit_account_path(current_user.employee.account) %>"><i class="icon-cog icon-white" title="Settings"></i></a></li>
+		<li><a href="<%= account_path(current_user.employee.account) %>" title="Settings"><i class="icon-cog icon-white"></i></a></li>
 	<% end %>
 	<li><%= link_to current_user.username, dashboard_path %></li>
 	<li><%= link_to "Sign Out", logout_path %></li>

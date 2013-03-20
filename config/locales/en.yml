@@ -2,4 +2,27 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      account:
+        name: "Company"
+        main_phone: "Phone #"
+        time_zone: "Time Zone"
+      agma_profile:
+        rehearsal_start: "Rehearsal Start"
+        rehearsal_start_time: "Rehearsal Start"
+        rehearsal_end: "Rehearsal End"
+        rehearsal_end_time: "Rehearsal End"
+        rehearsal_max_hrs_per_week: "Max Hours/Week"
+        rehearsal_max_hrs_per_day: "Max Hours/Day"
+        rehearsal_increment_min: "Rehearsal Increments"
+        class_break_min: "Class Break"
+      employee:
+        first_name: "First Name"
+        last_name: "Last Name"
+        job_title: "Job Title"
+        phone: "Phone #"
+      rehearsal:
+        start_date: "Date"
+        start_time: "Start Time"
+        end_time: "End Time"

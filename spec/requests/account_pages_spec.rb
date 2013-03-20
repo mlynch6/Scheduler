@@ -18,14 +18,14 @@ describe "Account Pages:" do
     describe "signup with valid info" do
     	let(:username) { Faker::Internet.user_name }
     	let(:company) { Faker::Company.name }
-    	let(:last_name) { Faker::Name.last_name }
+    	let(:emp_last_name) { Faker::Name.last_name }
     	before do
     		visit signup_path
     		fill_in "Company", with: company
     		fill_in "Phone #", with: "414-543-1000"
-    		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time zone"
+    		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
     		fill_in "First Name", with: Faker::Name.first_name
-    		fill_in "Last Name", with: last_name
+    		fill_in "Last Name", with: emp_last_name
     		fill_in "Job Title", with: Faker::Name.title
     		fill_in "Email", with: Faker::Internet.free_email
     		fill_in "Username", with: username
@@ -37,21 +37,21 @@ describe "Account Pages:" do
 #    	it "creates an Account" do
 #    		expect { click_button "Create Account" }.to change(Account, :count).by(1)
 #    	end
-#    	
-#    	it "creates an Employee" do
-#    		expect { click_button "Create Account" }.to change(Employee, :count).by(1)
-#    	end
-#    	
-#    	it "creates a User as Administrator" do
-#    		expect { click_button "Create Account" }.to change(User, :count).by(1)
-#    		User.last.role.should == "Administrator"
-#    	end
     	
-    	it "creates Account, Employee, and User & logs in user" do
-    		Account.unscoped.last.name.should == company
-    		Employee.unscoped.last.last_name.should == last_name
+    	it "creates the Account" do
+    		Account.find_by_name(company).should_not == company
+    	end
+    	
+    	it "creates an Employee" do
+    		emp = Employee.unscoped.last
+    		emp.last_name.should == emp_last_name
+    	end
+    	
+    	it "creates a User" do
     		User.unscoped.last.role.should == "Administrator"
-    		
+    	end
+    	
+    	it "logs in the new user" do
     		should have_selector('title', text: 'Dashboard')
     		should have_link('Sign Out', href: logout_path)
 				should have_content(username)
@@ -73,10 +73,52 @@ describe "Account Pages:" do
     end
 	end
 	
+	context "#show" do
+		it "has correct title" do
+			log_in
+			click_link "Settings"
+	  	
+	  	should have_selector('title', text: 'Settings')
+			should have_selector('h1', text: 'Settings')
+		end
+		
+		it "has Edit Settings links" do
+			log_in
+			click_link "Settings"
+	  	
+	  	should have_link('Company Info')
+			should have_link('Rehearsal Weeks')
+		end
+		
+		it "has Company Info section" do
+			log_in
+			click_link "Settings"
+	  	
+			should have_selector('h2', text: 'Company Info')
+			should have_selector('div.label-ui', text: 'Company')
+			should have_selector('div.label-ui', text: 'Phone #')
+			should have_selector('div.label-ui', text: 'Time Zone')
+		end
+		
+		it "has Rehearsal Weeks section" do
+			log_in
+			click_link "Settings"
+	  	
+			should have_selector('h2', text: 'Rehearsal Weeks')
+			should have_selector('div.label-ui', text: 'Rehearsal Start')
+			should have_selector('div.label-ui', text: 'Rehearsal End')
+			should have_selector('div.label-ui', text: 'Max Hours/Week')
+			should have_selector('div.label-ui', text: 'Max Hours/Day')
+			should have_selector('div.label-ui', text: 'Rehearsal Increments')
+			should have_selector('div.label-ui', text: 'Class Break')
+		end
+	end
+	
 	context "#edit" do
 		it "has correct title" do
 			log_in
-			visit edit_account_path(current_account)
+			click_link "Settings"
+			click_link "Company Info"
 	  	
 	  	should have_selector('title', text: 'Company Info')
 			should have_selector('h1', text: 'Company Info')
@@ -84,7 +126,8 @@ describe "Account Pages:" do
 		
 	  it "record with error" do
 	  	log_in
-			visit edit_account_path(current_account)
+			click_link "Settings"
+			click_link "Company Info"
 	  	fill_in "Company", with: ""
 	  	click_button 'Update'
 	
@@ -113,18 +156,19 @@ describe "Account Pages:" do
 		it "record with valid info saves account" do
 			log_in
 			new_name = Faker::Lorem.word
-			visit edit_account_path(current_account)
+			click_link "Settings"
+			click_link "Company Info"
 			fill_in "Company", with: new_name
     	fill_in "Phone #", with: "414-888-0000"
-    	select  "(GMT-10:00) Hawaii", from: "Time zone"
+    	select  "(GMT-10:00) Hawaii", from: "Time Zone"
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Company Info')
+			should have_selector('title', text: 'Settings')
 			
-			current_account.reload.name.should == new_name
-			current_account.reload.main_phone.should == "414-888-0000"
-			current_account.reload.time_zone.should == "Hawaii"
+			should have_selector('div.text-ui', text: new_name)
+			should have_selector('div.text-ui', text: "414-888-0000")
+			should have_selector('div.text-ui', text: "Hawaii")
 		end
 	end
 end
