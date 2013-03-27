@@ -76,16 +76,16 @@ $edarkgrey: #9B9B9B;
 			text-align: right;
 		}
 		
-		.Rehearsal, .Class, .Performance {
+		.rehearsal, .companyClass, .Performance {
 			font-size: 1.8em; font-weight: bold;
 			float: left;
 		}
 		
-		.Rehearsal:before {
+		.rehearsal:before {
 			content: "R";
 			color: $egreen;
 		}
-		.Class:before {
+		.companyClass:before {
 			content: "C";
 			color: $eblue;
 		}

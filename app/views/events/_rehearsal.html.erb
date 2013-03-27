@@ -1,0 +1,20 @@
+<div class="row-fluid event">
+	<div class="span8">
+		<div class="rehearsal"></div>
+		<div class="title"><%= rehearsal.title %></div>
+		<div class="location"><%= rehearsal.location.name %></div>
+		<div class="piece"><%= rehearsal.piece.name %></div>
+	</div>
+	<div class="span4">
+		<div class="time"><%= "#{rehearsal.start_time} to #{rehearsal.end_time}" %></div>
+		<div class="invitees"><%= pluralize(rehearsal.invitations.count, "invitee") %></div>
+		<div class="actions">
+			<% if allow? "rehearsals", "show" %>
+				<%= link_to 'Show', rehearsal_path(rehearsal) %>
+			<% end %>
+			<% if allow? "rehearsals", "edit" %>
+				<%= link_to 'Edit', edit_rehearsal_path(rehearsal) %>
+			<% end %>
+		</div>
+	</div>
+</div>

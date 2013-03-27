@@ -19,6 +19,7 @@ Scheduler::Application.routes.draw do
   
   resources :events, :only => :index
   resources :rehearsals, :only => [:new, :create, :show, :edit, :update]
+  resources :company_classes, :only => [:new, :create, :show, :edit, :update]
 	
 	match 'dashboard' => 'static_pages#dashboard'
 	match 'features' => 'static_pages#features'   

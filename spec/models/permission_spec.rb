@@ -64,6 +64,10 @@ describe Permission do
 		it { should_not allow(:rehearsals, :show) }
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }
+		
+		it { should_not allow(:company_classes, :show) }
+		it { should_not allow(:company_classes, :new) }
+		it { should_not allow(:company_classes, :create) }
 #
 #		it { should_not allow(:users, :new) }
 #		it { should_not allow(:users, :create) }
@@ -142,6 +146,10 @@ describe Permission do
 		it { should allow(:rehearsals, :show) }
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }
+		
+		it { should allow(:company_classes, :show) }
+		it { should_not allow(:company_classes, :new) }
+		it { should_not allow(:company_classes, :create) }
 	end
 	
 	context "as Administrator" do
@@ -202,6 +210,10 @@ describe Permission do
 		it { should allow(:rehearsals, :show) }
 		it { should allow(:rehearsals, :new) }
 		it { should allow(:rehearsals, :create) }
+		
+		it { should allow(:company_classes, :show) }
+		it { should allow(:company_classes, :new) }
+		it { should allow(:company_classes, :create) }
 	end
 	
 	context "as Super Administrator" do
@@ -262,5 +274,9 @@ describe Permission do
 		it { should allow(:rehearsals, :new) }
 		it { should allow(:rehearsals, :create) }
 		it { should allow(:rehearsals, :show) }
+		
+		it { should allow(:company_classes, :show) }
+		it { should allow(:company_classes, :new) }
+		it { should allow(:company_classes, :create) }
 	end
 end

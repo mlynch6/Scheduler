@@ -1,20 +1,10 @@
 <div class="row-fluid event">
 	<div class="span8">
-		<div class="<%= event.type %>"></div>
 		<div class="title"><%= event.title %></div>
 		<div class="location"><%= event.location.name %></div>
-		<div class="piece"><%= event.piece.name if event.piece %></div>
 	</div>
 	<div class="span4">
 		<div class="time"><%= "#{event.start_at.to_s(:hr12)} to #{event.end_at.to_s(:hr12)}" %></div>
 		<div class="invitees"><%= pluralize(event.invitations.count, "invitee") %></div>
-		<div class="actions">
-			<% if allow? "rehearsals", "show" %>
-				<%= link_to 'Show', rehearsal_path(event) %>
-			<% end %>
-			<% if allow? "rehearsals", "edit" %>
-				<%= link_to 'Edit', edit_rehearsal_path(event) %>
-			<% end %>
-			</div>
 	</div>
 </div>

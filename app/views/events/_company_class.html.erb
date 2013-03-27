@@ -1,0 +1,19 @@
+<div class="row-fluid event">
+	<div class="span8">
+		<div class="companyClass"></div>
+		<div class="title"><%= cclass.title %></div>
+		<div class="location"><%= cclass.location.name %></div>
+	</div>
+	<div class="span4">
+		<div class="time"><%= "#{cclass.start_time} to #{cclass.end_time}" %></div>
+		<div class="invitees"><%= pluralize(cclass.invitations.count, "invitee") %></div>
+		<div class="actions">
+			<% if allow? "company_classes", "show" %>
+				<%= link_to 'Show', company_class_path(cclass) %>
+			<% end %>
+			<% if allow? "company_classes", "edit" %>
+				<%= link_to 'Edit', edit_company_class_path(cclass) %>
+			<% end %>
+			</div>
+	</div>
+</div>

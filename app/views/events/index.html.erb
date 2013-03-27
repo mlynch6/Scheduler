@@ -3,7 +3,7 @@
 
 <div id="events">
 	<div class="row">
-		<h2 class="center span8">
+		<h2 class="center span9">
 			<%= link_to "<< ", date: @date.prev_day %>
 			<%= @date.to_s(:long) %>
 			<%= link_to ">> ", date: @date.next_day %>
@@ -19,19 +19,26 @@
 				</div>
 				
 				<% @events.each do |event| %>
-					<%= render 'event', :event => event %>
+					<% if event.type == "Rehearsal" %>
+						<%= render 'rehearsal', :rehearsal => event %>
+					<% elsif event.type == "CompanyClass" %>
+						<%= render 'company_class', :cclass => event %>
+					<% end %>
 				<% end %>
-			</div>
-
-		</div>
+				
+			</div><!-- end cal-list -->
+		</div><!-- end span8 -->
 		
 		<div class="span4">
+			<% if allow? "company_classes", "new" %>
+				<p><%= link_to 'New Company Class', new_company_class_path, :class => 'btn' %></p>
+			<% end %>
 			<% if allow? "rehearsals", "new" %>
-				<%= link_to 'New Rehearsal', new_rehearsal_path, :class => 'btn btn-mini' %>
+				<p><%= link_to 'New Rehearsal', new_rehearsal_path, :class => 'btn' %></p>
 			<% end %>
 			
 			Navigation Calendar?
-		</div>
+		</div><!-- end span4 -->
 	</div
 
 </div>

@@ -40,10 +40,6 @@ describe Account do
   		should be_valid
   	end
   	
-  	it "creates an AGMA profile" do
-  		account.agma_profile.should_not be_nil
-  	end
-  	
   	it "when main_phone in valid format" do
   		phones = ["111-222-3333","111.222.3333","111 222 3333","1112223333"]
   		phones.each do |valid_phone|
