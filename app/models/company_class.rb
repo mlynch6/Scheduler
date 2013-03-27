@@ -14,11 +14,19 @@
 #
 
 class CompanyClass < Event
+	before_validation :default_title
+
 	validate :check_contracted_start, :if => "start_time.present?"
 	validate :check_contracted_end, :if => "end_time.present?"
 	validate :check_duration_increments, :if => "start_at.present? && end_at.present?"
 
 protected	
+	def default_title
+		if title.empty?
+			self.title = "Company Class"
+		end
+	end
+
 	def check_contracted_start
 		profile = AgmaProfile.find_by_account_id(Account.current_id)
 		if !profile.nil?

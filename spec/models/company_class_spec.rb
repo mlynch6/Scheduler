@@ -43,6 +43,12 @@ describe CompanyClass do
   		should be_valid
   	end
   	
+  	it "without a title - title will be defaulted to 'Company Class'" do
+  		cclass.title = ""
+  		cclass.save
+  		cclass.reload.title.should == "Company Class"
+  	end
+  	
   	it "when start_time is the same as AgmaProfile rehearsal_start" do
   		@cclass.start_time = "9AM"
   		@cclass.end_time = "10AM"

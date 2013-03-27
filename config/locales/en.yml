@@ -25,7 +25,12 @@ en:
       rehearsal:
         start_at: "Start At"
         end_at: "End At"
-      rehearsal:
+        start_date: "Date"
+        start_time: "Start Time"
+        end_time: "End Time"
+      company_class:
+        start_at: "Start At"
+        end_at: "End At"
         start_date: "Date"
         start_time: "Start Time"
         end_time: "End Time"

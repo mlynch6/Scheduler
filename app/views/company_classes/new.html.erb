@@ -1,0 +1,9 @@
+<% provide(:title, 'New Company Class') %>
+<h1>New Company Class</h1>
+
+<%= form_for @cclass, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= render 'shared/error_messages', :object => f.object %>
+	<%= render 'form', :f => f %>
+	
+	<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
+<% end %>
