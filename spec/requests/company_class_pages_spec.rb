@@ -61,8 +61,8 @@ describe "CompanyClass Pages:" do
 		  	fill_in "Title", with: "Test Company Class"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
-		  	fill_in 'From', with: "9AM"
-		  	fill_in 'To', with: "10:30AM"
+		  	fill_in 'From', with: "10AM"
+		  	fill_in 'To', with: "11AM"
 		  	click_button 'Create'
 		
 				should have_selector('title', text: 'Events')
@@ -104,7 +104,31 @@ describe "CompanyClass Pages:" do
 	end
 	
 	context "#show" do
-		pending
+		it "has correct title" do	
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			cclass = FactoryGirl.create(:company_class, account: current_account, location: location)
+	  	visit company_class_path(cclass)
+	  	
+	  	should have_selector('title', text: 'Company Class')
+		  should have_selector('h1', text: cclass.title)
+		end
+		
+		it "has class info shown" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			cclass = FactoryGirl.create(:company_class, account: current_account, location: location,
+					start_date: Time.zone.today, start_time: "10AM", end_time: "11AM")
+	  	visit company_class_path(cclass.id)
+	  	
+			should have_selector('div.text-ui', text: cclass.location.name)
+		  should have_selector('div.text-ui', text: cclass.start_at.strftime('%D'))
+		  pending "missing Start/End Time checks"
+		end
+		
+		it "has invitees shown" do
+			pending
+		end
 	end
 	
 	context "#edit" do

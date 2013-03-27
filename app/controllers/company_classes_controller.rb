@@ -15,7 +15,7 @@ class CompanyClassesController < ApplicationController
 	end
 	
 	def show
-		#@cclass = CompanyClass.find(params[:id])
+		@cclass = CompanyClass.find(params[:id])
 	end
   
   private

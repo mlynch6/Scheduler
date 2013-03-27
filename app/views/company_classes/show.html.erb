@@ -1,0 +1,30 @@
+<% provide(:title, 'Company Class') %>
+<h1><%= @cclass.title %></h1>
+
+<div class="show-ui">
+	<div class="row">
+		<div class="label-ui span2">Location</div>
+		<div class="text-ui span4"><%= @cclass.location.name %></div>
+	</div>
+	
+	<div class="row">
+		<div class="label-ui span2">Date</div>
+		<div class="text-ui span4"><%= @cclass.start_date %></div>
+	</div>
+	
+	<div class="row">
+		<div class="label-ui span2">Time</div>
+		<div class="text-ui span4"><%= @cclass.start_time %> to <%= @cclass.end_time %></div>
+	</div>
+	
+	<div class="row">
+		<div class="label-ui span2">Invitees</div>
+		<div class="text-ui span8">
+			<ul class="unstyled">
+				<% @cclass.employees.each do |employee| %>
+					<li><%= employee.full_name %></li>
+				<% end %>
+			</ul>
+		</div>
+	</div>
+</div>
