@@ -30,6 +30,11 @@ describe Rehearsal do
 											piece: piece) }
 	before do
 		Account.current_id = account.id
+		profile = account.agma_profile
+  	profile.rehearsal_start_time = "9AM"
+  	profile.rehearsal_end_time = "5PM"
+  	profile.rehearsal_increment_min = 30
+  	profile.save
 		@rehearsal = FactoryGirl.build(:rehearsal)
 	end
 	
@@ -49,11 +54,47 @@ describe Rehearsal do
   	it "with minimum attributes" do
   		should be_valid
   	end
+  	
+  	it "when start_time is the same as AgmaProfile rehearsal_start" do
+  		@rehearsal.start_time = "9AM"
+  		@rehearsal.end_time = "10AM"
+  		should be_valid
+  	end
+  	
+  	it "when end_time is the same as AgmaProfile rehearsal_end" do
+  		@rehearsal.start_time = "4PM"
+  		@rehearsal.end_time = "5PM"
+  		should be_valid
+  	end
+  	
+  	it "when duration is a multiple of AgmaProfile rehearsal_increment_min" do
+  		@rehearsal.start_time = "4PM"
+  		@rehearsal.end_time = "4:30 PM"
+  		should be_valid
+  	end
   end
   
   context "(Invalid)" do
 		it "when piece is blank" do
   		@rehearsal.piece_id = " "
+  		should_not be_valid
+  	end
+  	
+  	it "when duration is NOT multiple of AgmaProfile rehearsal_increment_min" do
+  		@rehearsal.start_time = "4PM"
+  		@rehearsal.end_time = "4:15 PM"
+  		should_not be_valid
+  	end
+  	
+  	it "when start_time is before AgmaProfile rehearsal_start" do
+  		@rehearsal.start_time = "8 AM"
+  		@rehearsal.end_time = "10 AM"
+  		should_not be_valid
+  	end
+  	
+  	it "when end_time is after AgmaProfile rehearsal_end" do
+  		@rehearsal.start_time = "4 PM"
+  		@rehearsal.end_time = "6 PM"
   		should_not be_valid
   	end
   end

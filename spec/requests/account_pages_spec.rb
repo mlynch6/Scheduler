@@ -39,7 +39,13 @@ describe "Account Pages:" do
 #    	end
     	
     	it "creates the Account" do
-    		Account.find_by_name(company).should_not == company
+    		click_link "Settings"
+    		should have_content(company)
+    	end
+    	
+    	it "creates the Agma Profile" do
+    		click_link "Settings"
+    		should have_content("30 hours/week")
     	end
     	
     	it "creates an Employee" do

@@ -20,8 +20,8 @@ FactoryGirl.define do
 		sequence(:title)	{ |n| "Rehearsal #{n}" }
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
-		start_time				"9AM"
-		end_time					"10AM"
+		start_time				"10AM"
+		end_time					"11AM"
 		piece
 	end
 end

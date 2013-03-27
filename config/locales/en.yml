@@ -23,6 +23,9 @@ en:
         job_title: "Job Title"
         phone: "Phone #"
       rehearsal:
+        start_at: "Start At"
+        end_at: "End At"
+      rehearsal:
         start_date: "Date"
         start_time: "Start Time"
         end_time: "End Time"

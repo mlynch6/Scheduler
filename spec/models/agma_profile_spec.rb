@@ -21,7 +21,7 @@ describe AgmaProfile do
 	
 	before do
 		Account.current_id = account.id
-		@profile = AgmaProfile.first
+		@profile = account.agma_profile
 	end
 	
 	subject { @profile }
@@ -56,44 +56,44 @@ describe AgmaProfile do
   end
 
 	context "(Invalid)" do
-		context "when rehearsal_start" do
+		context "when rehearsal_start_time" do
 			it "is blank" do
-				@profile.rehearsal_start = " "
+				@profile.rehearsal_start_time = " "
 				should_not be_valid
 			end
 			
 			it "is invalid time" do
 				tms = ["abc", "8", "25:00"]
 	  		tms.each do |invalid_time|
-	  			@profile.rehearsal_start = invalid_time
+	  			@profile.rehearsal_start_time = invalid_time
 	  			should_not be_valid
 	  		end
 			end
 		end
   	
-  	context "when rehearsal_end" do
+  	context "when rehearsal_end_time" do
 			it "is blank" do
-	  		@profile.rehearsal_end = " "
+	  		@profile.rehearsal_end_time = " "
 	  		should_not be_valid
 	  	end
 	  	
 	  	it "is invalid time" do
 				tms = ["abc", "8", "25:00"]
 	  		tms.each do |invalid_time|
-	  			@profile.rehearsal_end = invalid_time
+	  			@profile.rehearsal_end_time = invalid_time
 	  			should_not be_valid
 	  		end
 			end
 	  	
-	  	it "same as rehearsal_start" do
-				@profile.rehearsal_start = 2.hours.ago.to_s(:hr12)
-				@profile.rehearsal_end = @profile.rehearsal_start
+	  	it "same as rehearsal_start_time" do
+				@profile.rehearsal_start_time = "11AM"
+				@profile.rehearsal_end_time = @profile.rehearsal_start_time
 		  	should_not be_valid
 		  end
 		  
-			it "is before rehearsal_start" do
-				@profile.rehearsal_start = 1.hour.ago.to_s(:hr12)
-				@profile.rehearsal_end = 2.hours.ago.to_s(:hr12)
+			it "is before rehearsal_start_time" do
+				@profile.rehearsal_start_time = "11AM"
+				@profile.rehearsal_end_time = "10 AM"
 		  	should_not be_valid
 		  end
 		end
@@ -239,49 +239,49 @@ describe AgmaProfile do
 		it "rehearsal_start" do
 			@profile.rehearsal_start_time = "9AM"
 			@profile.save
-	  	@profile.reload.rehearsal_start.to_s(:hr12).should == '9:00 AM'
+	  	account.agma_profile.rehearsal_start.to_s(:hr12).should == '9:00 AM'
 	  end
 	  
 	  it "rehearsal_start_time" do
 	  	@profile.rehearsal_start_time = "9AM"
 			@profile.save
-	  	@profile.reload.rehearsal_start_time.should == '9AM'
+	  	account.agma_profile.rehearsal_start_time.should == '9AM'
 	  end
 	  
 	  it "rehearsal_end" do
 	  	@profile.rehearsal_end_time = "5 PM"
 			@profile.save
-	  	@profile.reload.rehearsal_end.to_s(:hr12).should == '5:00 PM'
+	  	account.agma_profile.rehearsal_end.to_s(:hr12).should == '5:00 PM'
 	  end
 	  
 	  it "rehearsal_end_time" do
 	  	@profile.rehearsal_end_time = "5 PM"
 			@profile.save
-	  	@profile.reload.rehearsal_end_time.should == '5 PM'
+	  	account.agma_profile.rehearsal_end_time.should == '5 PM'
 	  end
 	  
 	  it "rehearsal_max_hrs_per_week" do
 			@profile.rehearsal_max_hrs_per_week = 30
 			@profile.save
-	  	@profile.reload.rehearsal_max_hrs_per_week.should == 30
+	  	account.agma_profile.rehearsal_max_hrs_per_week.should == 30
 	  end
 	  
 	  it "rehearsal_max_hrs_per_day" do
 	  	@profile.rehearsal_max_hrs_per_day = 6
 			@profile.save
-	  	@profile.reload.rehearsal_max_hrs_per_day.should == 6
+	  	account.agma_profile.rehearsal_max_hrs_per_day.should == 6
 	  end
 	  
 	  it "rehearsal_increment_min" do
 			@profile.rehearsal_increment_min = 60
 			@profile.save
-	  	@profile.reload.rehearsal_increment_min.should == 60
+	  	account.agma_profile.rehearsal_increment_min.should == 60
 	  end
 	  
 	  it "class_break_min" do
 			@profile.class_break_min = 15
 			@profile.save
-	  	@profile.reload.class_break_min.should == 15
+	  	account.agma_profile.class_break_min.should == 15
 	  end
   end
 

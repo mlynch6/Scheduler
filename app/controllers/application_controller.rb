@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   
   before_filter :authorize
   around_filter :scope_current_account
+  around_filter :account_time_zone, if: :current_user
   
   delegate :allow?, to: :current_permission
   helper_method :allow?
@@ -19,6 +20,10 @@ private
 		yield
 	ensure
 		Account.current_id = nil
+	end
+	
+	def account_time_zone(&block)
+		Time.use_zone(current_user.employee.account.time_zone, &block)
 	end
 	
 	def current_permission
