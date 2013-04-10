@@ -28,6 +28,7 @@ describe Permission do
 		
 		it { should_not allow(:agma_profiles, :edit) }
 		it { should_not allow(:agma_profiles, :update) }
+		it { should_not allow(:agma_profiles, :show) }
 
 		it { should_not allow(:locations, :index) }
 		it { should_not allow(:locations, :new) }
@@ -55,20 +56,31 @@ describe Permission do
 		it { should_not allow(:employees, :edit) }
 		it { should_not allow(:employees, :update) }
 		it { should_not allow(:employees, :destroy) }
+		it { should_not allow(:employees, :show) }
 		it { should_not allow(:employees, :inactive) }
 		it { should_not allow(:employees, :activate) }
 		it { should_not allow(:employees, :inactivate) }
+		
+		it { should_not allow(:users, :index) }
+		it { should_not allow(:users, :new) }
+		it { should_not allow(:users, :create) }
+		it { should_not allow(:users, :edit) }
+		it { should_not allow(:users, :update) }
 		
 		it { should_not allow(:events, :index) }
 		
 		it { should_not allow(:rehearsals, :show) }
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }
+		it { should_not allow(:rehearsals, :edit) }
+		it { should_not allow(:rehearsals, :update) }
 		
 		it { should_not allow(:company_classes, :show) }
 		it { should_not allow(:company_classes, :new) }
 		it { should_not allow(:company_classes, :create) }
-#
+		it { should_not allow(:company_classes, :edit) }
+		it { should_not allow(:company_classes, :update) }
+
 #		it { should_not allow(:users, :new) }
 #		it { should_not allow(:users, :create) }
 #
@@ -110,6 +122,7 @@ describe Permission do
 		
 		it { should_not allow(:agma_profiles, :edit) }
 		it { should_not allow(:agma_profiles, :update) }
+		it { should_not allow(:agma_profiles, :show) }
 		
 		it { should allow(:locations, :index) }
 		it { should_not allow(:locations, :new) }
@@ -137,19 +150,30 @@ describe Permission do
 		it { should_not allow(:employees, :edit) }
 		it { should_not allow(:employees, :update) }
 		it { should_not allow(:employees, :destroy) }
+		it { should_not allow(:employees, :show) }
 		it { should_not allow(:employees, :inactive) }
 		it { should_not allow(:employees, :activate) }
 		it { should_not allow(:employees, :inactivate) }
+		
+		it { should_not allow(:users, :index) }
+		it { should_not allow(:users, :new) }
+		it { should_not allow(:users, :create) }
+		it { should_not allow(:users, :edit) }
+		it { should_not allow(:users, :update) }
 		
 		it { should allow(:events, :index) }
 		
 		it { should allow(:rehearsals, :show) }
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }
+		it { should_not allow(:rehearsals, :edit) }
+		it { should_not allow(:rehearsals, :update) }
 		
 		it { should allow(:company_classes, :show) }
 		it { should_not allow(:company_classes, :new) }
 		it { should_not allow(:company_classes, :create) }
+		it { should_not allow(:company_classes, :edit) }
+		it { should_not allow(:company_classes, :update) }
 	end
 	
 	context "as Administrator" do
@@ -174,6 +198,7 @@ describe Permission do
 		
 		it { should allow(:agma_profiles, :edit) }
 		it { should allow(:agma_profiles, :update) }
+		it { should allow(:agma_profiles, :show) }
 		
 		it { should allow(:locations, :index) }
 		it { should allow(:locations, :new) }
@@ -201,19 +226,30 @@ describe Permission do
 		it { should allow(:employees, :edit) }
 		it { should allow(:employees, :update) }
 		it { should_not allow(:employees, :destroy) }
+		it { should allow(:employees, :show) }
 		it { should allow(:employees, :inactive) }
 		it { should allow(:employees, :activate) }
 		it { should allow(:employees, :inactivate) }
+		
+		it { should allow(:users, :index) }
+		it { should allow(:users, :new) }
+		it { should allow(:users, :create) }
+		it { should allow(:users, :edit) }
+		it { should allow(:users, :update) }
 		
 		it { should allow(:events, :index) }
 		
 		it { should allow(:rehearsals, :show) }
 		it { should allow(:rehearsals, :new) }
 		it { should allow(:rehearsals, :create) }
+		it { should allow(:rehearsals, :edit) }
+		it { should allow(:rehearsals, :update) }
 		
 		it { should allow(:company_classes, :show) }
 		it { should allow(:company_classes, :new) }
 		it { should allow(:company_classes, :create) }
+		it { should allow(:company_classes, :edit) }
+		it { should allow(:company_classes, :update) }
 	end
 	
 	context "as Super Administrator" do
@@ -238,6 +274,7 @@ describe Permission do
 		
 		it { should allow(:agma_profiles, :edit) }
 		it { should allow(:agma_profiles, :update) }
+		it { should allow(:agma_profiles, :show) }
 		
 		it { should allow(:locations, :index) }
 		it { should allow(:locations, :new) }
@@ -260,23 +297,34 @@ describe Permission do
 		it { should allow(:pieces, :inactivate) }
 		
 		it { should allow(:employees, :index) }
-		it { should allow(:employees, :inactive) }
 		it { should allow(:employees, :new) }
 		it { should allow(:employees, :create) }
 		it { should allow(:employees, :edit) }
 		it { should allow(:employees, :update) }
 		it { should allow(:employees, :destroy) }
+		it { should allow(:employees, :show) }
+		it { should allow(:employees, :inactive) }
 		it { should allow(:employees, :activate) }
 		it { should allow(:employees, :inactivate) }
+		
+		it { should allow(:users, :index) }
+		it { should allow(:users, :new) }
+		it { should allow(:users, :create) }
+		it { should allow(:users, :edit) }
+		it { should allow(:users, :update) }
 		
 		it { should allow(:events, :index) }
 		
 		it { should allow(:rehearsals, :new) }
 		it { should allow(:rehearsals, :create) }
 		it { should allow(:rehearsals, :show) }
+		it { should allow(:rehearsals, :edit) }
+		it { should allow(:rehearsals, :update) }
 		
 		it { should allow(:company_classes, :show) }
 		it { should allow(:company_classes, :new) }
 		it { should allow(:company_classes, :create) }
+		it { should allow(:company_classes, :edit) }
+		it { should allow(:company_classes, :update) }
 	end
 end

@@ -1,7 +1,11 @@
 <div class="control-group required">
 	<%= f.label :name, :class => 'control-label' %>
 	<div class="controls">
-		<%= f.text_field :name %>
+		<% if @account.new_record? %>
+			<%= f.text_field :name %>
+		<% else %>
+			<span class="uneditable-input"><%= @account.name %></span>
+		<% end %>
 	</div>
 </div>
 

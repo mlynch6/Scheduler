@@ -1,0 +1,99 @@
+$calendarBorder: #d3d3d3;
+$calendarHourBackground: #e6e6e6;
+$calendarHourHeight: 79px;
+$calendarHourWidth: 60px;
+$calendarTimeHeight: 19px;
+
+table.calendar {
+	border-collapse: collapse;
+	border-spacing: 0;
+	table-layout: fixed;
+	width: 100%;
+	vertical-align: top;
+	
+	thead {
+		text-align: center;
+		font-weight: bold;
+		font-size: 1.1em;
+		background: $calendarHourBackground;
+	}
+	
+	.cal-blue {
+		background: #dfeffc;
+		border: 2px solid #c5dbec;
+	}
+	.cal-yellow {
+		background: #fff9e5;
+		border: 2px solid #fcefa1;
+	}
+	.cal-green {
+		background: #f1fbe5;
+		border: 2px solid #8cce3b;
+	}
+	.cal-red {
+		background: #fef1ec;
+		border: 2px solid #cd0a0a;
+	}
+	.cal-brown {
+		background: #cbc7bd;
+		border: 2px solid #654b24;
+	}
+	.cal-grey {
+		background: #c9c9c9;
+		border: 2px solid #aaaaaa;
+	}
+	
+}
+  
+#calendar-weekly {
+	position: relative;
+}
+.cal-scrollable {
+	height: 400px;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+}
+
+.cal-weekly {
+	.hour-column { width: $calendarHourWidth; }
+	.day-column { height: 1920px; }
+	.day-container {
+		border-right: 1px solid $calendarBorder;
+		height: 100%
+	}
+	.grid-container, .day-container { position: relative; }
+	.hour-grid { 
+		position: absolute;
+		width: 100%;
+		background: $calendarHourBackground;
+		font-size: .9em;
+		text-align: center;
+		position: absolute;
+	}
+	.display-grid { 
+		position: absolute;
+		width: 100%;
+	}
+	.hour-slot {
+		height: $calendarHourHeight;
+		border-bottom: 1px solid $calendarBorder;
+	}
+	.time-slot {
+		height: $calendarTimeHeight;
+		border-bottom: 1px dotted $calendarBorder;
+	}
+	.hour-end {
+		border: none;
+	}
+	
+	.cal-event {
+		position: absolute;
+		width: 90%;
+		background: #c9c9c9;
+		border: 2px solid #aaaaaa;
+		border-radius: 5px;
+		padding: 3px;
+		/*** TO OVERRIDE THE EVENTS.CSS file ***/
+		min-height: 0px;
+	}
+}

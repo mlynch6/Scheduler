@@ -6,7 +6,7 @@ describe "CompanyClass Pages:" do
   context "#new" do
   	it "has correct title" do
 			log_in
-	  	visit events_path
+	  	click_link 'Scheduling'
 	  	click_link 'New Company Class'
 	  	
 	  	should have_selector('title', text: 'New Company Class')
@@ -31,6 +31,13 @@ describe "CompanyClass Pages:" do
   		
 			should have_selector('option', text: 'Peter Parker')
 			should_not have_selector('option', text: 'Clark Kent')
+		end
+		
+		it "defaults Start Date when date is sent in URL" do
+			log_in
+			visit new_company_class_path(date: Time.zone.today.to_s)
+			
+			find_field('company_class_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
 		end
 		
 		context "with error" do
@@ -62,16 +69,17 @@ describe "CompanyClass Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
 		  	fill_in 'From', with: "10AM"
-		  	fill_in 'To', with: "11AM"
+		  	fill_in 'company_class_end_time', with: "11AM"
 		  	click_button 'Create'
 		
-				should have_selector('title', text: 'Events')
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Daily Schedule')
 				
 				should have_selector('div.companyClass')
 				should have_content("Test Company Class")
 				should have_content(location.name)
-				should have_content("9:00 AM")
-				should have_content("10:30 AM")
+				should have_content("10:00 AM")
+				should have_content("11:00 AM")
 				should have_content("0 invitees")
 			end
 			
@@ -87,11 +95,12 @@ describe "CompanyClass Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'To', with: "10:30AM"
+		  	fill_in 'company_class_end_time', with: "10:30AM"
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
 		
-				should have_selector('title', text: 'Events')
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Daily Schedule')
 				
 				should have_selector('div.companyClass')
 				should have_content("Test Company Class")
@@ -107,8 +116,10 @@ describe "CompanyClass Pages:" do
 		it "has correct title" do	
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
-			cclass = FactoryGirl.create(:company_class, account: current_account, location: location)
-	  	visit company_class_path(cclass)
+			cclass = FactoryGirl.create(:company_class, account: current_account, location: location, start_date: Time.zone.today)
+			click_link "Scheduling"
+			click_link "Daily Schedule"
+	  	click_link "View"
 	  	
 	  	should have_selector('title', text: 'Company Class')
 		  should have_selector('h1', text: cclass.title)
@@ -118,20 +129,98 @@ describe "CompanyClass Pages:" do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			cclass = FactoryGirl.create(:company_class, account: current_account, location: location,
-					start_date: Time.zone.today, start_time: "10AM", end_time: "11AM")
-	  	visit company_class_path(cclass.id)
+					start_date: Time.zone.today,
+					start_time: "10AM",
+					end_time: "11AM")
+	  	visit company_class_path(cclass)
 	  	
-			should have_selector('div.text-ui', text: cclass.location.name)
-		  should have_selector('div.text-ui', text: cclass.start_at.strftime('%D'))
-		  pending "missing Start/End Time checks"
+			should have_content(cclass.location.name)
+		  should have_content(cclass.start_at.strftime('%D'))
+		  should have_content("10:00 AM to 11:00 AM")
 		end
 		
 		it "has invitees shown" do
-			pending
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			cclass = FactoryGirl.create(:company_class, account: current_account, location: location,
+					start_date: Time.zone.today,
+					start_time: "10AM",
+					end_time: "11AM")
+			employee1 = FactoryGirl.create(:employee, account: current_account)
+			employee2 = FactoryGirl.create(:employee, account: current_account)
+			FactoryGirl.create(:invitation, event: cclass, employee: employee1)
+			FactoryGirl.create(:invitation, event: cclass, employee: employee2)
+			
+			visit company_class_path(cclass)
+	  	
+			should have_content(employee1.full_name)
+			should have_content(employee2.full_name)
 		end
 	end
 	
 	context "#edit" do
-		pending
+		it "has correct title" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			cclass = FactoryGirl.create(:company_class,
+					account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+	  	click_link 'Scheduling'
+	  	click_link 'Edit'
+	  	
+	  	should have_selector('title', text: 'Edit Company Class')
+			should have_selector('h1', text: 'Edit Company Class')
+		end
+		
+	  it "record with error" do
+	  	log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			cclass = FactoryGirl.create(:company_class,
+					account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+	  	visit edit_company_class_path(cclass)
+	  	
+	  	fill_in "Date", with: ""
+	  	click_button 'Update'
+	
+			should have_selector('div.alert-error')
+		end
+	
+		it "with bad record in URL shows 'Record Not Found' error" do
+			pending
+			log_in
+			edit_company_class_path(0)
+	
+			should have_content('Record Not Found')
+		end
+		
+		it "record with wrong account shows 'Record Not Found' error" do
+			pending
+			log_in
+			cclass_wrong_account = FactoryGirl.create(:company_class)
+			visit edit_company_class_path(cclass_wrong_account)
+	
+			should have_content('Record Not Found')
+		end
+	 
+		it "record with valid info saves company class" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			cclass = FactoryGirl.create(:company_class,
+					account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+			visit edit_company_class_path(cclass)
+	  	
+	  	new_title = Faker::Lorem.word
+			fill_in "Title", with: new_title
+			click_button 'Update'
+	
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'Daily Schedule')
+			should have_content(new_title)
+		end
 	end
 end

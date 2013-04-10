@@ -1,18 +1,22 @@
-<% provide(:title, 'New Location') %>
-<h1>New Location</h1>
-<%= form_for @location, :html => { :class => 'form-horizontal' } do |f| %>
-	<%= render 'shared/error_messages', :object => f.object %>
-	
-	<div class="row">
-		<div class="span8">
-			<%= render 'form', :f => f %>
-			<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
-		</div>
-		<div class="span4">
-			<div class="alert alert-info">
-				Add the locations of your rehearsals, performances, and costume fittings. <br />
-				Examples: Studio A, Apollo Theater, Wardrobe
-			</div>
-		</div>
+<% provide(:title, 'Add Location') %>
+<% provide(:header_current, 'Administration') %>
+<% provide(:current, 'NewLocation') %>
+
+<h1>Add Location</h1>
+
+<div class="span9">
+	<%= form_for @location, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= render 'shared/error_messages', :object => f.object %>
+		
+		<%= render 'form', :f => f %>
+		<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
+	<% end %>
+</div>
+
+<div class="span3">
+	<div class="alert alert-info"><i class="icon-info-sign"></i> 
+		Add the locations of your rehearsals, performances, and costume fittings.
 	</div>
-<% end %>
+
+	<%= render 'shared/subnav' %>
+</div>

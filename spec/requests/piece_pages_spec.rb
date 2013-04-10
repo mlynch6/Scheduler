@@ -6,7 +6,8 @@ describe "Piece Pages:" do
 	context "#index" do
 		it "has correct title & table headers" do
 			log_in
-	  	visit pieces_path
+	  	click_link "Scheduling"
+	  	click_link "Pieces"
 	  	
 	  	should have_selector('title', text: 'Active Pieces')
 		  should have_selector('h1', text: 'Active Pieces')
@@ -18,7 +19,7 @@ describe "Piece Pages:" do
 			log_in
 	  	visit pieces_path
 	  	
-	    should have_selector('div.alert', text: "No records found")
+	    should have_selector('div.alert')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -42,7 +43,7 @@ describe "Piece Pages:" do
 			FactoryGirl.create(:piece, account: current_account)
 			visit pieces_path
 	
-			should_not have_link('New')
+			should_not have_link('Add Piece')
 			should_not have_link('Edit')
 			should_not have_link('Inactivate')
 			should_not have_link('Delete')
@@ -53,7 +54,7 @@ describe "Piece Pages:" do
 			FactoryGirl.create(:piece, account: current_account)
 			visit pieces_path
 	
-			should have_link('New')
+			should have_link('Add Piece')
 			should have_link('Edit')
 			should have_link('Inactivate')
 			should_not have_link('Delete')
@@ -81,8 +82,9 @@ describe "Piece Pages:" do
 	context "#inactive" do
 		it "has correct title & table headers" do
 			log_in
-	  	visit pieces_path
-	  	click_link 'Inactive'
+	  	click_link "Scheduling"
+	  	click_link "Pieces"
+	  	click_link 'Inactive Pieces'
 	  	
 	  	should have_selector('title', text: 'Inactive Pieces')
 		  should have_selector('h1', text: 'Inactive Pieces')
@@ -93,10 +95,9 @@ describe "Piece Pages:" do
 		it "without records" do
 			log_in
 			current_account.pieces.inactive.delete_all
-	  	visit pieces_path
-	  	click_link 'Inactive'
+	  	visit inactive_pieces_path
 	  	
-	    should have_selector('div.alert', text: "No records found")
+	    should have_selector('div.alert')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -154,18 +155,18 @@ describe "Piece Pages:" do
 	context "#new" do
 		it "has correct title" do
 			log_in
-			visit pieces_path
-	  	click_link 'New'
+			click_link "Scheduling"
+	  	click_link "Pieces"
+	  	click_link 'Add Piece'
 	
-			should have_selector('title', text: 'New Piece')
-			should have_selector('h1', text: 'New Piece')
+			should have_selector('title', text: 'Add Piece')
+			should have_selector('h1', text: 'Add Piece')
 		end
 		
 		context "with error" do
 			it "shows error message" do
 				log_in
-				visit pieces_path
-		  	click_link 'New'
+				visit new_piece_path
 		  	click_button 'Create'
 		
 				should have_selector('div.alert-error')
@@ -173,46 +174,17 @@ describe "Piece Pages:" do
 			
 			it "doesn't create Piece" do
 				log_in
-				visit pieces_path
-		  	click_link 'New'
+				visit new_piece_path
 		
 				expect { click_button 'Create' }.not_to change(Piece, :count)
 			end
 		end
-			
-#			context "Scenes section" do
-#		  	it "has a Scenes section" do
-#		    	should have_content('Scenes')
-#		    end
-#		    
-#		    it "has 'Add Scene' button" do
-#		    	should have_link('Add Scene')
-#		    end
-#		    
-#		    it "clicking 'Add Scene' button adds new row of form inputs" do
-#		    	pending
-#		    end
-#		  end
-#		  
-#		  context "Roles section" do
-#		  	it "has a Roles section" do
-#		    	should have_content('Roles')
-#		    end
-#		    
-#		    it "has 'Add Role' button" do
-#		    	should have_link('Add Role')
-#		    end
-#		    
-#		    it "clicking 'Add Role' button adds new row of form inputs" do
-#		    	pending
-#		    end
-#		  end
 	
 		context "with valid info" do
 			it "creates new Piece" do
 				log_in
-				visit pieces_path
-		  	click_link 'New'
+				visit new_piece_path
+				
 		  	new_name = Faker::Lorem.word
 				fill_in "Name", with: new_name
 				click_button 'Create'
@@ -228,7 +200,9 @@ describe "Piece Pages:" do
 		it "has correct title" do
 			log_in
 			piece = FactoryGirl.create(:piece, account: current_account)
-	  	visit edit_piece_path(piece)
+			click_link "Scheduling"
+	  	click_link "Pieces"
+	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: 'Edit Piece')
 			should have_selector('h1', text: 'Edit Piece')
@@ -276,47 +250,21 @@ describe "Piece Pages:" do
 		end
 	end
 
-	it "#destroy deletes the record" do
-  	log_in
-		piece = FactoryGirl.create(:piece, account: current_account)
-		visit pieces_path
-		click_link "delete_#{piece.id}"
-		
-		should have_selector('div.alert-success')
-		should have_selector('title', text: 'Active Pieces')
-		
-		click_link 'Active'
-		should_not have_content(piece.name)
-		
-		click_link 'Inactive'
-		should_not have_content(piece.name)
-	end
-
-	describe "#show" do
-		pending
-#		let(:piece) { FactoryGirl.create(:piece) }
-#  	before do
-#  		visit piece_path(piece)
-#  	end
-#  	
-#  	context "page" do
-#	    it { should have_selector('title', text: piece.name) }
-#	    it { should have_selector('title', text: 'Performances') }
-#	    it { should have_selector('h1', text: piece.name) }
-#	    
-#	    describe "has sub navigation" do
-#		    it "has a 'Performances' link" do
-#	    		should have_link('Performances', href: piece_path(piece))
-#	    	end
-#	    	
-#	    	it "has a 'Scenes' link" do
-#	    		should have_link('Scenes', href: piece_scenes_path(piece))
-#	    	end
-#	    	
-#	    	it "has a 'Roles' link" do
-#	    		should have_link('Roles', href: piece_roles_path(piece))
-#	    	end
-#	    end
-#    end
+	context "#destroy" do
+		it "deletes the record" do
+	  	log_in
+			piece = FactoryGirl.create(:piece, account: current_account)
+			visit pieces_path
+			click_link "delete_#{piece.id}"
+			
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'Active Pieces')
+			
+			click_link 'Active Pieces'
+			should_not have_content(piece.name)
+			
+			click_link 'Inactive Pieces'
+			should_not have_content(piece.name)
+		end
 	end
 end

@@ -6,7 +6,7 @@ describe "Rehearsal Pages:" do
   context "#new" do
   	it "has correct title" do
 			log_in
-	  	visit events_path
+	  	click_link 'Scheduling'
 	  	click_link 'New Rehearsal'
 	  	
 	  	should have_selector('title', text: 'New Rehearsal')
@@ -43,6 +43,13 @@ describe "Rehearsal Pages:" do
 			should_not have_selector('option', text: 'Clark Kent')
 		end
 		
+		it "defaults Start Date when date is sent in URL" do
+			log_in
+			visit new_rehearsal_path(date: Time.zone.today.to_s)
+			
+			find_field('rehearsal_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
+		end
+		
 		context "with error" do
 			it "shows error message" do
 				log_in
@@ -66,18 +73,18 @@ describe "Rehearsal Pages:" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
-				visit events_path
-	  		click_link 'New Rehearsal'
+				visit new_rehearsal_path
 	  		
 		  	fill_in "Title", with: "Test Rehearsal"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2012"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'To', with: "11:30AM"
+		  	fill_in 'rehearsal_end_time', with: "11:30AM"
 		  	select piece.name, from: "Piece"
 				click_button 'Create'
 		
-				should have_selector('title', text: 'Events')
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Daily Schedule')
 				
 				should have_selector('div.rehearsal')
 				should have_content("Test Rehearsal")
@@ -93,19 +100,19 @@ describe "Rehearsal Pages:" do
 				location = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
 				e1 = FactoryGirl.create(:employee, account: current_account)
-				visit events_path
-	  		click_link 'New Rehearsal'
+				visit new_rehearsal_path
 	  		
 		  	fill_in "Title", with: "Test Rehearsal"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2012"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'To', with: "11:30AM"
+		  	fill_in 'rehearsal_end_time', with: "11:30AM"
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
 		
-				should have_selector('title', text: 'Events')
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Daily Schedule')
 				
 				should have_selector('div.rehearsal')
 				should have_content("Test Rehearsal")
@@ -123,15 +130,127 @@ describe "Rehearsal Pages:" do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			piece = FactoryGirl.create(:piece, account: current_account)
-			rehearsal = FactoryGirl.create(:rehearsal, account: current_account, location: location, piece: piece)
-	  	visit rehearsal_path(rehearsal)
+			rehearsal = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: location,
+					piece: piece,
+					start_date: Time.zone.today)
+			click_link 'Scheduling'
+	  	click_link 'View'
 	  	
 	  	should have_selector('title', text: 'Rehearsal')
 		  should have_selector('h1', text: rehearsal.title)
 		end
+		
+		it "has rehearsal info shown" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			rehearsal = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: location,
+					piece: piece,
+					start_date: Time.zone.today,
+					start_time: "11am",
+					end_time: "12pm")
+			visit rehearsal_path(rehearsal)
+	  	
+			should have_content(rehearsal.location.name)
+		  should have_content(rehearsal.start_date.strftime('%D'))
+		  should have_content("11:00 AM to 12:00 PM")
+		  should have_content(rehearsal.piece.name)
+		end
+		
+		it "has invitees shown" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			rehearsal = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: location,
+					piece: piece,
+					start_date: Time.zone.today)
+			employee1 = FactoryGirl.create(:employee, account: current_account)
+			employee2 = FactoryGirl.create(:employee, account: current_account)
+			FactoryGirl.create(:invitation, event: rehearsal, employee: employee1)
+			FactoryGirl.create(:invitation, event: rehearsal, employee: employee2)
+			
+			visit rehearsal_path(rehearsal)
+	  	
+			should have_content(employee1.full_name)
+			should have_content(employee2.full_name)
+		end
 	end
 	
 	context "#edit" do
-		pending
+		it "has correct title" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			rehearsal = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: location,
+					piece: piece,
+					start_date: Time.zone.today)
+	  	click_link 'Scheduling'
+	  	click_link 'Edit'
+	  	
+	  	should have_selector('title', text: 'Edit Rehearsal')
+			should have_selector('h1', text: 'Edit Rehearsal')
+		end
+		
+	  it "record with error" do
+	  	log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			rehearsal = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: location,
+					piece: piece,
+					start_date: Time.zone.today)
+	  	visit edit_rehearsal_path(rehearsal)
+	  	
+	  	fill_in "Title", with: ""
+	  	click_button 'Update'
+	
+			should have_selector('div.alert-error')
+		end
+	
+		it "with bad record in URL shows 'Record Not Found' error" do
+			pending
+			log_in
+			edit_rehearsal_path(0)
+	
+			should have_content('Record Not Found')
+		end
+		
+		it "record with wrong account shows 'Record Not Found' error" do
+			pending
+			log_in
+			rehearsal_wrong_account = FactoryGirl.create(:rehearsal)
+			visit edit_rehearsal_path(rehearsal_wrong_account)
+	
+			should have_content('Record Not Found')
+		end
+	 
+		it "record with valid info saves rehearsal" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			rehearsal = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: location,
+					piece: piece,
+					start_date: Time.zone.today)
+			visit edit_rehearsal_path(rehearsal)
+	  	
+	  	new_title = Faker::Lorem.word
+			fill_in "Title", with: new_title
+			click_button 'Update'
+	
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'Daily Schedule')
+			should have_content(new_title)
+		end
 	end
 end

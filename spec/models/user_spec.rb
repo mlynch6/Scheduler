@@ -14,7 +14,8 @@
 require 'spec_helper'
 
 describe User do
-	let(:employee) { FactoryGirl.create(:employee) }
+	let(:account) { FactoryGirl.create(:account) }
+	let(:employee) { FactoryGirl.create(:employee, account: account) }
 	let(:user) { FactoryGirl.create(:user,
 				employee: employee,
 				username: 'TestUser') }
@@ -34,14 +35,15 @@ describe User do
   	
   	it { should respond_to(:employee) }
   	
+  	it { should respond_to(:new_registration) }
   	it { should respond_to(:authenticate) }
   	it { should respond_to(:set_admin_role) }
     
-    it "should not allow access to employee_id" do
-      expect do
-        User.new(employee_id: employee.id)
-      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end
+    it "employee_id cannot be changed" do
+			new_employee = FactoryGirl.create(:employee)
+			user.update_attribute(:employee_id, new_employee.id)
+			user.reload.employee_id.should == employee.id
+		end
     
     it "should not allow access to role" do
       expect do
@@ -51,6 +53,14 @@ describe User do
   end
 	
   context "(Valid)" do
+  	describe "when registering a new account & employee_id is blank" do
+  		before do
+  			@user.new_registration = true
+  			@user.employee_id = " "
+  		end
+  		
+  		it { should be_valid }
+  	end
   	it "with minimum attributes" do
   		should be_valid
   	end
@@ -69,7 +79,12 @@ describe User do
 		end
   end
   
-  context "(Invalid)" do
+  context "(Invalid)" do  	
+  	describe "when employee_id is blank" do
+  		before {@user.employee_id = " " }
+  		it { should_not be_valid }
+  	end
+  	
   	describe "when username is blank" do
   		before {@user.username = " " }
   		it { should_not be_valid }
@@ -148,32 +163,45 @@ describe User do
 	  end
 	end
 	
-	describe "employee_id cannot be changed" do
-		let(:new_employee) { FactoryGirl.create(:employee) }
-		before { user.update_attribute(:employee_id, new_employee.id) }
-		
-		it { user.reload.employee_id.should == employee.id }
-	end
-	
-	context ".authenticate" do
-		let(:found_user) { User.find_by_username(user.username) }
-											
-		describe "with valid password" do
-			it { user.should == found_user.authenticate(user.password) }
-		end
-		
-		describe "with invalid password" do
-			let(:invalid_password_user) { found_user.authenticate("invalid") }
+	describe "(Methods)" do
+		context ".authenticate" do
+			let(:found_user) { User.find_by_username(user.username) }
+												
+			describe "with valid password" do
+				it { user.should == found_user.authenticate(user.password) }
+			end
 			
-			it { should_not == invalid_password_user }
-			specify { invalid_password_user.should be_false }
+			describe "with invalid password" do
+				let(:invalid_password_user) { found_user.authenticate("invalid") }
+				
+				it { should_not == invalid_password_user }
+				specify { invalid_password_user.should be_false }
+			end
+		end
+		
+		context ".set_admin_role" do
+			describe "sets role to Administrator" do
+				before { user.set_admin_role }
+				it { user.reload.role.should == "Administrator" }
+			end
 		end
 	end
 	
-	context ".set_admin_role" do
-		describe "sets role to Administrator" do
-			before { user.set_admin_role }
-			it { user.reload.role.should == "Administrator" }
+	describe "(Scopes)" do
+		before do
+			account.employees.delete_all
+		end
+		let!(:employee1) { FactoryGirl.create(:employee, account: account) }
+		let!(:user1) { FactoryGirl.create(:user, employee: employee1) }
+		let!(:employee2) { FactoryGirl.create(:employee, account: account) }
+		let!(:user2) { FactoryGirl.create(:user, employee: employee2) }
+		let!(:employee_wrong_acnt) { FactoryGirl.create(:employee) }
+		let!(:user_wrong_acnt) { FactoryGirl.create(:user, employee: employee_wrong_acnt) }
+		
+		describe "default_scope" do
+			it "returns the records for current account" do
+				User.all.should == [user1, user2]
+			end
 		end
 	end
 end

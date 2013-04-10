@@ -1,44 +1,39 @@
-<% provide(:title, 'Events') %>
-<h1>Events</h1>
+<% provide(:title, 'Daily Schedule') %>
+<% provide(:header_current, 'Scheduling') %>
+<% provide(:current, 'Events') %>
 
-<div id="events">
+<div id="events" class="span9">
 	<div class="row">
-		<h2 class="center span9">
-			<%= link_to "<< ", date: @date.prev_day %>
+		<h2 class="text-center">
+			<a href="<%= events_path(date: @date.prev_day) %>"><i class="icon-chevron-left"></i></a>
 			<%= @date.to_s(:long) %>
-			<%= link_to ">> ", date: @date.next_day %>
+			<a href="<%= events_path(date: @date.next_day) %>"><i class="icon-chevron-right"></i></a>
 		</h2>
 	</div>
 	
 	<div class="row">
-		<div class="span8">			
-			<div class="cal-list">
+		<div class="calendar cal-list container-fluid">
 			
-				<div class="row-fluid dayofweek-header">
-					<%= @date.strftime('%A') %>
-				</div>
+			<div class="dayofweek-header row-fluid">
+				<%= @date.strftime('%A') %>
+			</div>
 				
-				<% @events.each do |event| %>
-					<% if event.type == "Rehearsal" %>
-						<%= render 'rehearsal', :rehearsal => event %>
-					<% elsif event.type == "CompanyClass" %>
-						<%= render 'company_class', :cclass => event %>
-					<% end %>
+			<% @events.each do |event| %>
+				<% if event.type == "Rehearsal" %>
+					<%= render 'rehearsal', :rehearsal => event %>
+				<% elsif event.type == "CompanyClass" %>
+					<%= render 'company_class', :cclass => event %>
 				<% end %>
+			<% end %>
 				
-			</div><!-- end cal-list -->
-		</div><!-- end span8 -->
-		
-		<div class="span4">
-			<% if allow? "company_classes", "new" %>
-				<p><%= link_to 'New Company Class', new_company_class_path, :class => 'btn' %></p>
-			<% end %>
-			<% if allow? "rehearsals", "new" %>
-				<p><%= link_to 'New Rehearsal', new_rehearsal_path, :class => 'btn' %></p>
-			<% end %>
-			
-			Navigation Calendar?
-		</div><!-- end span4 -->
-	</div
+		</div><!-- end cal-list -->
+	</div>
+</div>
 
+<div class="span3">
+	<div class="section">
+		<div id="datepicker"></div>
+	</div>
+	
+	<%= render 'shared/subnav' %>
 </div>

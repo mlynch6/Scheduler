@@ -4,18 +4,20 @@ describe "Agma Profile Pages:" do
   subject { page }
 	
 	context "#edit" do
-		it "has correct title" do
+		before do
 			log_in
-			click_link "Settings"
-			click_link "Rehearsal Weeks"
-	  	
-	  	should have_selector('title', text: 'Rehearsal Week Settings')
-			should have_selector('h1', text: 'Rehearsal Week Settings')
+			click_link "Administration"
+			click_link "Company Information"
+			click_link "Rehearsal Week Settings"
+			click_link "Edit"
 		end
 		
-	  it "record with error" do
-	  	log_in
-			visit edit_agma_profile_path(current_account)
+		it "has correct title" do
+	  	should have_selector('title', text: 'Edit Rehearsal Week Settings')
+			should have_selector('h1', text: 'Edit Rehearsal Week Settings')
+		end
+		
+	  it "invalid record shows error" do
 	  	fill_in "Max Hours/Week", with: ""
 	  	click_button 'Update'
 	
@@ -23,8 +25,7 @@ describe "Agma Profile Pages:" do
 		end
 	
 		it "with bad record in URL shows current account" do
-			pending
-			log_in
+pending
 			visit edit_agma_profile_path(0)
 	
 			should have_selector('title', text: 'Rehearsal Week Settings')
@@ -32,7 +33,7 @@ describe "Agma Profile Pages:" do
 		end
 		
 		it "record with wrong account shows current account" do
-			pending
+pending
 			wrong_account = FactoryGirl.create(:account)
 			log_in
 			visit edit_agma_profile_path(agma_profile)
@@ -41,10 +42,7 @@ describe "Agma Profile Pages:" do
 			should have_content(current_account.name)
 		end
 	 
-		it "record with valid info saves profile" do
-			log_in
-			click_link "Settings"
-			click_link "Rehearsal Weeks"
+		it "valid record saves profile" do
 			select  "8:30 AM", from: "Rehearsal Start"
 			select  "5:30 PM", from: "Rehearsal End"
 			fill_in "Max Hours/Week", with: 40
@@ -54,13 +52,51 @@ describe "Agma Profile Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Settings')
-			should have_selector('div.text-ui', text: '8:30 AM')
-			should have_selector('div.text-ui', text: '5:30 PM')
-			should have_selector('div.text-ui', text: '40 hours/week')
-			should have_selector('div.text-ui', text: '8 hours/day')
-			should have_selector('div.text-ui', text: '15 minutes')
-			should have_selector('div.text-ui', text: '30 minutes')
+			should have_selector('title', text: 'Rehearsal Week Settings')
+			should have_content('8:30 AM')
+			should have_content('5:30 PM')
+			should have_content('40 hours/week')
+			should have_content('8 hours/day')
+			should have_content('15 minutes')
+			should have_content('30 minutes')
+		end
+	end
+	
+	context "#show" do
+		before do
+			log_in
+			click_link "Administration"
+			click_link "Company Information"
+			click_link "Rehearsal Week Settings"
+		end
+		
+		it "has correct title" do
+	  	should have_selector('title', text: 'Rehearsal Week Settings')
+			should have_selector('h1', text: 'Rehearsal Week Settings')
+		end
+		
+		it "has Options links" do
+	  	should have_link('Edit')
+	  	
+	  	should have_link('Company Information')
+			should have_link('Rehearsal Week Settings')
+		end
+		
+		it "displays correct data" do
+			should have_selector('div.text-ui', text: "9:00 AM")
+			should have_selector('div.text-ui', text: "6:00 PM")
+			should have_selector('div.text-ui', text: "30 hours/week")
+			should have_selector('div.text-ui', text: "6 hours/day")
+			should have_selector('div.text-ui', text: "30 minutes")
+			should have_selector('div.text-ui', text: "15 minutes")
+		end
+		
+		it "with bad record in URL shows current account" do
+pending
+		end
+		
+		it "record with wrong account shows current account" do
+pending
 		end
 	end
 end

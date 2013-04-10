@@ -1,35 +1,40 @@
 <% provide(:title, 'Rehearsal') %>
+<% provide(:header_current, 'Scheduling') %>
+<% provide(:current, 'ShowRehearsal') %>
+
 <h1><%= @rehearsal.title %></h1>
 
-<div class="show-ui">
+<div class="show-ui span9">
 	<div class="row">
 		<div class="label-ui span2">Location</div>
-		<div class="text-ui span4"><%= @rehearsal.location.name %></div>
+		<div class="text-ui span7"><%= @rehearsal.location.name %></div>
 	</div>
-	
+		
 	<div class="row">
 		<div class="label-ui span2">Date</div>
-		<div class="text-ui span4"><%= @rehearsal.start_date %></div>
+		<div class="text-ui span7"><%= @rehearsal.start_date %></div>
 	</div>
-	
+		
 	<div class="row">
 		<div class="label-ui span2">Time</div>
-		<div class="text-ui span4"><%= @rehearsal.start_time %> to <%= @rehearsal.end_time %></div>
+		<div class="text-ui span7"><%= @rehearsal.start_time %> to <%= @rehearsal.end_time %></div>
 	</div>
-	
+		
 	<div class="row">
 		<div class="label-ui span2">Piece</div>
-		<div class="text-ui span4"><%= @rehearsal.piece.name %></div>
+		<div class="text-ui span7"><%= @rehearsal.piece.name %></div>
 	</div>
-	
+		
 	<div class="row">
 		<div class="label-ui span2">Invitees</div>
-		<div class="text-ui span8">
-			<ul class="unstyled">
-				<% @rehearsal.employees.each do |employee| %>
-					<li><%= employee.full_name %></li>
+		<div class="text-ui span7">
+			<% @rehearsal.employees.each do |employee| %>
+					<%= employee.full_name %>
 				<% end %>
-			</ul>
 		</div>
 	</div>
+</div>
+
+<div class="span3">	
+	<%= render 'shared/subnav' %>
 </div>

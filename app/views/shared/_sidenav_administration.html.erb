@@ -1,0 +1,31 @@
+<% class_active = " class=""active""" %>
+<div class="well" style="padding: 8px 0;">
+	<ul class="nav nav-list">
+		<li class="nav-header">Company Information</li>
+		<% if allow? "accounts", "show" %>
+			<li<%= class_active if yield(:current) == "Company" %>><%= link_to "Company Information", account_path(current_user.employee.account_id) %></li>
+		<% end %>
+		<% if allow? "agma_profiles", "show" %>
+			<li<%= class_active if yield(:current) == "Rehearsal" %>><%= link_to "Rehearsal Week Settings", agma_profile_path(AgmaProfile.first) %></li>
+		<% end %>
+		
+		<li class="nav-header">Locations</li>
+		<% if allow? "locations", "index" %>
+			<li<%= class_active if yield(:current) == "Locations" %>><%= link_to "Active Locations", locations_path %></li>
+		<% end %>
+		<% if allow? "locations", "inactive" %>
+			<li<%= class_active if yield(:current) == "InactiveLocations" %>><%= link_to "Inactive Locations", inactive_locations_path %></li>
+		<% end %>
+		<% if allow? "locations", "new" %>
+			<li<%= class_active if yield(:current) == "NewLocation" %>><%= link_w_icon "Add Location", new_location_path, "plus" %></li>
+		<% end %>
+		
+		<li class="nav-header">Users</li>
+		<% if allow? "users", "index" %>
+			<li<%= class_active if yield(:current) == "Users" %>><%= link_to "Users", users_path %></li>
+		<% end %>
+		<% if allow? "users", "new" %>
+			<li<%= class_active if yield(:current) == "NewUser" %>><%= link_w_icon "Add User", new_user_path, "plus" %></li>
+		<% end %>
+	</ul>
+</div>

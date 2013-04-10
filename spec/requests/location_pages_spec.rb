@@ -5,8 +5,10 @@ describe "Location Pages:" do
   
   context "#index" do
   	it "has correct title & table headers" do
-			log_in
-	  	visit locations_path
+  		log_in
+	  	click_link "Administration"
+	  	click_link "Locations"
+	  	click_link "Active Locations"
 	  	
 	  	should have_selector('title', text: 'Active Locations')
 		  should have_selector('h1', text: 'Active Locations')
@@ -18,7 +20,7 @@ describe "Location Pages:" do
 			log_in
 	  	visit locations_path
 	  	
-	    should have_selector('div.alert', text: "No records found")
+	    should have_selector('div.alert')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -42,7 +44,7 @@ describe "Location Pages:" do
 			FactoryGirl.create(:location, account: current_account)
 			visit locations_path
 	
-			should_not have_link('New')
+			should_not have_link('Add Location')
 			should_not have_link('Edit')
 			should_not have_link('Inactivate')
 			should_not have_link('Delete')
@@ -53,7 +55,7 @@ describe "Location Pages:" do
 			FactoryGirl.create(:location, account: current_account)
 			visit locations_path
 	
-			should have_link('New')
+			should have_link('Add Location')
 			should have_link('Edit')
 			should have_link('Inactivate')
 			should_not have_link('Delete')
@@ -81,8 +83,9 @@ describe "Location Pages:" do
 	context "#inactive" do
 		it "has correct title & table headers" do
 			log_in
-	  	visit locations_path
-	  	click_link 'Inactive'
+	  	click_link "Administration"
+	  	click_link "Locations"
+	  	click_link "Inactive Locations"
 	  	
 	  	should have_selector('title', text: 'Inactive Locations')
 		  should have_selector('h1', text: 'Inactive Locations')
@@ -93,10 +96,9 @@ describe "Location Pages:" do
 		it "without records" do
 			log_in
 			current_account.locations.inactive.delete_all
-	  	visit locations_path
-	  	click_link 'Inactive'
+	  	visit inactive_locations_path
 	  	
-	    should have_selector('div.alert', text: "No records found")
+	    should have_selector('div.alert')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -154,27 +156,26 @@ describe "Location Pages:" do
 	context "#new" do
 		it "has correct title" do
 			log_in
-			visit locations_path
-	  	click_link 'New'
+			click_link "Administration"
+	  	click_link "Locations"
+	  	click_link "Add Location"
 	
-			should have_selector('title', text: 'New Location')
-			should have_selector('h1', text: 'New Location')
+			should have_selector('title', text: 'Add Location')
+			should have_selector('h1', text: 'Add Location')
 		end
 		
 		context "with error" do
 			it "shows error message" do
 				log_in
-				visit locations_path
-		  	click_link 'New'
-		  	click_button 'Create'
+				visit new_location_path
+				click_button 'Create'
 		
 				should have_selector('div.alert-error')
 			end
 			
 			it "doesn't create Location" do
 				log_in
-				visit locations_path
-		  	click_link 'New'
+				visit new_location_path
 		
 				expect { click_button 'Create' }.not_to change(Location, :count)
 			end
@@ -183,8 +184,8 @@ describe "Location Pages:" do
 		context "with valid info" do
 			it "creates new Location" do
 				log_in
-				visit locations_path
-		  	click_link 'New'
+				visit new_location_path
+		  	
 		  	new_name = Faker::Lorem.word
 				fill_in "Name", with: new_name
 				click_button 'Create'
@@ -219,7 +220,7 @@ describe "Location Pages:" do
 		it "with bad record in URL shows 'Record Not Found' error" do
 			pending
 			log_in
-			edit_location_path(0)
+			visit edit_location_path(0)
 	
 			should have_content('Record Not Found')
 		end
@@ -248,19 +249,21 @@ describe "Location Pages:" do
 		end
 	end
 	
-	it "#destroy deletes the record" do
-  	log_in
-		location = FactoryGirl.create(:location, account: current_account)
-		visit locations_path
-		click_link "delete_#{location.id}"
-		
-		should have_selector('div.alert-success')
-		should have_selector('title', text: 'Active Locations')
-		
-		click_link 'Active'
-		should_not have_content(location.name)
-		
-		click_link 'Inactive'
-		should_not have_content(location.name)
+	context "#destroy" do
+		it "deletes the record" do
+	  	log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			visit locations_path
+			click_link "delete_#{location.id}"
+			
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'Active Locations')
+			
+			click_link 'Active Locations'
+			should_not have_content(location.name)
+			
+			click_link 'Inactive Locations'
+			should_not have_content(location.name)
+		end
 	end
 end

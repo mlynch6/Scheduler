@@ -5,9 +5,9 @@ Scheduler::Application.routes.draw do
 	match 'signup' => 'accounts#new'
 	
 	resources :accounts
-	resources :agma_profiles, :only => [:edit, :update]
-  resources :users
+	resources :agma_profiles, :only => [:show, :edit, :update]
   resources :sessions
+  resources :users, :except => [:show]
   
   resources :locations, :pieces, :employees do
   	get 'inactive', on: :collection

@@ -10,10 +10,11 @@ class Permission
 			allow [:rehearsals, :company_classes], [:show]
 			
 			if user.role == "Administrator"
-				allow [:accounts], [:edit, :update, :show]
-				allow [:accounts, :agma_profiles], [:edit, :update]
-				allow [:locations, :pieces, :employees], [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
-				allow [:rehearsals, :company_classes], [:new, :create]
+				allow [:accounts, :agma_profiles], [:edit, :update, :show]
+				allow [:locations, :pieces], [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
+				allow [:employees], [:new, :create, :edit, :update, :inactive, :activate, :inactivate, :show]
+				allow [:rehearsals, :company_classes], [:new, :create, :edit, :update]
+				allow [:users], [:index, :new, :create, :edit, :update]
 			end
 			
 			allow_all if user.role == "Super Administrator"

@@ -17,8 +17,7 @@ class LocationsController < ApplicationController
 	def create
 		@location = Location.new(params[:location])
 		if @location.save
-			flash[:success] = "Location created"
-			redirect_to locations_path
+			redirect_to locations_path, :notice => "Successfully created the location."
 		else
 			form_setup
 			render 'new'
@@ -33,8 +32,7 @@ class LocationsController < ApplicationController
 	def update
 		@location = Location.find(params[:id])
 		if @location.update_attributes(params[:location])
-			flash[:success] = "Location saved"
-			redirect_to locations_path
+			redirect_to locations_path, :notice => "Successfully updated the location."
 		else
 			form_setup
 			render 'edit'
@@ -43,20 +41,17 @@ class LocationsController < ApplicationController
 	
 	def destroy
 		Location.find(params[:id]).destroy
-		flash[:success] = "Location deleted"
-		redirect_to :action => :index
+		redirect_to locations_path, :notice => "Successfully deleted the location."
 	end
 	
 	def activate
 		Location.find(params[:id]).activate
-		flash[:success] = "Location activated"
-		redirect_to :action => :inactive
+		redirect_to inactive_locations_path, :notice => "Successfully activated the location."
 	end
 	
 	def inactivate
 		Location.find(params[:id]).inactivate
-		flash[:success] = "Location inactivated"
-		redirect_to :action => :index
+		redirect_to locations_path, :notice => "Successfully inactivated the location."
 	end
 
 	private

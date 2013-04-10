@@ -1,0 +1,36 @@
+<% provide(:title, 'Employee') %>
+<% provide(:header_current, 'Employees') %>
+<% provide(:current, 'ShowEmployee') %>
+
+<h1><%= @employee.full_name %></h1>
+
+<div class="show-ui span6">
+	<div class="row">
+		<div class="label-ui span2"><%= Employee.human_attribute_name(:active) %></div>
+		<div class="text-ui span4"><%= @employee.active ? "Active" : "Inactive" %></div>
+	</div>
+	<div class="row">
+		<div class="label-ui span2"><%= Employee.human_attribute_name(:job_title) %></div>
+		<div class="text-ui span4"><%= @employee.job_title %></div>
+	</div>
+</div>
+
+<div class="show-ui span3">
+	<div class="section">
+		<h2>Phone Numbers</h2>
+		<div class="row-ui">
+			<%= @employee.phone %>
+		</div>
+	</div>
+	
+	<div class="section">
+		<h2>Email</h2>
+		<div class="row-ui">
+			<%= @employee.email %>
+		</div>
+	</div>
+</div>
+
+<div class="span3">
+	<%= render 'shared/subnav' %>
+</div>

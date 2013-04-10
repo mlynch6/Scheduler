@@ -3,10 +3,9 @@ class SessionsController < ApplicationController
 	end
 	
 	def create
-		user = User.find_by_username((params[:username]).downcase)
+		user = User.unscoped.find_by_username((params[:username]).downcase)
 		if user && user.authenticate(params[:password])
 			session[:user_id] = user.id
-			flash[:success] = "Logged in!"
 			redirect_to dashboard_path
 		else
 			flash[:error] = "Username or password is invalid"
@@ -16,7 +15,6 @@ class SessionsController < ApplicationController
 	
 	def destroy
 		session[:user_id] = nil
-		flash[:success] = "Logged out!"
-		redirect_to root_url
+		redirect_to root_url, :notice => "You have been successfully signed off."
 	end
 end

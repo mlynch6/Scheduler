@@ -1,0 +1,50 @@
+<% provide(:title, 'Users') %>
+<% provide(:header_current, 'Administration') %>
+<% provide(:current, 'Users') %>
+
+<h1>Users</h1>
+
+<div class="span9">
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Employee</th>
+	  		<th>Username</th>
+	  		<th>&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @users.each do |user| %>
+				<tr>
+					<td><%= user.employee.name %></td>
+					<td><%= user.username %></td>
+					<td>
+						<% if allow? "users", "edit" %>
+							<%= link_to 'Edit', edit_user_path(user), :class => 'btn btn-small', :id => "edit_#{user.id}" %>
+						<% end %>
+						<% if allow? "users", "destroy" %>
+							<%= link_to 'Delete', user, method: :delete, confirm: "Delete?", :class => 'btn btn-small btn-danger', :id => "delete_#{user.id}" %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+
+	<div class="row">
+		<div class="span10 offset2">
+			<%= will_paginate(class: 'pagination',
+						previous_label: "&laquo;",
+			    	next_label: "&raquo;"
+					)%>
+		</div>
+	</div>
+	
+	<% unless @users.length > 0 %>
+		<div class="alert">No users are active. Click on 'Add User' to get started.</div>
+	<% end %>
+</div>
+
+<div class="span3">
+	<%= render 'shared/subnav' %>
+</div>

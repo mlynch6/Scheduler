@@ -6,14 +6,14 @@ describe "Employee Pages:" do
   context "#index" do
   	it "has correct title & table headers" do
 			log_in
-	  	visit employees_path
+	  	click_link "Employees"
+	  	click_link "Active Employees"
 	  	
 	  	should have_selector('title', text: 'Active Employees')
 		  should have_selector('h1', text: 'Active Employees')
 			
 			should have_selector('th', text: "Name")
-			should have_selector('th', text: "Email")
-			should have_selector('th', text: "Phone")
+			should have_selector('th', text: "Job Role")
 		end
 		
 		it "without records" do
@@ -21,8 +21,7 @@ describe "Employee Pages:" do
 			current_user.employee.inactivate
 	  	visit employees_path
 	  	
-	    should have_content("No records found")
-	    should have_selector('div.alert', text: "No records found")
+	    should have_selector('div.alert')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -35,7 +34,7 @@ describe "Employee Pages:" do
 			should have_selector('div.pagination')
 			Employee.active.paginate(page: 1, per_page: 3).each do |employee|
 				should have_selector('td', text: employee.name)
-				should have_link('Edit', href: edit_employee_path(employee))
+				should have_link('Show', href: employee_path(employee))
 				should have_link('Inactivate', href: inactivate_employee_path(employee))
 				should have_link('Delete', href: employee_path(employee))
 	    end
@@ -46,8 +45,8 @@ describe "Employee Pages:" do
 			FactoryGirl.create(:employee, account: current_account)
 			visit employees_path
 	
-			should_not have_link('New')
-			should_not have_link('Edit')
+			should_not have_link('Add Employee')
+			should_not have_link('View')
 			should_not have_link('Inactivate')
 			should_not have_link('Delete')
 		end
@@ -57,8 +56,8 @@ describe "Employee Pages:" do
 			FactoryGirl.create(:employee, account: current_account)
 			visit employees_path
 	
-			should have_link('New')
-			should have_link('Edit')
+			should have_link('Add Employee')
+			should have_link('View')
 			should have_link('Inactivate')
 			should_not have_link('Delete')
 		end
@@ -85,24 +84,22 @@ describe "Employee Pages:" do
 	context "#inactive" do
 		it "has correct title & table headers" do
 			log_in
-	  	visit employees_path
-	  	click_link 'Inactive'
+	  	click_link "Employees"
+	  	click_link "Inactive Employees"
 	  	
 	  	should have_selector('title', text: 'Inactive Employees')
 		  should have_selector('h1', text: 'Inactive Employees')
 			
 			should have_selector('th', text: "Name")
-			should have_selector('th', text: "Email")
-			should have_selector('th', text: "Phone")
+			should have_selector('th', text: "Job Role")
 		end
 			
 		it "without records" do
 			log_in
 			current_account.employees.inactive.delete_all
-	  	visit employees_path
-	  	click_link 'Inactive'
+	  	visit inactive_employees_path
 	  	
-	    should have_selector('div.alert', text: "No records found")
+	    should have_selector('div.alert')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -125,6 +122,7 @@ describe "Employee Pages:" do
 			FactoryGirl.create(:employee_inactive, account: current_account)
 			visit inactive_employees_path
 			
+			should_not have_link('Add Employee')
 			should_not have_link('Activate')
 			should_not have_link('Delete')
 		end
@@ -133,7 +131,8 @@ describe "Employee Pages:" do
 			log_in_admin
 			FactoryGirl.create(:employee_inactive, account: current_account)
 			visit inactive_employees_path
-	
+			
+			should have_link('Add Employee')
 			should have_link('Activate')
 			should_not have_link('Delete')
 		end
@@ -160,18 +159,18 @@ describe "Employee Pages:" do
 	context "#new" do
 		it "has correct title" do
 			log_in
-			visit employees_path
-	  	click_link 'New'
+			click_link "Employees"
+	  	click_link "Active Employees"
+	  	click_link 'Add Employee'
 	
-			should have_selector('title', text: 'New Employee')
-			should have_selector('h1', text: 'New Employee')
+			should have_selector('title', text: 'Add Employee')
+			should have_selector('h1', text: 'Add Employee')
 		end
 		
 		context "with error" do
 			it "shows error message" do
 				log_in
-				visit employees_path
-		  	click_link 'New'
+				visit new_employee_path
 		  	click_button 'Create'
 		
 				should have_selector('div.alert-error')
@@ -179,8 +178,7 @@ describe "Employee Pages:" do
 			
 			it "doesn't create Employee" do
 				log_in
-				visit employees_path
-		  	click_link 'New'
+				visit new_employee_path
 		
 				expect { click_button 'Create' }.not_to change(Employee, :count)
 			end
@@ -189,15 +187,15 @@ describe "Employee Pages:" do
 		context "with valid info" do
 			it "creates new Employee" do
 				log_in
-				visit employees_path
-		  	click_link 'New'
+				visit new_employee_path
+				
 		  	new_last_name = Faker::Name.last_name
 		  	new_first_name = Faker::Name.first_name
 		  	job_title = Faker::Name.title
 		  	email = Faker::Internet.free_email("#{new_first_name} #{new_last_name}")
 		  	fill_in "First Name", with: new_first_name
 				fill_in "Last Name", with: new_last_name
-				fill_in "Job Title", with: job_title
+				fill_in "Job Role", with: job_title
 				fill_in "Phone", with: '111-222-3333'
 				fill_in "Email", with: email
 				click_button 'Create'
@@ -206,8 +204,6 @@ describe "Employee Pages:" do
 				should have_selector('title', text: 'Active Employees')
 				should have_content("#{new_last_name}, #{new_first_name}")
 				should have_content(job_title)
-				should have_content('111-222-3333')
-				should have_content(email)
 			end
 		end
 	end
@@ -237,7 +233,7 @@ describe "Employee Pages:" do
 		end
 	
 		it "with bad record in URL shows 'Record Not Found' error" do
-			pending
+pending
 			log_in
 			visit edit_employee_path(0)
 	
@@ -245,7 +241,7 @@ describe "Employee Pages:" do
 		end
 		
 		it "record with wrong account shows 'Record Not Found' error" do
-			pending
+pending
 			log_in
 			employee_wrong_account = FactoryGirl.create(:employee)
 			visit edit_employee_path(employee_wrong_account)
@@ -263,7 +259,7 @@ describe "Employee Pages:" do
 	  	email = Faker::Internet.free_email("#{new_first_name} #{new_last_name}")
 	  	fill_in "First Name", with: new_first_name
 			fill_in "Last Name", with: new_last_name
-			fill_in "Job Title", with: job_title
+			fill_in "Job Role", with: job_title
 			fill_in "Phone", with: '111-222-3333'
 			fill_in "Email", with: email
 			click_button 'Update'
@@ -272,24 +268,63 @@ describe "Employee Pages:" do
 			should have_selector('title', text: 'Active Employees')
 			should have_content("#{new_last_name}, #{new_first_name}")
 			should have_content(job_title)
-			should have_content('111-222-3333')
-			should have_content(email)
 		end
 	end
 	
-	it "#destroy deletes the record" do
-		log_in
-		employee = FactoryGirl.create(:employee, account: current_account, last_name: 'Delete Test')
-		visit employees_path
-		click_link "delete_#{employee.id}"
+	context "#show" do
+		it "has correct title" do	
+			log_in
+			employee = FactoryGirl.create(:employee, account: current_account)
+	  	visit employees_path
+			click_link "show_#{employee.id}"
+	  	
+	  	should have_selector('title', text: 'Employee')
+		  should have_selector('h1', text: employee.full_name)
+		end
 		
-		should have_selector('div.alert-success')
-		should have_selector('title', text: 'Active Employees')
+		it "has employee info shown" do
+			log_in
+			employee = FactoryGirl.create(:employee, account: current_account)
+	  	visit employee_path(employee)
+	  	
+			should have_selector('div.text-ui', text: "Active")
+		  should have_selector('div.text-ui', text: employee.job_title)
+		  should have_selector('div.text-ui', text: employee.email)
+		  should have_selector('div.text-ui', text: employee.phone)
+		end
 		
-		click_link 'Active'
-		should_not have_content(employee.name)
+		it "doesn't have links for Employee" do
+			log_in_employee
+			employee = FactoryGirl.create(:employee, account: current_account)
+	  	visit employee_path(employee)
+	  	
+			should_not have_link('Edit Employee')
+		end
 		
-		click_link 'Inactive'
-		should_not have_content(employee.name)
+		it "has links for Administrator" do
+			log_in_admin
+			employee = FactoryGirl.create(:employee, account: current_account)
+	  	visit employee_path(employee)
+	
+			should have_link('Edit Employee')
+		end
+	end
+	
+	context "#destroy" do
+		it "deletes the record" do
+			log_in
+			employee = FactoryGirl.create(:employee, account: current_account, last_name: 'Delete Test')
+			visit employees_path
+			click_link "delete_#{employee.id}"
+			
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'Active Employees')
+			
+			click_link 'Active Employees'
+			should_not have_content(employee.name)
+			
+			click_link 'Inactive Employees'
+			should_not have_content(employee.name)
+		end
 	end
 end

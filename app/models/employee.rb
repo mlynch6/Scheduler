@@ -23,6 +23,7 @@ class Employee < ActiveRecord::Base
 	has_one :user, dependent: :destroy
   accepts_nested_attributes_for :user
   has_many :invitations, dependent: :destroy
+  has_many :events, through: :invitations
   
   validates :first_name,	presence: true, length: { maximum: 30 }
   validates :last_name,	presence: true, length: { maximum: 30 }
@@ -35,11 +36,7 @@ class Employee < ActiveRecord::Base
   default_scope lambda { order('last_name ASC, first_name ASC').where(:account_id => Account.current_id) }
   scope :active, where(:active => true)
 	scope :inactive, where(:active => false)
-  
-  # Used to require email for a new account registration
-  def new_account_registration?
-  	new_registration
-	end
+	scope :without_user, joins("left outer join users on employee_id = employees.id").where("users.employee_id IS NULL")
 	
 	def name
 		"#{last_name}, #{first_name}"
@@ -55,5 +52,12 @@ class Employee < ActiveRecord::Base
 	
 	def inactivate
 		self.update_attribute(:active, false)
+	end
+
+private
+
+	 # Used to require email for a new account registration
+  def new_account_registration?
+  	new_registration
 	end
 end

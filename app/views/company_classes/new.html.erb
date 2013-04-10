@@ -1,9 +1,18 @@
 <% provide(:title, 'New Company Class') %>
+<% provide(:header_current, 'Scheduling') %>
+<% provide(:current, 'NewCompanyClass') %>
+
 <h1>New Company Class</h1>
 
-<%= form_for @cclass, :html => { :class => 'form-horizontal' } do |f| %>
-	<%= render 'shared/error_messages', :object => f.object %>
-	<%= render 'form', :f => f %>
-	
-	<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
-<% end %>
+<div class="span9">
+	<%= form_for @cclass, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= render 'shared/error_messages', :object => f.object %>
+		<%= render 'form', :f => f %>
+		
+		<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
+	<% end %>
+</div>
+
+<div class="span3">
+	<%= render 'shared/subnav' %>
+</div>

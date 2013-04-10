@@ -11,25 +11,17 @@ module ApplicationHelper
 	end
 	
 	#Returns HTML for a bootstrap icon followed by text
-	def icon_with_text(text, icon)
-		content_tag(:i, "", :class => "icon-#{icon}")+" "+text
-	end
-	
-	#Returns 'Active' if true, 'Inactive' if false
-	def active_bool_to_text(activeFlag)
-		if activeFlag
-			"Active"
-		else
-			"Inactive"
-		end
+	def link_w_icon(text, path, icon)
+		link_text = content_tag(:i, nil, class: "icon-#{icon}")+text
+		content_tag(:a, link_text.html_safe, :href => path)
 	end
 	
 	#Formats date throughout Application
 	# %d-%m-%Y				=>	08-01-2012
 	# %-d-%-m-%Y			=>	8-2-2012
 	# %v OR %e-%b-%Y	=>	25-Aug-2012
-	def formatted_date(d, format="%v")
-		Date.strptime(d, '%Y-%m-%d').strftime(format)
+	def formatted_date(dt, format="%m/%d/%Y")
+		Date.strptime(dt, '%Y-%m-%d').strftime(format)
 	end
 
 end

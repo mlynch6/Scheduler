@@ -1,0 +1,9 @@
+<% if yield(:header_current) == "Home" %>
+	<%= render 'shared/sidenav_home' %>
+<% elsif yield(:header_current) == "Administration" %>
+	<%= render 'shared/sidenav_administration' %>
+<% elsif yield(:header_current) == "Scheduling" %>
+	<%= render 'shared/sidenav_schedule' %>
+<% elsif yield(:header_current) == "Employees" %>
+	<%= render 'shared/sidenav_employees' %>
+<% end %>

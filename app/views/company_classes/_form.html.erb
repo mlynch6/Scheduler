@@ -1,9 +1,8 @@
 <div class="control-group">
 	<%= f.label :title, :class => 'control-label' %>
 	<div class="controls">
-		<%= f.text_field :title %>
-		<span class="label label-info">Info</span>
-		<span class="help-inline muted">If you don't enter a title, 'Company Class' will be used</span>
+		<%= f.text_field :title, :placeholder => 'Company Class' %>
+		<div><span class="label label-info">Info</span> If you don't enter a title, 'Company Class' will be used</div>
 	</div>
 </div>
 
@@ -26,17 +25,12 @@
 
 <div class="control-group required">
 	<%= f.label :start_time, 'From', :class => 'control-label' %>
-	<div class="controls">
+	<div class="controls control-rows">
 		<div class="input-append">
 			<%= f.text_field :start_time, :class => 'input-mini' %>
 			<span class="add-on"><i class="icon-time"></i></span>
 		</div>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :start_time, 'To', :class => 'control-label' %>
-	<div class="controls">
+		&nbsp; to &nbsp;
 		<div class="input-append">
 			<%= f.text_field :end_time, :class => 'input-mini' %>
 			<span class="add-on"><i class="icon-time"></i></span>

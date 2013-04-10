@@ -6,10 +6,11 @@ describe "Event Pages:" do
   context "#index" do
   	it "has correct title & headers" do
 			log_in
-	  	visit events_path
+	  	click_link "Scheduling"
+	  	click_link "Daily Schedule"
 	  	
-	  	should have_selector('title', text: 'Events')
-		  should have_selector('h1', text: 'Events')
+	  	should have_selector('title', text: 'Daily Schedule')
+		 	
 		  should have_selector('h2', text: Time.zone.today.to_s(:long))
 		  should have_content(Time.zone.today.strftime('%A'))
 		end
@@ -25,14 +26,14 @@ describe "Event Pages:" do
 			log_in
 			loc1 = FactoryGirl.create(:location, account: current_account)
 			loc2 = FactoryGirl.create(:location, account: current_account)		
-			2.times { FactoryGirl.create(:event,
-										account: current_account,
-										location: loc1,
-										start_date: Time.zone.today) }
-			2.times { FactoryGirl.create(:event,
-										account: current_account,
-										location: loc2,
-										start_date: Time.zone.today) }
+			FactoryGirl.create(:event,
+					account: current_account,
+					location: loc1,
+					start_date: Time.zone.today)
+			FactoryGirl.create(:event,
+					account: current_account,
+					location: loc2,
+					start_date: Time.zone.today)
 			visit events_path
 	
 			Event.for_daily_calendar(Time.zone.today).each do |event|
@@ -64,7 +65,8 @@ describe "Event Pages:" do
 				should have_content(event.end_at.to_s(:hr12))
 				should have_selector('div', text: rehearsal.piece.name)
 				
-				should have_link('Show', href: edit_rehearsal_path)
+				should have_link('View', href: rehearsal_path)
+				should have_link('Edit', href: edit_rehearsal_path)
 	    end
 		end
 		
@@ -84,7 +86,8 @@ describe "Event Pages:" do
 				should have_content(company_class.start_at.to_s(:hr12))
 				should have_content(company_class.end_at.to_s(:hr12))
 				
-				should have_link('Show', href: edit_company_class_path)
+				should have_link('View', href: company_class_path)
+				should have_link('Edit', href: edit_company_class_path)
 	    end
 		end
 		
@@ -94,8 +97,8 @@ describe "Event Pages:" do
 			FactoryGirl.create(:event, account: current_account, location: location)
 			visit events_path
 	
-			should_not have_link('New Company Class', href: new_company_class_path)
-			should_not have_link('New Rehearsal', href: new_rehearsal_path)
+			should_not have_link('New Company Class')
+			should_not have_link('New Rehearsal')
 		end
 		
 		it "has links for Administrator" do
@@ -104,8 +107,8 @@ describe "Event Pages:" do
 			FactoryGirl.create(:event, account: current_account, location: location)
 			visit events_path
 	
-			should have_link('New Company Class', href: new_company_class_path)
-			should have_link('New Rehearsal', href: new_rehearsal_path)
+			should have_link('New Company Class')
+			should have_link('New Rehearsal')
 		end
 		
 	end

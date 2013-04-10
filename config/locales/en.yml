@@ -17,11 +17,19 @@ en:
         rehearsal_max_hrs_per_day: "Max Hours/Day"
         rehearsal_increment_min: "Rehearsal Increments"
         class_break_min: "Class Break"
+      location:
+        active: "Status"
+      piece:
+        active: "Status"
       employee:
         first_name: "First Name"
         last_name: "Last Name"
-        job_title: "Job Title"
+        active: "Status"
+        job_title: "Job Role"
         phone: "Phone #"
+      user:
+        password_digest: "Password"
+        password_confirmation: "Confirm Password"
       rehearsal:
         start_at: "Start At"
         end_at: "End At"

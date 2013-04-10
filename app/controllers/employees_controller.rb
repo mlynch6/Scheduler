@@ -17,12 +17,15 @@ class EmployeesController < ApplicationController
 	def create
 		@employee = Employee.new(params[:employee])
 		if @employee.save
-			flash[:success] = "Employee created"
-			redirect_to employees_path
+			redirect_to employees_path, :notice => "Successfully created the employee."
 		else
 			form_setup
 			render 'new'
 		end
+	end
+	
+	def show
+		@employee = Employee.find(params[:id])
 	end
 	
 	def edit
@@ -33,8 +36,7 @@ class EmployeesController < ApplicationController
 	def update
 		@employee = Employee.find(params[:id])
 		if @employee.update_attributes(params[:employee])
-			flash[:success] = "Employee saved"
-			redirect_to employees_path
+			redirect_to employees_path, :notice => "Successfully updated the employee."
 		else
 			form_setup
 			render 'edit'
@@ -43,20 +45,17 @@ class EmployeesController < ApplicationController
 	
 	def destroy
 		Employee.find(params[:id]).destroy
-		flash[:success] = "Employee deleted"
-		redirect_to :action => :index
+		redirect_to employees_path, :notice => "Successfully deleted the employee."
 	end
 	
 	def activate
 		Employee.find(params[:id]).activate
-		flash[:success] = "Employee activated"
-		redirect_to :action => :inactive
+		redirect_to inactive_employees_path, :notice => "Successfully activated the employee."
 	end
 	
 	def inactivate
 		Employee.find(params[:id]).inactivate
-		flash[:success] = "Employee inactivated"
-		redirect_to :action => :index
+		redirect_to employees_path, :notice => "Successfully inactivated the employee."
 	end
 
 	private

@@ -1,18 +1,22 @@
-<% provide(:title, 'New Piece') %>
-<h1>New Piece</h1>
-<%= form_for @piece, :html => { :class => 'form-horizontal' } do |f| %>
-	<%= render 'shared/error_messages', :object => f.object %>
-	
-	<div class="row">
-		<div class="span8">
-			<%= render 'form', :f => f %>
-		</div>
-		<div class="span4">
-			<div class="alert alert-info">
-				Add Scenes and Roles to your piece now if you know them. You can always add or update these later.
-			</div>
-		</div>
-	</div>
+<% provide(:title, 'Add Piece') %>
+<% provide(:header_current, 'Scheduling') %>
+<% provide(:current, 'NewPiece') %>
 
-	<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
-<% end %>
+<h1>Add Piece</h1>
+
+<div class="span9">
+	<%= form_for @piece, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= render 'shared/error_messages', :object => f.object %>
+		
+		<%= render 'form', :f => f %>
+		<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
+	<% end %>
+</div>
+
+<div class="span3">
+	<div class="alert alert-info"><i class="icon-info-sign"></i> 
+		Add Scenes and Roles to your piece now if you know them. You can always add or update these later.
+	</div>
+	
+	<%= render 'shared/subnav' %>
+</div>

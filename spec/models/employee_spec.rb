@@ -44,6 +44,7 @@ describe Employee do
   	it { should respond_to(:account) }
   	it { should respond_to(:user) }
   	it { should respond_to(:invitations) }
+  	it { should respond_to(:events) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -194,6 +195,18 @@ describe Employee do
 				end
 			end
 		end
+		
+		describe "events" do
+			let(:event1) { FactoryGirl.create(:event, account: account) }
+			let(:event2) { FactoryGirl.create(:event, account: account) }
+			let!(:second_invite) { FactoryGirl.create(:invitation, event: event1, employee: employee) }
+			let!(:first_invite) { FactoryGirl.create(:invitation, event: event2, employee: employee) }
+			let!(:non_invite) { FactoryGirl.create(:invitation, event: event1) }
+	
+			it "has multiple events" do
+				employee.events.count.should == 2
+			end
+		end
   end
   
   context "correct value is returned for" do		
@@ -247,8 +260,13 @@ describe Employee do
 			account.employees.delete_all
 		end
 		let!(:third_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown", first_name: "Brett") }
+		let!(:user3) { FactoryGirl.create(:user, employee: third_employee) }
+		
 		let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown", first_name: "Andrew") }
+		
 		let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
+		let!(:user1) { FactoryGirl.create(:user, employee: first_employee) }
+		
 		let!(:employee_inactive) { FactoryGirl.create(:employee_inactive, account: account, last_name: "Cambell") }
 		let!(:employee_wrong_acnt) { FactoryGirl.create(:employee) }
 		let!(:employee_wrong_acnt_inactive) { FactoryGirl.create(:employee_inactive) }
@@ -268,6 +286,12 @@ describe Employee do
 		describe "inactive" do
 			it "returns inactive records" do
 				Employee.inactive.should == [employee_inactive]
+			end
+		end
+		
+		describe "without_user" do
+			it "returns employee records that do not have an associated user" do
+				Employee.without_user.should == [second_employee, employee_inactive]
 			end
 		end
 	end

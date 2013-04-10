@@ -1,24 +1,21 @@
+<% class_active = " class=""active""" %>
 <div class="nav-collapse">
 	<ul class="nav">
+		<li<%= class_active if yield(:header_current) == "Home" %>><a href="<%= dashboard_path %>"><i class="icon-home"></i> Home</a></li>
+		<% if allow? "accounts", "show" %>
+			<li<%= class_active if yield(:header_current) == "Administration" %>><a href="<%= account_path(current_user.employee.account) %>"><i class="icon-cog"></i> Administration</a></li>
+		<% end %>
 		<% if allow? "events", "index" %>
-			<li><%= link_to "Events", events_path %></li>
-		<% end %>
-		<% if allow? "pieces", "index" %>
-			<li><%= link_to "Pieces", pieces_path %></li>
-		<% end %>
-		<% if allow? "locations", "index" %>
-			<li><%= link_to "Locations", locations_path %></li>
+			<li<%= class_active if yield(:header_current) == "Scheduling" %>><a href="<%= events_path %>"><i class="icon-list"></i> Scheduling</a></li>
 		<% end %>
 		<% if allow? "employees", "index" %>
-			<li><%= link_to "Employees", employees_path %></li>
+			<li<%= class_active if yield(:header_current) == "Employees" %>><a href="<%= employees_path %>"><i class="icon-user"></i> Employees</a></li>
 		<% end %>
 	</ul>
 </div>
+
 <ul class="nav pull-right">
 	<li class="divider-vertical"></li>
-	<% if allow? "accounts", "edit" %>
-		<li><a href="<%= account_path(current_user.employee.account) %>" title="Settings"><i class="icon-cog icon-white"></i></a></li>
-	<% end %>
-	<li><%= link_to current_user.username, dashboard_path %></li>
+	<li><%= link_to current_user.username, edit_user_path(current_user) %></li>
 	<li><%= link_to "Sign Out", logout_path %></li>
 </ul>

@@ -1,0 +1,27 @@
+<% class_active = " class=""active""" %>
+<div class="well" style="padding: 8px 0;">
+	<ul class="nav nav-list">
+		<li class="nav-header">Schedule</li>
+		<% if allow? "events", "index" %>
+			<li<%= class_active if yield(:current) == "Events" %>><%= link_to "Daily Schedule", events_path %></li>
+		<% end %>
+		<% if allow? "company_classes", "new" %>
+			<li<%= class_active if yield(:current) == "NewCompanyClass" %>><%= link_w_icon("New Company Class", new_company_class_path(date: @date), "plus") %></li>
+		<% end %>
+		<% if allow? "rehearsals", "new" %>
+			<li<%= class_active if yield(:current) == "NewRehearsal" %>><%= link_w_icon("New Rehearsal", new_rehearsal_path(date: @date), "plus") %></li>
+		<% end %>
+		
+		<li class="nav-header">Pieces</li>
+		<% if allow? "pieces", "index" %>
+			<li<%= class_active if yield(:current) == "Pieces" %>><%= link_to "Active Pieces", pieces_path %></li>
+		<% end %>
+		<% if allow? "pieces", "inactive" %>
+			<li<%= class_active if yield(:current) == "InactivePieces" %>><%= link_to "Inactive Pieces", inactive_pieces_path %></li>
+		<% end %>
+		<% if allow? "pieces", "new" %>
+			<li<%= class_active if yield(:current) == "NewPiece" %>><%= link_w_icon("Add Piece", new_piece_path, "plus") %></li>
+		<% end %>
+		
+	</ul>
+</div>

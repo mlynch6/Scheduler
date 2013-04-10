@@ -1,53 +1,53 @@
 <% provide(:title, 'Active Employees') %>
+<% provide(:header_current, 'Employees') %>
+<% provide(:current, 'Employees') %>
+
 <h1>Active Employees</h1>
 
-<%= render 'filter', :status => "active" %>
+<div class="span9">
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Name</th>
+	  		<th>Job Role</th>
+	  		<th>&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @employees.each do |employee| %>
+				<tr>
+					<td><%= employee.name %></td>
+					<td><%= employee.job_title %></td>
+					<td>
+						<% if allow? "employees", "show" %>
+							<%= link_to 'View', employee_path(employee), :class => 'btn btn-small', :id => "show_#{employee.id}" %>
+						<% end %>
+						<% if allow? "employees", "inactivate" %>
+							<%= link_to 'Inactivate', inactivate_employee_path(employee), :class => 'btn btn-small btn-warning', :id => "inactivate_#{employee.id}" %>
+						<% end %>
+						<% if allow? "employees", "destroy" %>
+							<%= link_to 'Delete', employee, method: :delete, confirm: "Delete?", :class => 'btn btn-small btn-danger', :id => "delete_#{employee.id}" %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
 
-<table class="table table-striped">
-	<thead>
-  	<tr>
-  		<th>Name</th>
-  		<th>Email</th>
-  		<th>Phone</th>
-  		<th>&nbsp;</th>
-  	</tr>
-  </thead>
-  <tbody>
-  	<% @employees.each do |employee| %>
-			<tr>
-				<td><%= employee.name %><br /><span class="muted"><%= employee.job_title %></span></td>
-				<td><%= employee.email %></td>
-				<td><%= employee.phone %></td>
-				<td>
-					<% if allow? "employees", "edit" %>
-						<%= link_to 'Edit', edit_employee_path(employee), :class => 'btn btn-mini', :id => "edit_#{employee.id}" %>
-					<% end %>
-					<% if allow? "employees", "inactivate" %>
-						<%= link_to 'Inactivate', inactivate_employee_path(employee), :class => 'btn btn-mini btn-warning', :id => "inactivate_#{employee.id}" %>
-					<% end %>
-					<% if allow? "employees", "destroy" %>
-						<%= link_to 'Delete', employee, method: :delete, confirm: "Delete?", :class => 'btn btn-mini btn-danger', :id => "delete_#{employee.id}" %>
-					<% end %>
-				</td>
-			</tr>
-		<% end %>
-	</tbody>
-</table>
-
-<% unless @employees.length > 0 %>
-	<div class="alert">No records found</div>
-<% end %>
-
-<div class="row">
-	<div class="span2">
-		<% if allow? "employees", "new" %>
-			<%= link_to 'New', new_employee_path, :class => 'btn btn-mini btn-primary' %>
-		<% end %>
+	<div class="row">
+		<div class="span10">
+			<%= will_paginate(class: 'pagination',
+						previous_label: "&laquo;",
+			    	next_label: "&raquo;"
+					)%>
+		</div>
 	</div>
-	<div class="span10">
-		<%= will_paginate(class: 'pagination',
-					previous_label: "&laquo;",
-		    	next_label: "&raquo;"
-				)%>
-	</div>
+
+	<% unless @employees.length > 0 %>
+		<div class="alert">No records found</div>
+	<% end %>
+</div>
+
+<div class="span3">
+	<%= render 'shared/subnav' %>
 </div>

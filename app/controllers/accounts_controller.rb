@@ -8,12 +8,14 @@ class AccountsController < ApplicationController
 
   def create
   	@account = Account.new(params[:account])
-  	@account.employees.first.new_registration = true
+  	employee = @account.employees.first
+  	employee.new_registration = true
+  	employee.user.new_registration = true
   	if @account.save
-  		user = @account.employees.first.user
+  		user = employee.user
   		user.set_admin_role
   		session[:user_id] = user.id
-  		redirect_to dashboard_path
+  		redirect_to login_path, :notice => "Congratulations! You have successfully created an account for #{@account.name}." 
   	else
   		form_setup
   		render "new"
@@ -28,8 +30,7 @@ class AccountsController < ApplicationController
 	def update
 		@account = Account.find(Account.current_id)
 		if @account.update_attributes(params[:account])
-			flash[:success] = "Company Info saved"
-			redirect_to account_path(@account)
+			redirect_to account_path(@account), :notice => "Successfully updated the Company Information"
 		else
 			form_setup
 			render 'edit'

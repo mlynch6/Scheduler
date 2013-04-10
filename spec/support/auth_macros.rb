@@ -29,6 +29,6 @@ protected
     fill_in "Username", with: @_current_user.username
     fill_in "Password", with: @_current_user.password
     click_button "Sign In"
-    page.should have_content "Logged in"
+    page.should have_content "Sign Out"
 	end
 end

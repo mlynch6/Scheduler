@@ -7,9 +7,26 @@ $egreen: #B8DAA0;
 $elightgrey: #F2F2F2;
 $edarkgrey: #9B9B9B;
 
+$calendarBorder: #ddd;
+/*** CALENDAR ***/
+.calendar {
+	.dayofweek-header {
+		font-size: 1.2em; font-weight: bold;
+		text-align: center; vertical-align: middle;
+		background: $elightgrey;
+		color: $edarkgrey;
+		border-top: 1px solid $calendarBorder;
+		border-left: 1px solid $calendarBorder;
+		border-right: 1px solid $calendarBorder;
+		&:last-child {
+			border-bottom: 1px solid $calendarBorder;
+		}
+	}
+}
+
+/*** EVENT SPECIFIC ***/
 #events {
 	min-height: 250px;
-
 	.cal-month {
 		border-collapse: collapse;
 		width: 100%;
@@ -41,40 +58,19 @@ $edarkgrey: #9B9B9B;
 	}
 	
 	.cal-list {
-		div.row-fluid,
-		div.row{
-			border-top: 1px solid #ddd;
-			border-left: 1px solid #ddd;
-			border-right: 1px solid #ddd;
-			padding: 3px;
+		.title, .location, .piece,
+		.rehearsal:before, .companyClass:before, .Performance:before {
+			padding-left: 4px;
 		}
-		div.row-fluid:last-child,
-		div.row:last-child {
-			border-bottom: 1px solid #ddd;
-		}
-		.event {	
-			min-height: 35px;
-		}
-		.dayofweek-header {
-			font-size: 1.2em; font-weight: bold;
-			text-align: center; vertical-align: middle;
-			background: $elightgrey;
-			color: $edarkgrey;
-		}
+		.time, .invitees, .actions { text-align: right; padding-right: 4px; }
 		
-		.title, .location, .piece {
-			margin-left: 20px;
-		}
+		.title, .location, .piece { margin-left: 20px;}
 		.title { font-weight: bold; }
 		.location { color: #999; }
 		.piece:before { content: 'Rehearsing: '}
-		.time, .invitees {
-			text-align: right;
-			color: #999;
-		}
-		.actions {
-			text-align: right;
-		}
+		
+		.time, .invitees { color: #999; }
+		.actions { text-align: right; }
 		
 		.rehearsal, .companyClass, .Performance {
 			font-size: 1.8em; font-weight: bold;
@@ -94,4 +90,15 @@ $edarkgrey: #9B9B9B;
 			color: $eyellow;
 		}
 	}
+}
+
+/*** DATEPICKER RESIZING ***/
+.section {
+	margin-bottom: 8px;
+	.ui-datepicker {
+		width: 99%;
+		padding: 0;
+	}
+	.ui-widget { font-size: 0.9em; }
+	.ui-datepicker table { font-size: 0.9em; }
 }
