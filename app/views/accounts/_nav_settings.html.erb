@@ -1,9 +1,0 @@
-<div class="well" style="padding: 8px 0;">
-	<ul class="nav nav-list">
-		<li class="nav-header">Edit Settings</li>
-		<% if allow? "accounts", "edit" %>
-			<li><%= link_to "Company Info", edit_account_path %></li>
-			<li><%= link_to "Rehearsal Weeks", edit_agma_profile_path %></li>
-		<% end %>
-	</ul>
-</div>
