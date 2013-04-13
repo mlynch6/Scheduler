@@ -337,6 +337,16 @@ describe Event do
 			event.reload.end_at.to_s(:hr12).should == "10:00 AM"
 	  end
   end
+  
+  context "(Methods)" do
+		it "duration_min" do
+			event.start_date = Time.zone.today
+			event.start_time = "9:30 AM"
+			event.end_time = "10:15 AM"
+			event.save
+	  	event.reload.duration_min.should == 45
+	  end
+  end
 
 	describe "(Scopes)" do
 		before do

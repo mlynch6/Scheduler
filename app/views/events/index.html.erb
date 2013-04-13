@@ -2,38 +2,25 @@
 <% provide(:header_current, 'Scheduling') %>
 <% provide(:current, 'Events') %>
 
-<div id="events" class="span9">
-	<div class="row">
-		<h2 class="text-center">
-			<a href="<%= events_path(date: @date.prev_day) %>"><i class="icon-chevron-left"></i></a>
-			<%= @date.to_s(:long) %>
-			<a href="<%= events_path(date: @date.next_day) %>"><i class="icon-chevron-right"></i></a>
-		</h2>
-	</div>
-	
-	<div class="row">
-		<div class="calendar cal-list container-fluid">
-			
-			<div class="dayofweek-header row-fluid">
-				<%= @date.strftime('%A') %>
-			</div>
-				
-			<% @events.each do |event| %>
+<div class="span9">	
+	<%= daily_calendar(@date, @locations) do |location| %>
+		<% if @events.has_key?(location) %>
+
+			<% @events[location].each do |event| %>
 				<% if event.type == "Rehearsal" %>
 					<%= render 'rehearsal', :rehearsal => event %>
 				<% elsif event.type == "CompanyClass" %>
 					<%= render 'company_class', :cclass => event %>
 				<% end %>
 			<% end %>
-				
-		</div><!-- end cal-list -->
-	</div>
+		<% end %>
+	<% end %>
 </div>
 
-<div class="span3">
+<div class="span3">	
+	<%= render 'shared/subnav' %>
+	
 	<div class="section">
 		<div id="datepicker"></div>
 	</div>
-	
-	<%= render 'shared/subnav' %>
 </div>

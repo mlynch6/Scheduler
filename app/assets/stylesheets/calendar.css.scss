@@ -1,21 +1,36 @@
 $calendarBorder: #d3d3d3;
-$calendarHourBackground: #e6e6e6;
+$calendarHeaderBackground: #e6e6e6;
 $calendarHourHeight: 79px;
 $calendarHourWidth: 60px;
 $calendarTimeHeight: 19px;
+
+$edarkgrey: #9B9B9B;
 
 table.calendar {
 	border-collapse: collapse;
 	border-spacing: 0;
 	table-layout: fixed;
-	width: 100%;
 	vertical-align: top;
+	width: 100%;
 	
 	thead {
 		text-align: center;
 		font-weight: bold;
 		font-size: 1.1em;
-		background: $calendarHourBackground;
+		background: $calendarHeaderBackground;
+	}
+	
+	.dayofweek-header {
+		font-size: 1.2em; font-weight: bold;
+		text-align: center; vertical-align: middle;
+		background: $calendarHeaderBackground;
+		color: $edarkgrey;
+		border-top: 1px solid $calendarBorder;
+		border-left: 1px solid $calendarBorder;
+		border-right: 1px solid $calendarBorder;
+		&:last-child {
+			border-bottom: 1px solid $calendarBorder;
+		}
 	}
 	
 	.cal-blue {
@@ -28,7 +43,7 @@ table.calendar {
 	}
 	.cal-green {
 		background: #f1fbe5;
-		border: 2px solid #8cce3b;
+		border: 2px solid #BADFA2;
 	}
 	.cal-red {
 		background: #fef1ec;
@@ -45,34 +60,29 @@ table.calendar {
 	
 }
   
-#calendar-weekly {
+#calendar-weekly, #calendar-daily {
 	position: relative;
 }
 .cal-scrollable {
-	height: 400px;
+	height: 721px;
 	overflow-x: hidden !important;
 	overflow-y: auto !important;
 }
 
-.cal-weekly {
-	.hour-column { width: $calendarHourWidth; }
-	.day-column { height: 1920px; }
-	.day-container {
-		border-right: 1px solid $calendarBorder;
-		height: 100%
+.cal-weekly, .cal-daily {
+	/** FOR BACKGROUND GRID ***/
+	.hour-column {
+		width: $calendarHourWidth;
 	}
-	.grid-container, .day-container { position: relative; }
-	.hour-grid { 
+	.grid-container { position: relative; height: 1px; }
+	.hours-wrapper, .grid-wrapper {
 		position: absolute;
 		width: 100%;
-		background: $calendarHourBackground;
+	}
+	.hours-wrapper {
+		background: $calendarHeaderBackground;
 		font-size: .9em;
 		text-align: center;
-		position: absolute;
-	}
-	.display-grid { 
-		position: absolute;
-		width: 100%;
 	}
 	.hour-slot {
 		height: $calendarHourHeight;
@@ -86,14 +96,28 @@ table.calendar {
 		border: none;
 	}
 	
+	/*** FOR DATA IN GRID ***/
+	.day-container {
+		position: relative;
+		height: 1920px;
+		border-right: 1px solid $calendarBorder;
+	}
+	
 	.cal-event {
 		position: absolute;
-		width: 90%;
+		width: 95%;
+		font-size: .9em;
 		background: #c9c9c9;
 		border: 2px solid #aaaaaa;
+		padding-left: 2px;
 		border-radius: 5px;
-		padding: 3px;
-		/*** TO OVERRIDE THE EVENTS.CSS file ***/
-		min-height: 0px;
+		overflow-x: hidden !important;
+		overflow-y: hidden !important;
+		
+		.cal-main { width: 70%; }
+		.cal-side {
+			width: 30%;
+			text-align: right;
+		}
 	}
 }

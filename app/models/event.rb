@@ -51,6 +51,10 @@ class Event < ActiveRecord::Base
 		@end_time || end_at.try(:to_s, :hr12)
 	end
 	
+	def duration_min
+		(end_at - start_at)/60
+	end
+	
 	protected
 	
 	def location_available

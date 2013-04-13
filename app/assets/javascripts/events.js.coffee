@@ -10,6 +10,10 @@ paramValue = (name) ->
     ""
   else
     results[1]
+ 
+getScrollOffset = () ->
+	hour_9AM_in_min = 9*60
+	hour_9AM_in_min * 4/3
 
 jQuery ->
 	$('#datepicker').datepicker
@@ -17,3 +21,5 @@ jQuery ->
 		defaultDate: paramValue("date"),
 		onSelect: (selectedDate, instance) ->
 			window.location = "?date="+selectedDate
+	#set calendar to show 9AM at top of page
+	$('.cal-scrollable').scrollTop(getScrollOffset());

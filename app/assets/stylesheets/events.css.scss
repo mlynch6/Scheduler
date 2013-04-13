@@ -4,92 +4,13 @@
 $eblue: #A5C6E4;
 $eyellow: #F5E7A1;
 $egreen: #B8DAA0;
-$elightgrey: #F2F2F2;
-$edarkgrey: #9B9B9B;
-
-$calendarBorder: #ddd;
-/*** CALENDAR ***/
-.calendar {
-	.dayofweek-header {
-		font-size: 1.2em; font-weight: bold;
-		text-align: center; vertical-align: middle;
-		background: $elightgrey;
-		color: $edarkgrey;
-		border-top: 1px solid $calendarBorder;
-		border-left: 1px solid $calendarBorder;
-		border-right: 1px solid $calendarBorder;
-		&:last-child {
-			border-bottom: 1px solid $calendarBorder;
-		}
-	}
-}
 
 /*** EVENT SPECIFIC ***/
-#events {
-	min-height: 250px;
-	.cal-month {
-		border-collapse: collapse;
-		width: 100%;
-		width: 100%;
-		font-size: .9em;
-		margin:0 0 .4em;
-		
-		th, td {
-			border: 1px solid #999;
-			padding: 6px;
-		}
-		
-		th {
-			background: #DDD;
-			color: #666;
-			text-align: center;
-			width: 14.285%;
-		}
-		
-		td {
-			background: #FFF;
-			color: #777;
-			height: 80px;
-			vertical-align: top;
-		}
-		
-		.notmonth, .notmonth a { color: #CCC; }
-		.today { background-color: #D7F2FF; }
-	}
-	
-	.cal-list {
-		.title, .location, .piece,
-		.rehearsal:before, .companyClass:before, .Performance:before {
-			padding-left: 4px;
-		}
-		.time, .invitees, .actions { text-align: right; padding-right: 4px; }
-		
-		.title, .location, .piece { margin-left: 20px;}
-		.title { font-weight: bold; }
-		.location { color: #999; }
-		.piece:before { content: 'Rehearsing: '}
-		
-		.time, .invitees { color: #999; }
-		.actions { text-align: right; }
-		
-		.rehearsal, .companyClass, .Performance {
-			font-size: 1.8em; font-weight: bold;
-			float: left;
-		}
-		
-		.rehearsal:before {
-			content: "R";
-			color: $egreen;
-		}
-		.companyClass:before {
-			content: "C";
-			color: $eblue;
-		}
-		.Performance:before {
-			content: "P";
-			color: $eyellow;
-		}
-	}
+.cal-event {
+	.title { font-weight: bold; line-height: 1em; }
+	.location, .time, .invitees { color: #999; }
+	.piece, .time, .invitees {}
+	.actions { text-align: right; }
 }
 
 /*** DATEPICKER RESIZING ***/
