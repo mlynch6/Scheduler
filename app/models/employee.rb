@@ -7,7 +7,7 @@
 #  first_name :string(30)       not null
 #  last_name  :string(30)       not null
 #  active     :boolean          default(TRUE), not null
-#  job_title  :string(50)
+#  role       :string(50)       not null
 #  email      :string(50)
 #  phone      :string(13)
 #  created_at :datetime         not null
@@ -15,7 +15,9 @@
 #
 
 class Employee < ActiveRecord::Base
-  attr_accessible :first_name, :last_name, :active, :job_title, :email, :phone
+  ROLES = ["Artistic Director", "Ballet Master", "Choreographer", "Dancer", "Employee", "Guest Instructor", "Instructor", "Musician"]
+  
+  attr_accessible :first_name, :last_name, :active, :role, :email, :phone
   attr_accessible :user_attributes
   attr_accessor :new_registration
   
@@ -27,8 +29,8 @@ class Employee < ActiveRecord::Base
   
   validates :first_name,	presence: true, length: { maximum: 30 }
   validates :last_name,	presence: true, length: { maximum: 30 }
-  validates :active,	:inclusion => { :in => [true, false] }
-  validates :job_title, length: { maximum: 50 }
+  validates :active, :inclusion => { :in => [true, false] }
+  validates :role,	presence: true, length: { maximum: 50 }, :inclusion => { :in => ROLES }
   validates :email, allow_blank: true, email: true, length: { maximum: 50 }
   validates :email,	presence: true, :if => :new_account_registration?
   validates :phone, allow_blank: true, phone: true,	length: { maximum: 13 }

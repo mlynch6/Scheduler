@@ -5,7 +5,7 @@ class CreateEmployees < ActiveRecord::Migration
       t.string :first_name, :null => false, :limit => 30
       t.string :last_name, :null => false, :limit => 30
       t.boolean :active, :null => false, :default => true
-      t.string :job_title, :limit => 50
+      t.string :role, :limit => 50, :null => false
       t.string :email, :limit => 50
       t.string :phone, :limit => 13
 

@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(:version => 20131207144540) do
     t.string   "first_name", :limit => 30,                   :null => false
     t.string   "last_name",  :limit => 30,                   :null => false
     t.boolean  "active",                   :default => true, :null => false
-    t.string   "job_title",  :limit => 50
+    t.string   "role",       :limit => 50,                   :null => false
     t.string   "email",      :limit => 50
     t.string   "phone",      :limit => 13
     t.datetime "created_at",                                 :null => false

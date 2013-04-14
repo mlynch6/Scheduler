@@ -9,7 +9,7 @@
 		<thead>
 	  	<tr>
 	  		<th>Name</th>
-	  		<th>Job Role</th>
+	  		<th>Role</th>
 	  		<th>&nbsp;</th>
 	  	</tr>
 	  </thead>
@@ -17,7 +17,7 @@
 	  	<% @employees.each do |employee| %>
 				<tr>
 					<td><%= employee.name %><br /></td>
-					<td><%= employee.job_title %></td>
+					<td><%= employee.role %></td>
 					<td>
 						<% if allow? "employees", "activate" %>
 							<%= link_to 'Activate', activate_employee_path(employee), :class => 'btn btn-small btn-success', :id => "activate_#{employee.id}" %>

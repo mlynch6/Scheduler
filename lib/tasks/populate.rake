@@ -44,7 +44,7 @@ namespace :db do
 			employee.first_name = "Melody"
 			employee.last_name = "Stephen-Hassard"
 			employee.active = true
-			employee.job_title = "Super Admin"
+			employee.role = "Artistic Director"
 			employee.email = "mlynch6@hotmail.com"
 			employee.phone = "617-852-3793"
 
@@ -67,7 +67,7 @@ namespace :db do
 				employee.first_name = Faker::Name.first_name
 				employee.last_name = Faker::Name.last_name
 				employee.active = [true, false]
-				employee.job_title = Faker::Name.title
+				employee.role = ["Dancer", "Instructor", "Musician", "Employee"]
 				employee.email = Faker::Internet.free_email
 				employee.phone = Faker::PhoneNumber.phone_number
 				employee.created_at = 2.years.ago..Time.now

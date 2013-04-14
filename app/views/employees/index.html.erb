@@ -9,7 +9,7 @@
 		<thead>
 	  	<tr>
 	  		<th>Name</th>
-	  		<th>Job Role</th>
+	  		<th>Role</th>
 	  		<th>&nbsp;</th>
 	  	</tr>
 	  </thead>
@@ -17,7 +17,7 @@
 	  	<% @employees.each do |employee| %>
 				<tr>
 					<td><%= employee.name %></td>
-					<td><%= employee.job_title %></td>
+					<td><%= employee.role %></td>
 					<td>
 						<% if allow? "employees", "show" %>
 							<%= link_to 'View', employee_path(employee), :class => 'btn btn-small', :id => "show_#{employee.id}" %>

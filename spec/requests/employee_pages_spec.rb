@@ -13,7 +13,7 @@ describe "Employee Pages:" do
 		  should have_selector('h1', text: 'Active Employees')
 			
 			should have_selector('th', text: "Name")
-			should have_selector('th', text: "Job Role")
+			should have_selector('th', text: "Role")
 		end
 		
 		it "without records" do
@@ -91,7 +91,7 @@ describe "Employee Pages:" do
 		  should have_selector('h1', text: 'Inactive Employees')
 			
 			should have_selector('th', text: "Name")
-			should have_selector('th', text: "Job Role")
+			should have_selector('th', text: "Role")
 		end
 			
 		it "without records" do
@@ -191,11 +191,10 @@ describe "Employee Pages:" do
 				
 		  	new_last_name = Faker::Name.last_name
 		  	new_first_name = Faker::Name.first_name
-		  	job_title = Faker::Name.title
 		  	email = Faker::Internet.free_email("#{new_first_name} #{new_last_name}")
 		  	fill_in "First Name", with: new_first_name
 				fill_in "Last Name", with: new_last_name
-				fill_in "Job Role", with: job_title
+				select "Instructor", from: "Role"
 				fill_in "Phone", with: '111-222-3333'
 				fill_in "Email", with: email
 				click_button 'Create'
@@ -203,7 +202,7 @@ describe "Employee Pages:" do
 				should have_selector('div.alert-success')
 				should have_selector('title', text: 'Active Employees')
 				should have_content("#{new_last_name}, #{new_first_name}")
-				should have_content(job_title)
+				should have_content("Instructor")
 			end
 		end
 	end
@@ -255,11 +254,10 @@ pending
 			visit edit_employee_path(employee)
 	  	new_last_name = Faker::Name.last_name
 	  	new_first_name = Faker::Name.first_name
-	  	job_title = Faker::Name.title
 	  	email = Faker::Internet.free_email("#{new_first_name} #{new_last_name}")
 	  	fill_in "First Name", with: new_first_name
 			fill_in "Last Name", with: new_last_name
-			fill_in "Job Role", with: job_title
+			select "Instructor", from: "Role"
 			fill_in "Phone", with: '111-222-3333'
 			fill_in "Email", with: email
 			click_button 'Update'
@@ -267,7 +265,7 @@ pending
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Active Employees')
 			should have_content("#{new_last_name}, #{new_first_name}")
-			should have_content(job_title)
+			should have_content("Instructor")
 		end
 	end
 	
@@ -288,7 +286,7 @@ pending
 	  	visit employee_path(employee)
 	  	
 			should have_selector('div.text-ui', text: "Active")
-		  should have_selector('div.text-ui', text: employee.job_title)
+		  should have_selector('div.text-ui', text: employee.role)
 		  should have_selector('div.text-ui', text: employee.email)
 		  should have_selector('div.text-ui', text: employee.phone)
 		end
