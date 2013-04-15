@@ -2,23 +2,23 @@
 	<legend>2. Owner Information</legend>
 	
 	<div class="control-group required">
-		<%= f.label :first_name, 'First Name', :class => 'control-label' %>
+		<%= f.label :first_name, :class => 'control-label' %>
 		<div class="controls">
 			<%= f.text_field :first_name %>
 		</div>
 	</div>
 		
 	<div class="control-group required">
-		<%= f.label :last_name, 'Last Name', :class => 'control-label' %>
+		<%= f.label :last_name, :class => 'control-label' %>
 		<div class="controls">
 			<%= f.text_field :last_name %>
 		</div>
 	</div>
 	
-	<div class="control-group">
-		<%= f.label :job_title, 'Job Title', :class => 'control-label' %>
+	<div class="control-group required">
+		<%= f.label :role, :class => 'control-label' %>
 		<div class="controls">
-			<%= f.text_field :job_title %>
+			<%= f.select :role, Employee::ROLES %>
 		</div>
 	</div>
 	
@@ -33,7 +33,7 @@
 	</div>
 	
 	<div class="control-group">
-		<%= f.label :phone, 'Phone #', :class => 'control-label' %>
+		<%= f.label :phone, :class => 'control-label' %>
 		<div class="controls">
 			<%= f.text_field :phone, :class => 'input-small', :placeholder => 'xxx-xxx-xxxx' %>
 		</div>

@@ -26,7 +26,7 @@ describe "Account Pages:" do
     		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
     		fill_in "First Name", with: Faker::Name.first_name
     		fill_in "Last Name", with: emp_last_name
-    		fill_in "Job Title", with: Faker::Name.title
+    		select  "Artistic Director", from: "Role"
     		fill_in "Email", with: Faker::Internet.free_email
     		fill_in "Username", with: username
     		fill_in "Password", with: "password"
@@ -74,9 +74,6 @@ describe "Account Pages:" do
 			visit account_path(current_account)
 	  	
 	  	should have_link('Edit')
-	  	
-	  	should have_link('Company Information')
-			should have_link('Rehearsal Week Settings')
 		end
 		
 		it "displays correct data" do

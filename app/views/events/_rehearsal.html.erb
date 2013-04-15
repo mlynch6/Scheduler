@@ -2,6 +2,7 @@
 	<div class="title"><%= rehearsal.title %></div>
 	<div class="time"><%= "#{rehearsal.start_time} to #{rehearsal.end_time}" %></div>
 	<div class="piece">Rehearsing: <%= rehearsal.piece.name %></div>
+	<div class="invitees"><%= pluralize(rehearsal.employees.count, "invitee") %></div>
 	<div class="actions">
 		<% if allow? "rehearsals", "show" %>
 			<%= link_to 'View', rehearsal_path(rehearsal) %>

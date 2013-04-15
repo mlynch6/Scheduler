@@ -75,7 +75,6 @@ describe "CompanyClass Pages:" do
 				should have_selector('div.alert-success')
 				should have_selector('title', text: 'Daily Schedule')
 				
-				should have_selector('div.companyClass')
 				should have_content("Test Company Class")
 				should have_content(location.name)
 				should have_content("10:00 AM")
@@ -102,7 +101,6 @@ describe "CompanyClass Pages:" do
 				should have_selector('div.alert-success')
 				should have_selector('title', text: 'Daily Schedule')
 				
-				should have_selector('div.companyClass')
 				should have_content("Test Company Class")
 				should have_content(location.name)
 				should have_content("9:00 AM")

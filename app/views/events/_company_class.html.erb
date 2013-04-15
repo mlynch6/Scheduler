@@ -1,6 +1,7 @@
 <div class="cal-event cal-green" <%= calculate_offset(cclass.start_at, cclass.duration_min).html_safe %>>
 	<div class="title"><%= cclass.title %></div>
 	<div class="time"><%= "#{cclass.start_time} to #{cclass.end_time}" %></div>
+	<div class="invitees"><%= pluralize(cclass.employees.count, "invitee") %></div>
 	<div class="actions">
 		<% if allow? "company_classes", "show" %>
 			<%= link_to 'View', company_class_path(cclass) %>
