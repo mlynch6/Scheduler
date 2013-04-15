@@ -10,3 +10,10 @@
 		<% end %>
 	</div>
 </div>
+
+<% break_min = cclass.account.agma_profile.class_break_min %>
+<% break_end = cclass.end_at + break_min*60 %>
+<div class="cal-event cal-red" <%= calculate_offset(cclass.end_at, break_min).html_safe %>>
+	<div class="title"><%= break_min %> min Break</div>
+	<div class="time"><%= "#{cclass.end_time} to #{break_end.to_s(:hr12)}" %></div>
+</div>

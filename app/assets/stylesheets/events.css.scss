@@ -8,7 +8,8 @@ $egreen: #B8DAA0;
 /*** EVENT SPECIFIC ***/
 .cal-event {
 	.title { font-weight: bold; line-height: 1em; }
-	.location, .time, .invitees { color: #999; }
+	.location, .invitees { color: #999; }
+	.time { font-size: 0.95em; }
 	.piece, .time, .invitees {}
 	.actions { text-align: right; }
 }

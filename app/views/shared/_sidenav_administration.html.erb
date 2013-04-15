@@ -5,8 +5,10 @@
 		<% if allow? "accounts", "show" %>
 			<li<%= class_active if yield(:current) == "Company" %>><%= link_to "Company Information", account_path(current_user.employee.account_id) %></li>
 		<% end %>
+		
+		<li class="nav-header">Settings</li>
 		<% if allow? "agma_profiles", "show" %>
-			<li<%= class_active if yield(:current) == "Rehearsal" %>><%= link_to "Rehearsal Week Settings", agma_profile_path(AgmaProfile.first) %></li>
+			<li<%= class_active if yield(:current) == "Rehearsal" %>><%= link_to "Rehearsal Week", agma_profile_path(AgmaProfile.first) %></li>
 		<% end %>
 		
 		<li class="nav-header">Locations</li>

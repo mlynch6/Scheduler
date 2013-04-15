@@ -7,8 +7,7 @@ describe "Agma Profile Pages:" do
 		before do
 			log_in
 			click_link "Administration"
-			click_link "Company Information"
-			click_link "Rehearsal Week Settings"
+			click_link "Rehearsal Week"
 			click_link "Edit"
 		end
 		
@@ -66,8 +65,7 @@ pending
 		before do
 			log_in
 			click_link "Administration"
-			click_link "Company Information"
-			click_link "Rehearsal Week Settings"
+			click_link "Rehearsal Week"
 		end
 		
 		it "has correct title" do
@@ -75,11 +73,8 @@ pending
 			should have_selector('h1', text: 'Rehearsal Week Settings')
 		end
 		
-		it "has Options links" do
+		it "has links" do
 	  	should have_link('Edit')
-	  	
-	  	should have_link('Company Information')
-			should have_link('Rehearsal Week Settings')
 		end
 		
 		it "displays correct data" do

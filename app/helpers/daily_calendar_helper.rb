@@ -6,8 +6,8 @@ module DailyCalendarHelper
 	def calculate_offset(start_at, duration)
 		time_in_min = start_at.hour * 60 + start_at.min
 		t = (time_in_min * 4/3) - 3
-		h = (duration/60 * 80) - 4
-		return 'style="top: '+t.to_s+'px; height: '+h.to_s+'px;"'
+		h = (duration * 4/3) - 4
+		return 'style="top: '+t.ceil().to_s+'px; height: '+h.ceil().to_s+'px;"'
 	end
 	
 	class DailyCalendar < Struct.new(:view, :date, :headers, :callback)

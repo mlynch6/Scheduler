@@ -36,7 +36,7 @@ class Event < ActiveRecord::Base
 	validates_time :end_time, :after => :start_time, :after_message => "must be after the Start Time"
 
 	default_scope lambda { order('start_at ASC').where(:account_id => Account.current_id) }
-	scope :for_daily_calendar, lambda { |date| where(start_at: date.beginning_of_day..date.end_of_day) }
+	scope :for_daily_calendar, lambda { |date| joins(:location).where(start_at: date.beginning_of_day..date.end_of_day).select("events.*, locations.name as location_name").order("locations.name") }
 	scope :for_monthly_calendar, lambda { |date| where(start_at: date.beginning_of_month.beginning_of_week(:sunday)..date.end_of_month.end_of_week(:sunday)) }
 		
 	def start_date

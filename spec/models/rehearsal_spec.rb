@@ -34,6 +34,7 @@ describe Rehearsal do
   	profile.rehearsal_start_time = "9AM"
   	profile.rehearsal_end_time = "5PM"
   	profile.rehearsal_increment_min = 30
+  	profile.class_break_min = 15
   	profile.save
 		@rehearsal = FactoryGirl.build(:rehearsal)
 	end
@@ -72,6 +73,19 @@ describe Rehearsal do
   		@rehearsal.end_time = "4:30 PM"
   		should be_valid
   	end
+  	
+  	it "when start_time is at the end of the Company Class break" do
+  		FactoryGirl.create(:company_class,
+					account: account,
+					start_date: Time.zone.today,
+					start_time: "9AM",
+					end_time: "10AM")
+					
+			@rehearsal.start_date = Time.zone.today
+  		@rehearsal.start_time = "10:15AM"
+  		@rehearsal.end_time = "10:45 AM"
+  		should be_valid
+  	end
   end
   
   context "(Invalid)" do
@@ -96,6 +110,28 @@ describe Rehearsal do
   		@rehearsal.start_time = "4 PM"
   		@rehearsal.end_time = "6 PM"
   		should_not be_valid
+  	end
+  	
+  	describe "when start_time" do
+  		let!(:company_class) { FactoryGirl.create(:company_class,
+					account: account,
+					start_date: Time.zone.today,
+					start_time: "9AM",
+					end_time: "10AM") }
+			
+  		it "is at the beginning of the Company Class break" do
+				@rehearsal.start_date = Time.zone.today
+	  		@rehearsal.start_time = "10AM"
+	  		@rehearsal.end_time = "10:30 AM"
+	  		should_not be_valid
+	  	end
+  		
+  		it "is during the Company Class break" do
+				@rehearsal.start_date = Time.zone.today
+	  		@rehearsal.start_time = "10:05 AM"
+	  		@rehearsal.end_time = "10:35 AM"
+	  		should_not be_valid
+  		end
   	end
   end
 	
