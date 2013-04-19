@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207144540) do
+ActiveRecord::Schema.define(:version => 20131207144539) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",       :limit => 100, :null => false
@@ -98,19 +98,10 @@ ActiveRecord::Schema.define(:version => 20131207144540) do
   add_index "pieces", ["account_id", "name"], :name => "index_pieces_on_account_id_and_name", :unique => true
   add_index "pieces", ["account_id"], :name => "index_pieces_on_account_id"
 
-  create_table "roles", :force => true do |t|
-    t.string   "name",       :limit => 30, :null => false
-    t.integer  "piece_id",                 :null => false
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
-  end
-
-  add_index "roles", ["piece_id"], :name => "index_roles_on_piece_id"
-
   create_table "scenes", :force => true do |t|
-    t.string   "name",       :limit => 100, :null => false
-    t.integer  "order_num",                 :null => false
     t.integer  "piece_id",                  :null => false
+    t.string   "name",       :limit => 100, :null => false
+    t.integer  "position",                  :null => false
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
   end
