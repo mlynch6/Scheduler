@@ -15,7 +15,7 @@
 #
 
 class Employee < ActiveRecord::Base
-  ROLES = ["Artistic Director", "Ballet Master", "Choreographer", "Dancer", "Employee", "Guest Instructor", "Instructor", "Musician"]
+  ROLES = ["AGMA Dancer", "Artistic Director", "Ballet Master", "Choreographer", "Dancer", "Employee", "Guest Instructor", "Instructor", "Musician"]
   
   attr_accessible :first_name, :last_name, :active, :role, :email, :phone
   attr_accessible :user_attributes
