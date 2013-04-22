@@ -20,6 +20,7 @@ class Account < ActiveRecord::Base
   has_many :locations, dependent: :destroy
   has_many :pieces, dependent: :destroy
   has_many :scenes, dependent: :destroy
+  has_many :characters, dependent: :destroy
   has_many :events, dependent: :destroy
   
   after_create :create_profile

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207144539) do
+ActiveRecord::Schema.define(:version => 20131207144540) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",       :limit => 100, :null => false
@@ -34,6 +34,18 @@ ActiveRecord::Schema.define(:version => 20131207144539) do
   end
 
   add_index "agma_profiles", ["account_id"], :name => "index_agma_profiles_on_account_id", :unique => true
+
+  create_table "characters", :force => true do |t|
+    t.integer  "account_id",               :null => false
+    t.integer  "piece_id",                 :null => false
+    t.string   "name",       :limit => 30, :null => false
+    t.integer  "position",                 :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "characters", ["account_id"], :name => "index_characters_on_account_id"
+  add_index "characters", ["piece_id"], :name => "index_characters_on_piece_id"
 
   create_table "employees", :force => true do |t|
     t.integer  "account_id",                                 :null => false

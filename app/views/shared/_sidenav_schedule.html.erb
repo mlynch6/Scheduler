@@ -32,6 +32,14 @@
 				<% if allow? "scenes", "new" %>
 					<li<%= class_active if yield(:current) == "NewScene" %>><%= link_w_icon("Add Scene", new_piece_scene_path(@piece), "plus") %></li>
 				<% end %>
+				
+				<li class="nav-header">Characters</li>
+				<% if allow? "characters", "index" %>
+					<li<%= class_active if yield(:current) == "Characters" %>><%= link_to "Characters", piece_characters_path(@piece) %></li>
+				<% end %>
+				<% if allow? "characters", "new" %>
+					<li<%= class_active if yield(:current) == "NewCharacter" %>><%= link_w_icon("Add Character", new_piece_character_path(@piece), "plus") %></li>
+				<% end %>
 			</ul>
 		<% end %>
 		

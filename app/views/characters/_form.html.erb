@@ -1,0 +1,13 @@
+<div class="control-group required">
+	<%= f.label :piece_id, :class => 'control-label' %>
+	<div class="controls">
+		<span class="uneditable-input"><%= @piece.name %></span>
+	</div>
+</div>
+
+<div class="control-group required">
+	<%= f.label :name, :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :name %>
+	</div>
+</div>

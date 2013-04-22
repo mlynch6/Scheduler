@@ -1,0 +1,44 @@
+<% provide(:title, "#{@piece.name} | Characters") %>
+<% provide(:header_current, 'Scheduling') %>
+<% provide(:current, 'Characters') %>
+
+<h1>Characters for <%= @piece.name %></h1>
+
+<div class="span9">
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Character Names</th>
+	  		<th>&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody id="characters" data-update-url="<%= sort_characters_url %>">
+	  	<% @characters.each do |character| %>
+				<%= content_tag_for :tr, character do %>
+					<td>
+						<% if allow? "characters", "sort" %>
+							<span class="handle"><span class="ui-icon ui-icon-arrowthick-2-n-s" /></span>
+						<% end %>
+						<%= character.name %>
+					</td>
+					<td>
+						<% if allow? "characters", "edit" %>
+							<%= link_to 'Edit', edit_character_path(character), :class => 'btn btn-small', :id => "edit_#{character.id}" %>
+						<% end %>
+						<% if allow? "characters", "destroy" %>
+							<%= link_to 'Delete', character, method: :delete, confirm: "Delete?", :class => 'btn btn-small btn-danger', :id => "delete_#{character.id}" %>
+						<% end %>
+					</td>
+				<% end %>
+			<% end %>
+		</tbody>
+	</table>
+
+	<% unless @characters.length > 0 %>
+		<div class="alert">There are currently no characters. Click on 'Add Character' to get started.</div>
+	<% end %>
+</div>
+
+<div class="span3">
+	<%= render 'shared/subnav' %>
+</div>

@@ -16,6 +16,7 @@ class Piece < ActiveRecord::Base
 	belongs_to :account
 	has_many :events, dependent: :destroy
 	has_many :scenes, dependent: :destroy
+	has_many :characters, dependent: :destroy
 
 	validates :name,	presence: true, length: { maximum: 50 }, uniqueness: { scope: :account_id }
 	validates :active, :inclusion => { :in => [true, false] }

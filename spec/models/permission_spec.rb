@@ -58,6 +58,14 @@ describe Permission do
 		it { should_not allow(:scenes, :destroy) }
 		it { should_not allow(:scenes, :sort) }
 		
+		it { should_not allow(:characters, :index) }
+		it { should_not allow(:characters, :new) }
+		it { should_not allow(:characters, :create) }
+		it { should_not allow(:characters, :edit) }
+		it { should_not allow(:characters, :update) }
+		it { should_not allow(:characters, :destroy) }
+		it { should_not allow(:characters, :sort) }
+		
 		it { should_not allow(:employees, :index) }
 		it { should_not allow(:employees, :new) }
 		it { should_not allow(:employees, :create) }
@@ -91,21 +99,6 @@ describe Permission do
 
 #		it { should_not allow(:users, :new) }
 #		it { should_not allow(:users, :create) }
-#
-#		it { should_not allow(:scenes, :index) }
-#		it { should_not allow(:scenes, :new) }
-#		it { should_not allow(:scenes, :create) }
-#		it { should_not allow(:scenes, :edit) }
-#		it { should_not allow(:scenes, :update) }
-#		it { should_not allow(:scenes, :destroy) }
-#		it { should_not allow(:scenes, :show) }
-#
-#		it { should_not allow(:roles, :index) }
-#		it { should_not allow(:roles, :new) }
-#		it { should_not allow(:roles, :create) }
-#		it { should_not allow(:roles, :edit) }
-#		it { should_not allow(:roles, :update) }
-#		it { should_not allow(:roles, :destroy) }
 	end
 	
 	context "as Employee" do
@@ -159,6 +152,14 @@ describe Permission do
 		it { should_not allow(:scenes, :update) }
 		it { should_not allow(:scenes, :destroy) }
 		it { should_not allow(:scenes, :sort) }
+		
+		it { should allow(:characters, :index) }
+		it { should_not allow(:characters, :new) }
+		it { should_not allow(:characters, :create) }
+		it { should_not allow(:characters, :edit) }
+		it { should_not allow(:characters, :update) }
+		it { should_not allow(:characters, :destroy) }
+		it { should_not allow(:characters, :sort) }
 		
 		it { should allow(:employees, :index) }
 		it { should_not allow(:employees, :new) }
@@ -244,6 +245,14 @@ describe Permission do
 		it { should allow(:scenes, :destroy) }
 		it { should allow(:scenes, :sort) }
 		
+		it { should allow(:characters, :index) }
+		it { should allow(:characters, :new) }
+		it { should allow(:characters, :create) }
+		it { should allow(:characters, :edit) }
+		it { should allow(:characters, :update) }
+		it { should allow(:characters, :destroy) }
+		it { should allow(:characters, :sort) }
+		
 		it { should allow(:employees, :index) }
 		it { should allow(:employees, :new) }
 		it { should allow(:employees, :create) }
@@ -327,6 +336,14 @@ describe Permission do
 		it { should allow(:scenes, :update) }
 		it { should allow(:scenes, :destroy) }
 		it { should allow(:scenes, :sort) }
+		
+		it { should allow(:characters, :index) }
+		it { should allow(:characters, :new) }
+		it { should allow(:characters, :create) }
+		it { should allow(:characters, :edit) }
+		it { should allow(:characters, :update) }
+		it { should allow(:characters, :destroy) }
+		it { should allow(:characters, :sort) }
 		
 		it { should allow(:employees, :index) }
 		it { should allow(:employees, :new) }

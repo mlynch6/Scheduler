@@ -18,14 +18,14 @@ Scheduler::Application.routes.draw do
   end
   
   resources :pieces do
-  	resources :scenes, only: [:index, :new, :create]
+  	resources :scenes, :characters, only: [:index, :new, :create]
   	get 'inactive', on: :collection
   	member do
   		get 'activate'
   		get 'inactivate'
   	end
   end
-  resources :scenes, only: [:edit, :update, :destroy] do
+  resources :scenes, :characters, only: [:edit, :update, :destroy] do
   	collection { post :sort }
   end
   

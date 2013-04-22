@@ -95,6 +95,24 @@ describe Piece do
 			end
 		end
 		
+		describe "characters" do
+			before { Account.current_id = account.id }
+			let!(:second_char) { FactoryGirl.create(:character, account: account, piece: piece, position: 2) }
+			let!(:first_char) { FactoryGirl.create(:character, account: account, piece: piece, position: 1) }
+	
+			it "has multiple characters" do
+				piece.characters.count.should == 2
+			end
+			
+			it "deletes associated characters" do
+				characters = piece.characters
+				piece.destroy
+				characters.each do |character|
+					Character.find_by_id(character.id).should be_nil
+				end
+			end
+		end
+		
 		describe "events" do
 			before { Account.current_id = account.id }
 			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }

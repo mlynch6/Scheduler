@@ -183,6 +183,25 @@ describe Account do
 			end
 		end
 		
+		describe "characters" do
+			before { Account.current_id = account.id }
+			let!(:piece) { FactoryGirl.create(:piece, account: account) }
+			let!(:character1) { FactoryGirl.create(:character, account: account, piece: piece) }
+			let!(:character2) { FactoryGirl.create(:character, account: account, piece: piece) }
+	
+			it "has multiple characters" do
+				account.characters.count.should == 2
+			end
+			
+			it "deletes associated characters" do
+				characters = account.characters
+				account.destroy
+				characters.each do |character|
+					Character.find_by_id(character.id).should be_nil
+				end
+			end
+		end
+		
 		describe "events" do
 			before { Account.current_id = account.id }
 			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, start_at: 1.hour.ago) }
