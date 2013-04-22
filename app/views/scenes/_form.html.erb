@@ -1,7 +1,7 @@
 <div class="control-group required">
-	<%= f.label :order_num, "Order", :class => 'control-label' %>
+	<%= f.label :piece_id, :class => 'control-label' %>
 	<div class="controls">
-		<%= f.text_field :order_num, :class => 'input-mini' %>
+		<span class="uneditable-input"><%= @piece.name %></span>
 	</div>
 </div>
 
@@ -9,5 +9,12 @@
 	<%= f.label :name, :class => 'control-label' %>
 	<div class="controls">
 		<%= f.text_field :name %>
+	</div>
+</div>
+
+<div class="control-group">
+	<%= f.label :track, :class => 'control-label' %>
+	<div class="controls">
+		<%= f.text_field :track, :class => 'input-small' %>
 	</div>
 </div>

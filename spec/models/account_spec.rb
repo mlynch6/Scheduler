@@ -32,6 +32,7 @@ describe Account do
   	it { should respond_to(:employees) }
   	it { should respond_to(:locations) }
   	it { should respond_to(:pieces) }
+  	it { should respond_to(:scenes) }
   	it { should respond_to(:events) }
   end
 	
@@ -159,6 +160,25 @@ describe Account do
 				account.destroy
 				pieces.each do |piece|
 					Piece.find_by_id(piece.id).should be_nil
+				end
+			end
+		end
+		
+		describe "scenes" do
+			before { Account.current_id = account.id }
+			let!(:piece) { FactoryGirl.create(:piece, account: account) }
+			let!(:scene1) { FactoryGirl.create(:scene, account: account, piece: piece) }
+			let!(:scene2) { FactoryGirl.create(:scene, account: account, piece: piece) }
+	
+			it "has multiple scenes" do
+				account.scenes.count.should == 2
+			end
+			
+			it "deletes associated scenes" do
+				scenes = account.scenes
+				account.destroy
+				scenes.each do |scene|
+					Scene.find_by_id(scene.id).should be_nil
 				end
 			end
 		end

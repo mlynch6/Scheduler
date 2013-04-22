@@ -15,11 +15,7 @@ class Piece < ActiveRecord::Base
 
 	belongs_to :account
 	has_many :events, dependent: :destroy
-#	has_many :scenes, dependent: :destroy
-#	accepts_nested_attributes_for :scenes, :reject_if => lambda { |a| a[:name].blank? }, :allow_destroy => true
-#		
-#	has_many :roles, dependent: :destroy
-#	accepts_nested_attributes_for :roles, :reject_if => lambda { |a| a[:name].blank? }, :allow_destroy => true
+	has_many :scenes, dependent: :destroy
 
 	validates :name,	presence: true, length: { maximum: 50 }, uniqueness: { scope: :account_id }
 	validates :active, :inclusion => { :in => [true, false] }

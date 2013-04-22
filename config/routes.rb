@@ -9,12 +9,24 @@ Scheduler::Application.routes.draw do
   resources :sessions
   resources :users, :except => [:show]
   
-  resources :locations, :pieces, :employees do
+  resources :locations, :employees do
   	get 'inactive', on: :collection
   	member do
   		get 'activate'
   		get 'inactivate'
   	end
+  end
+  
+  resources :pieces do
+  	resources :scenes, only: [:index, :new, :create]
+  	get 'inactive', on: :collection
+  	member do
+  		get 'activate'
+  		get 'inactivate'
+  	end
+  end
+  resources :scenes, only: [:edit, :update, :destroy] do
+  	collection { post :sort }
   end
   
   resources :events, :only => :index

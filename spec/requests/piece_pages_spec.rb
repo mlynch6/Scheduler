@@ -32,6 +32,7 @@ describe "Piece Pages:" do
 			should have_selector('div.pagination')
 			Piece.active.paginate(page: 1, per_page: 3).each do |piece|
 				should have_selector('td', text: pieces_path.name)
+				should have_link('View', href: piece_scenes_path(piece))
 				should have_link('Edit', href: edit_pieces_path(piece))
 				should have_link('Inactivate', href: inactivate_pieces_path(piece))
 				should have_link('Delete', href: pieces_path(piece))
@@ -44,6 +45,7 @@ describe "Piece Pages:" do
 			visit pieces_path
 	
 			should_not have_link('Add Piece')
+			should have_link('View')
 			should_not have_link('Edit')
 			should_not have_link('Inactivate')
 			should_not have_link('Delete')
@@ -55,6 +57,7 @@ describe "Piece Pages:" do
 			visit pieces_path
 	
 			should have_link('Add Piece')
+			should have_link('View')
 			should have_link('Edit')
 			should have_link('Inactivate')
 			should_not have_link('Delete')

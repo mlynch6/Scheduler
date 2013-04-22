@@ -45,3 +45,8 @@ form {
     border-bottom: 1px solid #E5E5E5;
 	}
 }
+
+.handle {
+	cursor: move; 
+	.ui-icon { float: left; margin: 0 4px; }
+}

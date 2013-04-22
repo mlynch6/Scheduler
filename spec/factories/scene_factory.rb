@@ -3,17 +3,19 @@
 # Table name: scenes
 #
 #  id         :integer          not null, primary key
-#  name       :string(100)      not null
-#  order_num  :integer          not null
+#  account_id :integer          not null
 #  piece_id   :integer          not null
+#  name       :string(100)      not null
+#  position   :integer          not null
+#  track      :string(20)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 
 FactoryGirl.define do
 	factory :scene do
-		sequence(:name)	{ |n| "Scene #{n}" }
-		sequence(:order_num)	{ |n| "#{n}" }
+		account
 		piece
+		sequence(:name)	{ |n| "Scene #{n}" }
 	end
 end

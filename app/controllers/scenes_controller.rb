@@ -4,10 +4,6 @@ class ScenesController < ApplicationController
 		@scenes = @piece.scenes.paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
-	def show
-		@scene = Scene.find(params[:id])
-	end
-	
 	def new
 		form_setup
 		@piece = Piece.find(params[:piece_id])
@@ -19,8 +15,7 @@ class ScenesController < ApplicationController
 		@scene = @piece.scenes.build(params[:scene])
 		
 		if @scene.save
-			flash[:success] = "Scene created"
-			redirect_to piece_scenes_url(@piece)
+			redirect_to piece_scenes_path(@piece), :notice => "Successfully created the scene."
 		else
 			form_setup
 			render 'new'
@@ -35,13 +30,12 @@ class ScenesController < ApplicationController
 	
 	def update
 		@scene = Scene.includes(:piece).find(params[:id])
+		@piece = @scene.piece
 		
 		if @scene.update_attributes(params[:scene])
-			flash[:success] = "Scene saved"
-			redirect_to piece_scenes_url(@scene.piece)
+			redirect_to piece_scenes_path(@piece), :notice => "Successfully updated the scene."
 		else
 			form_setup
-			@piece = @scene.piece
 			render 'edit'
 		end
 	end
@@ -49,10 +43,16 @@ class ScenesController < ApplicationController
 	def destroy
 		@scene = Scene.find(params[:id])
 		@scene.destroy
-		flash[:success] = "Scene deleted"
-		redirect_to piece_scenes_url(@scene.piece_id)
+		redirect_to piece_scenes_path(@scene.piece_id), :notice => "Successfully deleted the scene."
 	end
 
+	def sort
+		params[:scene].each_with_index do |id, index|
+			Scene.update_all({ position: index+1 }, { id: id })
+		end
+		render nothing: true
+	end
+	
 	private
 
 	#setup for form - dropdowns, etc

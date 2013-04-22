@@ -77,6 +77,24 @@ describe Piece do
 			piece.reload.account.should == account
 		end
 		
+		describe "scenes" do
+			before { Account.current_id = account.id }
+			let!(:second_scene) { FactoryGirl.create(:scene, account: account, piece: piece, position: 2) }
+			let!(:first_scene) { FactoryGirl.create(:scene, account: account, piece: piece, position: 1) }
+	
+			it "has multiple scenes" do
+				piece.scenes.count.should == 2
+			end
+			
+			it "deletes associated scenes" do
+				scenes = piece.scenes
+				piece.destroy
+				scenes.each do |scene|
+					Scene.find_by_id(scene.id).should be_nil
+				end
+			end
+		end
+		
 		describe "events" do
 			before { Account.current_id = account.id }
 			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }

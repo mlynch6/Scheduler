@@ -6,12 +6,13 @@ class Permission
 		
 		if user
 			allow :static_pages, [:dashboard]
-			allow [:locations, :pieces, :employees, :events], [:index]
+			allow [:locations, :pieces, :scenes, :employees, :events], [:index]
 			allow [:rehearsals, :company_classes], [:show]
 			
 			if user.role == "Administrator"
 				allow [:accounts, :agma_profiles], [:edit, :update, :show]
 				allow [:locations, :pieces], [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
+				allow [:scenes], [:new, :create, :edit, :update, :destroy, :sort]
 				allow [:employees], [:new, :create, :edit, :update, :inactive, :activate, :inactivate, :show]
 				allow [:rehearsals, :company_classes], [:new, :create, :edit, :update]
 				allow [:users], [:index, :new, :create, :edit, :update]

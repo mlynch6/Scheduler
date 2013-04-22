@@ -50,6 +50,14 @@ describe Permission do
 		it { should_not allow(:pieces, :activate) }
 		it { should_not allow(:pieces, :inactivate) }
 		
+		it { should_not allow(:scenes, :index) }
+		it { should_not allow(:scenes, :new) }
+		it { should_not allow(:scenes, :create) }
+		it { should_not allow(:scenes, :edit) }
+		it { should_not allow(:scenes, :update) }
+		it { should_not allow(:scenes, :destroy) }
+		it { should_not allow(:scenes, :sort) }
+		
 		it { should_not allow(:employees, :index) }
 		it { should_not allow(:employees, :new) }
 		it { should_not allow(:employees, :create) }
@@ -144,6 +152,14 @@ describe Permission do
 		it { should_not allow(:pieces, :activate) }
 		it { should_not allow(:pieces, :inactivate) }
 		
+		it { should allow(:scenes, :index) }
+		it { should_not allow(:scenes, :new) }
+		it { should_not allow(:scenes, :create) }
+		it { should_not allow(:scenes, :edit) }
+		it { should_not allow(:scenes, :update) }
+		it { should_not allow(:scenes, :destroy) }
+		it { should_not allow(:scenes, :sort) }
+		
 		it { should allow(:employees, :index) }
 		it { should_not allow(:employees, :new) }
 		it { should_not allow(:employees, :create) }
@@ -220,6 +236,14 @@ describe Permission do
 		it { should allow(:pieces, :activate) }
 		it { should allow(:pieces, :inactivate) }
 		
+		it { should allow(:scenes, :index) }
+		it { should allow(:scenes, :new) }
+		it { should allow(:scenes, :create) }
+		it { should allow(:scenes, :edit) }
+		it { should allow(:scenes, :update) }
+		it { should allow(:scenes, :destroy) }
+		it { should allow(:scenes, :sort) }
+		
 		it { should allow(:employees, :index) }
 		it { should allow(:employees, :new) }
 		it { should allow(:employees, :create) }
@@ -295,6 +319,14 @@ describe Permission do
 		it { should allow(:pieces, :inactive) }
 		it { should allow(:pieces, :activate) }
 		it { should allow(:pieces, :inactivate) }
+		
+		it { should allow(:scenes, :index) }
+		it { should allow(:scenes, :new) }
+		it { should allow(:scenes, :create) }
+		it { should allow(:scenes, :edit) }
+		it { should allow(:scenes, :update) }
+		it { should allow(:scenes, :destroy) }
+		it { should allow(:scenes, :sort) }
 		
 		it { should allow(:employees, :index) }
 		it { should allow(:employees, :new) }

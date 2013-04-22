@@ -99,13 +99,16 @@ ActiveRecord::Schema.define(:version => 20131207144539) do
   add_index "pieces", ["account_id"], :name => "index_pieces_on_account_id"
 
   create_table "scenes", :force => true do |t|
+    t.integer  "account_id",                :null => false
     t.integer  "piece_id",                  :null => false
     t.string   "name",       :limit => 100, :null => false
     t.integer  "position",                  :null => false
+    t.string   "track",      :limit => 20
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
   end
 
+  add_index "scenes", ["account_id"], :name => "index_scenes_on_account_id"
   add_index "scenes", ["piece_id"], :name => "index_scenes_on_piece_id"
 
   create_table "users", :force => true do |t|

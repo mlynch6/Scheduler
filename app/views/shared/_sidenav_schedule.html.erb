@@ -23,5 +23,17 @@
 			<li<%= class_active if yield(:current) == "NewPiece" %>><%= link_w_icon("Add Piece", new_piece_path, "plus") %></li>
 		<% end %>
 		
+		<% if params[:piece_id] %>
+			<ul class="nav nav-list">
+				<li class="nav-header">Scenes</li>
+				<% if allow? "scenes", "index" %>
+					<li<%= class_active if yield(:current) == "Scenes" %>><%= link_to "Scenes", piece_scenes_path(@piece) %></li>
+				<% end %>
+				<% if allow? "scenes", "new" %>
+					<li<%= class_active if yield(:current) == "NewScene" %>><%= link_w_icon("Add Scene", new_piece_scene_path(@piece), "plus") %></li>
+				<% end %>
+			</ul>
+		<% end %>
+		
 	</ul>
 </div>

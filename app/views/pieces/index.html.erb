@@ -17,6 +17,9 @@
 				<tr>
 					<td><%= piece.name %></td>
 					<td>
+						<% if allow? "scenes", "index" %>
+							<%= link_to 'View', piece_scenes_path(piece), :class => 'btn btn-small', :id => "view_#{piece.id}" %>
+						<% end %>
 						<% if allow? "pieces", "edit" %>
 							<%= link_to 'Edit', edit_piece_path(piece), :class => 'btn btn-small', :id => "edit_#{piece.id}" %>
 						<% end %>
