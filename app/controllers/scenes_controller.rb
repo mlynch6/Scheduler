@@ -1,7 +1,7 @@
 class ScenesController < ApplicationController
 	def index
 		@piece = Piece.find(params[:piece_id])
-		@scenes = @piece.scenes.paginate(page: params[:page], per_page: params[:per_page])
+		@scenes = @piece.scenes
 	end
 	
 	def new
