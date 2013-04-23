@@ -18,3 +18,10 @@
 		<%= f.text_field :track, :class => 'input-small' %>
 	</div>
 </div>
+
+<div class="control-group">
+	<%= f.label :character_ids, 'Characters', :class => 'control-label' %>
+	<div class="controls">
+		<%= f.select :character_ids, @characters, {}, { :multiple => true, :class => 'input-xxlarge' } %>
+	</div>
+</div>

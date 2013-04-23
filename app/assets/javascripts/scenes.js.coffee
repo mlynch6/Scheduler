@@ -8,3 +8,4 @@ jQuery ->
 		handle: '.handle'
 		update: ->
 			$.post($(this).data('update-url'), $(this).sortable('serialize'))
+	$('#scene_character_ids').chosen()

@@ -16,7 +16,7 @@ describe "Character Pages:" do
 	  	should have_selector('title', text: "#{piece.name} | Characters")
 		  should have_selector('h1', text: "Characters for #{piece.name}")
 		  
-		  should have_selector('th', text: "Character Name")
+		  should have_selector('th', text: "Characters")
 		end
 		
 		it "without records" do

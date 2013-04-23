@@ -14,9 +14,12 @@
 
 class Scene < ActiveRecord::Base
   attr_accessible :name, :track
+  attr_accessible :character_ids
   
   belongs_to :account
   belongs_to :piece
+  has_many :appearances, dependent: :destroy
+  has_many :characters, through: :appearances
   
   validates :account_id, presence: true
   validates :piece_id, presence: true

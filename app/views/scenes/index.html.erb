@@ -23,7 +23,7 @@
 						<% end %>
 						<%= scene.name %>
 					</td>
-					<td></td>
+					<td><%= scene.characters.map { |char| char.name }.join(", ") %></td>
 					<td><%= scene.track %></td>
 					<td>
 						<% if allow? "scenes", "edit" %>

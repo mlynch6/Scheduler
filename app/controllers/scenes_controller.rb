@@ -5,9 +5,9 @@ class ScenesController < ApplicationController
 	end
 	
 	def new
-		form_setup
 		@piece = Piece.find(params[:piece_id])
 		@scene = @piece.scenes.build
+		form_setup(@piece)
 	end
 	
 	def create
@@ -17,7 +17,7 @@ class ScenesController < ApplicationController
 		if @scene.save
 			redirect_to piece_scenes_path(@piece), :notice => "Successfully created the scene."
 		else
-			form_setup
+			form_setup(@piece)
 			render 'new'
 		end
 	end
@@ -25,7 +25,7 @@ class ScenesController < ApplicationController
 	def edit
 		@scene = Scene.includes(:piece).find(params[:id])
 		@piece = @scene.piece
-		form_setup
+		form_setup(@piece)
 	end
 	
 	def update
@@ -35,7 +35,7 @@ class ScenesController < ApplicationController
 		if @scene.update_attributes(params[:scene])
 			redirect_to piece_scenes_path(@piece), :notice => "Successfully updated the scene."
 		else
-			form_setup
+			form_setup(@piece)
 			render 'edit'
 		end
 	end
@@ -56,6 +56,7 @@ class ScenesController < ApplicationController
 	private
 
 	#setup for form - dropdowns, etc
-	def form_setup
+	def form_setup(piece)
+		@characters = piece.characters.map { |character| [character.name, character.id] }
 	end
 end

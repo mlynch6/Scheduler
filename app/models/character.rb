@@ -16,6 +16,7 @@ class Character < ActiveRecord::Base
   
   belongs_to :account
   belongs_to :piece
+  has_many :appearances, dependent: :destroy
   
   validates :account_id, presence: true
   validates :piece_id, presence: true

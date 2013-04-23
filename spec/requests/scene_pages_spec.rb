@@ -32,11 +32,21 @@ describe "Scene Pages:" do
 		it "lists records" do
 			log_in
 			piece = FactoryGirl.create(:piece, account: current_account)
-			4.times { FactoryGirl.create(:scene, account: current_account, piece: piece) }
+			4.times {
+				scene = FactoryGirl.create(:scene, account: current_account, piece: piece)
+				3.times {
+					character = FactoryGirl.create(:character, account: current_account, piece: piece)
+					FactoryGirl.create(:appearance, scene: scene, character: character)
+				}
+			}
 			visit piece_scenes_path(piece)
 	
 			piece.scenes.each do |scene|
 				should have_selector('td', text: scene.name)
+				scene.characters.each do |character|
+					should have_content(character.name)
+				end
+				should have_selector('td', text: scene.track)
 				should have_link('Edit', href: edit_scene_path(scene))
 				should have_link('Delete', href: scene_path(scene))
 	    end
@@ -97,8 +107,8 @@ describe "Scene Pages:" do
 			end
 		end
 	
-		context "with valid info" do
-			it "creates new Scene" do
+		context "with valid info" do			
+			it "creates new Scene without Characters" do
 				log_in
 				piece = FactoryGirl.create(:piece, account: current_account)
 				visit new_piece_scene_path(piece)
@@ -112,6 +122,26 @@ describe "Scene Pages:" do
 				should have_selector('div.alert-success')
 				should have_selector('title', text: 'Scenes')
 				should have_content(new_name)
+				should have_content(new_track)
+			end
+			
+			it "creates new Scene with Characters" do
+				log_in
+				piece = FactoryGirl.create(:piece, account: current_account)
+				character = FactoryGirl.create(:character, account: current_account, piece: piece)
+				visit new_piece_scene_path(piece)
+				
+		  	new_name = Faker::Lorem.word
+		  	new_track = Faker::Lorem.word
+				fill_in "Name", with: new_name
+				fill_in "Track", with: new_track
+				select character.name, from: "Characters"
+				click_button 'Create'
+
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Scenes')
+				should have_content(new_name)
+				should have_content(character.name)
 				should have_content(new_track)
 			end
 		end

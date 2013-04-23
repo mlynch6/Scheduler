@@ -35,6 +35,7 @@ describe Character do
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:piece) }
+  	it { should respond_to(:appearances) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -132,6 +133,23 @@ describe Character do
 		
   	it "has one piece" do
 			character.reload.piece.should == piece
+		end
+		
+		describe "appearances" do
+			let!(:appearance2) { FactoryGirl.create(:appearance, character: character) }
+			let!(:appearance1) { FactoryGirl.create(:appearance, character: character) }
+	
+			it "has multiple appearances" do
+				character.appearances.count.should == 2
+			end
+			
+			it "deletes associated appearances" do
+				appearances = character.appearances
+				character.destroy
+				appearances.each do |appearance|
+					Appearance.find_by_id(appearance.id).should be_nil
+				end
+			end
 		end
   end
   
