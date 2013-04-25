@@ -98,6 +98,29 @@ describe "Scene Pages:" do
 #				should have_selector('td', text: scene.track)
 #	    end
 		end
+		
+		it "allows download to PDF" do
+			log_in
+			piece = FactoryGirl.create(:piece, account: current_account)
+			4.times {
+				scene = FactoryGirl.create(:scene, account: current_account, piece: piece)
+				3.times {
+					character = FactoryGirl.create(:character, account: current_account, piece: piece)
+					FactoryGirl.create(:appearance, scene: scene, character: character)
+				}
+			}
+			visit piece_scenes_path(piece)
+			click_link "PDF"
+
+# HOW TO TEST CONTENTS ??
+#			piece.scenes.each do |scene|
+#				should have_selector('td', text: scene.name)
+#				scene.characters.each do |character|
+#					should have_content(character.name)
+#				end
+#				should have_selector('td', text: scene.track)
+#	    end
+		end
 	end
 	
 	context "#new" do
