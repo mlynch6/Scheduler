@@ -6,10 +6,10 @@
 			<li<%= class_active if yield(:current) == "Events" %>><%= link_to "Daily Schedule", events_path %></li>
 		<% end %>
 		<% if allow? "company_classes", "new" %>
-			<li<%= class_active if yield(:current) == "NewCompanyClass" %>><%= link_w_icon("New Company Class", new_company_class_path(date: @date), "plus") %></li>
+			<li<%= class_active if yield(:current) == "NewCompanyClass" %>><%= link_w_icon "New Company Class", new_company_class_path(date: @date), "plus" %></li>
 		<% end %>
 		<% if allow? "rehearsals", "new" %>
-			<li<%= class_active if yield(:current) == "NewRehearsal" %>><%= link_w_icon("New Rehearsal", new_rehearsal_path(date: @date), "plus") %></li>
+			<li<%= class_active if yield(:current) == "NewRehearsal" %>><%= link_w_icon "New Rehearsal", new_rehearsal_path(date: @date), "plus" %></li>
 		<% end %>
 		
 		<li class="nav-header">Pieces</li>
@@ -20,7 +20,7 @@
 			<li<%= class_active if yield(:current) == "InactivePieces" %>><%= link_to "Inactive Pieces", inactive_pieces_path %></li>
 		<% end %>
 		<% if allow? "pieces", "new" %>
-			<li<%= class_active if yield(:current) == "NewPiece" %>><%= link_w_icon("Add Piece", new_piece_path, "plus") %></li>
+			<li<%= class_active if yield(:current) == "NewPiece" %>><%= link_w_icon "Add Piece", new_piece_path, "plus" %></li>
 		<% end %>
 		
 		<% if params[:piece_id] %>
@@ -28,17 +28,25 @@
 				<li class="nav-header">Scenes</li>
 				<% if allow? "scenes", "index" %>
 					<li<%= class_active if yield(:current) == "Scenes" %>><%= link_to "Scenes", piece_scenes_path(@piece) %></li>
-				<% end %>
+					<% end %>
 				<% if allow? "scenes", "new" %>
-					<li<%= class_active if yield(:current) == "NewScene" %>><%= link_w_icon("Add Scene", new_piece_scene_path(@piece), "plus") %></li>
+					<li<%= class_active if yield(:current) == "NewScene" %>><%= link_w_icon "Add Scene", new_piece_scene_path(@piece), "plus" %></li>
 				<% end %>
+				
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-circle-arrow-down"></i>Download <b class="caret"></b></a>
+			    <ul class="dropdown-menu">
+			    	<li><%= link_to image_tag("file_extension_xls.png")+" Excel", piece_scenes_path(@piece, format: "xls") %></li>
+						
+			    </ul>
+				</li>
 				
 				<li class="nav-header">Characters</li>
 				<% if allow? "characters", "index" %>
 					<li<%= class_active if yield(:current) == "Characters" %>><%= link_to "Characters", piece_characters_path(@piece) %></li>
 				<% end %>
 				<% if allow? "characters", "new" %>
-					<li<%= class_active if yield(:current) == "NewCharacter" %>><%= link_w_icon("Add Character", new_piece_character_path(@piece), "plus") %></li>
+					<li<%= class_active if yield(:current) == "NewCharacter" %>><%= link_w_icon "Add Character", new_piece_character_path(@piece), "plus" %></li>
 				<% end %>
 			</ul>
 		<% end %>

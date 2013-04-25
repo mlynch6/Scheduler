@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Scenes">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Scene</Data></Cell>
+        <Cell><Data ss:Type="String">Characters</Data></Cell>
+        <Cell><Data ss:Type="String">Track</Data></Cell>
+      </Row>
+    <% @scenes.each do |scene| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= scene.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= scene.characters.map { |char| char.name }.join(", ") %></Cell>
+        <Cell><Data ss:Type="String"><%= scene.track %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

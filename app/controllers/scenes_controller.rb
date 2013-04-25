@@ -2,6 +2,10 @@ class ScenesController < ApplicationController
 	def index
 		@piece = Piece.find(params[:piece_id])
 		@scenes = @piece.scenes
+		respond_to do |format|
+			format.html
+			format.xls
+		end
 	end
 	
 	def new

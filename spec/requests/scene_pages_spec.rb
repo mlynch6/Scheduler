@@ -59,6 +59,7 @@ describe "Scene Pages:" do
 			visit piece_scenes_path(piece)
 	
 			should_not have_link('Add Scene')
+			should have_link('Excel')
 			should_not have_link('Edit')
 			should_not have_link('Delete')
 		end
@@ -70,8 +71,32 @@ describe "Scene Pages:" do
 			visit piece_scenes_path(piece)
 	
 			should have_link('Add Scene')
+			should have_link('Excel')
 			should have_link('Edit')
 			should have_link('Delete')
+		end
+		
+		it "allows download to Excel" do
+			log_in
+			piece = FactoryGirl.create(:piece, account: current_account)
+			4.times {
+				scene = FactoryGirl.create(:scene, account: current_account, piece: piece)
+				3.times {
+					character = FactoryGirl.create(:character, account: current_account, piece: piece)
+					FactoryGirl.create(:appearance, scene: scene, character: character)
+				}
+			}
+			visit piece_scenes_path(piece)
+			click_link "Excel"
+
+# HOW TO TEST CONTENTS ??
+#			piece.scenes.each do |scene|
+#				should have_selector('td', text: scene.name)
+#				scene.characters.each do |character|
+#					should have_content(character.name)
+#				end
+#				should have_selector('td', text: scene.track)
+#	    end
 		end
 	end
 	
