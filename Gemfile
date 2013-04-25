@@ -6,6 +6,7 @@ gem 'validates_timeliness', '~> 3.0'
 gem 'jquery-rails'
 gem 'less-rails'
 gem 'therubyracer'
+gem 'prawn'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
