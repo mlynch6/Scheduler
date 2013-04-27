@@ -34,5 +34,9 @@ FactoryGirl.define do
 		factory :teacher do
 			role					"Instructor"
 		end
+		
+		factory :employee_w_addresses do
+			after_create { |emp| FactoryGirl.create_list(:address_employee, 3, addressable: emp)}
+		end
 	end
 end

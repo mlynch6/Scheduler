@@ -4,12 +4,23 @@ Scheduler::Application.routes.draw do
 	match 'logout' =>'sessions#destroy'
 	match 'signup' => 'accounts#new'
 	
-	resources :accounts
+	resources :accounts do
+		resources :addresses, :except => [:index, :show]
+	end
 	resources :agma_profiles, :only => [:show, :edit, :update]
   resources :sessions
   resources :users, :except => [:show]
   
-  resources :locations, :employees do
+  resources :employees do
+  	resources :addresses, :except => [:index, :show]
+  	get 'inactive', on: :collection
+  	member do
+  		get 'activate'
+  		get 'inactivate'
+  	end
+  end
+  
+  resources :locations do
   	get 'inactive', on: :collection
   	member do
   		get 'activate'

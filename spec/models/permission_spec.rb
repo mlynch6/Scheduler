@@ -26,6 +26,12 @@ describe Permission do
 		it { should_not allow(:accounts, :update) }
 		it { should_not allow(:accounts, :show) }
 		
+		it { should_not allow(:addresses, :new) }
+		it { should_not allow(:addresses, :create) }
+		it { should_not allow(:addresses, :edit) }
+		it { should_not allow(:addresses, :update) }
+		it { should_not allow(:addresses, :destroy) }
+		
 		it { should_not allow(:agma_profiles, :edit) }
 		it { should_not allow(:agma_profiles, :update) }
 		it { should_not allow(:agma_profiles, :show) }
@@ -96,9 +102,6 @@ describe Permission do
 		it { should_not allow(:company_classes, :create) }
 		it { should_not allow(:company_classes, :edit) }
 		it { should_not allow(:company_classes, :update) }
-
-#		it { should_not allow(:users, :new) }
-#		it { should_not allow(:users, :create) }
 	end
 	
 	context "as Employee" do
@@ -120,6 +123,12 @@ describe Permission do
 		it { should_not allow(:accounts, :edit) }
 		it { should_not allow(:accounts, :update) }
 		it { should_not allow(:accounts, :show) }
+		
+		it { should_not allow(:addresses, :new) }
+		it { should_not allow(:addresses, :create) }
+		it { should_not allow(:addresses, :edit) }
+		it { should_not allow(:addresses, :update) }
+		it { should_not allow(:addresses, :destroy) }
 		
 		it { should_not allow(:agma_profiles, :edit) }
 		it { should_not allow(:agma_profiles, :update) }
@@ -213,6 +222,12 @@ describe Permission do
 		it { should allow(:accounts, :update) }
 		it { should allow(:accounts, :show) }
 		
+		it { should allow(:addresses, :new) }
+		it { should allow(:addresses, :create) }
+		it { should allow(:addresses, :edit) }
+		it { should allow(:addresses, :update) }
+		it { should allow(:addresses, :destroy) }
+		
 		it { should allow(:agma_profiles, :edit) }
 		it { should allow(:agma_profiles, :update) }
 		it { should allow(:agma_profiles, :show) }
@@ -304,6 +319,12 @@ describe Permission do
 		it { should allow(:accounts, :edit) }
 		it { should allow(:accounts, :update) }
 		it { should allow(:accounts, :show) }
+		
+		it { should allow(:addresses, :new) }
+		it { should allow(:addresses, :create) }
+		it { should allow(:addresses, :edit) }
+		it { should allow(:addresses, :update) }
+		it { should allow(:addresses, :destroy) }
 		
 		it { should allow(:agma_profiles, :edit) }
 		it { should allow(:agma_profiles, :update) }

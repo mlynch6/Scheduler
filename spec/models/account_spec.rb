@@ -29,6 +29,7 @@ describe Account do
   	it { should respond_to(:time_zone) }
   	
   	it { should respond_to(:agma_profile) }
+  	it { should respond_to(:addresses) }
   	it { should respond_to(:employees) }
   	it { should respond_to(:locations) }
   	it { should respond_to(:pieces) }
@@ -107,6 +108,24 @@ describe Account do
 				p = account.agma_profile
 				account.destroy
 				AgmaProfile.find_by_id(p.id).should be_nil
+			end
+		end
+  	
+  	describe "addresses" do
+			before { Account.current_id = account.id }
+			let!(:address1) { FactoryGirl.create(:address, addressable: account) }
+			let!(:address2) { FactoryGirl.create(:address, addressable: account) }
+	
+			it "has multiple addresses" do
+				account.addresses.count.should == 2
+			end
+			
+			it "deletes associated addresses" do
+				addresses = account.addresses
+				account.destroy
+				addresses.each do |address|
+					Address.find_by_id(address.id).should be_nil
+				end
 			end
 		end
   	

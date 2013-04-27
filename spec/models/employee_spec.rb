@@ -43,6 +43,7 @@ describe Employee do
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:user) }
+  	it { should respond_to(:addresses) }
   	it { should respond_to(:invitations) }
   	it { should respond_to(:events) }
   	
@@ -198,6 +199,23 @@ describe Employee do
 			end
 		end
 		
+		describe "addresses" do
+			let!(:address1) { FactoryGirl.create(:address, addressable: employee) }
+			let!(:address2) { FactoryGirl.create(:address, addressable: employee) }
+	
+			it "has multiple addresses" do
+				employee.addresses.count.should == 2
+			end
+			
+			it "deletes associated addresses" do
+				addresses = employee.addresses
+				employee.destroy
+				addresses.each do |address|
+					Address.find_by_id(address.id).should be_nil
+				end
+			end
+		end
+		
 		describe "invitations" do
 			let(:event1) { FactoryGirl.create(:event, account: account) }
 			let(:event2) { FactoryGirl.create(:event, account: account) }
@@ -261,6 +279,44 @@ describe Employee do
 	  
 	  it "full_name" do
 	  	employee.reload.full_name.should == 'Michael Pink'
+	  end
+	  
+	  describe "Employee::ROLES" do
+	  	it "has AGMA Dancer as a value" do
+		  	Employee::ROLES.should include("AGMA Dancer")
+		  end
+		  
+		  it "has Artistic Director as a value" do
+		  	Employee::ROLES.should include("Artistic Director")
+		  end
+		  
+		  it "has Ballet Master as a value" do
+		  	Employee::ROLES.should include("Ballet Master")
+		  end
+		  
+		  it "has Choreographer as a value" do
+		  	Employee::ROLES.should include("Choreographer")
+		  end
+		  
+		  it "has Dancer as a value" do
+		  	Employee::ROLES.should include("Dancer")
+		  end
+		  
+		  it "has Employee as a value" do
+		  	Employee::ROLES.should include("Employee")
+		  end
+		  
+		  it "has Guest Instructor as a value" do
+		  	Employee::ROLES.should include("Guest Instructor")
+		  end
+		  
+		  it "has Instructor as a value" do
+		  	Employee::ROLES.should include("Instructor")
+		  end
+		  
+		  it "has Musician as a value" do
+		  	Employee::ROLES.should include("Musician")
+		  end
 	  end
 	end
 	

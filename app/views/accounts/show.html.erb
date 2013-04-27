@@ -24,6 +24,24 @@
 			</div>
 		</div>
 	<% end %>
+	
+	<div class="row">
+		<div class=" span3">
+			<h2>Addresses</h2>
+			<% @account.addresses.each do |addr| %>
+				<address>
+					<strong><%= addr.addr_type %> Address</strong><br />
+					<%= addr.addr %><br />
+					<%= addr.addr2 if addr.addr2.present? %>
+					<%= tag(:br) if addr.addr2.present? %>
+					<%= "#{addr.city}, #{addr.state} #{addr.zipcode}" %><br />
+					<%= link_to "Edit", [:edit, @account, addr], :id => "edit_address_#{addr.id}" %>
+					<%= link_to 'Delete', [@account, addr], method: :delete, confirm: "Delete?", :id => "delete_address_#{addr.id}" %>
+				</address>
+			<% end %>
+			<%= link_to "Add Address", [:new, @account, :address] %>
+		</div>
+	</div>
 </div>
 
 <div class="span3">

@@ -10,12 +10,26 @@ class Permission
 			allow [:rehearsals, :company_classes], [:show]
 			
 			if user.role == "Administrator"
-				allow [:accounts, :agma_profiles], [:edit, :update, :show]
-				allow [:locations, :pieces], [:new, :create, :edit, :update, :inactive, :activate, :inactivate]
-				allow [:scenes, :characters], [:new, :create, :edit, :update, :destroy, :sort]
-				allow [:employees], [:new, :create, :edit, :update, :inactive, :activate, :inactivate, :show]
-				allow [:rehearsals, :company_classes], [:new, :create, :edit, :update]
-				allow [:users], [:index, :new, :create, :edit, :update]
+				#index
+				allow [:users], [:index]
+				
+				#show
+				allow [:accounts, :agma_profiles, :employees], [:show]
+				
+				#new & create
+				allow [:addresses, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes], [:new, :create]
+				
+				#edit & update
+				allow [:accounts, :agma_profiles, :addresses, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes], [:edit, :update]
+				
+				#destroy
+				allow [:addresses, :scenes, :characters], [:destroy]
+				
+				#activate & inactive & inactivate
+				allow [:employees, :locations, :pieces], [:inactive, :activate, :inactivate]
+				
+				#sort
+				allow [:scenes, :characters], [:sort]
 			end
 			
 			allow_all if user.role == "Super Administrator"

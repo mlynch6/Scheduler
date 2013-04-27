@@ -1,5 +1,5 @@
 <fieldset>
-	<legend>2. Owner Information</legend>
+	<legend>3. Director Information</legend>
 	
 	<div class="control-group required">
 		<%= f.label :first_name, :class => 'control-label' %>
@@ -41,7 +41,7 @@
 </fieldset>
 
 <fieldset>
-	<legend>3. Administration User</legend>
+	<legend>4. Administration User</legend>
 	<%= f.fields_for :user do |builder| %>
 		<%= render 'user_fields', :f =>  builder %>
 	<% end %>

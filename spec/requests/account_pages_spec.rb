@@ -16,19 +16,25 @@ describe "Account Pages:" do
     end
     
     describe "valid Signup" do
-    	let(:username) { Faker::Internet.user_name }
     	let(:company_name) { "New York City Ballet #{Time.now}" }
-    	let(:emp_last_name) { Faker::Name.last_name }
     	before do
     		visit signup_path
     		fill_in "Company", with: company_name
     		fill_in "Phone #", with: "414-543-1000"
     		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
-    		fill_in "First Name", with: Faker::Name.first_name
-    		fill_in "Last Name", with: emp_last_name
+		  	
+		  	fill_in "Address", with: Faker::Address.street_address
+				fill_in "Address 2", with: Faker::Address.street_address
+				fill_in "City", with: Faker::Address.city
+				select "New York", from: "State"
+				fill_in "Zip Code", with: Faker::Address.zip.first(5)
+    		
+    		fill_in "First Name", with: "Peter"
+    		fill_in "Last Name", with: "Martin"
     		select  "Artistic Director", from: "Role"
-    		fill_in "Email", with: Faker::Internet.free_email
-    		fill_in "Username", with: username
+    		fill_in "Email", with: "peter.martin@nycb.org"
+    		
+    		fill_in "Username", with: "pmartin"
     		fill_in "Password", with: "password"
     		fill_in "Confirm Password", with: "password"
     	end
@@ -41,6 +47,11 @@ describe "Account Pages:" do
     	
     	it "creates the Agma Profile" do
 				expect { click_button "Create Account" }.to change(AgmaProfile.unscoped, :count).by(1)
+    	end
+    	
+    	it "creates an Address" do
+				expect { click_button "Create Account" }.to change(Address.unscoped, :count).by(1)
+				Address.unscoped.last.addr_type.should == "Work"
     	end
     	
     	it "creates an Employee" do
@@ -67,6 +78,26 @@ describe "Account Pages:" do
 	  	
 	  	should have_selector('title', text: 'Company Information')
 			should have_selector('h1', text: 'Company Information')
+		end
+		
+		it "has addresses shown" do
+			log_in
+			3.times { FactoryGirl.create(:address, addressable: current_account) }
+			visit account_path(current_account)
+
+			should have_selector('h2', text: 'Addresses')
+			current_account.addresses.each do |address|
+				should have_content("#{address.addr_type} Address")
+				should have_content(address.addr)
+				should have_content(address.addr2) if address.addr2.present?
+				should have_content(address.city)
+				should have_content(address.state)
+				should have_content(address.zipcode)
+				
+				should have_link('Edit', href: edit_account_address_path(current_account, address))
+				should have_link('Delete', href: account_address_path(current_account, address))
+			end
+	    should have_link('Add Address')
 		end
 		
 		it "has Options links" do

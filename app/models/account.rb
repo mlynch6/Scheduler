@@ -11,8 +11,11 @@
 #
 
 class Account < ActiveRecord::Base
-  attr_accessible :name, :main_phone, :time_zone, :employees_attributes
+  attr_accessible :name, :main_phone, :time_zone
+  attr_accessible :addresses_attributes, :employees_attributes
   
+  has_many :addresses, :as => :addressable, dependent: :destroy
+  accepts_nested_attributes_for :addresses
   has_many :employees, dependent: :destroy
   accepts_nested_attributes_for :employees
   

@@ -1,13 +1,18 @@
 class AccountsController < ApplicationController
    def new
   	@account = Account.new
+  	@addressable = @account
+  	address = @account.addresses.build
+  	address.addr_type = "Work"
   	employee = @account.employees.build
+  	employee.role = "Artistic Director"
   	employee.build_user
   	form_setup
   end
 
   def create
   	@account = Account.new(params[:account])
+  	@addressable = @account
   	employee = @account.employees.first
   	employee.new_registration = true
   	employee.user.new_registration = true

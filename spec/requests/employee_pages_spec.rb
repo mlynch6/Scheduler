@@ -291,6 +291,26 @@ pending
 		  should have_selector('div.text-ui', text: employee.phone)
 		end
 		
+		it "has addresses shown" do
+			log_in
+			employee = FactoryGirl.create(:employee_w_addresses, account: current_account)
+			visit employee_path(employee)
+
+			should have_selector('h2', text: 'Addresses')
+			employee.addresses.each do |address|
+				should have_content("#{address.addr_type} Address")
+				should have_content(address.addr)
+				should have_content(address.addr2) if address.addr2.present?
+				should have_content(address.city)
+				should have_content(address.state)
+				should have_content(address.zipcode)
+				
+				should have_link('Edit', href: edit_employee_address_path(employee, address))
+				should have_link('Delete', href: employee_address_path(employee, address))
+			end
+	    should have_link('Add Address')
+		end
+		
 		it "doesn't have links for Employee" do
 			log_in_employee
 			employee = FactoryGirl.create(:employee, account: current_account)

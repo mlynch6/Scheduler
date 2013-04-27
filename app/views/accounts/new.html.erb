@@ -11,7 +11,11 @@
 			<legend>1. Company Information</legend>
 			<%= render 'form', :f => f %>
 		</fieldset>
-				
+		
+		<%= f.fields_for :addresses do |builder| %>
+			<%= render 'address_fields', :f =>  builder %>
+		<% end %>
+		
 		<%= f.fields_for :employees do |builder| %>
 			<%= render 'employee_fields', :f =>  builder %>
 		<% end %>

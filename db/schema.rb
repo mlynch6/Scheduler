@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207144541) do
+ActiveRecord::Schema.define(:version => 20131207144542) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",       :limit => 100, :null => false
@@ -20,6 +20,21 @@ ActiveRecord::Schema.define(:version => 20131207144541) do
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
   end
+
+  create_table "addresses", :force => true do |t|
+    t.integer  "addressable_id",                 :null => false
+    t.string   "addressable_type",               :null => false
+    t.string   "addr_type",        :limit => 30, :null => false
+    t.string   "addr",             :limit => 50, :null => false
+    t.string   "addr2",            :limit => 50
+    t.string   "city",             :limit => 50, :null => false
+    t.string   "state",            :limit => 2,  :null => false
+    t.string   "zipcode",          :limit => 5,  :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "addresses", ["addressable_id", "addressable_type"], :name => "index_addresses_on_addressable_id_and_addressable_type"
 
   create_table "agma_profiles", :force => true do |t|
     t.integer  "account_id",                 :null => false
