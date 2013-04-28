@@ -62,7 +62,6 @@ class EmployeesController < ApplicationController
 
 	#setup for form - dropdowns, etc
 	def form_setup
-		@roles = Employee::ROLES
 	end
 	
 #	def redirect_index

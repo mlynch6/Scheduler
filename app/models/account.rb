@@ -28,9 +28,8 @@ class Account < ActiveRecord::Base
   
   after_create :create_profile
   
-  validates :name,	presence: true, length: { maximum: 100 }
-  VALID_PHONE_REGEX = /\A[0-9]{3}[-. ]?[0-9]{3}[-. ]?[0-9]{4}\z/i
-  validates :main_phone,	length: { maximum: 13 }, format: { with: VALID_PHONE_REGEX }
+  validates :name, presence: true, length: { maximum: 100 }
+  validates :main_phone, presence: true, phone: true, length: { maximum: 13 }
   validates :time_zone,	presence: true, length: { maximum: 100 }, inclusion: { in: ActiveSupport::TimeZone.zones_map(&:name) }
   
   default_scope order: 'name ASC'

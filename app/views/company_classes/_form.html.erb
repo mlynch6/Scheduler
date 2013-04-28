@@ -1,48 +1,16 @@
-<div class="control-group">
-	<%= f.label :title, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :title, :placeholder => 'Company Class' %>
-		<div><span class="label label-info">Info</span> If you don't enter a title, 'Company Class' will be used</div>
+<%= f.text_field :title, 
+			:placeholder => 'Company Class',
+			:help_text => content_tag(:span, 'Info', class: "label label-info")+" If you do not enter a title, 'Company Class' will be used" %>
+<%= f.select :location_id, @locations, { :include_blank => true } %>
+<%= f.date_field :start_date %>
+
+<div class="row">
+	<div class="span3">
+		<%= f.time_field :start_time, :label => 'From' %>
+	</div>
+	<div class="span3">
+		<%= f.time_field :end_time, :label => 'To' %>
 	</div>
 </div>
 
-<div class="control-group required">
-	<%= f.label :location_id, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.select :location_id, @locations, { :include_blank => true } %>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :start_date, :class => 'control-label' %>
-	<div class="controls">
-		<div class="input-append">
-			<%= f.text_field :start_date, :class => 'input-small', :placeholder => 'mm/dd/yyyy' %>
-			<span class="add-on"><i class="icon-calendar"></i></span>
-		</div>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :start_time, 'From', :class => 'control-label' %>
-	<div class="controls control-rows">
-		<div class="input-append">
-			<%= f.text_field :start_time, :class => 'input-mini' %>
-			<span class="add-on"><i class="icon-time"></i></span>
-		</div>
-		&nbsp; to &nbsp;
-		<div class="input-append">
-			<%= f.text_field :end_time, :class => 'input-mini' %>
-			<span class="add-on"><i class="icon-time"></i></span>
-		</div>
-	</div>
-</div>
-
-<div class="control-group">
-	<%= f.label :employee_ids, 'Invitees', :class => 'control-label' %>
-	<div class="controls">
-		<div class="input-prepend">
-			<%= f.select :employee_ids, @employees, {}, { :multiple => true, :class => 'input-xxlarge' } %>
-		</div>
-	</div>
-</div>
+<%= f.select :employee_ids, @employees, {}, { :multiple => true, :class => 'input-xxlarge' } %>

@@ -1,20 +1,3 @@
-<div class="control-group required">
-	<%= f.label :username, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :username %>
-	</div>
-</div>
-	
-<div class="control-group required">
-	<%= f.label :password, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.password_field :password %>
-	</div>
-</div>
-		
-<div class="control-group required">
-	<%= f.label :password_confirmation, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.password_field :password_confirmation %>
-	</div>
-</div>
+<%= f.text_field :username %>
+<%= f.password_field :password %>
+<%= f.password_field :password_confirmation %>

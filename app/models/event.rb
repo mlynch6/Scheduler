@@ -32,8 +32,11 @@ class Event < ActiveRecord::Base
 	validates :location_id,	presence: true
 	validate :location_available, :if => "start_at.present? && end_at.present?"
 	validates_date :start_date
+	validates :start_date,	presence: true
 	validates_time :start_time
+	validates :start_time,	presence: true
 	validates_time :end_time, :after => :start_time, :after_message => "must be after the Start Time"
+	validates :end_time,	presence: true
 
 	default_scope lambda { order('start_at ASC').where(:account_id => Account.current_id) }
 	scope :for_daily_calendar, lambda { |date| joins(:location).where(start_at: date.beginning_of_day..date.end_of_day).select("events.*, locations.name as location_name").order("locations.name") }

@@ -26,6 +26,8 @@ en:
         active: "Status"
       piece:
         active: "Status"
+      scene:
+        character_ids: "Characters"
       employee:
         first_name: "First Name"
         last_name: "Last Name"
@@ -40,9 +42,11 @@ en:
         start_date: "Date"
         start_time: "Start Time"
         end_time: "End Time"
+        employee_ids: "Invitees"
       company_class:
         start_at: "Start At"
         end_at: "End At"
         start_date: "Date"
         start_time: "Start Time"
         end_time: "End Time"
+        employee_ids: "Invitees"

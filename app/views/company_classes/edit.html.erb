@@ -5,11 +5,10 @@
 <h1>Edit Company Class</h1>
 
 <div class="span9">
-	<%= form_for @cclass, :html => { :class => 'form-horizontal' } do |f| %>
-		<%= render 'shared/error_messages', :object => f.object %>
+	<%= form_for @cclass, builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= f.error_messages %>
 		<%= render 'form', :f => f %>
-		
-		<%= render 'shared/form_submit', :f => f, :action_text => 'Update' %>
+		<%= f.submit 'Update', :class => 'btn btn-primary' %>
 	<% end %>
 </div>
 

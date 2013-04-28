@@ -5,11 +5,10 @@
 <h1>New Rehearsal</h1>
 
 <div class="span9">
-	<%= form_for @rehearsal, :html => { :class => 'form-horizontal' } do |f| %>
-		<%= render 'shared/error_messages', :object => f.object %>
-		
+	<%= form_for @rehearsal, builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= f.error_messages %>
 		<%= render 'form', :f => f %>
-		<%= render 'shared/form_submit', :f => f, :action_text => 'Create' %>
+		<%= f.submit 'Create', :class => 'btn btn-primary' %>
 	<% end %>
 </div>
 

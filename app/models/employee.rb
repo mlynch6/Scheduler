@@ -19,6 +19,7 @@ class Employee < ActiveRecord::Base
   
   attr_accessible :first_name, :last_name, :active, :role, :email, :phone
   attr_accessible :user_attributes
+  # Used to require email for a new account registration
   attr_accessor :new_registration
   
   belongs_to :account
@@ -33,7 +34,7 @@ class Employee < ActiveRecord::Base
   validates :active, :inclusion => { :in => [true, false] }
   validates :role,	presence: true, length: { maximum: 50 }, :inclusion => { :in => ROLES }
   validates :email, allow_blank: true, email: true, length: { maximum: 50 }
-  validates :email,	presence: true, :if => :new_account_registration?
+  validate :check_email_for_new_registration
   validates :phone, allow_blank: true, phone: true,	length: { maximum: 13 }
   
   default_scope lambda { order('last_name ASC, first_name ASC').where(:account_id => Account.current_id) }
@@ -58,9 +59,10 @@ class Employee < ActiveRecord::Base
 	end
 
 private
-
-	 # Used to require email for a new account registration
-  def new_account_registration?
-  	new_registration
+	
+	def check_email_for_new_registration
+  	if new_registration and email.blank?
+  		errors.add(:email, "can't be blank")
+  	end
 	end
 end

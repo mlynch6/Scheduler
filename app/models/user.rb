@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
   validates :employee_id,	presence: true, unless: :new_account_registration?
   validates :username,	presence: true, length: { in: 6..20 }, uniqueness: { case_sensitive: false }
   validates :role,	presence: true, length: { maximum: 20 }
+  validates :password,	presence: true
   validates :password_confirmation,	presence: true
   
   before_validation(:on => :create) do

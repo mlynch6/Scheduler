@@ -183,7 +183,7 @@ describe "Scene Pages:" do
 		  	new_track = Faker::Lorem.word
 				fill_in "Name", with: new_name
 				fill_in "Track", with: new_track
-				select character.name, from: "Characters"
+				select character.name, from: "scene_character_ids" #Label = Characters
 				click_button 'Create'
 
 				should have_selector('div.alert-success')

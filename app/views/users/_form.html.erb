@@ -1,37 +1,10 @@
-<fieldset>
-	<div class="control-group required">
-		<%= f.label :employee_id, :class => 'control-label' %>
-		<div class="controls">
-			<% if @user.new_record? %>
-				<%= f.select :employee_id, @employees, { :include_blank => true } %>
-			<% else %>
-				<span class="uneditable-input"><%= @user.employee.full_name %></span>
-			<% end %>
-		</div>
-	</div>
-
-	<div class="control-group required">
-		<%= f.label :username, :class => 'control-label' %>
-		<div class="controls">
-			<% if @user.new_record? %>
-				<%= f.text_field :username %>
-			<% else %>
-				<span class="uneditable-input"><%= @user.username %></span>
-			<% end %>
-		</div>
-	</div>
+<% if @user.new_record? %>
+	<%= f.select :employee_id, @employees, { :include_blank => true } %>
+	<%= f.text_field :username %>
+<% else %>
+	<%= f.uneditable_text_field :employee_id, @user.employee.full_name %>
+	<%= f.uneditable_text_field :username, @user.username %>
+<% end %>
 	
-	<div class="control-group required">
-		<%= f.label :password, :class => 'control-label' %>
-		<div class="controls">
-			<%= f.password_field :password %>
-		</div>
-	</div>
-			
-	<div class="control-group required">
-		<%= f.label :password_confirmation, 'Confirm Password', :class => 'control-label' %>
-		<div class="controls">
-			<%= f.password_field :password_confirmation %>
-		</div>
-	</div>
-</fieldset>
+<%= f.password_field :password %>
+<%= f.password_field :password_confirmation %>

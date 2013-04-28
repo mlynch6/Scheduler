@@ -1,25 +1,38 @@
 class AccountsController < ApplicationController
    def new
   	@account = Account.new
+  	
   	@addressable = @account
-  	address = @account.addresses.build
-  	address.addr_type = "Work"
-  	employee = @account.employees.build
-  	employee.role = "Artistic Director"
-  	employee.build_user
+  	@address = @account.addresses.build
+  	@address.new_registration = true
+  	@address.addr_type = "Work"
+  	
+  	@employee = @account.employees.build
+  	@employee.new_registration = true
+  	@employee.role = "Artistic Director"
+  	
+  	@user = @employee.build_user
+  	@user.new_registration = true
+  	
   	form_setup
   end
 
   def create
   	@account = Account.new(params[:account])
+  	
   	@addressable = @account
-  	employee = @account.employees.first
-  	employee.new_registration = true
-  	employee.user.new_registration = true
+  	@address = @account.addresses.first
+  	@address.new_registration = true
+  	
+  	@employee = @account.employees.first
+  	@employee.new_registration = true
+  	
+  	@user = @employee.user
+  	@user.new_registration = true
+  	
   	if @account.save
-  		user = employee.user
-  		user.set_admin_role
-  		session[:user_id] = user.id
+  		@user.set_admin_role
+  		session[:user_id] = @user.id
   		redirect_to login_path, :notice => "Congratulations! You have successfully created an account for #{@account.name}." 
   	else
   		form_setup

@@ -1,63 +1,20 @@
-<div class="control-group required">
-	<%= f.label :rehearsal_start_time, 'Rehearsal Start', :class => 'control-label' %>
-	<div class="controls">
-		<div class="input-append">
-			<%= f.select :rehearsal_start_time, @times, {}, { :class => 'input-small' } %>
-		</div>
-		<span class="help-inline muted">Class &amp; Rehearsals will start no earlier than this</span>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :rehearsal_end_time, 'Rehearsal End', :class => 'control-label' %>
-	<div class="controls">
-		<div class="input-append">
-			<%= f.select :rehearsal_end_time, @times, {}, { :class => 'input-small' } %>
-		</div>
-		<span class="help-inline muted">Class &amp; Rehearsals will end no later than this</span>
-	</div>
-</div>
-	
-<div class="control-group required">
-	<%= f.label :rehearsal_max_hrs_per_week, :class => 'control-label' %>
-	<div class="controls">
-		<div class="input-append">
-			<%= f.text_field :rehearsal_max_hrs_per_week, :class => 'input-mini' %>
-			<span class="add-on">hours/week</i></span>
-		</div>
-		<span class="help-inline muted">Maximum hours an Artist may be called upon to rehearse in a week</span>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :rehearsal_max_hrs_per_day, :class => 'control-label' %>
-	<div class="controls">
-		<div class="input-append">
-			<%= f.text_field :rehearsal_max_hrs_per_day, :class => 'input-mini' %>
-			<span class="add-on">hours/day</i></span>
-		</div>
-		<span class="help-inline muted">Maximum hours an Artist may be called upon to rehearse in a day</span>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :rehearsal_increment_min, :class => 'control-label' %>
-	<div class="controls">
-		<div class="input-append">
-			<%= f.text_field :rehearsal_increment_min, :class => 'input-mini' %>
-			<span class="add-on">min</i></span>
-		</div>
-		<span class="help-inline muted">Increment that a Rehearsal can be called</span>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :class_break_min, :class => 'control-label' %>
-	<div class="controls">
-		<div class="input-append">
-			<%= f.text_field :class_break_min, :class => 'input-mini' %>
-			<span class="add-on">min</i></span>
-		</div>
-	<span class="help-inline muted">Amount of time for break following the end class and the first rehearsal</span>
-	</div>
-</div>
+<%= f.select :rehearsal_start_time, @times, {}, { :class => 'input-small', 
+				:help_text =>'Class & Rehearsals will start no earlier than this' } %>
+<%= f.select :rehearsal_end_time, @times, {}, { :class => 'input-small',
+				:help_text => 'Class & Rehearsals will end no later than this' } %>
+<%= f.text_w_add_on :rehearsal_max_hrs_per_week, {
+				:class => 'input-mini',
+				:add_on => 'hours/week',
+				:help_text => 'Maximum hours an Artist may be called upon to rehearse in a week' } %>
+<%= f.text_w_add_on :rehearsal_max_hrs_per_day, {
+				:class => 'input-mini',
+				:add_on => 'hours/day',
+				:help_text => 'Maximum hours an Artist may be called upon to rehearse in a day' } %>
+<%= f.text_w_add_on :rehearsal_increment_min, {
+				:class => 'input-mini',
+				:add_on => 'min',
+				:help_text => 'Increment that a Rehearsal can be called' } %>
+<%= f.text_w_add_on :class_break_min, {
+				:class => 'input-mini',
+				:add_on => 'min',
+				:help_text => 'Amount of break time following the end of class and the first rehearsal' } %>

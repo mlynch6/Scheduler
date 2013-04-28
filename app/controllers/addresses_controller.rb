@@ -43,8 +43,6 @@ class AddressesController < ApplicationController
 private
 	#setup for form - dropdowns, etc
 	def form_setup
-		@addr_types = Address::TYPES
-		@states = Address::STATES
 	end
 
 	def load_addressable

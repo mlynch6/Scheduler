@@ -25,11 +25,13 @@ class AgmaProfile < ActiveRecord::Base
 	
   validates :account_id, :uniqueness => true
   validates_time :rehearsal_start_time
+  validates :rehearsal_start_time,	presence: true
   validates_time :rehearsal_end_time, :after => :rehearsal_start_time, :after_message => "must be after Rehearsal Start"
-  validates :rehearsal_max_hrs_per_week, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 168 }
-  validates :rehearsal_max_hrs_per_day, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 24 }
-  validates :rehearsal_increment_min, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
-  validates :class_break_min, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
+  validates :rehearsal_end_time,	presence: true
+  validates :rehearsal_max_hrs_per_week,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 168 }
+  validates :rehearsal_max_hrs_per_day,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 24 }
+  validates :rehearsal_increment_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
+  validates :class_break_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
   
   default_scope lambda { where(:account_id => Account.current_id) }
   

@@ -1,27 +1,4 @@
-<div class="control-group required">
-	<%= f.label :piece_id, :class => 'control-label' %>
-	<div class="controls">
-		<span class="uneditable-input"><%= @piece.name %></span>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :name, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :name %>
-	</div>
-</div>
-
-<div class="control-group">
-	<%= f.label :track, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :track, :class => 'input-small' %>
-	</div>
-</div>
-
-<div class="control-group">
-	<%= f.label :character_ids, 'Characters', :class => 'control-label' %>
-	<div class="controls">
-		<%= f.select :character_ids, @characters, {}, { :multiple => true, :class => 'input-xxlarge' } %>
-	</div>
-</div>
+<%= f.uneditable_text_field :piece_id, @piece.name %>
+<%= f.text_field :name %>
+<%= f.text_field :track, :class => 'input-small' %>
+<%= f.select :character_ids, @characters, {}, { :multiple => true, :class => 'input-xxlarge' } %>

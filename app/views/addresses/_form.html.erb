@@ -1,41 +1,13 @@
-<div class="control-group required">
-	<%= f.label :addr_type, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.select :addr_type, @addr_types %>
-	</div>
-</div>
+<% if !@address.new_registration %>
+	<%= f.select :addr_type, Address::TYPES %>
+<% end %>
 
-<div class="control-group required">
-	<%= f.label :addr, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :addr %>
-	</div>
-</div>
+<%= f.text_field :addr %>
+<%= f.text_field :addr2 %>
+<%= f.text_field :city %>
+<%= f.select :state, Address::STATES %>
+<%= f.text_field :zipcode, :class => 'input-mini' %>
 
-<div class="control-group">
-	<%= f.label :addr2, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :addr2 %>
-	</div>
-</div>
-	
-<div class="control-group required">
-	<%= f.label :city, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :city %>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :state, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.select :state, @states %>
-	</div>
-</div>
-
-<div class="control-group required">
-	<%= f.label :zipcode, :class => 'control-label' %>
-	<div class="controls">
-		<%= f.text_field :zipcode, :class => 'input-mini' %>
-	</div>
-</div>
+<% if @address.new_registration %>
+	<%= f.hidden_field :addr_type %>
+<% end %>
