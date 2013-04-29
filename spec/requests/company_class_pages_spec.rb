@@ -6,7 +6,7 @@ describe "CompanyClass Pages:" do
   context "#new" do
   	it "has correct title" do
 			log_in
-	  	click_link 'Scheduling'
+	  	click_link 'Daily Schedule'
 	  	click_link 'New Company Class'
 	  	
 	  	should have_selector('title', text: 'New Company Class')
@@ -115,7 +115,6 @@ describe "CompanyClass Pages:" do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			cclass = FactoryGirl.create(:company_class, account: current_account, location: location, start_date: Time.zone.today)
-			click_link "Scheduling"
 			click_link "Daily Schedule"
 	  	click_link "View"
 	  	
@@ -164,7 +163,7 @@ describe "CompanyClass Pages:" do
 					account: current_account,
 					location: location,
 					start_date: Time.zone.today)
-	  	click_link 'Scheduling'
+	  	click_link 'Daily Schedule'
 	  	click_link 'Edit'
 	  	
 	  	should have_selector('title', text: 'Edit Company Class')

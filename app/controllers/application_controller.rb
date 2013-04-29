@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  helper :link
   
   before_filter :authorize
   around_filter :scope_current_account

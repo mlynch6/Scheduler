@@ -1,15 +1,20 @@
 <% provide(:title, 'Active Pieces') %>
 <% provide(:header_current, 'Scheduling') %>
-<% provide(:current, 'Pieces') %>
 
 <h1>Active Pieces</h1>
 
-<div class="span9">
+<div class="row">
+	<div class="row text-center">
+		<% if allow? "pieces", "new" %>
+			<%= new_button "Add Piece", new_piece_path %>
+		<% end %>
+	</div>
+
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
 	  		<th>Name</th>
-	  		<th>&nbsp;</th>
+	  		<th style="width:140px;">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -18,16 +23,16 @@
 					<td><%= piece.name %></td>
 					<td>
 						<% if allow? "scenes", "index" %>
-							<%= link_to 'View', piece_scenes_path(piece), :class => 'btn btn-small', :id => "view_#{piece.id}" %>
+							<%= view_button nil, piece_scenes_path(piece), :class => 'btn-small', :id => "view_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "edit" %>
-							<%= link_to 'Edit', edit_piece_path(piece), :class => 'btn btn-small', :id => "edit_#{piece.id}" %>
+							<%= edit_button nil, edit_piece_path(piece), :class => 'btn-small', :id => "edit_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "inactivate" %>
-							<%= link_to 'Inactivate', inactivate_piece_path(piece), :class => 'btn btn-small btn-warning', :id => "inactivate_#{piece.id}" %>
+							<%= inactivate_button nil, inactivate_piece_path(piece), :class => 'btn-small', :id => "inactivate_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "destroy" %>
-							<%= link_to 'Delete', piece, method: :delete, confirm: "Delete?", :class => 'btn btn-small btn-danger', :id => "delete_#{piece.id}" %>
+							<%= delete_button nil, piece, :class => 'btn-small', :id => "delete_#{piece.id}" %>
 						<% end %>
 					</td>
 				</tr>
@@ -47,8 +52,4 @@
 	<% unless @pieces.length > 0 %>
 		<div class="alert">No pieces are active. Click on 'Add Piece' to get started.</div>
 	<% end %>
-</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
 </div>

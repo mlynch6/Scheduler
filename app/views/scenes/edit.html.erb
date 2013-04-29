@@ -1,17 +1,12 @@
 <% provide(:title, "#{@piece.name} | Edit Scene") %>
 <% provide(:header_current, 'Scheduling') %>
-<% provide(:current, 'EditScene') %>
 
 <h1>Edit Scene for <%= @piece.name %></h1>
 
-<div class="span9">
+<div class="row">
 	<%= form_for @scene, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
 		<%= f.error_messages %>
 		<%= render 'form', :f => f %>
 		<%= f.submit 'Update', :class => 'btn btn-primary' %>
 	<% end %>
-</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
 </div>

@@ -6,8 +6,7 @@ describe "Agma Profile Pages:" do
 	context "#edit" do
 		before do
 			log_in
-			click_link "Administration"
-			click_link "Rehearsal Week"
+			click_link "Rehearsal Week Settings"
 			click_link "Edit"
 		end
 		
@@ -64,8 +63,7 @@ pending
 	context "#show" do
 		before do
 			log_in
-			click_link "Administration"
-			click_link "Rehearsal Week"
+			click_link "Rehearsal Week Settings"
 		end
 		
 		it "has correct title" do

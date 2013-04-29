@@ -6,7 +6,6 @@ describe "Employee Pages:" do
   context "#index" do
   	it "has correct title & table headers" do
 			log_in
-	  	click_link "Employees"
 	  	click_link "Active Employees"
 	  	
 	  	should have_selector('title', text: 'Active Employees')
@@ -73,10 +72,10 @@ describe "Employee Pages:" do
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Active Employees')
 				
-			click_link 'Active'
+			click_link 'Active Employees'
 			should_not have_content(employee.name)
 				
-			click_link 'Inactive'
+			click_link 'Inactive Employees'
 			should have_content(employee.name)
 		end
 	end
@@ -84,7 +83,6 @@ describe "Employee Pages:" do
 	context "#inactive" do
 		it "has correct title & table headers" do
 			log_in
-	  	click_link "Employees"
 	  	click_link "Inactive Employees"
 	  	
 	  	should have_selector('title', text: 'Inactive Employees')
@@ -122,7 +120,6 @@ describe "Employee Pages:" do
 			FactoryGirl.create(:employee_inactive, account: current_account)
 			visit inactive_employees_path
 			
-			should_not have_link('Add Employee')
 			should_not have_link('Activate')
 			should_not have_link('Delete')
 		end
@@ -132,7 +129,6 @@ describe "Employee Pages:" do
 			FactoryGirl.create(:employee_inactive, account: current_account)
 			visit inactive_employees_path
 			
-			should have_link('Add Employee')
 			should have_link('Activate')
 			should_not have_link('Delete')
 		end
@@ -148,10 +144,10 @@ describe "Employee Pages:" do
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Inactive Employees')
 			
-			click_link 'Inactive'
+			click_link 'Inactive Employees'
 			should_not have_content(employee.name)
 			
-			click_link 'Active'
+			click_link 'Active Employees'
 			should have_content(employee.name)
 		end
 	end
@@ -159,7 +155,6 @@ describe "Employee Pages:" do
 	context "#new" do
 		it "has correct title" do
 			log_in
-			click_link "Employees"
 	  	click_link "Active Employees"
 	  	click_link 'Add Employee'
 	
@@ -211,7 +206,10 @@ describe "Employee Pages:" do
 		it "has correct title" do
 			log_in
 			employee = FactoryGirl.create(:employee, account: current_account)
-			visit edit_employee_path(employee)
+			click_link "Active Employees"
+			click_link "View"
+			click_link "Edit"
+			
 	  	
 	  	should have_selector('title', text: 'Update Employee')
 			should have_selector('h1', text: 'Update Employee')
@@ -316,7 +314,8 @@ pending
 			employee = FactoryGirl.create(:employee, account: current_account)
 	  	visit employee_path(employee)
 	  	
-			should_not have_link('Edit Employee')
+			should_not have_link('Edit')
+			should_not have_link('Add Address')
 		end
 		
 		it "has links for Administrator" do
@@ -324,7 +323,8 @@ pending
 			employee = FactoryGirl.create(:employee, account: current_account)
 	  	visit employee_path(employee)
 	
-			should have_link('Edit Employee')
+			should have_link('Edit')
+			should have_link('Add Address')
 		end
 	end
 	

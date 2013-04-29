@@ -73,7 +73,6 @@ describe "Account Pages:" do
 	context "#show" do
 		it "has correct title" do
 			log_in
-			click_link "Administration"
 			click_link "Company Information"
 	  	
 	  	should have_selector('title', text: 'Company Information')
@@ -105,6 +104,7 @@ describe "Account Pages:" do
 			visit account_path(current_account)
 	  	
 	  	should have_link('Edit')
+	  	should have_link('Add Address')
 		end
 		
 		it "displays correct data" do
@@ -120,7 +120,6 @@ describe "Account Pages:" do
 	context "#edit" do
 		it "has correct title" do
 			log_in
-			click_link "Administration"
 			click_link "Company Information"
 			click_link "Edit"
 	  	

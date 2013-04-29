@@ -8,13 +8,12 @@ describe "Character Pages:" do
   		log_in
   		piece = FactoryGirl.create(:piece, account: current_account)
   		FactoryGirl.create(:character, account: current_account, piece: piece)
-	  	click_link "Scheduling"
 	  	click_link "Active Pieces"
 	  	click_link "View"
 	  	click_link "Characters"
 	  	
 	  	should have_selector('title', text: "#{piece.name} | Characters")
-		  should have_selector('h1', text: "Characters for #{piece.name}")
+		  should have_selector('h1', text: "#{piece.name}")
 		  
 		  should have_selector('th', text: "Characters")
 		end
@@ -68,9 +67,9 @@ describe "Character Pages:" do
 		it "has correct title" do
 			log_in
   		piece = FactoryGirl.create(:piece, account: current_account)
-  		click_link "Scheduling"
 	  	click_link "Active Pieces"
 	  	click_link "View"
+	  	click_link "Characters"
 	  	click_link "Add Character"
 	
 			should have_selector('title', text: "#{piece.name} | Add Character")
@@ -118,7 +117,6 @@ describe "Character Pages:" do
 			log_in
 			piece = FactoryGirl.create(:piece, account: current_account)
 			character = FactoryGirl.create(:character, account: current_account, piece: piece)
-  		click_link "Scheduling"
 	  	click_link "Active Pieces"
 	  	click_link "View"
 	  	click_link "Characters"

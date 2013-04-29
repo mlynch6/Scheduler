@@ -1,10 +1,9 @@
 <% provide(:title, 'Rehearsal Week Settings') %>
 <% provide(:header_current, 'Administration') %>
-<% provide(:current, 'Rehearsal') %>
 
 <h1>Rehearsal Week Settings</h1>
 
-<div class="show-ui span9">
+<div class="show-ui">
 	<div class="row">
 		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_start_time) %></div>
 		<div class="text-ui span6"><%= @agma_profile.rehearsal_start_time %></div>
@@ -29,15 +28,10 @@
 		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:class_break_min) %></div>
 		<div class="text-ui span6"><%= @agma_profile.class_break_min %> minutes</div>
 	</div>
-	<% if allow? "accounts", "edit" %>
-		<div class="row row-action">
-			<div class="offset2">
-				<%= link_to "Edit", edit_agma_profile_path(@agma_profile), :class => 'btn' %>
-			</div>
-		</div>
-	<% end %>
-</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
+	
+	<div class="row text-center">
+		<% if allow? "agma_profiles", "edit" %>
+			<%= edit_button "Edit", edit_agma_profile_path(@agma_profile) %>
+		<% end %>
+	</div>
 </div>

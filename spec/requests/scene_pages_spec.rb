@@ -8,12 +8,12 @@ describe "Scene Pages:" do
   		log_in
   		piece = FactoryGirl.create(:piece, account: current_account)
   		FactoryGirl.create(:scene, account: current_account, piece: piece)
-	  	click_link "Scheduling"
 	  	click_link "Active Pieces"
 	  	click_link "View"
+	  	click_link "Scenes"
 	  	
 	  	should have_selector('title', text: "#{piece.name} | Scenes")
-		  should have_selector('h1', text: "Scenes for #{piece.name}")
+		  should have_selector('h1', text: "#{piece.name}")
 		  
 		  should have_selector('th', text: "Scene")
 		  should have_selector('th', text: "Characters")
@@ -60,6 +60,7 @@ describe "Scene Pages:" do
 	
 			should_not have_link('Add Scene')
 			should have_link('Excel')
+			should have_link('PDF')
 			should_not have_link('Edit')
 			should_not have_link('Delete')
 		end
@@ -72,6 +73,7 @@ describe "Scene Pages:" do
 	
 			should have_link('Add Scene')
 			should have_link('Excel')
+			should have_link('PDF')
 			should have_link('Edit')
 			should have_link('Delete')
 		end
@@ -127,7 +129,6 @@ describe "Scene Pages:" do
 		it "has correct title" do
 			log_in
   		piece = FactoryGirl.create(:piece, account: current_account)
-  		click_link "Scheduling"
 	  	click_link "Active Pieces"
 	  	click_link "View"
 	  	click_link "Add Scene"
@@ -200,7 +201,6 @@ describe "Scene Pages:" do
 			log_in
 			piece = FactoryGirl.create(:piece, account: current_account)
 			scene = FactoryGirl.create(:scene, account: current_account, piece: piece)
-  		click_link "Scheduling"
 	  	click_link "Active Pieces"
 	  	click_link "View"
 	  	click_link "Edit"

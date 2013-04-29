@@ -2,14 +2,65 @@
 <div class="nav-collapse">
 	<ul class="nav">
 		<li<%= class_active if yield(:header_current) == "Home" %>><a href="<%= dashboard_path %>"><i class="icon-home"></i> Home</a></li>
+		
 		<% if allow? "accounts", "show" %>
-			<li<%= class_active if yield(:header_current) == "Administration" %>><a href="<%= account_path(current_user.employee.account) %>"><i class="icon-cog"></i> Administration</a></li>
+			<li class="dropdown<%= " active" if yield(:header_current) == "Administration" %>">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= content_tag(:i, nil, class: "icon-list") %> Administration <%= content_tag(:b, nil, class: "caret") %></a>
+				<ul class="dropdown-menu">
+					<% if allow? "accounts", "show" %>
+						<li><%= link_to "Company Information", account_path(current_user.employee.account_id) %></li>
+					<% end %>
+					<% if allow? "agma_profiles", "show" %>
+						<li><%= link_to "Rehearsal Week Settings", agma_profile_path(AgmaProfile.first) %></li>
+					<% end %>
+					<li class="divider"></li>
+					
+					<% if allow? "locations", "index" %>
+						<li><%= link_to "Active Locations", locations_path %></li>
+					<% end %>
+					<% if allow? "locations", "inactive" %>
+						<li><%= link_to "Inactive Locations", inactive_locations_path %></li>
+					<% end %>
+					<li class="divider"></li>
+					
+					<% if allow? "users", "index" %>
+						<li><%= link_to "Users", users_path %></li>
+					<% end %>
+				</ul>
+			</li>
 		<% end %>
+		
 		<% if allow? "events", "index" %>
-			<li<%= class_active if yield(:header_current) == "Scheduling" %>><a href="<%= events_path %>"><i class="icon-list"></i> Scheduling</a></li>
+			<li class="dropdown<%= " active" if yield(:header_current) == "Scheduling" %>">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= content_tag(:i, nil, class: "icon-list") %> Scheduling <%= content_tag(:b, nil, class: "caret") %></a>
+				<ul class="dropdown-menu">
+					<% if allow? "events", "index" %>
+						<li><%= link_to "Daily Schedule", events_path %></li>
+					<% end %>
+					<li class="divider"></li>
+					
+					<% if allow? "pieces", "index" %>
+						<li><%= link_to "Active Pieces", pieces_path %></li>
+					<% end %>
+					<% if allow? "pieces", "inactive" %>
+						<li><%= link_to "Inactive Pieces", inactive_pieces_path %></li>
+					<% end %>
+				</ul>
+			</li>
 		<% end %>
+		
 		<% if allow? "employees", "index" %>
-			<li<%= class_active if yield(:header_current) == "Employees" %>><a href="<%= employees_path %>"><i class="icon-user"></i> Employees</a></li>
+			<li class="dropdown<%= " active" if yield(:header_current) == "Employees" %>">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= content_tag(:i, nil, class: "icon-user") %> Employees <%= content_tag(:b, nil, class: "caret") %></a>
+				<ul class="dropdown-menu">
+					<% if allow? "employees", "index" %>
+						<li><%= link_to "Active Employees", employees_path %></li>
+					<% end %>
+					<% if allow? "employees", "inactive" %>
+						<li><%= link_to "Inactive Employees", inactive_employees_path %></li>
+					<% end %>
+				</ul>
+			</li>
 		<% end %>
 	</ul>
 </div>

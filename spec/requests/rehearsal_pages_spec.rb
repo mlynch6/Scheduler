@@ -6,7 +6,7 @@ describe "Rehearsal Pages:" do
   context "#new" do
   	it "has correct title" do
 			log_in
-	  	click_link 'Scheduling'
+	  	click_link 'Daily Schedule'
 	  	click_link 'New Rehearsal'
 	  	
 	  	should have_selector('title', text: 'New Rehearsal')
@@ -135,7 +135,7 @@ describe "Rehearsal Pages:" do
 					location: location,
 					piece: piece,
 					start_date: Time.zone.today)
-			click_link 'Scheduling'
+			click_link 'Daily Schedule'
 	  	click_link 'View'
 	  	
 	  	should have_selector('title', text: 'Rehearsal')
@@ -192,7 +192,7 @@ describe "Rehearsal Pages:" do
 					location: location,
 					piece: piece,
 					start_date: Time.zone.today)
-	  	click_link 'Scheduling'
+	  	click_link 'Daily Schedule'
 	  	click_link 'Edit'
 	  	
 	  	should have_selector('title', text: 'Edit Rehearsal')

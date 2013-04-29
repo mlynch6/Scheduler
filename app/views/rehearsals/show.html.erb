@@ -1,10 +1,9 @@
 <% provide(:title, 'Rehearsal') %>
 <% provide(:header_current, 'Scheduling') %>
-<% provide(:current, 'ShowRehearsal') %>
 
 <h1><%= @rehearsal.title %></h1>
 
-<div class="show-ui span9">
+<div class="show-ui">
 	<div class="row">
 		<div class="label-ui span2">Location</div>
 		<div class="text-ui span7"><%= @rehearsal.location.name %></div>
@@ -33,8 +32,10 @@
 				<% end %>
 		</div>
 	</div>
-</div>
-
-<div class="span3">	
-	<%= render 'shared/subnav' %>
+	
+	<div class="row text-center">
+		<% if allow? "rehearsals", "edit" %>
+			<%= edit_button "Edit", edit_rehearsal_path(@rehearsal) %>
+		<% end %>
+	</div>
 </div>

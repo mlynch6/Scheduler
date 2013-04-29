@@ -1,10 +1,9 @@
 <% provide(:title, 'Company Class') %>
 <% provide(:header_current, 'Scheduling') %>
-<% provide(:current, 'ShowCompany Class') %>
 
 <h1><%= @cclass.title %></h1>
 
-<div class="span9">
+<div class="row">
 	<div class="show-ui">
 		<div class="row">
 			<div class="label-ui span2">Location</div>
@@ -32,9 +31,10 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-
-<div class="span3">	
-	<%= render 'shared/subnav' %>
+	
+	<div class="row text-center">
+		<% if allow? "company_classes", "edit" %>
+			<%= edit_button "Edit", edit_company_class_path(@cclass) %>
+		<% end %>
+	</div>
 </div>

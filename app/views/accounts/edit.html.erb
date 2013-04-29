@@ -1,17 +1,12 @@
 <% provide(:title, 'Edit Company Information') %>
 <% provide(:header_current, 'Administration') %>
-<% provide(:current, 'EditCompany') %>
 
 <h1>Edit Company Information</h1>
 
-<div class="span9">
+<div class="row">
 	<%= form_for @account, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
 		<%= f.error_messages %>
 		<%= render 'form', :f => f %>
 		<%= f.submit 'Update', :class => 'btn btn-primary' %>
 	<% end %>
-</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
 </div>

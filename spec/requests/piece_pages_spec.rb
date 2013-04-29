@@ -6,8 +6,7 @@ describe "Piece Pages:" do
 	context "#index" do
 		it "has correct title & table headers" do
 			log_in
-	  	click_link "Scheduling"
-	  	click_link "Pieces"
+	  	click_link "Active Pieces"
 	  	
 	  	should have_selector('title', text: 'Active Pieces')
 		  should have_selector('h1', text: 'Active Pieces')
@@ -74,10 +73,10 @@ describe "Piece Pages:" do
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Active Pieces')
 				
-			click_link 'Active'
+			click_link 'Active Pieces'
 			should_not have_content(piece.name)
 				
-			click_link 'Inactive'
+			click_link 'Inactive Pieces'
 			should have_content(piece.name)
 		end
 	end
@@ -85,8 +84,7 @@ describe "Piece Pages:" do
 	context "#inactive" do
 		it "has correct title & table headers" do
 			log_in
-	  	click_link "Scheduling"
-	  	click_link "Pieces"
+	  	click_link "Active Pieces"
 	  	click_link 'Inactive Pieces'
 	  	
 	  	should have_selector('title', text: 'Inactive Pieces')
@@ -147,10 +145,10 @@ describe "Piece Pages:" do
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Inactive Pieces')
 			
-			click_link 'Inactive'
+			click_link 'Inactive Pieces'
 			should_not have_content(piece.name)
 			
-			click_link 'Active'
+			click_link 'Active Pieces'
 			should have_content(piece.name)
 		end
 	end
@@ -158,8 +156,7 @@ describe "Piece Pages:" do
 	context "#new" do
 		it "has correct title" do
 			log_in
-			click_link "Scheduling"
-	  	click_link "Pieces"
+	  	click_link "Active Pieces"
 	  	click_link 'Add Piece'
 	
 			should have_selector('title', text: 'Add Piece')
@@ -203,8 +200,7 @@ describe "Piece Pages:" do
 		it "has correct title" do
 			log_in
 			piece = FactoryGirl.create(:piece, account: current_account)
-			click_link "Scheduling"
-	  	click_link "Pieces"
+	  	click_link "Active Pieces"
 	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: 'Edit Piece')

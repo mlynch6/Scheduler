@@ -1,38 +1,45 @@
 <% provide(:title, 'Active Employees') %>
 <% provide(:header_current, 'Employees') %>
-<% provide(:current, 'Employees') %>
 
 <h1>Active Employees</h1>
 
-<div class="span9">
-	<table class="table table-striped">
-		<thead>
-	  	<tr>
-	  		<th>Name</th>
-	  		<th>Role</th>
-	  		<th>&nbsp;</th>
-	  	</tr>
-	  </thead>
-	  <tbody>
-	  	<% @employees.each do |employee| %>
-				<tr>
-					<td><%= employee.name %></td>
-					<td><%= employee.role %></td>
-					<td>
-						<% if allow? "employees", "show" %>
-							<%= link_to 'View', employee_path(employee), :class => 'btn btn-small', :id => "show_#{employee.id}" %>
-						<% end %>
-						<% if allow? "employees", "inactivate" %>
-							<%= link_to 'Inactivate', inactivate_employee_path(employee), :class => 'btn btn-small btn-warning', :id => "inactivate_#{employee.id}" %>
-						<% end %>
-						<% if allow? "employees", "destroy" %>
-							<%= link_to 'Delete', employee, method: :delete, confirm: "Delete?", :class => 'btn btn-small btn-danger', :id => "delete_#{employee.id}" %>
-						<% end %>
-					</td>
-				</tr>
-			<% end %>
-		</tbody>
-	</table>
+<div class="row">
+	<div class="row text-center">
+		<% if allow? "employees", "new" %>
+			<%= new_button "Add Employee", new_employee_path %>
+		<% end %>
+	</div>
+	
+	<div class="row">
+		<table class="table table-striped">
+			<thead>
+		  	<tr>
+		  		<th>Name</th>
+		  		<th>Role</th>
+		  		<th style="width:105px;">&nbsp;</th>
+		  	</tr>
+		  </thead>
+		  <tbody>
+		  	<% @employees.each do |employee| %>
+					<tr>
+						<td><%= employee.name %></td>
+						<td><%= employee.role %></td>
+						<td>
+							<% if allow? "employees", "show" %>
+								<%= view_button nil, employee_path(employee), :class => 'btn-small', :id => "show_#{employee.id}" %>
+							<% end %>
+							<% if allow? "employees", "inactivate" %>
+								<%= inactivate_button nil, inactivate_employee_path(employee), :class => 'btn-small', :id => "inactivate_#{employee.id}" %>
+							<% end %>
+							<% if allow? "employees", "destroy" %>
+								<%= delete_button nil, employee, :class => 'btn-small', :id => "delete_#{employee.id}" %>
+							<% end %>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
 
 	<div class="row">
 		<div class="span10">
@@ -46,8 +53,4 @@
 	<% unless @employees.length > 0 %>
 		<div class="alert">No records found</div>
 	<% end %>
-</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
 </div>

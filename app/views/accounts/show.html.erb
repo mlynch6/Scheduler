@@ -1,10 +1,9 @@
 <% provide(:title, 'Company Information') %>
 <% provide(:header_current, 'Administration') %>
-<% provide(:current, 'Company') %>
 
 <h1>Company Information</h1>
 
-<div class="show-ui span9">
+<div class="show-ui">
 	<div class="row">
 		<div class="label-ui span2"><%= Account.human_attribute_name(:name) %></div>
 		<div class="text-ui span6"><%= @account.name %></div>
@@ -17,33 +16,29 @@
 		<div class="label-ui span2"><%= Account.human_attribute_name(:time_zone) %></div>
 		<div class="text-ui span6"><%= @account.time_zone %></div>
 	</div>
-	<% if allow? "accounts", "edit" %>
-		<div class="row row-action">
-			<div class="offset2">
-				<%= link_to "Edit", edit_account_path(@account), :class => 'btn' %>
-			</div>
-		</div>
-	<% end %>
+	
+	<div class="row text-center">
+		<% if allow? "accounts", "edit" %>
+			<%= edit_button "Edit", edit_account_path(@account) %>
+		<% end %>
+	</div>
 	
 	<div class="row">
 		<div class=" span3">
 			<h2>Addresses</h2>
 			<% @account.addresses.each do |addr| %>
 				<address>
-					<strong><%= addr.addr_type %> Address</strong><br />
+					<strong><%= addr.addr_type %> Address</strong>
+					&nbsp;<%= edit_link nil, [:edit, @account, addr], :id => "edit_address_#{addr.id}" %>
+					&nbsp;<%= delete_link nil, [@account, addr], :id => "delete_address_#{addr.id}" %>
+					<br />
 					<%= addr.addr %><br />
 					<%= addr.addr2 if addr.addr2.present? %>
 					<%= tag(:br) if addr.addr2.present? %>
 					<%= "#{addr.city}, #{addr.state} #{addr.zipcode}" %><br />
-					<%= link_to "Edit", [:edit, @account, addr], :id => "edit_address_#{addr.id}" %>
-					<%= link_to 'Delete', [@account, addr], method: :delete, confirm: "Delete?", :id => "delete_address_#{addr.id}" %>
 				</address>
 			<% end %>
-			<%= link_to "Add Address", [:new, @account, :address] %>
+			<%= new_link "Add Address", [:new, @account, :address] %>
 		</div>
 	</div>
-</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
 </div>

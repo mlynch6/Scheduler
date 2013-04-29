@@ -6,8 +6,6 @@ describe "User Pages:" do
   context "#index" do
   	it "has correct title & table headers" do
   		log_in
-	  	click_link "Administration"
-	  	click_link "User"
 	  	click_link "Users"
 	  	
 	  	should have_selector('title', text: 'Users')
@@ -60,7 +58,6 @@ describe "User Pages:" do
   context "#new" do
   	it "has correct title" do
 			log_in
-			click_link "Administration"
 	  	click_link "Users"
 	  	click_link "Add User"
 	
@@ -109,7 +106,6 @@ describe "User Pages:" do
   context "#edit" do
   	it "has correct title" do
 			log_in
-			click_link "Administration"
 	  	click_link "Users"
 	  	click_link "Edit"
 	

@@ -1,15 +1,14 @@
 <% provide(:title, 'Inactive Pieces') %>
 <% provide(:header_current, 'Scheduling') %>
-<% provide(:current, 'InactivePieces') %>
 
 <h1>Inactive Pieces</h1>
 
-<div class="span9">
+<div class="row">	
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
 	  		<th>Name</th>
-	  		<th>&nbsp;</th>
+	  		<th style="width:70px;">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -18,10 +17,10 @@
 					<td><%= piece.name %></td>
 					<td>
 						<% if allow? "pieces", "activate" %>
-							<%= link_to 'Activate', activate_piece_path(piece), :class => 'btn btn-small btn-success', :id => "activate_#{piece.id}" %>
+							<%= activate_button nil, activate_piece_path(piece), :class => 'btn-small', :id => "activate_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "destroy" %>
-							<%= link_to 'Delete', piece, method: :delete, confirm: "Delete?", :class => 'btn btn-small btn-danger', :id => "delete_#{piece.id}" %>
+							<%= delete_button nil, piece, :class => 'btn-small', :id => "delete_#{piece.id}" %>
 						<% end %>
 					</td>
 				</tr>
@@ -41,8 +40,4 @@
 	<% unless @pieces.length > 0 %>
 		<div class="alert">No pieces are inactive.</div>
 	<% end %>
-</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
 </div>

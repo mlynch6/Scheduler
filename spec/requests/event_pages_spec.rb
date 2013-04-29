@@ -6,7 +6,6 @@ describe "Event Pages:" do
   context "#index" do
   	it "has correct title & headers" do
 			log_in
-	  	click_link "Scheduling"
 	  	click_link "Daily Schedule"
 	  	
 	  	should have_selector('title', text: 'Daily Schedule')

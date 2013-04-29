@@ -7,7 +7,7 @@ describe "Address Pages:" do
 		context "for Account" do
 			it "has correct title" do
 				log_in
-				click_link "Administration"
+				click_link "Company Information"
 		  	click_link 'Add Address'
 		
 				should have_selector('title', text: 'Add Address')
@@ -65,7 +65,7 @@ describe "Address Pages:" do
 		context "for Employee" do
 			it "has correct title" do
 				log_in
-				click_link "Employees"
+				click_link "Active Employees"
 		  	click_link "View"
 		  	click_link 'Add Address'
 		
@@ -130,7 +130,7 @@ describe "Address Pages:" do
 			it "has correct title" do
 				log_in
 				address = FactoryGirl.create(:address, addressable: current_account)
-				click_link "Administration"
+				click_link "Company Information"
 		  	click_link "edit_address_#{address.id}"
 		  	
 		  	should have_selector('title', text: 'Update Address')
@@ -183,7 +183,7 @@ describe "Address Pages:" do
 				log_in
 				employee = FactoryGirl.create(:employee, account: current_account)
 				address = FactoryGirl.create(:address_employee, addressable: employee)
-				click_link "Employees"
+				click_link "Active Employees"
 				click_link "show_#{employee.id}"
 		  	click_link "edit_address_#{address.id}"
 		  	

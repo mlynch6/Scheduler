@@ -19,12 +19,6 @@ describe ApplicationHelper do
 		end
 	end
 
-	context 'link_w_icon' do	
-		it "has the HTML for bootstrap icon and text" do
-			link_w_icon("Delete", "#", 'trash').should == '<a href="#"><i class="icon-trash"></i>Delete</a>'
-		end
-	end
-
 	context 'formatted_date' do
 		it "formats date in default format" do
 			formatted_date('2012-10-09').should == '10/09/2012'
@@ -32,6 +26,16 @@ describe ApplicationHelper do
 		
 		it "formats date in specified format" do
 			formatted_date('2012-10-09', '%v').should == ' 9-Oct-2012'
+		end
+	end
+	
+	context 'active_inactive' do
+		it "when true displays Active" do
+			active_inactive(true).should == 'Active'
+		end
+		
+		it "when false displays Inactive" do
+			active_inactive(false).should == 'Inactive'
 		end
 	end
 end

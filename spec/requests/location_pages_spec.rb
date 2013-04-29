@@ -6,8 +6,6 @@ describe "Location Pages:" do
   context "#index" do
   	it "has correct title & table headers" do
   		log_in
-	  	click_link "Administration"
-	  	click_link "Locations"
 	  	click_link "Active Locations"
 	  	
 	  	should have_selector('title', text: 'Active Locations')
@@ -72,10 +70,10 @@ describe "Location Pages:" do
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Active Locations')
 				
-			click_link 'Active'
+			click_link 'Active Locations'
 			should_not have_content(location.name)
 				
-			click_link 'Inactive'
+			click_link 'Inactive Locations'
 			should have_content(location.name)
 		end
 	end
@@ -83,8 +81,6 @@ describe "Location Pages:" do
 	context "#inactive" do
 		it "has correct title & table headers" do
 			log_in
-	  	click_link "Administration"
-	  	click_link "Locations"
 	  	click_link "Inactive Locations"
 	  	
 	  	should have_selector('title', text: 'Inactive Locations')
@@ -145,10 +141,10 @@ describe "Location Pages:" do
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Inactive Locations')
 			
-			click_link 'Inactive'
+			click_link 'Inactive Locations'
 			should_not have_content(location.name)
 			
-			click_link 'Active'
+			click_link 'Active Locations'
 			should have_content(location.name)
 		end
 	end
@@ -156,8 +152,7 @@ describe "Location Pages:" do
 	context "#new" do
 		it "has correct title" do
 			log_in
-			click_link "Administration"
-	  	click_link "Locations"
+	  	click_link "Active Locations"
 	  	click_link "Add Location"
 	
 			should have_selector('title', text: 'Add Location')
@@ -201,7 +196,8 @@ describe "Location Pages:" do
 		it "has correct title" do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
-	  	visit edit_location_path(location)
+			click_link "Active Locations"
+	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: 'Edit Location')
 			should have_selector('h1', text: 'Edit Location')

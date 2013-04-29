@@ -5,10 +5,10 @@
 	<div class="invitees"><%= pluralize(rehearsal.employees.count, "invitee") %></div>
 	<div class="actions">
 		<% if allow? "rehearsals", "show" %>
-			<%= link_to 'View', rehearsal_path(rehearsal) %>
+			<%= view_link "View", rehearsal_path(rehearsal) %>
 		<% end %>
 		<% if allow? "rehearsals", "edit" %>
-			<%= link_to 'Edit', edit_rehearsal_path(rehearsal) %>
+			<%= edit_link "Edit", edit_rehearsal_path(rehearsal) %>
 		<% end %>
 	</div>
 </div>

@@ -1,16 +1,21 @@
 <% provide(:title, 'Users') %>
 <% provide(:header_current, 'Administration') %>
-<% provide(:current, 'Users') %>
 
 <h1>Users</h1>
 
-<div class="span9">
+<div class="row">
+	<div class="row text-center">
+		<% if allow? "users", "new" %>
+			<%= new_button "Add User", new_user_path %>
+		<% end %>
+	</div>
+	
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
 	  		<th>Employee</th>
 	  		<th>Username</th>
-	  		<th>&nbsp;</th>
+	  		<th style="width:70px;">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -20,10 +25,10 @@
 					<td><%= user.username %></td>
 					<td>
 						<% if allow? "users", "edit" %>
-							<%= link_to 'Edit', edit_user_path(user), :class => 'btn btn-small', :id => "edit_#{user.id}" %>
+							<%= edit_button nil, edit_user_path(user), :class => 'btn-small', :id => "edit_#{user.id}" %>
 						<% end %>
 						<% if allow? "users", "destroy" %>
-							<%= link_to 'Delete', user, method: :delete, confirm: "Delete?", :class => 'btn btn-small btn-danger', :id => "delete_#{user.id}" %>
+							<%= delete_button nil, user, :class => 'btn-small', :id => "delete_#{user.id}" %>
 						<% end %>
 					</td>
 				</tr>
@@ -43,8 +48,4 @@
 	<% unless @users.length > 0 %>
 		<div class="alert">No users are active. Click on 'Add User' to get started.</div>
 	<% end %>
-</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
 </div>

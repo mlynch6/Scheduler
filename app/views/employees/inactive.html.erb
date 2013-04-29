@@ -1,16 +1,15 @@
 <% provide(:title, 'Inactive Employees') %>
 <% provide(:header_current, 'Employees') %>
-<% provide(:current, 'InactiveEmployees') %>
 
 <h1>Inactive Employees</h1>
 
-<div class="span9">
+<div class="row">
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
 	  		<th>Name</th>
 	  		<th>Role</th>
-	  		<th>&nbsp;</th>
+	  		<th style="width:70px;">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -20,10 +19,10 @@
 					<td><%= employee.role %></td>
 					<td>
 						<% if allow? "employees", "activate" %>
-							<%= link_to 'Activate', activate_employee_path(employee), :class => 'btn btn-small btn-success', :id => "activate_#{employee.id}" %>
+							<%= activate_button nil, activate_employee_path(employee), :class => 'btn-small', :id => "activate_#{employee.id}" %>
 						<% end %>
 						<% if allow? "employees", "destroy" %>
-							<%= link_to 'Delete', employee, method: :delete, confirm: "Delete?", :class => 'btn btn-small btn-danger', :id => "delete_#{employee.id}" %>
+							<%= delete_button nil, employee, :class => 'btn-small', :id => "delete_#{employee.id}" %>
 						<% end %>
 					</td>
 				</tr>
@@ -44,7 +43,4 @@
 		<div class="alert">No records found</div>
 	<% end %>
 	</div>
-
-<div class="span3">
-	<%= render 'shared/subnav' %>
 </div>
