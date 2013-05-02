@@ -88,11 +88,6 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 		end
 	end
 	
-#	<%= f.label :piece_id, :class => 'control-label' %>
-#	<div class="controls">
-#		<span class="uneditable-input"><%= @piece.name %></span>
-#	</div>
-	
 	def submit(*args)
 		content_tag :div, class: "form-actions" do
 			super

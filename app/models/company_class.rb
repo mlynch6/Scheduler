@@ -22,9 +22,7 @@ class CompanyClass < Event
 
 protected	
 	def default_title
-		if title.empty?
-			self.title = "Company Class"
-		end
+		self.title = "Company Class" if title.empty?
 	end
 
 	def check_contracted_start

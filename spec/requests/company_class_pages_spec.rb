@@ -51,8 +51,7 @@ describe "CompanyClass Pages:" do
 			
 			it "doesn't create Company Class" do
 				log_in
-				visit events_path
-	  		click_link 'New Company Class'
+				visit new_company_class_path
 		
 				expect { click_button 'Create' }.not_to change(CompanyClass, :count)
 			end
@@ -62,8 +61,7 @@ describe "CompanyClass Pages:" do
 			it "creates new Company Class without Invitees" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
-				visit events_path
-	  		click_link 'New Company Class'
+				visit new_company_class_path
 	  		
 		  	fill_in "Title", with: "Test Company Class"
 		  	select location.name, from: "Location"
@@ -87,8 +85,7 @@ describe "CompanyClass Pages:" do
 				location = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
 				e1 = FactoryGirl.create(:employee, account: current_account)
-				visit events_path
-	  		click_link 'New Company Class'
+				visit new_company_class_path
 	  		
 		  	fill_in "Title", with: "Test Company Class"
 		  	select location.name, from: "Location"
@@ -106,6 +103,48 @@ describe "CompanyClass Pages:" do
 				should have_content("9:00 AM")
 				should have_content("10:30 AM")
 				should have_content("1 invitee")
+			end
+		end
+		
+		context "shows warning" do			
+			it "when employee is double booked" do
+				log_in
+				loc1 = FactoryGirl.create(:location, account: current_account)
+				loc2 = FactoryGirl.create(:location, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account)
+				e2 = FactoryGirl.create(:employee, account: current_account)
+				e3 = FactoryGirl.create(:employee, account: current_account)
+				
+				cc1 = FactoryGirl.create(:company_class, account: current_account,
+								location: loc1,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								end_time: "12 PM")
+				FactoryGirl.create(:invitation, event: cc1, employee: e1)
+				FactoryGirl.create(:invitation, event: cc1, employee: e2)
+				FactoryGirl.create(:invitation, event: cc1, employee: e3)
+				
+				cc2 = FactoryGirl.create(:company_class, account: current_account,
+								location: loc1,
+								start_date: Time.zone.today,
+								start_time: "12 PM",
+								end_time: "1 PM")
+				FactoryGirl.create(:invitation, event: cc2, employee: e1)
+				
+				visit new_company_class_path
+				fill_in "Title", with: "Test Rehearsal"
+		  	select loc2.name, from: "Location"
+		  	fill_in 'Date', with: Time.zone.today
+		  	fill_in 'From', with: "11AM"
+		  	fill_in 'To', with: "1PM"
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Create'
+		
+				should have_selector('div.alert-warning')
+				should have_content("people are double booked")
+				should have_content(e1.full_name)
+				should_not have_content(e2.full_name)
+				should_not have_content(e3.full_name)
 			end
 		end
 	end
@@ -218,6 +257,49 @@ describe "CompanyClass Pages:" do
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Daily Schedule')
 			should have_content(new_title)
+		end
+		
+		context "with warning" do			
+			it "shows warning when employee is double booked" do
+				log_in
+				loc1 = FactoryGirl.create(:location, account: current_account)
+				loc2 = FactoryGirl.create(:location, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account)
+				e2 = FactoryGirl.create(:employee, account: current_account)
+				e3 = FactoryGirl.create(:employee, account: current_account)
+				
+				cc1 = FactoryGirl.create(:company_class, account: current_account,
+								location: loc1,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								end_time: "12 PM")
+				FactoryGirl.create(:invitation, event: cc1, employee: e1)
+				FactoryGirl.create(:invitation, event: cc1, employee: e2)
+				FactoryGirl.create(:invitation, event: cc1, employee: e3)
+				
+				cc2 = FactoryGirl.create(:company_class, account: current_account,
+								location: loc1,
+								start_date: Time.zone.today,
+								start_time: "12 PM",
+								end_time: "1 PM")
+				FactoryGirl.create(:invitation, event: cc2, employee: e1)
+				
+				cc3 = FactoryGirl.create(:company_class, account: current_account,
+								location: loc2,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								end_time: "1 PM")
+				
+				visit edit_company_class_path(cc3)
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Update'
+		
+				should have_selector('div.alert-warning')
+				should have_content("people are double booked")
+				should have_content(e1.full_name)
+				should_not have_content(e2.full_name)
+				should_not have_content(e3.full_name)
+			end
 		end
 	end
 end

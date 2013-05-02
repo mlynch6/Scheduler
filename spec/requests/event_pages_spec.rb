@@ -10,7 +10,7 @@ describe "Event Pages:" do
 	  	
 	  	should have_selector('title', text: 'Daily Schedule')
 		 	
-		  should have_selector('h2', text: Time.zone.today.to_s(:long))
+		  should have_selector('h2', text: Time.zone.today.strftime('%A, %B %-d, %Y'))
 		  should have_content(Time.zone.today.strftime('%A'))
 		end
 		

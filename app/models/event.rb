@@ -17,20 +17,20 @@
 class Event < ActiveRecord::Base
 	attr_accessible :title, :start_date, :start_time, :end_time, :location_id
 	attr_accessible :employee_ids
+	attr_writer :start_date, :start_time, :end_time
 
 	belongs_to :account
 	belongs_to :location
 	has_many :invitations, dependent: :destroy
 	has_many :employees, through: :invitations
 
-	attr_writer :start_date, :start_time, :end_time
 	before_validation :save_start_at, :if => "@start_date.present? && @start_time.present?"
 	before_validation :save_end_at, :if => "@start_date.present? && @end_time.present?"
 	
 	validates :title,	presence: true, length: { maximum: 30 }
 	validates :type,	presence: true, length: { maximum: 20 }
 	validates :location_id,	presence: true
-	validate :location_available, :if => "start_at.present? && end_at.present?"
+	validate :location_available?, :if => "start_at.present? && end_at.present?"
 	validates_date :start_date
 	validates :start_date,	presence: true
 	validates_time :start_time
@@ -58,21 +58,43 @@ class Event < ActiveRecord::Base
 		(end_at - start_at)/60
 	end
 	
-	protected
+	def overlapping
+		events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod)", {
+									:stime => start_at,
+									:etime => end_at,
+									:sod => start_at.beginning_of_day,
+									:eod => end_at.end_of_day })
+		events.where("id <> :id", { :id => id }) if !new_record?
+	end
 	
-	def location_available
-		if id.nil?
-			cnt_begin = Event.where("start_at < :etime AND end_at >= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
-			cnt_end = Event.where("end_at > :stime AND end_at <= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
-			cnt_subset = Event.where("start_at <= :stime AND end_at >= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
-		else
-			cnt_begin = Event.where("id <> :id", { :id => id }).where("start_at < :etime AND end_at >= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
-			cnt_end = Event.where("id <> :id", { :id => id }).where("end_at > :stime AND end_at <= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
-			cnt_subset = Event.where("id <> :id", { :id => id }).where("start_at <= :stime AND end_at >= :etime", { :stime => start_at, :etime => end_at }).where(:location_id => location_id).count
+	def double_booked_employees_warning
+		double_booked_employees = Employee.joins(:invitations).where(id: self.employees, invitations: {event_id: self.overlapping}).uniq_by(&:id)
+		if double_booked_employees.any?
+			employee_list = double_booked_employees.map { |emp| emp.full_name }.join(", ")
+			return "The following people are double booked during this time: "+employee_list
 		end
-		
-		cnt = cnt_begin + cnt_end + cnt_subset
-		errors.add(:location_id, "is booked during this time") if cnt > 0
+	end
+	
+protected
+	
+	def location_available?
+		if new_record?
+			events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod) AND location_id = :location_id", {
+									:stime => start_at,
+									:etime => end_at,
+									:sod => start_at.beginning_of_day,
+									:eod => end_at.end_of_day,
+									:location_id => location_id})
+		else
+			events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod) AND location_id = :location_id AND id <> :id", {
+									:stime => start_at,
+									:etime => end_at,
+									:sod => start_at.beginning_of_day,
+									:eod => end_at.end_of_day,
+									:location_id => location_id,
+									:id => id })
+		end
+		errors.add(:location_id, "is booked during this time") if events.count > 0
 	end
 	
 	def save_start_at

@@ -25,13 +25,15 @@
 	</div>
 		
 	<div class="row">
-		<div class="label-ui span2">Invitees</div>
-		<div class="text-ui span7">
-			<% @rehearsal.employees.each do |employee| %>
-					<%= employee.full_name %>
-				<% end %>
+			<div class="label-ui span2">Invitees</div>
+			<div class="text-ui span7">
+				<ul class="unstyled">
+					<% @rehearsal.employees.each do |employee| %>
+						<li><%= employee.full_name %></li>
+					<% end %>
+				</ul>
+			</div>
 		</div>
-	</div>
 	
 	<div class="row text-center">
 		<% if allow? "rehearsals", "edit" %>

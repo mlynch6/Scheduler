@@ -346,6 +346,104 @@ describe Event do
 			event.save
 	  	event.reload.duration_min.should == 45
 	  end
+	  
+	  context "overlapping" do
+	  	let!(:e) { FactoryGirl.create(:event,
+											account: account,
+											location: location,
+											start_date: Date.new(2012,1,2),
+											start_time: "1PM",
+											end_time: "2PM") }
+											
+	  	let!(:location2) { FactoryGirl.create(:location, account: account) }
+	  	let!(:location3) { FactoryGirl.create(:location, account: account) }
+	  	let!(:overlap_start) { FactoryGirl.create(:event,
+											account: account,
+											location: location2,
+											start_date: Date.new(2012,1,2),
+											start_time: "12:15 PM",
+											end_time: "1:15 PM") }
+			let!(:overlap_end) { FactoryGirl.create(:event,
+											account: account,
+											location: location2,
+											start_date: Date.new(2012,1,2),
+											start_time: "1:45 PM",
+											end_time: "2:45 PM") }
+			let!(:overlap_entire) { FactoryGirl.create(:event,
+											account: account,
+											location: location3,
+											start_date: Date.new(2012,1,2),
+											start_time: "12:00 PM",
+											end_time: "2:35 PM") }
+			let!(:overlap_subset) { FactoryGirl.create(:event,
+											account: account,
+											location: location2,
+											start_date: Date.new(2012,1,2),
+											start_time: "1:15 PM",
+											end_time: "1:45 PM") }
+			let!(:before_event) { FactoryGirl.create(:event,
+											account: account,
+											location: location,
+											start_date: Date.new(2012,1,2),
+											start_time: "12:30 PM",
+											end_time: "1:00 PM") }
+			let!(:after_event) { FactoryGirl.create(:event,
+											account: account,
+											location: location,
+											start_date: Date.new(2012,1,2),
+											start_time: "2:00 PM",
+											end_time: "3:30 PM") }
+			let!(:day_before) { FactoryGirl.create(:event,
+											account: account,
+											location: location,
+											start_date: Date.new(2012,1,1)) }
+			let!(:day_after) { FactoryGirl.create(:event,
+											account: account,
+											location: location,
+											start_date: Date.new(2012,1,3)) }
+			
+			it "shows events that have an overlap" do
+				e.overlapping.should include(overlap_start)
+				e.overlapping.should include(overlap_end)
+				e.overlapping.should include(overlap_entire)
+				e.overlapping.should include(overlap_subset)
+				
+				e.overlapping.should_not include(e)
+				#e.overlapping.should_not include(before_event)
+				e.overlapping.should_not include(after_event)
+				e.overlapping.should_not include(day_before)
+				e.overlapping.should_not include(day_after)
+			end
+	  end
+	  
+	  context "double_booked_employees_warning" do
+			let(:location2) { FactoryGirl.create(:location, account: account) }
+			let(:e1) { FactoryGirl.create(:employee, account: account) }
+			let(:e2) { FactoryGirl.create(:employee, account: account) }
+			let(:e3) { FactoryGirl.create(:employee, account: account) }
+			let!(:event1) { FactoryGirl.create(:event, account: account, 
+													location: location,
+													start_date: Time.zone.today,
+													start_time: "8AM", end_time: "8:30AM") }
+			let!(:i1) { FactoryGirl.create(:invitation, event: event1, employee: e1) }
+			let!(:i2) { FactoryGirl.create(:invitation, event: event1, employee: e2) }
+			let!(:i3) { FactoryGirl.create(:invitation, event: event1, employee: e3) }
+			
+			let!(:event2) { FactoryGirl.create(:event, account: account, 
+													location: location,
+													start_date: Time.zone.today,
+													start_time: "9AM", end_time: "9:30AM") }
+			let!(:i4) { FactoryGirl.create(:invitation, event: event2, employee: e1) }
+			
+			it "for double booked employees on record update" do
+				event.start_date = Time.zone.today
+				event.start_time = "8AM"
+				event.end_time = "9:30 AM"
+				event.employee_ids = [e1.id]
+				event.save
+				event.double_booked_employees_warning.should == "The following people are double booked during this time: #{e1.full_name}"
+			end
+		end
   end
 
 	describe "(Scopes)" do
@@ -422,9 +520,5 @@ describe Event do
 				Event.for_monthly_calendar(DateTime.parse("2012-12-7 09:00:00")).should == [prev_month_good, prev_month_good2, current_month_good, current_month_good2, current_month_good3, next_month_good, next_month_good2]
 			end
 		end
-	end
-	
-	describe "(Custom Error Messages)" do
-		pending
 	end
 end

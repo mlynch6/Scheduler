@@ -8,7 +8,9 @@ class CompanyClassesController < ApplicationController
   def create
 		@cclass = CompanyClass.new(params[:company_class])
 		if @cclass.save
-			redirect_to events_path(:date => @cclass.start_date), notice: "Successfully created the company class."
+			flash[:success] = "Successfully created the company class."
+			show_warnings
+			redirect_to events_path(:date => @cclass.start_date)
 		else
 			form_setup
 			render 'new'
@@ -30,7 +32,9 @@ class CompanyClassesController < ApplicationController
 	def update
 		@cclass = CompanyClass.find(params[:id])
 		if @cclass.update_attributes(params[:company_class])
-			redirect_to events_path(:date => @cclass.start_date), :notice => "Successfully updated the company class."
+			flash[:success] = "Successfully updated the company class."
+			show_warnings
+			redirect_to events_path(:date => @cclass.start_date)
 		else
 			form_setup
 			render 'edit'
@@ -43,5 +47,10 @@ class CompanyClassesController < ApplicationController
 	def form_setup
 		@locations = Location.active.map { |location| [location.name, location.id] }
 		@employees = Employee.active.map { |employee| [employee.full_name, employee.id] }
+	end
+	
+	def show_warnings
+		db_employee_msg = @cclass.double_booked_employees_warning
+		flash[:warning] = db_employee_msg if db_employee_msg.present?
 	end
 end

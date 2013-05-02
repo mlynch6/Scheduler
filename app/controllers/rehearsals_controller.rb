@@ -8,7 +8,9 @@ class RehearsalsController < ApplicationController
   def create
 		@rehearsal = Rehearsal.new(params[:rehearsal])
 		if @rehearsal.save
-			redirect_to events_path(:date => @rehearsal.start_date), :notice => "Successfully created the rehearsal."
+			flash[:success] = "Successfully created the rehearsal."
+			show_warnings
+			redirect_to events_path(:date => @rehearsal.start_date)
 		else
 			form_setup
 			render 'new'
@@ -30,7 +32,9 @@ class RehearsalsController < ApplicationController
 	def update
 		@rehearsal = Rehearsal.find(params[:id])
 		if @rehearsal.update_attributes(params[:rehearsal])
-			redirect_to events_path(:date => @rehearsal.start_date), :notice => "Successfully updated the rehearsal."
+			flash[:success] = "Successfully updated the rehearsal."
+			show_warnings
+			redirect_to events_path(:date => @rehearsal.start_date)
 		else
 			form_setup
 			render 'edit'
@@ -44,5 +48,10 @@ class RehearsalsController < ApplicationController
 		@locations = Location.active.map { |location| [location.name, location.id] }
 		@pieces = Piece.active.map { |piece| [piece.name, piece.id] }
 		@employees = Employee.active.map { |employee| [employee.full_name, employee.id] }
+	end
+	
+	def show_warnings
+		db_employee_msg = @rehearsal.double_booked_employees_warning
+		flash[:warning] = db_employee_msg if db_employee_msg.present?
 	end
 end

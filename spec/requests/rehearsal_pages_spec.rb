@@ -79,7 +79,7 @@ describe "Rehearsal Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2012"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'rehearsal_end_time', with: "11:30AM"
+		  	fill_in 'To', with: "11:30AM"
 		  	select piece.name, from: "Piece"
 				click_button 'Create'
 		
@@ -106,7 +106,7 @@ describe "Rehearsal Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2012"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'rehearsal_end_time', with: "11:30AM"
+		  	fill_in 'To', with: "11:30AM"
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -121,6 +121,52 @@ describe "Rehearsal Pages:" do
 				should have_content("11:30 AM")
 				should have_content(piece.name)
 				should have_content("1 invitee")
+			end
+		end
+			
+		context "shows warning" do			
+			it "when employee is double booked" do
+				log_in
+				loc1 = FactoryGirl.create(:location, account: current_account)
+				loc2 = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account)
+				e2 = FactoryGirl.create(:employee, account: current_account)
+				e3 = FactoryGirl.create(:employee, account: current_account)
+				
+				r1 = FactoryGirl.create(:rehearsal, account: current_account,
+								location: loc1,
+								piece: piece,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								end_time: "12 PM")
+				FactoryGirl.create(:invitation, event: r1, employee: e1)
+				FactoryGirl.create(:invitation, event: r1, employee: e2)
+				FactoryGirl.create(:invitation, event: r1, employee: e3)
+				
+				r2 = FactoryGirl.create(:rehearsal, account: current_account,
+								location: loc1,
+								piece: piece,
+								start_date: Time.zone.today,
+								start_time: "12 PM",
+								end_time: "1 PM")
+				FactoryGirl.create(:invitation, event: r2, employee: e1)
+				
+				visit new_rehearsal_path
+				fill_in "Title", with: "Test Rehearsal"
+		  	select loc2.name, from: "Location"
+		  	fill_in 'Date', with: Time.zone.today
+		  	fill_in 'From', with: "11AM"
+		  	fill_in 'To', with: "1PM"
+		  	select piece.name, from: "Piece"
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Create'
+		
+				should have_selector('div.alert-warning')
+				should have_content("people are double booked")
+				should have_content(e1.full_name)
+				should_not have_content(e2.full_name)
+				should_not have_content(e3.full_name)
 			end
 		end
 	end
@@ -251,6 +297,53 @@ describe "Rehearsal Pages:" do
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Daily Schedule')
 			should have_content(new_title)
+		end
+		
+		context "with warning" do			
+			it "shows warning when employee is double booked" do
+				log_in
+				loc1 = FactoryGirl.create(:location, account: current_account)
+				loc2 = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account)
+				e2 = FactoryGirl.create(:employee, account: current_account)
+				e3 = FactoryGirl.create(:employee, account: current_account)
+				
+				r1 = FactoryGirl.create(:rehearsal, account: current_account,
+								location: loc1,
+								piece: piece,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								end_time: "12 PM")
+				FactoryGirl.create(:invitation, event: r1, employee: e1)
+				FactoryGirl.create(:invitation, event: r1, employee: e2)
+				FactoryGirl.create(:invitation, event: r1, employee: e3)
+				
+				r2 = FactoryGirl.create(:rehearsal, account: current_account,
+								location: loc1,
+								piece: piece,
+								start_date: Time.zone.today,
+								start_time: "12 PM",
+								end_time: "1 PM")
+				FactoryGirl.create(:invitation, event: r2, employee: e1)
+				
+				r3 = FactoryGirl.create(:rehearsal, account: current_account,
+								location: loc2,
+								piece: piece,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								end_time: "1 PM")
+				
+				visit edit_rehearsal_path(r3)
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Update'
+		
+				should have_selector('div.alert-warning')
+				should have_content("people are double booked")
+				should have_content(e1.full_name)
+				should_not have_content(e2.full_name)
+				should_not have_content(e3.full_name)
+			end
 		end
 	end
 end

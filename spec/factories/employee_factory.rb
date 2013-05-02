@@ -17,8 +17,8 @@
 FactoryGirl.define do
 	factory :employee do
 		account
-		first_name		Faker::Name.first_name
-		last_name			Faker::Name.last_name
+		sequence(:first_name)	{ |n| "#{Faker::Name.first_name} #{n}" }
+		sequence(:last_name)	{ |n| "#{Faker::Name.last_name} #{n}" }
 		role					"Employee"
 		#email					Faker::Internet.free_email
 	 	#phone 				Faker::PhoneNumber.phone_number

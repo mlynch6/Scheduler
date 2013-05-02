@@ -20,7 +20,7 @@ module DailyCalendarHelper
 		
 		def date_header
 			content_tag :h2, class: "text-center" do
-				date.strftime('%A, %B %d, %Y')
+				date.strftime('%A, %B %-d, %Y')
 			end
 		end
 		
