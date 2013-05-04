@@ -435,7 +435,7 @@ describe Event do
 													start_time: "9AM", end_time: "9:30AM") }
 			let!(:i4) { FactoryGirl.create(:invitation, event: event2, employee: e1) }
 			
-			it "for double booked employees on record update" do
+			it "gives warning message for double booked employees" do
 				event.start_date = Time.zone.today
 				event.start_time = "8AM"
 				event.end_time = "9:30 AM"

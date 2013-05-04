@@ -55,7 +55,7 @@ class Event < ActiveRecord::Base
 	end
 	
 	def duration_min
-		(end_at - start_at)/60
+		((end_at - start_at)/60).to_i
 	end
 	
 	def overlapping

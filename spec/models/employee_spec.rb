@@ -47,6 +47,11 @@ describe Employee do
   	it { should respond_to(:invitations) }
   	it { should respond_to(:events) }
   	
+  	it { should respond_to(:name) }
+  	it { should respond_to(:full_name) }
+  	it { should respond_to(:activate) }
+  	it { should respond_to(:inactivate) }
+  	
   	it "should not allow access to account_id" do
       expect do
         Employee.new(account_id: account.id)
@@ -330,6 +335,47 @@ describe Employee do
 			employee.inactivate
 	  	employee.reload.active?.should be_false
 	  end
+	  
+	  context "max_rehearsal_hrs_in_day_warning" do
+	  	let(:location) { FactoryGirl.create(:location, account: account) }
+			let(:piece) { FactoryGirl.create(:piece, account: account) }
+			let(:e1) { FactoryGirl.create(:employee, account: account, role: 'AGMA Dancer') }
+			let(:e2) { FactoryGirl.create(:employee, account: account, role: 'AGMA Dancer') }
+			let(:e3) { FactoryGirl.create(:employee_inactive, account: account, role: 'AGMA Dancer') }
+			let(:e4) { FactoryGirl.create(:employee, account: account, role: 'Musician') }
+			
+			let!(:cc) { FactoryGirl.create(:company_class, account: account, 
+													location: location,
+													start_date: Time.zone.today,
+													start_time: "9AM", end_time: "9:30AM") }
+			let!(:cci1) { FactoryGirl.create(:invitation, event: cc, employee: e1) }
+			let!(:cci2) { FactoryGirl.create(:invitation, event: cc, employee: e2) }
+			let!(:cci3) { FactoryGirl.create(:invitation, event: cc, employee: e3) }
+			let!(:cci4) { FactoryGirl.create(:invitation, event: cc, employee: e4) }
+			
+			let!(:r1) { FactoryGirl.create(:rehearsal, account: account, 
+													location: location,
+													piece: piece,
+													start_date: Time.zone.today,
+													start_time: "10AM", end_time: "4PM") }
+			let!(:i1) { FactoryGirl.create(:invitation, event: r1, employee: e1) }
+			let!(:i2) { FactoryGirl.create(:invitation, event: r1, employee: e2) }
+			let!(:i3) { FactoryGirl.create(:invitation, event: r1, employee: e3) }
+			let!(:i4) { FactoryGirl.create(:invitation, event: r1, employee: e4) }
+			
+			let!(:r2) { FactoryGirl.create(:rehearsal, account: account, 
+													location: location,
+													piece: piece,
+													start_date: Time.zone.today,
+													start_time: "4PM", end_time: "4:30PM") }
+			let!(:i5) { FactoryGirl.create(:invitation, event: r2, employee: e1) }
+			let!(:i3) { FactoryGirl.create(:invitation, event: r1, employee: e3) }
+			let!(:i6) { FactoryGirl.create(:invitation, event: r2, employee: e4) }
+			
+			it "gives error message for active AGMA Dancer who have reached their max rehearsal hours in a day" do
+				Employee.max_rehearsal_hrs_in_day_warning(Time.zone.today).should == "The following people are over their rehearsal limit of 6 hrs/day: #{e1.full_name}"
+			end
+		end
 	end
 	
 	describe "(Scopes)" do

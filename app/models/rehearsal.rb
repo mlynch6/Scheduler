@@ -27,8 +27,7 @@ class Rehearsal < Event
 
 protected	
 	def check_contracted_start
-		profile = AgmaProfile.find_by_account_id(Account.current_id)
-		if !profile.nil?
+		if profile.present?
 			contracted_start = profile.rehearsal_start_time
 			
 			if Time.zone.parse(contracted_start) > Time.zone.parse(start_time.to_s(:hr12))
@@ -38,8 +37,7 @@ protected
 	end
 	
 	def check_contracted_end
-		profile = AgmaProfile.find_by_account_id(Account.current_id)
-		if !profile.nil?
+		if profile.present?
 			contracted_end = profile.rehearsal_end_time
 			
 			if Time.zone.parse(contracted_end) < Time.zone.parse(end_time.to_s(:hr12))
@@ -49,8 +47,7 @@ protected
 	end
 	
 	def check_duration_increments
-		profile = AgmaProfile.find_by_account_id(Account.current_id)
-		if !profile.nil?
+		if profile.present?
 			contract_increment_min = profile.rehearsal_increment_min
 			duration_min = (end_at - start_at) / 60
 			
@@ -62,10 +59,9 @@ protected
 	
 	#Rehearsal cannot start during the break following the company class
 	def check_company_class_break
-		profile = AgmaProfile.find_by_account_id(Account.current_id)
 		cclass = CompanyClass.for_daily_calendar(start_date).first
 		
-		if !profile.nil? && !cclass.nil?
+		if profile.present? && cclass.present?
 			break_start = cclass.end_at
 			break_end = break_start + (profile.class_break_min * 60)
 			
@@ -73,5 +69,9 @@ protected
 				errors.add(:start_time, "cannot be during the #{profile.class_break_min} min break following the Company Class")
 			end
 		end
+	end
+	
+	def profile
+		@profile ||= AgmaProfile.find_by_account_id(Account.current_id)
 	end
 end

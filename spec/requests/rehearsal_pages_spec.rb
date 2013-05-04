@@ -168,6 +168,37 @@ describe "Rehearsal Pages:" do
 				should_not have_content(e2.full_name)
 				should_not have_content(e3.full_name)
 			end
+			
+			it "when AGMA Dancer has exceeded their max rehearsal hours per day" do
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				loc2 = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account, role: 'AGMA Dancer')
+				
+				r_5hr = FactoryGirl.create(:rehearsal, account: current_account,
+								location: loc,
+								piece: piece,
+								start_date: Time.zone.today,
+								start_time: "9 AM",
+								end_time: "2 PM")
+				FactoryGirl.create(:invitation, event: r_5hr, employee: e1)
+				
+				visit new_rehearsal_path
+				fill_in "Title", with: "Test Rehearsal"
+		  	select loc2.name, from: "Location"
+		  	fill_in 'Date', with: Time.zone.today
+		  	fill_in 'From', with: "2 PM"
+		  	fill_in 'To', with: "3:30 PM"
+		  	select piece.name, from: "Piece"
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Create'
+		
+				should have_selector('div.alert-warning')
+				should have_content("over their rehearsal limit")
+				should have_content("hrs/day")
+				should have_content(e1.full_name)
+			end
 		end
 	end
 	
@@ -343,6 +374,38 @@ describe "Rehearsal Pages:" do
 				should have_content(e1.full_name)
 				should_not have_content(e2.full_name)
 				should_not have_content(e3.full_name)
+			end
+			
+			it "when AGMA Dancer has exceeded their max rehearsal hours per day" do
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				loc2 = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account, role: 'AGMA Dancer')
+				
+				r_5hr = FactoryGirl.create(:rehearsal, account: current_account,
+								location: loc,
+								piece: piece,
+								start_date: Time.zone.today,
+								start_time: "9 AM",
+								end_time: "2 PM")
+				FactoryGirl.create(:invitation, event: r_5hr, employee: e1)
+				
+				r = FactoryGirl.create(:rehearsal, account: current_account,
+								location: loc2,
+								piece: piece,
+								start_date: Time.zone.today,
+								start_time: "2 PM",
+								end_time: "3:30 PM")
+				
+				visit edit_rehearsal_path(r)
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Update'
+		
+				should have_selector('div.alert-warning')
+				should have_content("over their rehearsal limit")
+				should have_content("hrs/day")
+				should have_content(e1.full_name)
 			end
 		end
 	end
