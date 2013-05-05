@@ -40,6 +40,7 @@ class Event < ActiveRecord::Base
 
 	default_scope lambda { order('start_at ASC').where(:account_id => Account.current_id) }
 	scope :for_daily_calendar, lambda { |date| joins(:location).where(start_at: date.beginning_of_day..date.end_of_day).select("events.*, locations.name as location_name").order("locations.name") }
+	scope :for_week, lambda { |date| where(start_at: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day) } #Week starts on Monday
 	scope :for_monthly_calendar, lambda { |date| where(start_at: date.beginning_of_month.beginning_of_week(:sunday)..date.end_of_month.end_of_week(:sunday)) }
 		
 	def start_date

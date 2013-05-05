@@ -489,7 +489,56 @@ describe Event do
 														start_time: "9AM", end_time: "10am") }
 			
 			it "returns the records for the day" do
-				Event.for_daily_calendar(DateTime.parse("2012-12-3 01:00:00")).should == [current_day_good, current_day_good3, current_day_good2]
+				Event.for_daily_calendar(Date.parse("2012-12-3")).should == [current_day_good, current_day_good3, current_day_good2]
+			end
+		end
+		
+		describe "for_week" do
+			# For Week containing January 1, 2013
+			let!(:prev_week_sun) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2012,12,30),
+														start_time: "9AM", end_time: "10am") }
+			let!(:current_week_mon) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2012,12,31),
+														start_time: "12AM", end_time: "1am") }
+			let!(:current_week_wrong_acnt) { FactoryGirl.create(:event, 
+														start_date: Date.new(2012,1,3),
+														start_time: "9AM", end_time: "10am") }
+			let!(:current_week_tue) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2013,1,1),
+														start_time: "12AM", end_time: "1am") }
+			let!(:current_week_wed) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2013,1,2),
+														start_time: "12AM", end_time: "1am") }
+			let!(:current_week_thu) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2013,1,3),
+														start_time: "11PM", end_time: "11:30pm") }
+			let!(:current_week_fri) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2013,1,4),
+														start_time: "11PM", end_time: "11:30pm") }
+			let!(:current_week_sat) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2013,1,5),
+														start_time: "11PM", end_time: "11:30pm") }
+			let!(:current_week_sun) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2013,1,4),
+														start_time: "11PM", end_time: "11:30pm") }
+			let!(:wrong_week_bad) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2013,1,7),
+														start_time: "11AM", end_time: "12pm") }
+			
+			it "returns the records for the week starting on Monday" do
+				events = Event.for_week(Date.new(2013,1,1))
+				events.should include(current_week_mon)
+				events.should include(current_week_tue)
+				events.should include(current_week_wed)
+				events.should include(current_week_thu)
+				events.should include(current_week_fri)
+				events.should include(current_week_sat)
+				events.should include(current_week_sun)
+				
+				events.should_not include(prev_week_sun)
+				events.should_not include(current_week_wrong_acnt)
+				events.should_not include(wrong_week_bad)
 			end
 		end
 		

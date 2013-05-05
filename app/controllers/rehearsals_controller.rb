@@ -59,6 +59,9 @@ class RehearsalsController < ApplicationController
 		max_hr_per_day_msg = Employee.max_rehearsal_hrs_in_day_warning(date)
 		warnings << max_hr_per_day_msg if max_hr_per_day_msg.present?
 		
+		max_hr_per_week_msg = Employee.max_rehearsal_hrs_in_week_warning(date)
+		warnings << max_hr_per_week_msg if max_hr_per_week_msg.present?
+		
 		flash[:warning] = warnings if warnings.any?
 	end
 end

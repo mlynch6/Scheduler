@@ -81,6 +81,30 @@ class Employee < ActiveRecord::Base
 			end
 		end
 	end
+	
+	def self.max_rehearsal_hrs_in_week_warning(date)
+		#Search only Active AGMA Dancers
+		profile = AgmaProfile.find_by_account_id(Account.current_id)
+		if profile.present?
+			dancers = self.active.where(:role => 'AGMA Dancer')
+			dancers_above_max = []
+			
+			dancers.each do |dancer|
+				#Find rehearsals for specified date
+				rehearsals = dancer.events.for_week(date).where(:events => { :type => 'Rehearsal'})
+				total_min = 0
+				rehearsals.each do |rehearsal|
+					total_min += rehearsal.duration_min
+				end
+				dancers_above_max << dancer if (total_min/60.0) > profile.rehearsal_max_hrs_per_week
+			end
+			
+			if dancers_above_max.any?
+				overtime_list = dancers_above_max.map { |emp| emp.full_name }.join(", ")
+				return "The following people are over their rehearsal limit of #{profile.rehearsal_max_hrs_per_week} hrs/week: "+overtime_list
+			end
+		end
+	end
 
 private
 	
