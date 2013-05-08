@@ -10,6 +10,7 @@
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
+#  rehearsal_break_min_per_hr :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #

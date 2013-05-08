@@ -25,7 +25,19 @@ class Rehearsal < Event
 	validate :check_company_class_break, :if => "start_date.present? && start_time.present?"
 	validates :piece_id,	presence: true
 
+	def break_duration
+		profile.rehearsal_break_min_per_hr if profile.present?
+	end
+	
+	def break_time
+		if profile.present?
+			break_start = end_at - break_duration*60
+			return "#{break_start.to_s(:hr12)} to #{end_at.to_s(:hr12)}"
+		end
+	end
+	
 protected	
+
 	def check_contracted_start
 		if profile.present?
 			contracted_start = profile.rehearsal_start_time

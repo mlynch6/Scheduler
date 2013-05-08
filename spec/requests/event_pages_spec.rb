@@ -57,7 +57,6 @@ describe "Event Pages:" do
 			visit events_path
 	
 			Event.for_daily_calendar(Time.zone.today).each do |rehearsal|
-				should have_selector('div.rehearsal')
 				should have_selector('div', text: rehearsal.title)
 				should have_selector('div', text: rehearsal.location.name)
 				should have_content(event.start_at.to_s(:hr12))
@@ -69,6 +68,8 @@ describe "Event Pages:" do
 	    end
 		end
 		
+		it "shows Rehearsal details in popup window"
+		
 		it "lists Company Class records" do
 			log_in
 			loc = FactoryGirl.create(:location, account: current_account)
@@ -79,7 +80,6 @@ describe "Event Pages:" do
 			visit events_path
 	
 			Event.for_daily_calendar(Time.zone.today).each do |company_class|
-				should have_selector('div.companyClass')
 				should have_selector('div', text: company_class.title)
 				should have_selector('div', text: company_class.location.name)
 				should have_content(company_class.start_at.to_s(:hr12))
@@ -89,6 +89,41 @@ describe "Event Pages:" do
 				should have_link('Edit', href: edit_company_class_path)
 	    end
 		end
+		
+		it "shows Company Class break" do
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			profile = current_account.agma_profile
+			FactoryGirl.create(:company_class,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today)
+			visit events_path
+	
+			Event.for_daily_calendar(Time.zone.today).each do |company_class|
+				should have_content("#{profile.class_break_min} min Break")
+	    end
+		end
+		
+		it "does not show Company Class break if contract break is 0" do
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			profile = AgmaProfile.find_by_account_id(current_account.id)
+			profile.class_break_min = 0
+			profile.save
+			
+			FactoryGirl.create(:company_class,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today)
+			visit events_path
+	
+			Event.for_daily_calendar(Time.zone.today).each do |company_class|
+				should_not have_content("#{profile.class_break_min} min Break")
+	    end
+		end
+		
+		it "shows Company Class details in popup window"
 		
 		it "doesn't have links for Employee" do
 			log_in_employee

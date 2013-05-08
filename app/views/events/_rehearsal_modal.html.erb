@@ -1,0 +1,46 @@
+<div id="modal_<%= rehearsal.id %>" class="modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3><%= rehearsal.title %></h3>
+		<span class="muted">Rehearsal in <%= rehearsal.location.name %></span>
+	</div>
+	<div class="modal-body show-ui">		
+		<div class="row-fluid">
+			<div class="label-ui span4">Date</div>
+			<div class="text-ui span8"><%= rehearsal.start_date %></div>
+		</div>
+		
+		<div class="row-fluid">
+			<div class="label-ui span4">Time</div>
+			<div class="text-ui span8"><%= "#{rehearsal.start_time} to #{rehearsal.end_time}" %></div>
+		</div>
+		
+		<div class="row-fluid">
+			<div class="label-ui span4">Piece</div>
+			<div class="text-ui span8"><%= rehearsal.piece.name %></div>
+		</div>
+		
+		<div class="row-fluid">
+			<div class="label-ui span4">Invitees</div>
+			<div class="text-ui span8">
+				<ul class="unstyled">
+					<% rehearsal.employees.each do |employee| %>
+						<li><%= employee.full_name %></li>
+					<% end %>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="row-fluid text-error">
+			<div class="span4 text-right"><span class="label label-important">Break: </span></div>
+			<div class="text-ui span8"><%= rehearsal.break_time %> for <%= rehearsal.break_duration %> minutes</div>
+		</div>
+	</div>
+	
+	<div class="modal-footer">
+		<% if allow? "rehearsals", "edit" %>
+			<%= edit_button "Edit", edit_rehearsal_path(rehearsal) %>
+		<% end %>
+		<a href="#" class="btn" data-dismiss="modal">Close</a>	
+	</div>
+</div>

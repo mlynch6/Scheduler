@@ -20,14 +20,24 @@ class CompanyClass < Event
 	validate :check_contracted_end, :if => "end_time.present?"
 	validate :check_duration_increments, :if => "start_at.present? && end_at.present?"
 
+	def break_duration
+		profile.class_break_min if profile.present?
+	end
+	
+	def break_time
+		if profile.present?
+			break_end = end_at + break_duration*60
+			return "#{end_at.to_s(:hr12)} to #{break_end.to_s(:hr12)}"
+		end
+	end
+	
 protected	
 	def default_title
 		self.title = "Company Class" if title.empty?
 	end
 
 	def check_contracted_start
-		profile = AgmaProfile.find_by_account_id(Account.current_id)
-		if !profile.nil?
+		if profile.present?
 			contracted_start = profile.rehearsal_start_time
 			
 			if Time.zone.parse(contracted_start) > Time.zone.parse(start_time.to_s(:hr12))
@@ -37,8 +47,7 @@ protected
 	end
 	
 	def check_contracted_end
-		profile = AgmaProfile.find_by_account_id(Account.current_id)
-		if !profile.nil?
+		if profile.present?
 			contracted_end = profile.rehearsal_end_time
 			
 			if Time.zone.parse(contracted_end) < Time.zone.parse(end_time.to_s(:hr12))
@@ -48,8 +57,7 @@ protected
 	end
 	
 	def check_duration_increments
-		profile = AgmaProfile.find_by_account_id(Account.current_id)
-		if !profile.nil?
+		if profile.present?
 			contract_increment_min = profile.rehearsal_increment_min
 			duration_min = (end_at - start_at) / 60
 			
@@ -57,5 +65,9 @@ protected
 				errors.add(:duration, "must be in increments of #{contract_increment_min} minutes")
 			end
 		end
+	end
+	
+	def profile
+		@profile ||= AgmaProfile.find_by_account_id(Account.current_id)
 	end
 end

@@ -35,6 +35,7 @@ describe Rehearsal do
   	profile.rehearsal_end_time = "5PM"
   	profile.rehearsal_increment_min = 30
   	profile.class_break_min = 15
+  	profile.rehearsal_break_min_per_hr = 5
   	profile.save
 		@rehearsal = FactoryGirl.build(:rehearsal)
 	end
@@ -43,6 +44,8 @@ describe Rehearsal do
 
 	context "accessible attributes" do
   	it { should respond_to(:piece) }
+  	it { should respond_to(:break_time) }
+  	it { should respond_to(:break_duration) }
   	
     it "should allow access to piece_id" do
       expect do
@@ -145,5 +148,15 @@ describe Rehearsal do
 	  it "type" do
 	  	rehearsal.reload.type.should == 'Rehearsal'
 	  end
+	end
+	
+	context "(Methods)" do
+		it "break_time for 1 hr rehearsal" do
+			rehearsal.break_time.should == "9:55 AM to 10:00 AM"
+		end
+		
+		it "break_duration for 1 hr rehearsal" do
+			rehearsal.break_duration.should == 5
+		end
 	end
 end

@@ -77,7 +77,6 @@ describe "CompanyClass Pages:" do
 				should have_content(location.name)
 				should have_content("10:00 AM")
 				should have_content("11:00 AM")
-				should have_content("0 invitees")
 			end
 			
 			it "creates new Company Class with Invitees" do
@@ -102,7 +101,6 @@ describe "CompanyClass Pages:" do
 				should have_content(location.name)
 				should have_content("9:00 AM")
 				should have_content("10:30 AM")
-				should have_content("1 invitee")
 			end
 		end
 		
@@ -140,57 +138,11 @@ describe "CompanyClass Pages:" do
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
 		
-				should have_selector('div.alert-warning')
-				should have_content("people are double booked")
-				should have_content(e1.full_name)
-				should_not have_content(e2.full_name)
-				should_not have_content(e3.full_name)
+				should have_selector('div.alert-warning', text: "people are double booked")
+				should have_selector('div.alert-warning', text: e1.full_name)
+				should_not have_selector('div.alert-warning', text: e2.full_name)
+				should_not have_selector('div.alert-warning', text: e3.full_name)
 			end
-		end
-	end
-	
-	context "#show" do
-		it "has correct title" do	
-			log_in
-			location = FactoryGirl.create(:location, account: current_account)
-			cclass = FactoryGirl.create(:company_class, account: current_account, location: location, start_date: Time.zone.today)
-			click_link "Daily Schedule"
-	  	click_link "View"
-	  	
-	  	should have_selector('title', text: 'Company Class')
-		  should have_selector('h1', text: cclass.title)
-		end
-		
-		it "has class info shown" do
-			log_in
-			location = FactoryGirl.create(:location, account: current_account)
-			cclass = FactoryGirl.create(:company_class, account: current_account, location: location,
-					start_date: Time.zone.today,
-					start_time: "10AM",
-					end_time: "11AM")
-	  	visit company_class_path(cclass)
-	  	
-			should have_content(cclass.location.name)
-		  should have_content(cclass.start_at.strftime('%D'))
-		  should have_content("10:00 AM to 11:00 AM")
-		end
-		
-		it "has invitees shown" do
-			log_in
-			location = FactoryGirl.create(:location, account: current_account)
-			cclass = FactoryGirl.create(:company_class, account: current_account, location: location,
-					start_date: Time.zone.today,
-					start_time: "10AM",
-					end_time: "11AM")
-			employee1 = FactoryGirl.create(:employee, account: current_account)
-			employee2 = FactoryGirl.create(:employee, account: current_account)
-			FactoryGirl.create(:invitation, event: cclass, employee: employee1)
-			FactoryGirl.create(:invitation, event: cclass, employee: employee2)
-			
-			visit company_class_path(cclass)
-	  	
-			should have_content(employee1.full_name)
-			should have_content(employee2.full_name)
 		end
 	end
 	
@@ -222,23 +174,6 @@ describe "CompanyClass Pages:" do
 	  	click_button 'Update'
 	
 			should have_selector('div.alert-error')
-		end
-	
-		it "with bad record in URL shows 'Record Not Found' error" do
-			pending
-			log_in
-			edit_company_class_path(0)
-	
-			should have_content('Record Not Found')
-		end
-		
-		it "record with wrong account shows 'Record Not Found' error" do
-			pending
-			log_in
-			cclass_wrong_account = FactoryGirl.create(:company_class)
-			visit edit_company_class_path(cclass_wrong_account)
-	
-			should have_content('Record Not Found')
 		end
 	 
 		it "record with valid info saves company class" do
@@ -294,11 +229,10 @@ describe "CompanyClass Pages:" do
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Update'
 		
-				should have_selector('div.alert-warning')
-				should have_content("people are double booked")
-				should have_content(e1.full_name)
-				should_not have_content(e2.full_name)
-				should_not have_content(e3.full_name)
+				should have_selector('div.alert-warning', text: "people are double booked")
+				should have_selector('div.alert-warning', text: e1.full_name)
+				should_not have_selector('div.alert-warning', text: e2.full_name)
+				should_not have_selector('div.alert-warning', text: e3.full_name)
 			end
 		end
 	end

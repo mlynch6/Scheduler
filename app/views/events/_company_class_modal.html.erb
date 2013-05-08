@@ -1,0 +1,41 @@
+<div id="modal_<%= cclass.id %>" class="modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3><%= cclass.title %></h3>
+		<span class="muted">Company Class in <%= cclass.location.name %></span>
+	</div>
+	<div class="modal-body show-ui">
+		<div class="row-fluid">
+			<div class="label-ui span4">Date</div>
+			<div class="text-ui span8"><%= cclass.start_date %></div>
+		</div>
+		
+		<div class="row-fluid">
+			<div class="label-ui span4">Time</div>
+			<div class="text-ui span8"><%= "#{cclass.start_time} to #{cclass.end_time}" %></div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="label-ui span4">Invitees</div>
+			<div class="text-ui span8">
+				<ul class="unstyled">
+					<% cclass.employees.each do |employee| %>
+						<li><%= employee.full_name %></li>
+					<% end %>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="row-fluid text-error">
+			<div class="span4 text-right"><span class="label label-important">Break: </span></div>
+			<div class="text-ui span8"><%= cclass.break_time %> for <%= cclass.break_duration %> minutes</div>
+		</div>
+	</div>
+	
+	<div class="modal-footer">
+		<% if allow? "rehearsals", "edit" %>
+			<%= edit_button "Edit", edit_company_class_path(cclass) %>
+		<% end %>
+		<a href="#" class="btn" data-dismiss="modal">Close</a>	
+	</div>
+</div>

@@ -1,20 +1,13 @@
-<div class="cal-event cal-green" <%= calculate_offset(cclass.start_at, cclass.duration_min).html_safe %>>
+<div class="cal-event cal-green" <%= calculate_offset(cclass.start_at, cclass.duration_min).html_safe %> data-toggle="modal" data-target="#modal_<%= cclass.id %>">
 	<div class="title"><%= cclass.title %></div>
 	<div class="time"><%= "#{cclass.start_time} to #{cclass.end_time}" %></div>
-	<div class="invitees"><%= pluralize(cclass.employees.count, "invitee") %></div>
-	<div class="actions">
-		<% if allow? "company_classes", "show" %>
-			<%= view_link 'View', company_class_path(cclass) %>
-		<% end %>
-		<% if allow? "company_classes", "edit" %>
-			<%= edit_link 'Edit', edit_company_class_path(cclass) %>
-		<% end %>
-	</div>
 </div>
 
-<% break_min = cclass.account.agma_profile.class_break_min %>
-<% break_end = cclass.end_at + break_min*60 %>
-<div class="cal-event cal-red" <%= calculate_offset(cclass.end_at, break_min).html_safe %>>
-	<div class="title"><%= break_min %> min Break</div>
-	<div class="time"><%= "#{cclass.end_time} to #{break_end.to_s(:hr12)}" %></div>
-</div>
+<% if cclass.break_duration > 0 %>
+	<div class="cal-event cal-red" <%= calculate_offset(cclass.end_at, cclass.break_duration).html_safe %> data-toggle="modal" data-target="#modal_<%= cclass.id %>">
+		<div class="title"><%= cclass.break_duration %> min Break</div>
+		<div class="time"><%= cclass.break_time %></div>
+	</div>
+<% end %>
+
+<%= render 'company_class_modal', :cclass => cclass %>

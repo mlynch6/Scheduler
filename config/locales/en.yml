@@ -22,6 +22,7 @@ en:
         rehearsal_max_hrs_per_day: "Max Hours/Day"
         rehearsal_increment_min: "Rehearsal Increments"
         class_break_min: "Class Break"
+        rehearsal_break_min_per_hr: "Rehearsal Break"
       location:
         active: "Status"
       piece:

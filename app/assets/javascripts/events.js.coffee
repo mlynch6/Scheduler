@@ -22,4 +22,4 @@ jQuery ->
 		onSelect: (selectedDate, instance) ->
 			window.location = "?date="+selectedDate
 	#set calendar to show 9AM at top of page
-	$('.cal-scrollable').scrollTop(getScrollOffset());
+	$('.cal-scrollable').scrollTop(getScrollOffset())

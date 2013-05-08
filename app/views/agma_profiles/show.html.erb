@@ -24,9 +24,17 @@
 		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_increment_min) %></div>
 		<div class="text-ui span6"><%= @agma_profile.rehearsal_increment_min %> minutes</div>
 	</div>
+	
+	<h3>Breaks</h3>
+	
 	<div class="row">
 		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:class_break_min) %></div>
 		<div class="text-ui span6"><%= @agma_profile.class_break_min %> minutes</div>
+	</div>
+	
+	<div class="row">
+		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_break_min_per_hr) %></div>
+		<div class="text-ui span6"><%= @agma_profile.rehearsal_break_min_per_hr %> minutes/Hour Rehearsal</div>
 	</div>
 	
 	<div class="row text-center">

@@ -32,11 +32,17 @@ describe CompanyClass do
   	profile.rehearsal_start_time = "9AM"
   	profile.rehearsal_end_time = "5PM"
   	profile.rehearsal_increment_min = 30
+  	profile.class_break_min = 15
   	profile.save
 		@cclass = FactoryGirl.build(:company_class)
 	end
 	
 	subject { @cclass }
+	
+	context "accessible attributes" do
+  	it { should respond_to(:break_time) }
+  	it { should respond_to(:break_duration) }
+  end
 	
   context "(Valid)" do
   	it "with minimum attributes" do
@@ -92,5 +98,15 @@ describe CompanyClass do
 	  it "type" do
 	  	cclass.reload.type.should == 'CompanyClass'
 	  end
+	end
+	
+	context "(Methods)" do
+		it "break_time" do
+			cclass.break_time.should == "10:00 AM to 10:15 AM"
+		end
+		
+		it "break_duration" do
+			cclass.break_duration.should == account.agma_profile.class_break_min
+		end
 	end
 end

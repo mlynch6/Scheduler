@@ -21,24 +21,6 @@ describe "Agma Profile Pages:" do
 	
 			should have_selector('div.alert-error')
 		end
-	
-		it "with bad record in URL shows current account" do
-pending
-			visit edit_agma_profile_path(0)
-	
-			should have_selector('title', text: 'Rehearsal Week Settings')
-			should have_content(current_account.name)
-		end
-		
-		it "record with wrong account shows current account" do
-pending
-			wrong_account = FactoryGirl.create(:account)
-			log_in
-			visit edit_agma_profile_path(agma_profile)
-	
-			should have_selector('title', text: 'Rehearsal Week Settings')
-			should have_content(current_account.name)
-		end
 	 
 		it "valid record saves profile" do
 			select  "8:30 AM", from: "Rehearsal Start"
@@ -47,6 +29,7 @@ pending
     	fill_in "Max Hours/Day", with: 8
     	fill_in "Rehearsal Increments", with: 15
     	fill_in "Class Break", with: 30
+    	fill_in "Rehearsal Break", with: 10
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
@@ -57,6 +40,7 @@ pending
 			should have_content('8 hours/day')
 			should have_content('15 minutes')
 			should have_content('30 minutes')
+			should have_content('10 minutes')
 		end
 	end
 	
@@ -82,14 +66,7 @@ pending
 			should have_selector('div.text-ui', text: "6 hours/day")
 			should have_selector('div.text-ui', text: "30 minutes")
 			should have_selector('div.text-ui', text: "15 minutes")
-		end
-		
-		it "with bad record in URL shows current account" do
-pending
-		end
-		
-		it "record with wrong account shows current account" do
-pending
+			should have_selector('div.text-ui', text: "5 minutes/Hour Rehearsal")
 		end
 	end
 end

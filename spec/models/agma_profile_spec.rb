@@ -10,6 +10,7 @@
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
+#  rehearsal_break_min_per_hr :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #
@@ -33,6 +34,7 @@ describe AgmaProfile do
   	it { should respond_to(:rehearsal_max_hrs_per_day) }
   	it { should respond_to(:rehearsal_increment_min) }
   	it { should respond_to(:class_break_min) }
+  	it { should respond_to(:rehearsal_break_min_per_hr) }
   	
   	it { should respond_to(:account) }
 		
@@ -53,6 +55,11 @@ describe AgmaProfile do
   	it "with minimum attributes" do
   		should be_valid
   	end
+  	
+  	it "when class_break_min = 0" do
+	  		@profile.class_break_min = 0
+	  		should be_valid
+	  	end
   end
 
 	context "(Invalid)" do
@@ -207,13 +214,33 @@ describe AgmaProfile do
 	  		should_not be_valid
 	  	end
 	  	
-	  	it "= 0" do
-	  		@profile.class_break_min = 0
+	  	it "> 144 (6 hrs)" do
+	  		@profile.class_break_min = 145
+	  		should_not be_valid
+	  	end
+	  end
+	  
+	  context "when rehearsal_break_min_per_hr" do
+	  	it "is blank" do
+	  		@profile.rehearsal_break_min_per_hr = " "
 	  		should_not be_valid
 	  	end
 	  	
-	  	it "> 144 (6 hrs)" do
-	  		@profile.class_break_min = 145
+	  	it "not an integer" do
+	  		vals = ["abc", 8.6]
+	  		vals.each do |invalid_integer|
+	  			@profile.rehearsal_break_min_per_hr = invalid_integer
+	  			should_not be_valid
+	  		end
+	  	end
+	  	
+			it "< 0" do
+	  		@profile.rehearsal_break_min_per_hr = -1
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "> 60 (1 hr)" do
+	  		@profile.rehearsal_break_min_per_hr = 61
 	  		should_not be_valid
 	  	end
 	  end
@@ -282,6 +309,12 @@ describe AgmaProfile do
 			@profile.class_break_min = 15
 			@profile.save
 	  	account.agma_profile.class_break_min.should == 15
+	  end
+	  
+	  it "rehearsal_break_min_per_hr" do
+			@profile.rehearsal_break_min_per_hr = 10
+			@profile.save
+	  	account.agma_profile.rehearsal_break_min_per_hr.should == 10
 	  end
   end
 

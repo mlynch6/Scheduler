@@ -10,13 +10,15 @@
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
+#  rehearsal_break_min_per_hr :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #
 
 class AgmaProfile < ActiveRecord::Base
 	attr_writer :rehearsal_start_time, :rehearsal_end_time
-  attr_accessible :rehearsal_start_time, :rehearsal_end_time, :rehearsal_max_hrs_per_week, :rehearsal_max_hrs_per_day, :rehearsal_increment_min, :class_break_min
+  attr_accessible :rehearsal_start_time, :rehearsal_end_time, :rehearsal_max_hrs_per_week, :rehearsal_max_hrs_per_day, :rehearsal_increment_min
+  attr_accessible :class_break_min, :rehearsal_break_min_per_hr
   
   belongs_to :account
   
@@ -31,7 +33,8 @@ class AgmaProfile < ActiveRecord::Base
   validates :rehearsal_max_hrs_per_week,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 168 }
   validates :rehearsal_max_hrs_per_day,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 24 }
   validates :rehearsal_increment_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
-  validates :class_break_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
+  validates :class_break_min,	presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 144 }
+  validates :rehearsal_break_min_per_hr,	presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 60 }
   
   default_scope lambda { where(:account_id => Account.current_id) }
   
