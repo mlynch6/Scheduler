@@ -7,7 +7,6 @@ class Permission
 		if user
 			allow :static_pages, [:dashboard]
 			allow [:locations, :pieces, :scenes, :characters, :employees, :events], [:index]
-			allow [:rehearsals, :company_classes], [:show]
 			
 			if user.role == "Administrator"
 				#index
@@ -17,10 +16,10 @@ class Permission
 				allow [:accounts, :agma_profiles, :employees], [:show]
 				
 				#new & create
-				allow [:addresses, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes], [:new, :create]
+				allow [:addresses, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:new, :create]
 				
 				#edit & update
-				allow [:accounts, :agma_profiles, :addresses, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes], [:edit, :update]
+				allow [:accounts, :agma_profiles, :addresses, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:edit, :update]
 				
 				#destroy
 				allow [:addresses, :scenes, :characters], [:destroy]

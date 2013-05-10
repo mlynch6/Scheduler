@@ -13,6 +13,8 @@
 						<%= render 'rehearsal', :rehearsal => event %>
 					<% elsif event.type == "CompanyClass" %>
 						<%= render 'company_class', :cclass => event %>
+					<% elsif event.type == "CostumeFitting" %>
+						<%= render 'costume_fitting', :fitting => event %>
 					<% end %>
 				<% end %>
 				
@@ -31,6 +33,9 @@
 			<% end %>
 			<% if allow? "rehearsals", "new" %>
 				<%= new_button "New Rehearsal", new_rehearsal_path(date: @date) %>
+			<% end %>
+			<% if allow? "costume_fittings", "new" %>
+				<%= new_button "New Costume Fitting", new_costume_fitting_path(date: @date) %>
 			<% end %>
 		</div>
 	</div>

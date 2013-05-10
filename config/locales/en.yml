@@ -23,6 +23,7 @@ en:
         rehearsal_increment_min: "Rehearsal Increments"
         class_break_min: "Class Break"
         rehearsal_break_min_per_hr: "Rehearsal Break"
+        costume_increment_min: "Costume Fitting Increments"
       location:
         active: "Status"
       piece:
@@ -51,3 +52,11 @@ en:
         start_time: "Start Time"
         end_time: "End Time"
         employee_ids: "Invitees"
+      costume_fitting:
+        start_at: "Start At"
+        end_at: "End At"
+        start_date: "Date"
+        start_time: "Start Time"
+        end_time: "End Time"
+        employee_ids: "Invitees"
+        

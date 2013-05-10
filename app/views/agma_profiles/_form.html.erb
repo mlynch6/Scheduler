@@ -13,7 +13,7 @@
 <%= f.text_w_add_on :rehearsal_increment_min, {
 				:class => 'input-mini',
 				:add_on => 'min',
-				:help_text => 'Increment that a Rehearsal can be called' } %>
+				:help_text => 'Increment in which a Rehearsal can be called and counted' } %>
 
 <legend>Breaks</legend>
 <%= f.text_w_add_on :class_break_min, {
@@ -24,3 +24,9 @@
 				:class => 'input-mini',
 				:add_on => 'min/Hour Rehearsal',
 				:help_text => 'Amount of break time during each hour of rehearsal' } %>
+
+<legend>Costume Fittings</legend>			
+<%= f.text_w_add_on :costume_increment_min, {
+				:class => 'input-mini',
+				:add_on => 'min',
+				:help_text => 'Increment in which a Costume Fitting can be called and counted' } %>

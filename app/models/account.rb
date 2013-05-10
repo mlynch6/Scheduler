@@ -54,6 +54,7 @@ class Account < ActiveRecord::Base
 		p.rehearsal_increment_min = 30
 		p.class_break_min = 15
 		p.rehearsal_break_min_per_hr = 5
+		p.costume_increment_min = 15
 		p.save
 	end
 end

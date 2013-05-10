@@ -11,6 +11,7 @@
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
 #  rehearsal_break_min_per_hr :integer          not null
+#  costume_increment_min      :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #
@@ -35,6 +36,7 @@ describe AgmaProfile do
   	it { should respond_to(:rehearsal_increment_min) }
   	it { should respond_to(:class_break_min) }
   	it { should respond_to(:rehearsal_break_min_per_hr) }
+  	it { should respond_to(:costume_increment_min) }
   	
   	it { should respond_to(:account) }
 		
@@ -244,6 +246,36 @@ describe AgmaProfile do
 	  		should_not be_valid
 	  	end
 	  end
+	  
+	  context "when costume_increment_min" do
+	  	it "is blank" do
+	  		@profile.costume_increment_min = " "
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "not an integer" do
+	  		vals = ["abc", 8.6]
+	  		vals.each do |invalid_integer|
+	  			@profile.costume_increment_min = invalid_integer
+	  			should_not be_valid
+	  		end
+	  	end
+	  	
+			it "< 0" do
+	  		@profile.costume_increment_min = -1
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "= 0" do
+	  		@profile.costume_increment_min = 0
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "> 144 (6 hrs)" do
+	  		@profile.costume_increment_min = 145
+	  		should_not be_valid
+	  	end
+	  end
 	end
 	
 	context "(Uniqueness)" do
@@ -315,6 +347,12 @@ describe AgmaProfile do
 			@profile.rehearsal_break_min_per_hr = 10
 			@profile.save
 	  	account.agma_profile.rehearsal_break_min_per_hr.should == 10
+	  end
+	  
+	  it "costume_increment_min" do
+	  	@profile.costume_increment_min = 10
+			@profile.save
+	  	account.agma_profile.costume_increment_min.should == 10
 	  end
   end
 

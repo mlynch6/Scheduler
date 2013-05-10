@@ -6,13 +6,13 @@ describe "Agma Profile Pages:" do
 	context "#edit" do
 		before do
 			log_in
-			click_link "Rehearsal Week Settings"
+			click_link "Contract Settings"
 			click_link "Edit"
 		end
 		
 		it "has correct title" do
-	  	should have_selector('title', text: 'Edit Rehearsal Week Settings')
-			should have_selector('h1', text: 'Edit Rehearsal Week Settings')
+	  	should have_selector('title', text: 'Edit Contract Settings')
+			should have_selector('h1', text: 'Edit Contract Settings')
 		end
 		
 	  it "invalid record shows error" do
@@ -30,10 +30,12 @@ describe "Agma Profile Pages:" do
     	fill_in "Rehearsal Increments", with: 15
     	fill_in "Class Break", with: 30
     	fill_in "Rehearsal Break", with: 10
+    	fill_in "Costume Fitting Increments", with: 20
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Rehearsal Week Settings')
+			should have_selector('title', text: 'Contract Settings')
+			
 			should have_content('8:30 AM')
 			should have_content('5:30 PM')
 			should have_content('40 hours/week')
@@ -41,18 +43,19 @@ describe "Agma Profile Pages:" do
 			should have_content('15 minutes')
 			should have_content('30 minutes')
 			should have_content('10 minutes')
+			should have_content('20 minutes')
 		end
 	end
 	
 	context "#show" do
 		before do
 			log_in
-			click_link "Rehearsal Week Settings"
+			click_link "Contract Settings"
 		end
 		
 		it "has correct title" do
-	  	should have_selector('title', text: 'Rehearsal Week Settings')
-			should have_selector('h1', text: 'Rehearsal Week Settings')
+	  	should have_selector('title', text: 'Contract Settings')
+			should have_selector('h1', text: 'Contract Settings')
 		end
 		
 		it "has links" do
@@ -67,6 +70,7 @@ describe "Agma Profile Pages:" do
 			should have_selector('div.text-ui', text: "30 minutes")
 			should have_selector('div.text-ui', text: "15 minutes")
 			should have_selector('div.text-ui', text: "5 minutes/Hour Rehearsal")
+			should have_selector('div.text-ui', text: "15 minutes")
 		end
 	end
 end

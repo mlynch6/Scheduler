@@ -43,4 +43,13 @@ FactoryGirl.define do
 		end_time					"10AM"
 		piece
 	end
+	
+	factory :costume_fitting do
+		account
+		sequence(:title)	{ |n| "Costume Fitting #{n}" }
+		location
+		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
+		start_time				"8:30AM"
+		end_time					"9 AM"
+	end
 end

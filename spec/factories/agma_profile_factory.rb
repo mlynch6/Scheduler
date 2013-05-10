@@ -11,6 +11,7 @@
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
 #  rehearsal_break_min_per_hr :integer          not null
+#  costume_increment_min      :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #

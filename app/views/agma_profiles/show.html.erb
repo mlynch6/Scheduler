@@ -1,9 +1,11 @@
-<% provide(:title, 'Rehearsal Week Settings') %>
+<% provide(:title, 'Contract Settings') %>
 <% provide(:header_current, 'Administration') %>
 
-<h1>Rehearsal Week Settings</h1>
+<h1>Contract Settings</h1>
 
 <div class="show-ui">
+	<h2>Rehearsal Week</h2>
+	
 	<div class="row">
 		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_start_time) %></div>
 		<div class="text-ui span6"><%= @agma_profile.rehearsal_start_time %></div>
@@ -25,17 +27,24 @@
 		<div class="text-ui span6"><%= @agma_profile.rehearsal_increment_min %> minutes</div>
 	</div>
 	
-	<h3>Breaks</h3>
+	<h2>Breaks</h2>
 	
 	<div class="row">
 		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:class_break_min) %></div>
 		<div class="text-ui span6"><%= @agma_profile.class_break_min %> minutes</div>
 	</div>
-	
 	<div class="row">
 		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_break_min_per_hr) %></div>
 		<div class="text-ui span6"><%= @agma_profile.rehearsal_break_min_per_hr %> minutes/Hour Rehearsal</div>
 	</div>
+	
+	<h2>Costume Fittings</h2>
+	
+	<div class="row">
+		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:costume_increment_min) %></div>
+		<div class="text-ui span6"><%= @agma_profile.costume_increment_min %> minutes</div>
+	</div>
+	
 	
 	<div class="row text-center">
 		<% if allow? "agma_profiles", "edit" %>

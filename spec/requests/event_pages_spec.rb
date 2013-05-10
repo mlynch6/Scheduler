@@ -63,7 +63,6 @@ describe "Event Pages:" do
 				should have_content(event.end_at.to_s(:hr12))
 				should have_selector('div', text: rehearsal.piece.name)
 				
-				should have_link('View', href: rehearsal_path)
 				should have_link('Edit', href: edit_rehearsal_path)
 	    end
 		end
@@ -85,7 +84,6 @@ describe "Event Pages:" do
 				should have_content(company_class.start_at.to_s(:hr12))
 				should have_content(company_class.end_at.to_s(:hr12))
 				
-				should have_link('View', href: company_class_path)
 				should have_link('Edit', href: edit_company_class_path)
 	    end
 		end
@@ -125,6 +123,27 @@ describe "Event Pages:" do
 		
 		it "shows Company Class details in popup window"
 		
+		it "lists Costume Fitting records" do
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			FactoryGirl.create(:costume_fitting,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today)
+			visit events_path
+	
+			Event.for_daily_calendar(Time.zone.today).each do |costume_fitting|
+				should have_selector('div', text: costume_fitting.title)
+				should have_selector('div', text: costume_fitting.location.name)
+				should have_content(costume_fitting.start_at.to_s(:hr12))
+				should have_content(costume_fitting.end_at.to_s(:hr12))
+				
+				should have_link('Edit', href: edit_costume_fitting_path)
+	    end
+		end
+		
+		it "shows Costume Fitting details in popup window"
+		
 		it "doesn't have links for Employee" do
 			log_in_employee
 			location = FactoryGirl.create(:location, account: current_account)
@@ -133,6 +152,7 @@ describe "Event Pages:" do
 	
 			should_not have_link('New Company Class')
 			should_not have_link('New Rehearsal')
+			should_not have_link('New Costume Fitting')
 		end
 		
 		it "has links for Administrator" do
@@ -143,6 +163,7 @@ describe "Event Pages:" do
 	
 			should have_link('New Company Class')
 			should have_link('New Rehearsal')
+			should have_link('New Costume Fitting')
 		end
 		
 	end

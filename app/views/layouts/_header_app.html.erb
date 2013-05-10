@@ -11,7 +11,7 @@
 						<li><%= link_to "Company Information", account_path(current_user.employee.account_id) %></li>
 					<% end %>
 					<% if allow? "agma_profiles", "show" %>
-						<li><%= link_to "Rehearsal Week Settings", agma_profile_path(AgmaProfile.first) %></li>
+						<li><%= link_to "Contract Settings", agma_profile_path(AgmaProfile.first) %></li>
 					<% end %>
 					<li class="divider"></li>
 					

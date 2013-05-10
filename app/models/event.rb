@@ -111,4 +111,8 @@ protected
 	rescue ArgumentError
 		errors.add :end_at, "cannot be parsed"
 	end
+	
+	def profile
+		@profile ||= AgmaProfile.find_by_account_id(Account.current_id)
+	end
 end

@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(:version => 20131207144542) do
     t.integer  "rehearsal_increment_min",    :null => false
     t.integer  "class_break_min",            :null => false
     t.integer  "rehearsal_break_min_per_hr", :null => false
+    t.integer  "costume_increment_min",      :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
   end

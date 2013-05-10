@@ -91,17 +91,20 @@ describe Permission do
 		
 		it { should_not allow(:events, :index) }
 		
-		it { should_not allow(:rehearsals, :show) }
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }
 		it { should_not allow(:rehearsals, :edit) }
 		it { should_not allow(:rehearsals, :update) }
 		
-		it { should_not allow(:company_classes, :show) }
 		it { should_not allow(:company_classes, :new) }
 		it { should_not allow(:company_classes, :create) }
 		it { should_not allow(:company_classes, :edit) }
 		it { should_not allow(:company_classes, :update) }
+		
+		it { should_not allow(:costume_fittings, :new) }
+		it { should_not allow(:costume_fittings, :create) }
+		it { should_not allow(:costume_fittings, :edit) }
+		it { should_not allow(:costume_fittings, :update) }
 	end
 	
 	context "as Employee" do
@@ -189,17 +192,20 @@ describe Permission do
 		
 		it { should allow(:events, :index) }
 		
-		it { should allow(:rehearsals, :show) }
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }
 		it { should_not allow(:rehearsals, :edit) }
 		it { should_not allow(:rehearsals, :update) }
 		
-		it { should allow(:company_classes, :show) }
 		it { should_not allow(:company_classes, :new) }
 		it { should_not allow(:company_classes, :create) }
 		it { should_not allow(:company_classes, :edit) }
 		it { should_not allow(:company_classes, :update) }
+		
+		it { should_not allow(:costume_fittings, :new) }
+		it { should_not allow(:costume_fittings, :create) }
+		it { should_not allow(:costume_fittings, :edit) }
+		it { should_not allow(:costume_fittings, :update) }
 	end
 	
 	context "as Administrator" do
@@ -287,17 +293,20 @@ describe Permission do
 		
 		it { should allow(:events, :index) }
 		
-		it { should allow(:rehearsals, :show) }
 		it { should allow(:rehearsals, :new) }
 		it { should allow(:rehearsals, :create) }
 		it { should allow(:rehearsals, :edit) }
 		it { should allow(:rehearsals, :update) }
 		
-		it { should allow(:company_classes, :show) }
 		it { should allow(:company_classes, :new) }
 		it { should allow(:company_classes, :create) }
 		it { should allow(:company_classes, :edit) }
 		it { should allow(:company_classes, :update) }
+		
+		it { should allow(:costume_fittings, :new) }
+		it { should allow(:costume_fittings, :create) }
+		it { should allow(:costume_fittings, :edit) }
+		it { should allow(:costume_fittings, :update) }
 	end
 	
 	context "as Super Administrator" do
@@ -387,14 +396,17 @@ describe Permission do
 		
 		it { should allow(:rehearsals, :new) }
 		it { should allow(:rehearsals, :create) }
-		it { should allow(:rehearsals, :show) }
 		it { should allow(:rehearsals, :edit) }
 		it { should allow(:rehearsals, :update) }
 		
-		it { should allow(:company_classes, :show) }
 		it { should allow(:company_classes, :new) }
 		it { should allow(:company_classes, :create) }
 		it { should allow(:company_classes, :edit) }
 		it { should allow(:company_classes, :update) }
+		
+		it { should allow(:costume_fittings, :new) }
+		it { should allow(:costume_fittings, :create) }
+		it { should allow(:costume_fittings, :edit) }
+		it { should allow(:costume_fittings, :update) }
 	end
 end

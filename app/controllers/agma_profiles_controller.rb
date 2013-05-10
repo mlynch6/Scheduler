@@ -11,7 +11,7 @@ class AgmaProfilesController < ApplicationController
 	def update
 		@agma_profile = AgmaProfile.first
 		if @agma_profile.update_attributes(params[:agma_profile])
-			redirect_to agma_profile_path(@agma_profile), :notice => "Successfully updated the Rehearsal Week Settings"
+			redirect_to agma_profile_path(@agma_profile), :notice => "Successfully updated the Contract Settings"
 		else
 			form_setup
 			render 'edit'
