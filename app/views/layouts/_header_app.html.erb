@@ -32,7 +32,7 @@
 		
 		<% if allow? "events", "index" %>
 			<li class="dropdown<%= " active" if yield(:header_current) == "Scheduling" %>">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= content_tag(:i, nil, class: "icon-list") %> Scheduling <%= content_tag(:b, nil, class: "caret") %></a>
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= content_tag(:i, nil, class: "icon-calendar") %> Scheduling <%= content_tag(:b, nil, class: "caret") %></a>
 				<ul class="dropdown-menu">
 					<% if allow? "events", "index" %>
 						<li><%= link_to "Daily Schedule", events_path %></li>

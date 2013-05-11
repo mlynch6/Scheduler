@@ -37,7 +37,7 @@
 				<%= content_tag_for :tr, scene do %>
 					<td>
 						<% if allow? "scenes", "sort" %>
-							<span class="handle"><span class="ui-icon ui-icon-arrowthick-2-n-s" /></span>
+							<%= content_tag :i, nil, class: 'handle icon-resize-vertical' %>
 						<% end %>
 						<%= scene.name %>
 					</td>
