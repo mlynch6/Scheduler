@@ -4,18 +4,19 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string(100)      not null
-#  main_phone :string(13)       not null
 #  time_zone  :string(100)      not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 
 class Account < ActiveRecord::Base
-  attr_accessible :name, :main_phone, :time_zone
-  attr_accessible :addresses_attributes, :employees_attributes
+  attr_accessible :name, :time_zone
+  attr_accessible :addresses_attributes, :phones_attributes, :employees_attributes
   
   has_many :addresses, :as => :addressable, dependent: :destroy
   accepts_nested_attributes_for :addresses
+  has_many :phones, :as => :phoneable, dependent: :destroy
+  accepts_nested_attributes_for :phones
   has_many :employees, dependent: :destroy
   accepts_nested_attributes_for :employees
   
@@ -29,7 +30,6 @@ class Account < ActiveRecord::Base
   after_create :create_profile
   
   validates :name, presence: true, length: { maximum: 100 }
-  validates :main_phone, presence: true, phone: true, length: { maximum: 13 }
   validates :time_zone,	presence: true, length: { maximum: 100 }, inclusion: { in: ActiveSupport::TimeZone.zones_map(&:name) }
   
   default_scope order: 'name ASC'

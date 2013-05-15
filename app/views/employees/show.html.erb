@@ -19,8 +19,8 @@
 		<% end %>
 	</div>
 
-	<div class="row">
-		<div class="span3">
+	<div class="row-fluid">
+		<div class="span4">
 			<h2>Addresses</h2>
 			<% @employee.addresses.each do |addr| %>
 				<address>
@@ -37,14 +37,19 @@
 			<%= new_link "Add Address", [:new, @employee, :address] %>
 		</div>
 		
-		<div class="span3">
-			<h2>Phone Numbers</h2>
-			<div class="row-ui">
-				<%= @employee.phone %>
-			</div>
+		<div class="span4">
+			<h2>Phone Numbers</h2>			
+			<% @employee.phones.each do |phone| %>
+				<address>
+					<strong><%= phone.phone_type %>: </strong><%= phone.phone_num %>
+					<%= edit_link nil, [:edit, @employee, phone], :id => "edit_phone_#{phone.id}" %>
+					<%= delete_link nil, [@employee, phone], :id => "delete_phone_#{phone.id}" %>
+				</address>
+			<% end %>
+			<%= new_link "Add Phone Number", [:new, @employee, :phone] %>
 		</div>
 		
-		<div class="span3">
+		<div class="span4">
 			<h2>Email</h2>
 			<div class="row-ui">
 				<%= @employee.email %>

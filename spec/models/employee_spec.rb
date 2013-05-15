@@ -9,7 +9,6 @@
 #  active     :boolean          default(TRUE), not null
 #  role       :string(50)       not null
 #  email      :string(50)
-#  phone      :string(13)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -24,8 +23,7 @@ describe Employee do
 										last_name: 'Pink',
 										active: false,
 										role: 'Artistic Director',
-										email: 'mpink@example.com',
-										phone: '414-555-1000') }
+										email: 'mpink@example.com') }
 	before do
 		Account.current_id = account.id
 		@employee = FactoryGirl.build(:employee)
@@ -39,11 +37,11 @@ describe Employee do
 		it { should respond_to(:active) }
   	it { should respond_to(:role) }
   	it { should respond_to(:email) }
-  	it { should respond_to(:phone) }
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:user) }
   	it { should respond_to(:addresses) }
+  	it { should respond_to(:phones) }
   	it { should respond_to(:invitations) }
   	it { should respond_to(:events) }
   	
@@ -83,14 +81,6 @@ describe Employee do
   		emails = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
   		emails.each do |valid_email|
   			@employee.email = valid_email
-  			should be_valid
-  		end
-  	end
-  	
-  	it "when phone in valid format" do
-  		phones = ["111-222-3333","111.222.3333","111 222 3333","1112223333"]
-  		phones.each do |valid_phone|
-  			@employee.phone = valid_phone
   			should be_valid
   		end
   	end
@@ -164,19 +154,6 @@ describe Employee do
 			@employee.email = " "
   		should_not be_valid
   	end
-  	
-  	it "when phone is too long" do
-  		@employee.phone = "a"*14
-  		should_not be_valid
-  	end
-  	
-  	it "when phone in invalid format" do
-  		phones = ["111","1 111.222.3333","1basd"]
-  		phones.each do |invalid_phone|
-  			@employee.phone = invalid_phone
-  			should_not be_valid
-  		end
-  	end
   end
   
   context "(Associations)" do
@@ -220,7 +197,24 @@ describe Employee do
 				end
 			end
 		end
-		
+
+		describe "phones" do
+			let!(:phone1) { FactoryGirl.create(:phone, phoneable: employee) }
+			let!(:phone2) { FactoryGirl.create(:phone, phoneable: employee) }
+	
+			it "has multiple phones" do
+				employee.phones.count.should == 2
+			end
+			
+			it "deletes associated phones" do
+				phones = employee.phones
+				employee.destroy
+				phones.each do |phone|
+					Phone.find_by_id(phone.id).should be_nil
+				end
+			end
+		end
+				
 		describe "invitations" do
 			let(:event1) { FactoryGirl.create(:event, account: account) }
 			let(:event2) { FactoryGirl.create(:event, account: account) }
@@ -272,10 +266,6 @@ describe Employee do
 	  
 	  it "email" do
 	  	employee.reload.email.should == 'mpink@example.com'
-	  end
-	  
-	  it "phone" do
-	  	employee.reload.phone.should == '414-555-1000'
 	  end
 	  
 	  it "name" do

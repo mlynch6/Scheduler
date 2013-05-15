@@ -1,10 +1,6 @@
 class AddressesController < ApplicationController
 	before_filter :load_addressable
 	
-  def index
-  	@addresses = @addressable.addresses
-  end
-
   def new
   	form_setup
   	@address = @addressable.addresses.new

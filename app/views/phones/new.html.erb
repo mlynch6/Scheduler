@@ -1,0 +1,13 @@
+<% provide(:title, 'Add Phone Number') %>
+<% provide(:header_current, 'Employees') if @phone.phoneable_type == "Employee" %>
+<% provide(:header_current, 'Administration') if @phone.phoneable_type == "Account" %>
+
+<h1>Add Phone Number</h1>
+
+<div class="row">
+	<%= form_for [@phoneable, @phone], builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= f.error_messages %>
+		<%= render 'form', :f => f %>
+		<%= f.submit 'Create', :class => 'btn btn-primary' %>
+	<% end %>
+</div>

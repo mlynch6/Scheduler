@@ -11,11 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207144542) do
+ActiveRecord::Schema.define(:version => 20131207144543) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",       :limit => 100, :null => false
-    t.string   "main_phone", :limit => 13,  :null => false
     t.string   "time_zone",  :limit => 100, :null => false
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
@@ -82,7 +81,6 @@ ActiveRecord::Schema.define(:version => 20131207144542) do
     t.boolean  "active",                   :default => true, :null => false
     t.string   "role",       :limit => 50,                   :null => false
     t.string   "email",      :limit => 50
-    t.string   "phone",      :limit => 13
     t.datetime "created_at",                                 :null => false
     t.datetime "updated_at",                                 :null => false
   end
@@ -126,6 +124,18 @@ ActiveRecord::Schema.define(:version => 20131207144542) do
 
   add_index "locations", ["account_id", "name"], :name => "index_locations_on_account_id_and_name", :unique => true
   add_index "locations", ["account_id"], :name => "index_locations_on_account_id"
+
+  create_table "phones", :force => true do |t|
+    t.integer  "phoneable_id",                                    :null => false
+    t.string   "phoneable_type",                                  :null => false
+    t.string   "phone_type",     :limit => 20,                    :null => false
+    t.string   "phone_num",      :limit => 13,                    :null => false
+    t.boolean  "primary",                      :default => false, :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
+  end
+
+  add_index "phones", ["phoneable_id", "phoneable_type"], :name => "index_phones_on_phoneable_id_and_phoneable_type"
 
   create_table "pieces", :force => true do |t|
     t.integer  "account_id",                                 :null => false

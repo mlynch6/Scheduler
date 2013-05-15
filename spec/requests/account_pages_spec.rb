@@ -20,8 +20,9 @@ describe "Account Pages:" do
     	before do
     		visit signup_path
     		fill_in "Company", with: company_name
-    		fill_in "Phone #", with: "414-543-1000"
     		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
+    		
+    		fill_in "Phone #", with: "414-543-1000"
 		  	
 		  	fill_in "Address", with: Faker::Address.street_address
 				fill_in "Address 2", with: Faker::Address.street_address
@@ -54,6 +55,13 @@ describe "Account Pages:" do
 				Address.unscoped.last.addr_type.should == "Work"
     	end
     	
+    	it "creates a Phone Number" do
+				expect { click_button "Create Account" }.to change(Phone.unscoped, :count).by(1)
+				phone = Phone.unscoped.last
+				phone.phone_type.should == "Work"
+				phone.primary.should be_true
+    	end
+    	
     	it "creates an Employee" do
 				expect { click_button "Create Account" }.to change(Employee.unscoped, :count).by(1)
     	end
@@ -79,6 +87,14 @@ describe "Account Pages:" do
 			should have_selector('h1', text: 'Company Information')
 		end
 		
+		it "displays correct data" do
+			log_in
+			visit account_path(current_account)
+	  	
+			should have_selector('div.text-ui', text: current_account.name)
+			should have_selector('div.text-ui', text: current_account.time_zone)
+		end
+		
 		it "has addresses shown" do
 			log_in
 			3.times { FactoryGirl.create(:address, addressable: current_account) }
@@ -99,21 +115,29 @@ describe "Account Pages:" do
 	    should have_link('Add Address')
 		end
 		
-		it "has Options links" do
+		it "has phone numbers shown" do
+			log_in
+			3.times { FactoryGirl.create(:phone, phoneable: current_account) }
+			visit account_path(current_account)
+
+			should have_selector('h2', text: 'Phone Numbers')
+			current_account.phones.each do |phone|
+				should have_content("#{phone.phone_type}:")
+				should have_content(phone.phone_num)
+				
+				should have_link('Edit', href: edit_account_phone_path(current_account, phone))
+				should have_link('Delete', href: account_phone_path(current_account, phone))
+			end
+	    should have_link('Add Phone Number')
+		end
+		
+		it "has links" do
 			log_in
 			visit account_path(current_account)
 	  	
 	  	should have_link('Edit')
 	  	should have_link('Add Address')
-		end
-		
-		it "displays correct data" do
-			log_in
-			visit account_path(current_account)
-	  	
-			should have_selector('div.text-ui', text: current_account.name)
-			should have_selector('div.text-ui', text: current_account.main_phone)
-			should have_selector('div.text-ui', text: current_account.time_zone)
+	  	should have_link('Add Phone Number')
 		end
 	end
 	
@@ -128,31 +152,13 @@ describe "Account Pages:" do
 		end
 		
 	  it "record with error" do
+pending "No field on form can currently cause error"
 	  	log_in
 			visit edit_account_path(current_account)
-	  	fill_in "Phone #", with: ""
+	  	fill_in "Company", with: ""
 	  	click_button 'Update'
 	
 			should have_selector('div.alert-error')
-		end
-	
-		it "with bad record in URL shows current account" do
-pending
-			log_in
-			visit edit_account_path(0)
-	
-			should have_selector('title', text: 'Company Info')
-			should have_content(current_account.name)
-		end
-		
-		it "record with wrong account shows current account" do
-pending
-			wrong_account = FactoryGirl.create(:account)
-			log_in
-			visit edit_account_path(wrong_account)
-	
-			should have_selector('title', text: 'Company Info')
-			should have_content(current_account.name)
 		end
 	 
 		it "record with valid info saves account" do
@@ -160,7 +166,6 @@ pending
 			visit edit_account_path(current_account)
 			should have_content(current_account.name)
 			
-    	fill_in "Phone #", with: "414-888-0000"
     	select  "(GMT-10:00) Hawaii", from: "Time Zone"
 			click_button 'Update'
 	
@@ -168,7 +173,6 @@ pending
 			should have_selector('title', text: 'Company Information')
 			
 			should have_selector('div.text-ui', text: current_account.name)
-			should have_selector('div.text-ui', text: "414-888-0000")
 			should have_selector('div.text-ui', text: "Hawaii")
 		end
 	end

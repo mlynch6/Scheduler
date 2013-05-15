@@ -4,5 +4,4 @@
 	<%= f.uneditable_text_field :name, @account.name %>
 <% end %>
 
-<%= f.phone_field :main_phone %>
 <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, { :class => 'input-xlarge' } %>

@@ -4,8 +4,12 @@ class AccountsController < ApplicationController
   	
   	@addressable = @account
   	@address = @account.addresses.build
-  	@address.new_registration = true
   	@address.addr_type = "Work"
+  	
+  	@phoneable = @account
+  	@phone = @account.phones.build
+  	@phone.phone_type = "Work"
+  	@phone.primary = true
   	
   	@employee = @account.employees.build
   	@employee.new_registration = true
@@ -22,7 +26,9 @@ class AccountsController < ApplicationController
   	
   	@addressable = @account
   	@address = @account.addresses.first
-  	@address.new_registration = true
+  	
+  	@phoneable = @account
+  	@phone = @account.phones.first
   	
   	@employee = @account.employees.first
   	@employee.new_registration = true

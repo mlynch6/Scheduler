@@ -190,7 +190,6 @@ describe "Employee Pages:" do
 		  	fill_in "First Name", with: new_first_name
 				fill_in "Last Name", with: new_last_name
 				select "Instructor", from: "Role"
-				fill_in "Phone", with: '111-222-3333'
 				fill_in "Email", with: email
 				click_button 'Create'
 		
@@ -209,7 +208,6 @@ describe "Employee Pages:" do
 			click_link "Active Employees"
 			click_link "View"
 			click_link "Edit"
-			
 	  	
 	  	should have_selector('title', text: 'Update Employee')
 			should have_selector('h1', text: 'Update Employee')
@@ -229,23 +227,6 @@ describe "Employee Pages:" do
 			should have_selector('div.alert-error')
 		end
 	
-		it "with bad record in URL shows 'Record Not Found' error" do
-pending
-			log_in
-			visit edit_employee_path(0)
-	
-			should have_content('Record Not Found')
-		end
-		
-		it "record with wrong account shows 'Record Not Found' error" do
-pending
-			log_in
-			employee_wrong_account = FactoryGirl.create(:employee)
-			visit edit_employee_path(employee_wrong_account)
-	
-			should have_content('Record Not Found')
-		end
-	
 		it "record with valid info saves employee" do
 			log_in
 			employee = FactoryGirl.create(:employee, account: current_account)
@@ -256,7 +237,6 @@ pending
 	  	fill_in "First Name", with: new_first_name
 			fill_in "Last Name", with: new_last_name
 			select "Instructor", from: "Role"
-			fill_in "Phone", with: '111-222-3333'
 			fill_in "Email", with: email
 			click_button 'Update'
 	
@@ -286,7 +266,6 @@ pending
 			should have_selector('div.text-ui', text: "Active")
 		  should have_selector('div.text-ui', text: employee.role)
 		  should have_selector('div.text-ui', text: employee.email)
-		  should have_selector('div.text-ui', text: employee.phone)
 		end
 		
 		it "has addresses shown" do
@@ -309,6 +288,22 @@ pending
 	    should have_link('Add Address')
 		end
 		
+		it "has phone numbers shown" do
+			log_in
+			employee = FactoryGirl.create(:employee_w_phones, account: current_account)
+			visit employee_path(employee)
+
+			should have_selector('h2', text: 'Phone Numbers')
+			employee.phones.each do |phone|
+				should have_content("#{phone.phone_type}:")
+				should have_content(phone.phone_num)
+				
+				should have_link('Edit', href: edit_employee_phone_path(employee, phone))
+				should have_link('Delete', href: employee_phone_path(employee, phone))
+			end
+	    should have_link('Add Phone Number')
+		end
+		
 		it "doesn't have links for Employee" do
 			log_in_employee
 			employee = FactoryGirl.create(:employee, account: current_account)
@@ -316,6 +311,7 @@ pending
 	  	
 			should_not have_link('Edit')
 			should_not have_link('Add Address')
+			should_not have_link('Add Phone Number')
 		end
 		
 		it "has links for Administrator" do
@@ -325,6 +321,7 @@ pending
 	
 			should have_link('Edit')
 			should have_link('Add Address')
+			should have_link('Add Phone Number')
 		end
 	end
 	

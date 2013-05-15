@@ -4,7 +4,6 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string(100)      not null
-#  main_phone :string(13)       not null
 #  time_zone  :string(100)      not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -15,7 +14,6 @@ require 'spec_helper'
 describe Account do
 	let(:account) { FactoryGirl.create(:account,
 										:name => 'Milwaukee Ballet',
-										:main_phone => '414-543-1000',
 										:time_zone => 'Eastern Time (US & Canada)') }
   before do
 		@account = FactoryGirl.build(:account)
@@ -25,11 +23,11 @@ describe Account do
 	
 	context "accessible attributes" do
 		it { should respond_to(:name) }
-		it { should respond_to(:main_phone) }
   	it { should respond_to(:time_zone) }
   	
   	it { should respond_to(:agma_profile) }
   	it { should respond_to(:addresses) }
+  	it { should respond_to(:phones) }
   	it { should respond_to(:employees) }
   	it { should respond_to(:locations) }
   	it { should respond_to(:pieces) }
@@ -40,14 +38,6 @@ describe Account do
   context "(Valid)" do  	
   	it "with minimum attributes" do
   		should be_valid
-  	end
-  	
-  	it "when main_phone in valid format" do
-  		phones = ["111-222-3333","111.222.3333","111 222 3333","1112223333"]
-  		phones.each do |valid_phone|
-  			@account.main_phone = valid_phone
-  			@account.should be_valid
-  		end
   	end
   end
   
@@ -60,24 +50,6 @@ describe Account do
   	it "when name is too long" do
   		@account.name = "a"*101
   		should_not be_valid
-  	end
-  	
-  	it "when main_phone is blank" do
-  		@account.main_phone = ""
-  		should_not be_valid
-  	end
-  	
-  	it "when main_phone is too long" do
-  		@account.main_phone = "a"*14
-  		should_not be_valid
-  	end
-  	
-  	it "when main_phone in invalid format" do
-  		phones = ["111","1 111.222.3333","1basd"]
-  		phones.each do |invalid_phone|
-  			@account.main_phone = invalid_phone
-  			@account.should_not be_valid
-  		end
   	end
   	
   	it "when time_zone is blank" do
@@ -125,6 +97,24 @@ describe Account do
 				account.destroy
 				addresses.each do |address|
 					Address.find_by_id(address.id).should be_nil
+				end
+			end
+		end
+		
+		describe "phones" do
+			before { Account.current_id = account.id }
+			let!(:phone1) { FactoryGirl.create(:phone, phoneable: account) }
+			let!(:phone2) { FactoryGirl.create(:phone, phoneable: account) }
+	
+			it "has multiple phone numbers" do
+				account.phones.count.should == 2
+			end
+			
+			it "deletes associated phone numbers" do
+				phones = account.phones
+				account.destroy
+				phones.each do |phone|
+					Phone.find_by_id(phone.id).should be_nil
 				end
 			end
 		end
@@ -243,10 +233,6 @@ describe Account do
 	context "correct value is returned for" do
 		it "name" do
 	  	account.reload.name.should == "Milwaukee Ballet"
-	  end
-	  
-	  it "main_phone" do
-	  	account.reload.main_phone.should == '414-543-1000'
 	  end
 	  
 	  it "time_zone" do

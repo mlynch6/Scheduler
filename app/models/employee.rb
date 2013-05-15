@@ -9,7 +9,6 @@
 #  active     :boolean          default(TRUE), not null
 #  role       :string(50)       not null
 #  email      :string(50)
-#  phone      :string(13)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -17,7 +16,7 @@
 class Employee < ActiveRecord::Base
   ROLES = ["AGMA Dancer", "Artistic Director", "Ballet Master", "Choreographer", "Dancer", "Employee", "Guest Instructor", "Instructor", "Musician"]
   
-  attr_accessible :first_name, :last_name, :active, :role, :email, :phone
+  attr_accessible :first_name, :last_name, :active, :role, :email
   attr_accessible :user_attributes
   # Used to require email for a new account registration
   attr_accessor :new_registration
@@ -26,6 +25,7 @@ class Employee < ActiveRecord::Base
 	has_one :user, dependent: :destroy
   accepts_nested_attributes_for :user
   has_many :addresses, :as => :addressable, dependent: :destroy
+  has_many :phones, :as => :phoneable, dependent: :destroy
   has_many :invitations, dependent: :destroy
   has_many :events, through: :invitations
   
@@ -35,7 +35,6 @@ class Employee < ActiveRecord::Base
   validates :role,	presence: true, length: { maximum: 50 }, :inclusion => { :in => ROLES }
   validates :email, allow_blank: true, email: true, length: { maximum: 50 }
   validate :check_email_for_new_registration
-  validates :phone, allow_blank: true, phone: true,	length: { maximum: 13 }
   
   default_scope lambda { order('last_name ASC, first_name ASC').where(:account_id => Account.current_id) }
   scope :active, where(:active => true)

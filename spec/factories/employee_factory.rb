@@ -9,7 +9,6 @@
 #  active     :boolean          default(TRUE), not null
 #  role       :string(50)       not null
 #  email      :string(50)
-#  phone      :string(13)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -21,7 +20,6 @@ FactoryGirl.define do
 		sequence(:last_name)	{ |n| "#{Faker::Name.last_name}" }
 		role					"Employee"
 		#email					Faker::Internet.free_email
-	 	#phone 				Faker::PhoneNumber.phone_number
 	 	
 	 	factory :employee_inactive do
 			active 			false
@@ -37,6 +35,10 @@ FactoryGirl.define do
 		
 		factory :employee_w_addresses do
 			after_create { |emp| FactoryGirl.create_list(:address_employee, 3, addressable: emp)}
+		end
+		
+		factory :employee_w_phones do
+			after_create { |emp| FactoryGirl.create_list(:phone_employee, 3, phoneable: emp)}
 		end
 	end
 end

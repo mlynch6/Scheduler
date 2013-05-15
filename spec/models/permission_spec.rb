@@ -32,6 +32,12 @@ describe Permission do
 		it { should_not allow(:addresses, :update) }
 		it { should_not allow(:addresses, :destroy) }
 		
+		it { should_not allow(:phones, :new) }
+		it { should_not allow(:phones, :create) }
+		it { should_not allow(:phones, :edit) }
+		it { should_not allow(:phones, :update) }
+		it { should_not allow(:phones, :destroy) }
+		
 		it { should_not allow(:agma_profiles, :edit) }
 		it { should_not allow(:agma_profiles, :update) }
 		it { should_not allow(:agma_profiles, :show) }
@@ -132,6 +138,12 @@ describe Permission do
 		it { should_not allow(:addresses, :edit) }
 		it { should_not allow(:addresses, :update) }
 		it { should_not allow(:addresses, :destroy) }
+		
+		it { should_not allow(:phones, :new) }
+		it { should_not allow(:phones, :create) }
+		it { should_not allow(:phones, :edit) }
+		it { should_not allow(:phones, :update) }
+		it { should_not allow(:phones, :destroy) }
 		
 		it { should_not allow(:agma_profiles, :edit) }
 		it { should_not allow(:agma_profiles, :update) }
@@ -234,6 +246,12 @@ describe Permission do
 		it { should allow(:addresses, :update) }
 		it { should allow(:addresses, :destroy) }
 		
+		it { should allow(:phones, :new) }
+		it { should allow(:phones, :create) }
+		it { should allow(:phones, :edit) }
+		it { should allow(:phones, :update) }
+		it { should allow(:phones, :destroy) }
+		
 		it { should allow(:agma_profiles, :edit) }
 		it { should allow(:agma_profiles, :update) }
 		it { should allow(:agma_profiles, :show) }
@@ -334,6 +352,12 @@ describe Permission do
 		it { should allow(:addresses, :edit) }
 		it { should allow(:addresses, :update) }
 		it { should allow(:addresses, :destroy) }
+		
+		it { should allow(:phones, :new) }
+		it { should allow(:phones, :create) }
+		it { should allow(:phones, :edit) }
+		it { should allow(:phones, :update) }
+		it { should allow(:phones, :destroy) }
 		
 		it { should allow(:agma_profiles, :edit) }
 		it { should allow(:agma_profiles, :update) }

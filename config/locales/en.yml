@@ -6,13 +6,15 @@ en:
     attributes:
       account:
         name: "Company"
-        main_phone: "Phone #"
         time_zone: "Time Zone"
       address:
         addr_type: "Address Type"
         addr: "Address"
         addr2: "Address 2"
         zipcode: "Zip Code"
+      phone:
+        phone_type: "Phone Type"
+        phone_num: "Phone #"
       agma_profile:
         rehearsal_start: "Rehearsal Start"
         rehearsal_start_time: "Rehearsal Start"
@@ -34,7 +36,6 @@ en:
         first_name: "First Name"
         last_name: "Last Name"
         active: "Status"
-        phone: "Phone #"
       user:
         password_digest: "Password"
         password_confirmation: "Confirm Password"

@@ -16,13 +16,13 @@ class Permission
 				allow [:accounts, :agma_profiles, :employees], [:show]
 				
 				#new & create
-				allow [:addresses, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:new, :create]
+				allow [:addresses, :phones, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:new, :create]
 				
 				#edit & update
-				allow [:accounts, :agma_profiles, :addresses, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:edit, :update]
+				allow [:accounts, :agma_profiles, :addresses, :phones, :employees, :users, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:edit, :update]
 				
 				#destroy
-				allow [:addresses, :scenes, :characters], [:destroy]
+				allow [:addresses, :phones, :scenes, :characters], [:destroy]
 				
 				#activate & inactive & inactivate
 				allow [:employees, :locations, :pieces], [:inactive, :activate, :inactivate]

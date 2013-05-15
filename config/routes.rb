@@ -6,6 +6,7 @@ Scheduler::Application.routes.draw do
 	
 	resources :accounts do
 		resources :addresses, :except => [:index, :show]
+		resources :phones, 		:except => [:index, :show]
 	end
 	resources :agma_profiles, :only => [:show, :edit, :update]
   resources :sessions
@@ -13,6 +14,7 @@ Scheduler::Application.routes.draw do
   
   resources :employees do
   	resources :addresses, :except => [:index, :show]
+  	resources :phones, 		:except => [:index, :show]
   	get 'inactive', on: :collection
   	member do
   		get 'activate'
@@ -40,10 +42,10 @@ Scheduler::Application.routes.draw do
   	collection { post :sort }
   end
   
-  resources :events, :only => :index
-  resources :rehearsals, :only => [:new, :create, :edit, :update]
-  resources :company_classes, :only => [:new, :create, :edit, :update]
-  resources :costume_fittings, :only => [:new, :create, :edit, :update]
+  resources :events,						:only => :index
+  resources :rehearsals,				:only => [:new, :create, :edit, :update]
+  resources :company_classes,		:only => [:new, :create, :edit, :update]
+  resources :costume_fittings,	:only => [:new, :create, :edit, :update]
 	
 	match 'dashboard' => 'static_pages#dashboard'
 	match 'features' => 'static_pages#features'   

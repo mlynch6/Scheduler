@@ -9,10 +9,6 @@
 		<div class="text-ui span6"><%= @account.name %></div>
 	</div>
 	<div class="row">
-		<div class="label-ui span2"><%= Account.human_attribute_name(:main_phone) %></div>
-		<div class="text-ui span6"><%= @account.main_phone %></div>
-	</div>
-	<div class="row">
 		<div class="label-ui span2"><%= Account.human_attribute_name(:time_zone) %></div>
 		<div class="text-ui span6"><%= @account.time_zone %></div>
 	</div>
@@ -23,8 +19,8 @@
 		<% end %>
 	</div>
 	
-	<div class="row">
-		<div class=" span3">
+	<div class="row-fluid">
+		<div class="span4">
 			<h2>Addresses</h2>
 			<% @account.addresses.each do |addr| %>
 				<address>
@@ -39,6 +35,18 @@
 				</address>
 			<% end %>
 			<%= new_link "Add Address", [:new, @account, :address] %>
+		</div>
+		
+		<div class="span4">
+			<h2>Phone Numbers</h2>			
+			<% @account.phones.each do |phone| %>
+				<address>
+					<strong><%= phone.phone_type %>: </strong><%= phone.phone_num %>
+					<%= edit_link nil, [:edit, @account, phone], :id => "edit_phone_#{phone.id}" %>
+					<%= delete_link nil, [@account, phone], :id => "delete_phone_#{phone.id}" %>
+				</address>
+			<% end %>
+			<%= new_link "Add Phone Number", [:new, @account, :phone] %>
 		</div>
 	</div>
 </div>

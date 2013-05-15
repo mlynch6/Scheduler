@@ -29,7 +29,6 @@ class Address < ActiveRecord::Base
 		[ "Vermont", "VT" ],[ "Virginia", "VA" ],[ "Washington", "WA" ],[ "West Virginia", "WV" ],[ "Wisconsin", "WI" ],
 		[ "Wyoming", "WY" ]]
   attr_accessible :addr_type, :addr, :addr2, :city, :state, :zipcode
-  attr_accessor :new_registration
   
   belongs_to :addressable, :polymorphic => true
   

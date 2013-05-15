@@ -10,12 +10,16 @@
 		<fieldset>
 			<legend>1. Company Information</legend>
 			<%= render 'form', :f => f %>
+			
+			<%= f.fields_for :phones do |builder| %>
+				<%= render 'phone_fields', :f => builder %>
+			<% end %>
 		</fieldset>
 		
 		<fieldset>
 			<legend>2. Business Address</legend>
 			<%= f.fields_for :addresses do |builder| %>
-				<%= render 'addresses/form', :f => builder %>
+				<%= render 'address_fields', :f => builder %>
 			<% end %>
 		</fieldset>
 		
