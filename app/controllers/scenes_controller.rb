@@ -4,7 +4,6 @@ class ScenesController < ApplicationController
 		@scenes = @piece.scenes
 		respond_to do |format|
 			format.html
-			format.xls 
 			format.pdf do
 				pdf = ScenePdf.new(@piece, view_context)
 				send_data pdf.render, filename: "#{@piece.name} by Scene.pdf", type: "application/pdf"
