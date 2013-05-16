@@ -41,6 +41,13 @@ describe Permission do
 		it { should_not allow(:agma_profiles, :edit) }
 		it { should_not allow(:agma_profiles, :update) }
 		it { should_not allow(:agma_profiles, :show) }
+		
+		it { should_not allow(:seasons, :index) }
+		it { should_not allow(:seasons, :new) }
+		it { should_not allow(:seasons, :create) }
+		it { should_not allow(:seasons, :edit) }
+		it { should_not allow(:seasons, :update) }
+		it { should_not allow(:seasons, :destroy) }
 
 		it { should_not allow(:locations, :index) }
 		it { should_not allow(:locations, :new) }
@@ -149,6 +156,13 @@ describe Permission do
 		it { should_not allow(:agma_profiles, :update) }
 		it { should_not allow(:agma_profiles, :show) }
 		
+		it { should_not allow(:seasons, :index) }
+		it { should_not allow(:seasons, :new) }
+		it { should_not allow(:seasons, :create) }
+		it { should_not allow(:seasons, :edit) }
+		it { should_not allow(:seasons, :update) }
+		it { should_not allow(:seasons, :destroy) }
+		
 		it { should allow(:locations, :index) }
 		it { should_not allow(:locations, :new) }
 		it { should_not allow(:locations, :create) }
@@ -256,6 +270,13 @@ describe Permission do
 		it { should allow(:agma_profiles, :update) }
 		it { should allow(:agma_profiles, :show) }
 		
+		it { should allow(:seasons, :index) }
+		it { should allow(:seasons, :new) }
+		it { should allow(:seasons, :create) }
+		it { should allow(:seasons, :edit) }
+		it { should allow(:seasons, :update) }
+		it { should allow(:seasons, :destroy) }
+		
 		it { should allow(:locations, :index) }
 		it { should allow(:locations, :new) }
 		it { should allow(:locations, :create) }
@@ -362,6 +383,13 @@ describe Permission do
 		it { should allow(:agma_profiles, :edit) }
 		it { should allow(:agma_profiles, :update) }
 		it { should allow(:agma_profiles, :show) }
+		
+		it { should allow(:seasons, :index) }
+		it { should allow(:seasons, :new) }
+		it { should allow(:seasons, :create) }
+		it { should allow(:seasons, :edit) }
+		it { should allow(:seasons, :update) }
+		it { should allow(:seasons, :destroy) }
 		
 		it { should allow(:locations, :index) }
 		it { should allow(:locations, :new) }

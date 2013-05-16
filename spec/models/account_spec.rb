@@ -31,6 +31,7 @@ describe Account do
   	it { should respond_to(:employees) }
   	it { should respond_to(:users) }
   	it { should respond_to(:locations) }
+  	it { should respond_to(:seasons) }
   	it { should respond_to(:pieces) }
   	it { should respond_to(:scenes) }
   	it { should respond_to(:events) }
@@ -172,6 +173,24 @@ describe Account do
 				account.destroy
 				locations.each do |location|
 					Location.find_by_id(location.id).should be_nil
+				end
+			end
+		end
+		
+		describe "seasons" do
+			before { Account.current_id = account.id }
+			let!(:second_season) { FactoryGirl.create(:season, account: account) }
+			let!(:first_season) { FactoryGirl.create(:season, account: account) }
+	
+			it "has multiple seasons" do
+				account.seasons.count.should == 2
+			end
+			
+			it "deletes associated seasons" do
+				seasons = account.seasons
+				account.destroy
+				seasons.each do |season|
+					Season.find_by_id(season.id).should be_nil
 				end
 			end
 		end

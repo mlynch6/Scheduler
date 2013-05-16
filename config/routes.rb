@@ -29,6 +29,7 @@ Scheduler::Application.routes.draw do
   		get 'inactivate'
   	end
   end
+  resources :seasons, :except => [:show]
   
   resources :pieces do
   	resources :scenes, :characters, only: [:index, :new, :create]

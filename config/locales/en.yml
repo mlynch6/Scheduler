@@ -28,6 +28,9 @@ en:
         costume_increment_min: "Costume Fitting Increments"
       location:
         active: "Status"
+      season:
+        start_dt: "Start Date"
+        end_dt: "End Date"
       piece:
         active: "Status"
       scene:

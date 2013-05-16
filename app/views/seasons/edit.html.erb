@@ -1,0 +1,12 @@
+<% provide(:title, 'Edit Season') %>
+<% provide(:header_current, 'Administration') %>
+
+<h1>Edit Season</h1>
+
+<div class="row">
+	<%= form_for @season, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= f.error_messages %>
+		<%= render 'form', :f => f %>
+		<%= f.submit 'Update', :class => 'btn btn-primary' %>
+	<% end %>
+</div>

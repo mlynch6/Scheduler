@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207144543) do
+ActiveRecord::Schema.define(:version => 20131207144544) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",       :limit => 100, :null => false
@@ -160,6 +160,17 @@ ActiveRecord::Schema.define(:version => 20131207144543) do
 
   add_index "scenes", ["account_id"], :name => "index_scenes_on_account_id"
   add_index "scenes", ["piece_id"], :name => "index_scenes_on_piece_id"
+
+  create_table "seasons", :force => true do |t|
+    t.integer  "account_id",               :null => false
+    t.string   "name",       :limit => 30, :null => false
+    t.date     "start_dt",                 :null => false
+    t.date     "end_dt",                   :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "seasons", ["account_id"], :name => "index_seasons_on_account_id"
 
   create_table "users", :force => true do |t|
     t.integer  "account_id",                    :null => false

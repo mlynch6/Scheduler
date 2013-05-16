@@ -1,0 +1,53 @@
+<% provide(:title, 'Seasons') %>
+<% provide(:header_current, 'Administration') %>
+
+<h1>Seasons</h1>
+
+<div class="row">
+	<div class="row text-center">
+		<% if allow? "seasons", "new" %>
+			<%= new_button "Add Season", new_season_path %>
+		<% end %>
+	</div>
+	
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Name</th>
+	  		<th>Start Date</th>
+	  		<th>End Date</th>
+	  		<th style="width:70px;">&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @seasons.each do |season| %>
+				<tr>
+					<td><%= season.name %></td>
+					<td><%= season.start_dt %></td>
+					<td><%= season.end_dt %></td>
+					<td>
+						<% if allow? "seasons", "edit" %>
+							<%= edit_button nil, edit_season_path(season), :class => 'btn-small', :id => "edit_#{season.id}" %>
+						<% end %>
+						<% if allow? "seasons", "destroy" %>
+							<%= delete_button nil, season, :class => 'btn-small', :id => "delete_#{season.id}" %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+
+	<div class="row">
+		<div class="span10 offset2">
+			<%= will_paginate(class: 'pagination',
+						previous_label: "&laquo;",
+			    	next_label: "&raquo;"
+					)%>
+		</div>
+	</div>
+	
+	<% unless @seasons.length > 0 %>
+		<div class="alert">No seasons have been found. Click on 'Add Season' to get started.</div>
+	<% end %>
+</div>
