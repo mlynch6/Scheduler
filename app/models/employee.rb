@@ -23,11 +23,12 @@ class Employee < ActiveRecord::Base
   
   belongs_to :account
 	has_one :user, dependent: :destroy
-  accepts_nested_attributes_for :user
   has_many :addresses, :as => :addressable, dependent: :destroy
   has_many :phones, :as => :phoneable, dependent: :destroy
   has_many :invitations, dependent: :destroy
   has_many :events, through: :invitations
+  
+  accepts_nested_attributes_for :user
   
   validates :first_name,	presence: true, length: { maximum: 30 }
   validates :last_name,	presence: true, length: { maximum: 30 }

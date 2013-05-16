@@ -29,6 +29,7 @@ describe Account do
   	it { should respond_to(:addresses) }
   	it { should respond_to(:phones) }
   	it { should respond_to(:employees) }
+  	it { should respond_to(:users) }
   	it { should respond_to(:locations) }
   	it { should respond_to(:pieces) }
   	it { should respond_to(:scenes) }
@@ -133,6 +134,26 @@ describe Account do
 				account.destroy
 				employees.each do |employee|
 					Employee.find_by_id(employee.id).should be_nil
+				end
+			end
+		end
+		
+		describe "users" do
+  		before { Account.current_id = account.id }
+  		let!(:employee1) { FactoryGirl.create(:employee, account: account) }
+			let!(:employee2) { FactoryGirl.create(:employee, account: account) }
+			let!(:second_user) { FactoryGirl.create(:user, account: account, employee: employee1) }
+			let!(:first_user) { FactoryGirl.create(:user, account: account, employee: employee2) }
+	
+			it "has multiple users" do
+				account.users.count.should == 2
+			end
+			
+			it "deletes associated users" do
+				users = account.users
+				account.destroy
+				users.each do |user|
+					User.find_by_id(user.id).should be_nil
 				end
 			end
 		end

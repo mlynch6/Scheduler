@@ -20,7 +20,7 @@ FactoryGirl.define do
 		association :addressable, :factory => :account
 		addr_type					"Home"
 		addr							Faker::Address.street_address.first(50)
-		city							Faker::Address.city
+		city							Faker::Address.city.first(50)
 		state							"MA"
 		zipcode						Faker::Address.zip.first(5)
 		

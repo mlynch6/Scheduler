@@ -158,6 +158,7 @@ describe Employee do
   
   context "(Associations)" do
   	let!(:user) { FactoryGirl.create(:user,
+  									account: account,
 										employee: employee) }
 		let!(:employee_with_no_user) { FactoryGirl.create(:employee) }
   	

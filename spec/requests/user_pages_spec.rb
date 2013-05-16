@@ -19,7 +19,7 @@ describe "User Pages:" do
 			log_in
 			4.times {
 				employee = FactoryGirl.create(:employee, account: current_account)
-				FactoryGirl.create(:user, employee: employee)
+				FactoryGirl.create(:user, account: current_account, employee: employee)
 				}
 			visit users_path(per_page: 3)
 	
@@ -35,7 +35,7 @@ describe "User Pages:" do
 		it "doesn't have links for Employee" do
 			log_in_employee
 			employee = FactoryGirl.create(:employee, account: current_account)
-			FactoryGirl.create(:user, employee: employee)
+			FactoryGirl.create(:user, account: current_account, employee: employee)
 			visit users_path
 	
 			should_not have_link('Add User')
@@ -46,7 +46,7 @@ describe "User Pages:" do
 		it "has links for Administrator" do
 			log_in_admin
 			employee = FactoryGirl.create(:employee, account: current_account)
-			FactoryGirl.create(:user, employee: employee)
+			FactoryGirl.create(:user, account: current_account, employee: employee)
 			visit users_path
 	
 			should have_link('Add User')
@@ -88,9 +88,9 @@ describe "User Pages:" do
 				emp = FactoryGirl.create(:employee, account: current_account)
 				visit new_user_path
 		  	
-		  	new_name = Faker::Internet.user_name
+		  	new_username = "New_Username"
 		  	select emp.full_name, from: "Employee"
-				fill_in "Username", with: new_name
+				fill_in "Username", with: new_username
 				fill_in "Password", with: "password"
 				fill_in "Confirm Password", with: "password"
 				click_button 'Create'
@@ -98,7 +98,7 @@ describe "User Pages:" do
 				should have_selector('div.alert-success')
 				should have_selector('title', text: 'Users')
 				should have_content(emp.name)
-				should have_content(new_name)
+				should have_content(new_username.downcase)
 			end
 		end
   end
@@ -118,33 +118,22 @@ describe "User Pages:" do
 		
 	  it "record with error" do
 	  	log_in
-	  	visit edit_user_path(current_user)
+	  	employee = FactoryGirl.create(:employee, account: current_account)
+			user = FactoryGirl.create(:user, account: current_account, employee: employee)
+	  	visit edit_user_path(user)
+	  	
 	  	fill_in "Password", with: ""
 	  	click_button 'Update'
 	
 			should have_selector('div.alert-error')
 		end
-	
-		it "with bad record in URL shows 'Record Not Found' error" do
-pending
-			log_in
-			visit edit_user_path(current_user)
-	
-			should have_content('Record Not Found')
-		end
-		
-		it "record with wrong account shows 'Record Not Found' error" do
-pending
-			log_in
-			user_wrong_account = FactoryGirl.create(:user)
-			visit edit_user_path(current_user)
-	
-			should have_content('Record Not Found')
-		end
 	 
 		it "record with valid info saves user" do
 			log_in
-			visit edit_user_path(current_user)
+			employee = FactoryGirl.create(:employee, account: current_account)
+			user = FactoryGirl.create(:user, account: current_account, employee: employee)
+	  	visit edit_user_path(user)
+	  	
 			fill_in "Password", with: 'Updated'
 			fill_in "Confirm Password", with: 'Updated'
 			click_button 'Update'
@@ -158,7 +147,7 @@ pending
 		it "deletes the record" do
 	  	log_in
 			employee = FactoryGirl.create(:employee, account: current_account)
-			user = FactoryGirl.create(:user, employee: employee)
+			user = FactoryGirl.create(:user, account: current_account, employee: employee)
 			visit users_path
 			click_link "delete_#{user.id}"
 			

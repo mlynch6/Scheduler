@@ -13,19 +13,20 @@ class Account < ActiveRecord::Base
   attr_accessible :name, :time_zone
   attr_accessible :addresses_attributes, :phones_attributes, :employees_attributes
   
-  has_many :addresses, :as => :addressable, dependent: :destroy
-  accepts_nested_attributes_for :addresses
-  has_many :phones, :as => :phoneable, dependent: :destroy
-  accepts_nested_attributes_for :phones
-  has_many :employees, dependent: :destroy
-  accepts_nested_attributes_for :employees
-  
   has_one :agma_profile, dependent: :destroy
+  has_many :employees, dependent: :destroy
+  has_many :users, dependent: :destroy
+  has_many :addresses, :as => :addressable, dependent: :destroy
+  has_many :phones, :as => :phoneable, dependent: :destroy
   has_many :locations, dependent: :destroy
   has_many :pieces, dependent: :destroy
   has_many :scenes, dependent: :destroy
   has_many :characters, dependent: :destroy
   has_many :events, dependent: :destroy
+  
+  accepts_nested_attributes_for :addresses
+  accepts_nested_attributes_for :phones
+  accepts_nested_attributes_for :employees
   
   after_create :create_profile
   

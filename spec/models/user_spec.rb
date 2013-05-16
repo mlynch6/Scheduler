@@ -3,6 +3,7 @@
 # Table name: users
 #
 #  id              :integer          not null, primary key
+#  account_id      :integer          not null
 #  employee_id     :integer          not null
 #  username        :string(20)       not null
 #  password_digest :string(255)      not null
@@ -17,6 +18,7 @@ describe User do
 	let(:account) { FactoryGirl.create(:account) }
 	let(:employee) { FactoryGirl.create(:employee, account: account) }
 	let(:user) { FactoryGirl.create(:user,
+				account: account,
 				employee: employee,
 				username: 'TestUser') }
   before do
@@ -33,6 +35,7 @@ describe User do
   	it { should respond_to(:password_confirmation) }
   	it { should respond_to(:role) }
   	
+  	it { should respond_to(:account) }
   	it { should respond_to(:employee) }
   	
   	it { should respond_to(:new_registration) }
@@ -43,6 +46,19 @@ describe User do
 			new_employee = FactoryGirl.create(:employee)
 			user.update_attribute(:employee_id, new_employee.id)
 			user.reload.employee_id.should == employee.id
+		end
+		
+		it "should not allow access to account_id" do
+      expect do
+        User.new(account_id: account.id)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+    
+    describe "account_id cannot be changed" do
+			let(:new_account) { FactoryGirl.create(:account) }
+			before { user.update_attribute(:account_id, new_account.id) }
+			
+			it { user.reload.account_id.should == account.id }
 		end
     
     it "should not allow access to role" do
@@ -141,6 +157,10 @@ describe User do
   end
   
   context "(Associations)" do
+  	it "account" do
+	  	user.reload.account.should == account
+	  end
+  	
   	it "employee" do
 	  	user.reload.employee.should == employee
 	  end
@@ -192,14 +212,14 @@ describe User do
 			account.employees.delete_all
 		end
 		let!(:employee1) { FactoryGirl.create(:employee, account: account) }
-		let!(:user1) { FactoryGirl.create(:user, employee: employee1) }
+		let!(:user1) { FactoryGirl.create(:user, account: account, employee: employee1, username: "alpha123") }
 		let!(:employee2) { FactoryGirl.create(:employee, account: account) }
-		let!(:user2) { FactoryGirl.create(:user, employee: employee2) }
+		let!(:user2) { FactoryGirl.create(:user, account: account, employee: employee2, username: "beta1234") }
 		let!(:employee_wrong_acnt) { FactoryGirl.create(:employee) }
 		let!(:user_wrong_acnt) { FactoryGirl.create(:user, employee: employee_wrong_acnt) }
 		
 		describe "default_scope" do
-			it "returns the records for current account" do
+			it "returns the records for current account is alphabetic order by username" do
 				User.all.should == [user1, user2]
 			end
 		end

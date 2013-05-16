@@ -1,16 +1,19 @@
 module AuthMacros
   def log_in(attributes = {})
-    @_current_user = FactoryGirl.create(:superadmin, attributes)
+  	employee = FactoryGirl.create(:employee)
+    @_current_user = FactoryGirl.create(:superadmin, employee: employee, account: employee.account)
     do_user_login
   end
   
   def log_in_employee(attributes = {})
-    @_current_user = FactoryGirl.create(:user, attributes)
+  	employee = FactoryGirl.create(:employee)
+    @_current_user = FactoryGirl.create(:user, employee: employee, account: employee.account)
     do_user_login
   end
   
   def log_in_admin(attributes = {})
-    @_current_user = FactoryGirl.create(:admin, attributes)
+  	employee = FactoryGirl.create(:employee)
+    @_current_user = FactoryGirl.create(:admin, employee: employee, account: employee.account)
     do_user_login
   end
 
@@ -19,7 +22,7 @@ module AuthMacros
   end
   
   def current_account
-    @_current_user.employee.account
+    @_current_user.account
   end
   
 protected

@@ -34,6 +34,7 @@ class AccountsController < ApplicationController
   	@employee.new_registration = true
   	
   	@user = @employee.user
+  	@user.account = @account
   	@user.new_registration = true
   	
   	if @account.save
