@@ -134,8 +134,8 @@ describe Season do
 		let!(:season_wrong_acnt) { FactoryGirl.create(:season) }
 		
 		describe "default_scope" do
-			it "returns the records in start_dt order" do
-				Season.all.should == [first_season, second_season]
+			it "returns the records in start_dt order (most recent first)" do
+				Season.all.should == [second_season, first_season]
 			end
 			
 			it "only shows records for current account" do
