@@ -2,7 +2,7 @@ class CompanyClassesController < ApplicationController
   def new
   	form_setup
 		@cclass = CompanyClass.new
-		@cclass.start_date = Time.parse(params[:date]).strftime("%m/%d/%Y") if params[:date].present?
+		@cclass.start_date = params[:date] if params[:date].present?
   end
   
   def create

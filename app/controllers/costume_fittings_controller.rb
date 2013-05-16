@@ -2,7 +2,7 @@ class CostumeFittingsController < ApplicationController
   def new
   	form_setup
 		@fitting = CostumeFitting.new
-		@fitting.start_date = Time.parse(params[:date]).strftime("%m/%d/%Y") if params[:date].present?
+		@fitting.start_date = params[:date] if params[:date].present?
   end
   
   def create
