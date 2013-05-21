@@ -14,5 +14,5 @@ class Invitation < ActiveRecord::Base
 	belongs_to :employee
 	
 	validates :event_id,	presence: true
-	validates :employee_id,	presence: true
+	validates :employee_id,	presence: true, uniqueness: { scope: :event_id }
 end

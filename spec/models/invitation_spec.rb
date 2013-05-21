@@ -61,7 +61,9 @@ describe Invitation do
   	end
   	
   	it "when employee/event uniqueness is violated" do
-  		pending
+  		@invitation.event = invitation.event
+	  	@invitation.employee = invitation.employee
+	  	should_not be_valid
   	end
 	end
 	
@@ -74,16 +76,4 @@ describe Invitation do
 			invitation.reload.employee.should == employee
 		end
   end
-
-	describe "(Scopes)" do
-		before do
-			event.invitations.delete_all
-		end
-		
-		describe "default_scope" do	
-			it "returns the records in alphabetical order by employee" do
-				pending
-			end
-		end
-	end
 end
