@@ -139,7 +139,7 @@ describe "Scene Pages:" do
 				
 		  	new_name = Faker::Lorem.word
 		  	new_track = Faker::Lorem.word
-				fill_in "Name", with: new_name
+				fill_in "Scene", with: new_name
 				fill_in "Track", with: new_track
 				click_button 'Create'
 
@@ -157,7 +157,7 @@ describe "Scene Pages:" do
 				
 		  	new_name = Faker::Lorem.word
 		  	new_track = Faker::Lorem.word
-				fill_in "Name", with: new_name
+				fill_in "Scene", with: new_name
 				fill_in "Track", with: new_track
 				select character.name, from: "scene_character_ids" #Label = Characters
 				click_button 'Create'
@@ -189,7 +189,7 @@ describe "Scene Pages:" do
 	  	piece = FactoryGirl.create(:piece, account: current_account)
 			scene = FactoryGirl.create(:scene, account: current_account, piece: piece)
 	  	visit edit_scene_path(scene)
-	  	fill_in "Name", with: ""
+	  	fill_in "Scene", with: ""
 	  	click_button 'Update'
 	
 			should have_selector('div.alert-error')
@@ -220,7 +220,7 @@ describe "Scene Pages:" do
 			
 			new_name = Faker::Lorem.word
 			new_track = Faker::Lorem.word
-			fill_in "Name", with: new_name
+			fill_in "Scene", with: new_name
 			fill_in "Track", with: new_track
 			click_button 'Update'
 	
