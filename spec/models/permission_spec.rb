@@ -48,6 +48,7 @@ describe Permission do
 		it { should_not allow(:seasons, :edit) }
 		it { should_not allow(:seasons, :update) }
 		it { should_not allow(:seasons, :destroy) }
+		it { should_not allow(:seasons, :show) }
 
 		it { should_not allow(:locations, :index) }
 		it { should_not allow(:locations, :new) }
@@ -162,6 +163,7 @@ describe Permission do
 		it { should_not allow(:seasons, :edit) }
 		it { should_not allow(:seasons, :update) }
 		it { should_not allow(:seasons, :destroy) }
+		it { should_not allow(:seasons, :show) }
 		
 		it { should allow(:locations, :index) }
 		it { should_not allow(:locations, :new) }
@@ -276,6 +278,7 @@ describe Permission do
 		it { should allow(:seasons, :edit) }
 		it { should allow(:seasons, :update) }
 		it { should allow(:seasons, :destroy) }
+		it { should allow(:seasons, :show) }
 		
 		it { should allow(:locations, :index) }
 		it { should allow(:locations, :new) }
@@ -390,6 +393,7 @@ describe Permission do
 		it { should allow(:seasons, :edit) }
 		it { should allow(:seasons, :update) }
 		it { should allow(:seasons, :destroy) }
+		it { should allow(:seasons, :show) }
 		
 		it { should allow(:locations, :index) }
 		it { should allow(:locations, :new) }

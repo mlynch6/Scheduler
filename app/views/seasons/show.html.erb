@@ -1,0 +1,25 @@
+<% provide(:title, "#{@season.name} | Pieces") %>
+<% provide(:header_current, 'Administration') %>
+<% provide(:current, 'Pieces') %>
+
+<%= render 'seasons/detail' %>
+<%= render 'seasons/tabs' %>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+	  	<th>Piece</th>
+	  </tr>
+	</thead>
+	<tbody>
+		<% @pieces.each do |piece| %>
+			<tr>
+				<td><%= piece.name %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<% unless @pieces.length > 0 %>
+	<div class="alert">There are currently no pieces.</div>
+<% end %>

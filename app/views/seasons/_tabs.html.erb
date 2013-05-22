@@ -1,0 +1,6 @@
+<% class_active = " class=""active""" %>
+<ul class="nav nav-tabs">
+	<% if allow? "seasons", "show" %>
+		<li<%= class_active if yield(:current) == "Pieces" %>><%= link_to content_tag(:i, nil, class: "icon-certificate")+" Pieces", season_path(@season) %></li>
+	<% end %>
+</ul>

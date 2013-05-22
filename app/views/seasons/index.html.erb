@@ -16,7 +16,7 @@
 	  		<th>Name</th>
 	  		<th>Start Date</th>
 	  		<th>End Date</th>
-	  		<th style="width:70px;">&nbsp;</th>
+	  		<th style="width:105px;">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -26,6 +26,9 @@
 					<td><%= season.start_dt %></td>
 					<td><%= season.end_dt %></td>
 					<td>
+						<% if allow? "seasons", "show" %>
+							<%= view_button nil, season_path(season), :class => 'btn-small', :id => "view_#{season.id}" %>
+						<% end %>
 						<% if allow? "seasons", "edit" %>
 							<%= edit_button nil, edit_season_path(season), :class => 'btn-small', :id => "edit_#{season.id}" %>
 						<% end %>

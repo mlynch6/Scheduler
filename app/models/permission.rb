@@ -13,7 +13,7 @@ class Permission
 				allow [:users, :seasons], [:index]
 				
 				#show
-				allow [:accounts, :agma_profiles, :employees], [:show]
+				allow [:accounts, :agma_profiles, :employees, :seasons], [:show]
 				
 				#new & create
 				allow [:addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:new, :create]

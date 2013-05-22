@@ -8,3 +8,4 @@
 		<%= f.date_field :end_dt, :label => 'To' %>
 	</div>
 </div>
+<%= f.select :piece_ids, @pieces, {}, { :multiple => true, :class => 'input-xxlarge' } %>

@@ -33,6 +33,7 @@ describe "Season Pages:" do
 			should have_selector('div.pagination')
 			Season.paginate(page: 1, per_page: 3).each do |season|
 				should have_selector('td', text: season.name)
+				should have_link('View', href: season_path(season))
 				should have_link('Edit', href: edit_season_path(season))
 				should have_link('Delete', href: season_path(season))
 	    end
@@ -44,6 +45,7 @@ describe "Season Pages:" do
 			visit seasons_path
 	
 			should_not have_link('Add Season')
+			should_not have_link('View')
 			should_not have_link('Edit')
 			should_not have_link('Delete')
 		end
@@ -54,6 +56,7 @@ describe "Season Pages:" do
 			visit seasons_path
 	
 			should have_link('Add Season')
+			should have_link('View')
 			should have_link('Edit')
 			should have_link('Delete')
 		end
@@ -87,7 +90,7 @@ describe "Season Pages:" do
 		end
 	
 		context "with valid info" do
-			it "creates new Season" do
+			it "creates new Season without Pieces" do
 				log_in
 				visit new_season_path
 		  	
@@ -95,6 +98,25 @@ describe "Season Pages:" do
 				fill_in "Name", with: new_name
 				fill_in "From", with: '01/01/2011'
 				fill_in "To", with: '12/31/2011'
+				click_button 'Create'
+		
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Seasons')
+				should have_content(new_name)
+				should have_content('01/01/2011')
+				should have_content('12/31/2011')
+			end
+			
+			it "creates new Season with Pieces" do
+				log_in
+				piece = FactoryGirl.create(:piece, account: current_account)
+				visit new_season_path
+		  	
+		  	new_name = Faker::Lorem.word
+				fill_in "Name", with: new_name
+				fill_in "From", with: '01/01/2011'
+				fill_in "To", with: '12/31/2011'
+				select piece.name, from: "Pieces"
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')

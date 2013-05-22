@@ -30,6 +30,8 @@ describe Piece do
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:events) }
+  	it { should respond_to(:season_pieces) }
+  	it { should respond_to(:seasons) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -128,6 +130,36 @@ describe Piece do
 				events.each do |event|
 					Event.find_by_id(event.id).should be_nil
 				end
+			end
+		end
+		
+		describe "season_pieces" do
+			let(:season1) { FactoryGirl.create(:season, account: account) }
+			let(:season2) { FactoryGirl.create(:season, account: account) }
+			let!(:second_inter) { FactoryGirl.create(:season_piece, season: season1, piece: piece) }
+			let!(:first_inter) { FactoryGirl.create(:season_piece, season: season2, piece: piece) }
+	
+			it "has multiple season_pieces" do
+				piece.season_pieces.count.should == 2
+			end
+			
+			it "deletes associated season_pieces" do
+				season_pieces = piece.season_pieces
+				piece.destroy
+				season_pieces.each do |season_piece|
+					SeasonPiece.find_by_id(season_piece.id).should be_nil
+				end
+			end
+		end
+		
+		describe "seasons" do
+			let(:season1) { FactoryGirl.create(:season, account: account) }
+			let(:season2) { FactoryGirl.create(:season, account: account) }
+			let!(:second_inter) { FactoryGirl.create(:season_piece, season: season1, piece: piece) }
+			let!(:first_inter) { FactoryGirl.create(:season_piece, season: season2, piece: piece) }
+	
+			it "has multiple seasons" do
+				piece.seasons.count.should == 2
 			end
 		end
   end

@@ -60,6 +60,7 @@ en:
       season:
         start_dt: "Start Date"
         end_dt: "End Date"
+        piece_ids: "Pieces"
       scene:
         name: "Scene"
         character_ids: "Characters"

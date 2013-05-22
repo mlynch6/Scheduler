@@ -17,6 +17,8 @@ class Piece < ActiveRecord::Base
 	has_many :events, dependent: :destroy
 	has_many :scenes, dependent: :destroy
 	has_many :characters, dependent: :destroy
+	has_many :season_pieces, dependent: :destroy
+	has_many :seasons, through: :season_pieces
 
 	validates :name,	presence: true, length: { maximum: 50 }, uniqueness: { scope: :account_id }
 	validates :active, :inclusion => { :in => [true, false] }
