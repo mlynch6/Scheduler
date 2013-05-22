@@ -178,4 +178,43 @@ describe "Season Pages:" do
 			should_not have_content(season.name)
 		end
 	end
+	
+	context "#show" do
+  	it "has correct title & table headers" do
+  		log_in
+  		season = FactoryGirl.create(:season, account: current_account)
+	  	click_link "Seasons"
+	  	click_link "View"
+	  	
+	  	should have_selector('title', text: season.name)
+	  	should have_selector('title', text: 'Pieces')
+		  should have_selector('h1', text: season.name)
+		  
+		  should have_selector('th', text: "Piece")
+		end
+		
+		it "displays correct data" do
+			log_in
+			season = FactoryGirl.create(:season, account: current_account)
+			visit season_path(season)
+	  	
+			should have_content(season.name)
+			should have_content(season.start_dt)
+			should have_content(season.end_dt)
+		end
+		
+		it "has pieces shown" do
+			log_in
+			season = FactoryGirl.create(:season, account: current_account)
+			3.times {
+				piece = FactoryGirl.create(:piece, account: current_account)
+				FactoryGirl.create(:season_piece, season: season, piece: piece)
+			}
+			visit season_path(season)
+
+			season.pieces.each do |piece|
+				should have_content(piece.name)
+			end
+		end
+	end
 end
