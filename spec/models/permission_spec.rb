@@ -86,6 +86,9 @@ describe Permission do
 		it { should_not allow(:characters, :destroy) }
 		it { should_not allow(:characters, :sort) }
 		
+		it { should_not allow(:casts, :new) }
+		it { should_not allow(:casts, :destroy) }
+		
 		it { should_not allow(:employees, :index) }
 		it { should_not allow(:employees, :new) }
 		it { should_not allow(:employees, :create) }
@@ -200,6 +203,9 @@ describe Permission do
 		it { should_not allow(:characters, :update) }
 		it { should_not allow(:characters, :destroy) }
 		it { should_not allow(:characters, :sort) }
+		
+		it { should_not allow(:casts, :new) }
+		it { should_not allow(:casts, :destroy) }
 		
 		it { should allow(:employees, :index) }
 		it { should_not allow(:employees, :new) }
@@ -316,6 +322,9 @@ describe Permission do
 		it { should allow(:characters, :destroy) }
 		it { should allow(:characters, :sort) }
 		
+		it { should allow(:casts, :new) }
+		it { should allow(:casts, :destroy) }
+		
 		it { should allow(:employees, :index) }
 		it { should allow(:employees, :new) }
 		it { should allow(:employees, :create) }
@@ -430,6 +439,9 @@ describe Permission do
 		it { should allow(:characters, :update) }
 		it { should allow(:characters, :destroy) }
 		it { should allow(:characters, :sort) }
+		
+		it { should allow(:casts, :new) }
+		it { should allow(:casts, :destroy) }
 		
 		it { should allow(:employees, :index) }
 		it { should allow(:employees, :new) }

@@ -9,17 +9,34 @@
 	<thead>
 		<tr>
 	  	<th>Piece</th>
+	  	<th>Casts</th>
+	  	<th style="width:105px;">&nbsp;</th>
 	  </tr>
 	</thead>
 	<tbody>
-		<% @pieces.each do |piece| %>
+		<% @season_pieces.each do |season_piece| %>
 			<tr>
-				<td><%= piece.name %></td>
+				<td><%= season_piece.piece.name %></td>
+				<td><ul class="unstyled">
+					<% season_piece.casts.each do |cast| %>
+						<li>
+							<%= cast.name %>
+							<% if allow? "casts", "destroy" %>
+								<%= delete_link nil, cast, :id => "delete_#{cast.id}" %>
+							<% end %>
+						</li>
+					<% end %>
+				</ul></td>
+				<td>
+					<% if allow? "casts", "new" %>
+						<%= new_button "Add Cast", new_season_piece_cast_path(season_piece), :class => 'btn-small', :id => "newCast_#{season_piece.id}" %>
+					<% end %>
+				</td>
 			</tr>
 		<% end %>
 	</tbody>
 </table>
 
-<% unless @pieces.length > 0 %>
+<% unless @season_pieces.length > 0 %>
 	<div class="alert">There are currently no pieces.</div>
 <% end %>

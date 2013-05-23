@@ -5,7 +5,7 @@ class SeasonsController < ApplicationController
 	
 	def show
   	@season = Season.find(params[:id])
-  	@pieces = @season.pieces
+  	@season_pieces = @season.season_pieces
 	end
 	
 	def new

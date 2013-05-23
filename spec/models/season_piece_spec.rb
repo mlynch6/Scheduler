@@ -28,6 +28,7 @@ describe SeasonPiece do
 	context "accessible attributes" do
   	it { should respond_to(:season) }
   	it { should respond_to(:piece) }
+  	it { should respond_to(:casts) }
 		
 		it "should not allow access to season_id" do
       expect do
@@ -73,6 +74,23 @@ describe SeasonPiece do
 		
 		it "has one piece" do
 			season_piece.reload.piece.should == piece
+		end
+		
+		describe "casts" do
+			let!(:second_cast) { FactoryGirl.create(:cast, season_piece: season_piece) }
+			let!(:first_cast) { FactoryGirl.create(:cast, season_piece: season_piece) }
+	
+			it "has multiple casts" do
+				season_piece.casts.count.should == 2
+			end
+			
+			it "deletes associated casts" do
+				casts = season_piece.casts
+				season_piece.destroy
+				casts.each do |cast|
+					Cast.find_by_id(cast.id).should be_nil
+				end
+			end
 		end
   end
 end

@@ -12,6 +12,7 @@
 class SeasonPiece < ActiveRecord::Base
   belongs_to :season
 	belongs_to :piece
+	has_many :casts, dependent: :destroy
 	
 	validates :season_id,	presence: true
 	validates :piece_id,	presence: true, uniqueness: { scope: :season_id }

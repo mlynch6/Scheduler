@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Season Pages:" do
+describe "Season Pages:", focus: true do
 	subject { page }
   
   context "#index" do
@@ -191,6 +191,7 @@ describe "Season Pages:" do
 		  should have_selector('h1', text: season.name)
 		  
 		  should have_selector('th', text: "Piece")
+		  should have_selector('th', text: "Casts")
 		end
 		
 		it "displays correct data" do
@@ -215,6 +216,34 @@ describe "Season Pages:" do
 			season.pieces.each do |piece|
 				should have_content(piece.name)
 			end
+		end
+		
+		it "has casts for pieces shown" do
+			log_in
+			season = FactoryGirl.create(:season, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			season_piece = FactoryGirl.create(:season_piece, season: season, piece: piece)
+			3.times { FactoryGirl.create(:cast, season_piece: season_piece) }
+			visit season_path(season)
+
+			should have_content(piece.name)
+			season_piece.casts.each do |cast|
+				should have_content(cast.name)
+				should have_link('Add Cast', href: new_season_piece_cast_path(season_piece))
+				should have_link('Delete')
+			end
+		end
+		
+		it "has links for Administrator" do
+			log_in_admin
+			season = FactoryGirl.create(:season, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			season_piece = FactoryGirl.create(:season_piece, season: season, piece: piece)
+			cast = FactoryGirl.create(:cast, season_piece: season_piece)
+			visit season_path(season)
+	
+			should have_link('Add Cast')
+			should have_link('Delete')
 		end
 	end
 end

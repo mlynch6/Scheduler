@@ -5,16 +5,16 @@ Scheduler::Application.routes.draw do
 	match 'signup' => 'accounts#new'
 	
 	resources :accounts do
-		resources :addresses, :except => [:index, :show]
-		resources :phones, 		:except => [:index, :show]
+		resources :addresses, 			:except => [:index, :show]
+		resources :phones, 					:except => [:index, :show]
 	end
-	resources :agma_profiles, :only => [:show, :edit, :update]
+	resources :agma_profiles, 		:only => [:show, :edit, :update]
   resources :sessions
-  resources :users, :except => [:show]
+  resources :users, 						:except => [:show]
   
   resources :employees do
-  	resources :addresses, :except => [:index, :show]
-  	resources :phones, 		:except => [:index, :show]
+  	resources :addresses, 			:except => [:index, :show]
+  	resources :phones, 					:except => [:index, :show]
   	get 'inactive', on: :collection
   	member do
   		get 'activate'
@@ -42,6 +42,8 @@ Scheduler::Application.routes.draw do
   resources :scenes, :characters, only: [:edit, :update, :destroy] do
   	collection { post :sort }
   end
+  get 'pieces/:season_piece_id/casts/new', to: 'casts#new', as: :new_season_piece_cast
+  resources :casts,							:only => :destroy
   
   resources :events,						:only => :index
   resources :rehearsals,				:only => [:new, :create, :edit, :update]

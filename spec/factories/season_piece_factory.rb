@@ -14,4 +14,8 @@ FactoryGirl.define do
 		season
 		piece
 	end
+	
+	factory :season_piece_w_casts do
+			after_create { |sp| FactoryGirl.create_list(:cast, 3, season_piece: sp)}
+		end
 end
