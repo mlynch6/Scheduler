@@ -1,4 +1,8 @@
 class UsersController < ApplicationController
+  def index
+  	@users = User.includes(:employee).paginate(page: params[:page], per_page: params[:per_page])
+	end
+	
   def new
   	form_setup
   	@user = User.new
@@ -13,10 +17,6 @@ class UsersController < ApplicationController
   		render "new"
   	end
   end
-  
-  def index
-  	@users = User.paginate(page: params[:page], per_page: params[:per_page])
-	end
 
 	def edit
 		@user = User.find(params[:id])

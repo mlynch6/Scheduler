@@ -29,6 +29,7 @@ end
 group :development do
   gem 'annotate', '~> 2.5.0'
   gem 'populator', '1.0.0'
+  gem 'bullet'
 end
 
 group :test do
