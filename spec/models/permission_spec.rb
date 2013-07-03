@@ -1,8 +1,164 @@
 require 'spec_helper'
 
-RSpec::Matchers.define :allow do |*args|
+RSpec::Matchers.define :allow do |controller, action|
 	match do |permission|
-		permission.allow?(*args).should be_true
+		permission.allow?(controller, action) == true
+	end
+	
+	description do
+    "allow #{controller}##{action}"
+  end
+end
+
+shared_examples "a guest" do
+	context "static pages" do
+		it { should allow(:static_pages, :home) }
+		it { should allow(:static_pages, :features) }
+		it { should allow(:static_pages, :pricing) }
+		it { should allow(:static_pages, :contact) }
+	end
+	
+	context "sessions" do
+		it { should allow(:sessions, :new) }
+		it { should allow(:sessions, :create) }
+		it { should allow(:sessions, :destroy) }
+	end
+	
+	context "account" do
+		it { should allow(:accounts, :new) }
+		it { should allow(:accounts, :create) }
+	end
+end
+
+shared_examples "an employee" do
+	it_behaves_like "a guest"
+	
+	context "static pages" do
+		it { should allow(:static_pages, :dashboard) }
+	end
+	
+	context "events" do
+		it { should allow(:events, :index) }
+	end
+end
+
+shared_examples "a member of the Artistic Staff" do
+	context "seasons" do
+		it { should allow(:seasons, :index) }
+		it { should allow(:seasons, :new) }
+		it { should allow(:seasons, :create) }
+		it { should allow(:seasons, :edit) }
+		it { should allow(:seasons, :update) }
+		it { should allow(:seasons, :destroy) }
+		it { should allow(:seasons, :show) }
+	end
+	
+	context "pieces" do
+		it { should allow(:pieces, :index) }
+		it { should allow(:pieces, :new) }
+		it { should allow(:pieces, :create) }
+		it { should allow(:pieces, :edit) }
+		it { should allow(:pieces, :update) }
+		it { should allow(:pieces, :inactive) }
+		it { should allow(:pieces, :activate) }
+		it { should allow(:pieces, :inactivate) }
+	end
+	
+	context "scenes" do
+		it { should allow(:scenes, :index) }
+		it { should allow(:scenes, :new) }
+		it { should allow(:scenes, :create) }
+		it { should allow(:scenes, :edit) }
+		it { should allow(:scenes, :update) }
+		it { should allow(:scenes, :destroy) }
+		it { should allow(:scenes, :sort) }
+	end
+	
+	context "characters" do
+		it { should allow(:characters, :index) }
+		it { should allow(:characters, :new) }
+		it { should allow(:characters, :create) }
+		it { should allow(:characters, :edit) }
+		it { should allow(:characters, :update) }
+		it { should allow(:characters, :destroy) }
+		it { should allow(:characters, :sort) }
+	end
+	
+	context "casts" do
+		it { should allow(:casts, :index) }
+		it { should allow(:casts, :new) }
+		it { should allow(:casts, :destroy) }
+	end
+	
+	context "rehearsals" do
+		it { should allow(:rehearsals, :new) }
+		it { should allow(:rehearsals, :create) }
+		it { should allow(:rehearsals, :edit) }
+		it { should allow(:rehearsals, :update) }
+	end
+end
+
+shared_examples "an administrator" do
+	it_behaves_like "an employee"
+	it_behaves_like "a member of the Artistic Staff"
+	
+	context "accounts" do
+		it { should allow(:accounts, :edit) }
+		it { should allow(:accounts, :update) }
+		it { should allow(:accounts, :show) }
+	end
+	
+	context "addresses" do
+		it { should allow(:addresses, :new) }
+		it { should allow(:addresses, :create) }
+		it { should allow(:addresses, :edit) }
+		it { should allow(:addresses, :update) }
+		it { should allow(:addresses, :destroy) }
+	end
+	
+	context "phones" do
+		it { should allow(:phones, :new) }
+		it { should allow(:phones, :create) }
+		it { should allow(:phones, :edit) }
+		it { should allow(:phones, :update) }
+		it { should allow(:phones, :destroy) }
+	end
+	
+	context "agma_profiles" do
+		it { should allow(:agma_profiles, :edit) }
+		it { should allow(:agma_profiles, :update) }
+		it { should allow(:agma_profiles, :show) }
+	end
+	
+	context "employees" do
+		it { should allow(:employees, :index) }
+		it { should allow(:employees, :new) }
+		it { should allow(:employees, :create) }
+		it { should allow(:employees, :edit) }
+		it { should allow(:employees, :update) }
+		it { should allow(:employees, :show) }
+		it { should allow(:employees, :inactive) }
+		it { should allow(:employees, :activate) }
+		it { should allow(:employees, :inactivate) }
+	end
+	
+	context "users" do
+		it { should allow(:users, :index) }
+		it { should allow(:users, :new) }
+		it { should allow(:users, :create) }
+		it { should allow(:users, :edit) }
+		it { should allow(:users, :update) }
+	end
+	
+	context "locations" do
+		it { should allow(:locations, :index) }
+		it { should allow(:locations, :new) }
+		it { should allow(:locations, :create) }
+		it { should allow(:locations, :edit) }
+		it { should allow(:locations, :update) }
+		it { should allow(:locations, :inactive) }
+		it { should allow(:locations, :activate) }
+		it { should allow(:locations, :inactivate) }
 	end
 end
 
@@ -10,18 +166,10 @@ describe Permission do
 	context "as guest" do
 		subject { Permission.new(nil) }
 		
-		it { should allow(:static_pages, :home) }
-		it { should allow(:static_pages, :features) }
-		it { should allow(:static_pages, :pricing) }
-		it { should allow(:static_pages, :contact) }
+		it_behaves_like "a guest"
+		
 		it { should_not allow(:static_pages, :dashboard) }
-		
-		it { should allow(:sessions, :new) }
-		it { should allow(:sessions, :create) }
-		it { should allow(:sessions, :destroy) }
-		
-		it { should allow(:accounts, :new) }
-		it { should allow(:accounts, :create) }
+
 		it { should_not allow(:accounts, :edit) }
 		it { should_not allow(:accounts, :update) }
 		it { should_not allow(:accounts, :show) }
@@ -86,6 +234,7 @@ describe Permission do
 		it { should_not allow(:characters, :destroy) }
 		it { should_not allow(:characters, :sort) }
 		
+		it { should_not allow(:casts, :index) }
 		it { should_not allow(:casts, :new) }
 		it { should_not allow(:casts, :destroy) }
 		
@@ -128,18 +277,8 @@ describe Permission do
 		let(:user) { FactoryGirl.create(:user) }
 		subject { Permission.new(user) }
 		
-		it { should allow(:static_pages, :home) }
-		it { should allow(:static_pages, :features) }
-		it { should allow(:static_pages, :pricing) }
-		it { should allow(:static_pages, :contact) }
-		it { should allow(:static_pages, :dashboard) }
+		it_behaves_like "an employee"
 		
-		it { should allow(:sessions, :new) }
-		it { should allow(:sessions, :create) }
-		it { should allow(:sessions, :destroy) }
-		
-		it { should allow(:accounts, :new) }
-		it { should allow(:accounts, :create) }
 		it { should_not allow(:accounts, :edit) }
 		it { should_not allow(:accounts, :update) }
 		it { should_not allow(:accounts, :show) }
@@ -204,6 +343,7 @@ describe Permission do
 		it { should_not allow(:characters, :destroy) }
 		it { should_not allow(:characters, :sort) }
 		
+		it { should_not allow(:casts, :index) }
 		it { should_not allow(:casts, :new) }
 		it { should_not allow(:casts, :destroy) }
 		
@@ -223,8 +363,6 @@ describe Permission do
 		it { should_not allow(:users, :create) }
 		it { should_not allow(:users, :edit) }
 		it { should_not allow(:users, :update) }
-		
-		it { should allow(:events, :index) }
 		
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }
@@ -246,108 +384,11 @@ describe Permission do
 		let(:user) { FactoryGirl.create(:admin) }
 		subject { Permission.new(user) }
 		
-		it { should allow(:static_pages, :home) }
-		it { should allow(:static_pages, :features) }
-		it { should allow(:static_pages, :pricing) }
-		it { should allow(:static_pages, :contact) }
-		it { should allow(:static_pages, :dashboard) }
+		it_behaves_like "an administrator"
 		
-		it { should allow(:sessions, :new) }
-		it { should allow(:sessions, :create) }
-		it { should allow(:sessions, :destroy) }
-		
-		it { should allow(:accounts, :new) }
-		it { should allow(:accounts, :create) }
-		it { should allow(:accounts, :edit) }
-		it { should allow(:accounts, :update) }
-		it { should allow(:accounts, :show) }
-		
-		it { should allow(:addresses, :new) }
-		it { should allow(:addresses, :create) }
-		it { should allow(:addresses, :edit) }
-		it { should allow(:addresses, :update) }
-		it { should allow(:addresses, :destroy) }
-		
-		it { should allow(:phones, :new) }
-		it { should allow(:phones, :create) }
-		it { should allow(:phones, :edit) }
-		it { should allow(:phones, :update) }
-		it { should allow(:phones, :destroy) }
-		
-		it { should allow(:agma_profiles, :edit) }
-		it { should allow(:agma_profiles, :update) }
-		it { should allow(:agma_profiles, :show) }
-		
-		it { should allow(:seasons, :index) }
-		it { should allow(:seasons, :new) }
-		it { should allow(:seasons, :create) }
-		it { should allow(:seasons, :edit) }
-		it { should allow(:seasons, :update) }
-		it { should allow(:seasons, :destroy) }
-		it { should allow(:seasons, :show) }
-		
-		it { should allow(:locations, :index) }
-		it { should allow(:locations, :new) }
-		it { should allow(:locations, :create) }
-		it { should allow(:locations, :edit) }
-		it { should allow(:locations, :update) }
-		it { should_not allow(:locations, :destroy) }
-		it { should allow(:locations, :inactive) }
-		it { should allow(:locations, :activate) }
-		it { should allow(:locations, :inactivate) }
-		
-		it { should allow(:pieces, :index) }
-		it { should allow(:pieces, :new) }
-		it { should allow(:pieces, :create) }
-		it { should allow(:pieces, :edit) }
-		it { should allow(:pieces, :update) }
-		it { should_not allow(:pieces, :destroy) }
-		it { should allow(:pieces, :inactive) }
-		it { should allow(:pieces, :activate) }
-		it { should allow(:pieces, :inactivate) }
-		
-		it { should allow(:scenes, :index) }
-		it { should allow(:scenes, :new) }
-		it { should allow(:scenes, :create) }
-		it { should allow(:scenes, :edit) }
-		it { should allow(:scenes, :update) }
-		it { should allow(:scenes, :destroy) }
-		it { should allow(:scenes, :sort) }
-		
-		it { should allow(:characters, :index) }
-		it { should allow(:characters, :new) }
-		it { should allow(:characters, :create) }
-		it { should allow(:characters, :edit) }
-		it { should allow(:characters, :update) }
-		it { should allow(:characters, :destroy) }
-		it { should allow(:characters, :sort) }
-		
-		it { should allow(:casts, :new) }
-		it { should allow(:casts, :destroy) }
-		
-		it { should allow(:employees, :index) }
-		it { should allow(:employees, :new) }
-		it { should allow(:employees, :create) }
-		it { should allow(:employees, :edit) }
-		it { should allow(:employees, :update) }
 		it { should_not allow(:employees, :destroy) }
-		it { should allow(:employees, :show) }
-		it { should allow(:employees, :inactive) }
-		it { should allow(:employees, :activate) }
-		it { should allow(:employees, :inactivate) }
-		
-		it { should allow(:users, :index) }
-		it { should allow(:users, :new) }
-		it { should allow(:users, :create) }
-		it { should allow(:users, :edit) }
-		it { should allow(:users, :update) }
-		
-		it { should allow(:events, :index) }
-		
-		it { should allow(:rehearsals, :new) }
-		it { should allow(:rehearsals, :create) }
-		it { should allow(:rehearsals, :edit) }
-		it { should allow(:rehearsals, :update) }
+		it { should_not allow(:locations, :destroy) }
+		it { should_not allow(:pieces, :destroy) }
 		
 		it { should allow(:company_classes, :new) }
 		it { should allow(:company_classes, :create) }
@@ -364,108 +405,11 @@ describe Permission do
 		let(:user) { FactoryGirl.create(:superadmin) }
 		subject { Permission.new(user) }
 		
-		it { should allow(:static_pages, :home) }
-		it { should allow(:static_pages, :features) }
-		it { should allow(:static_pages, :pricing) }
-		it { should allow(:static_pages, :contact) }
-		it { should allow(:static_pages, :dashboard) }
+		it_behaves_like "an administrator"
 		
-		it { should allow(:sessions, :new) }
-		it { should allow(:sessions, :create) }
-		it { should allow(:sessions, :destroy) }
-		
-		it { should allow(:accounts, :new) }
-		it { should allow(:accounts, :create) }
-		it { should allow(:accounts, :edit) }
-		it { should allow(:accounts, :update) }
-		it { should allow(:accounts, :show) }
-		
-		it { should allow(:addresses, :new) }
-		it { should allow(:addresses, :create) }
-		it { should allow(:addresses, :edit) }
-		it { should allow(:addresses, :update) }
-		it { should allow(:addresses, :destroy) }
-		
-		it { should allow(:phones, :new) }
-		it { should allow(:phones, :create) }
-		it { should allow(:phones, :edit) }
-		it { should allow(:phones, :update) }
-		it { should allow(:phones, :destroy) }
-		
-		it { should allow(:agma_profiles, :edit) }
-		it { should allow(:agma_profiles, :update) }
-		it { should allow(:agma_profiles, :show) }
-		
-		it { should allow(:seasons, :index) }
-		it { should allow(:seasons, :new) }
-		it { should allow(:seasons, :create) }
-		it { should allow(:seasons, :edit) }
-		it { should allow(:seasons, :update) }
-		it { should allow(:seasons, :destroy) }
-		it { should allow(:seasons, :show) }
-		
-		it { should allow(:locations, :index) }
-		it { should allow(:locations, :new) }
-		it { should allow(:locations, :create) }
-		it { should allow(:locations, :edit) }
-		it { should allow(:locations, :update) }
-		it { should allow(:locations, :destroy) }
-		it { should allow(:locations, :inactive) }
-		it { should allow(:locations, :activate) }
-		it { should allow(:locations, :inactivate) }
-		
-		it { should allow(:pieces, :index) }
-		it { should allow(:pieces, :new) }
-		it { should allow(:pieces, :create) }
-		it { should allow(:pieces, :edit) }
-		it { should allow(:pieces, :update) }
-		it { should allow(:pieces, :destroy) }
-		it { should allow(:pieces, :inactive) }
-		it { should allow(:pieces, :activate) }
-		it { should allow(:pieces, :inactivate) }
-		
-		it { should allow(:scenes, :index) }
-		it { should allow(:scenes, :new) }
-		it { should allow(:scenes, :create) }
-		it { should allow(:scenes, :edit) }
-		it { should allow(:scenes, :update) }
-		it { should allow(:scenes, :destroy) }
-		it { should allow(:scenes, :sort) }
-		
-		it { should allow(:characters, :index) }
-		it { should allow(:characters, :new) }
-		it { should allow(:characters, :create) }
-		it { should allow(:characters, :edit) }
-		it { should allow(:characters, :update) }
-		it { should allow(:characters, :destroy) }
-		it { should allow(:characters, :sort) }
-		
-		it { should allow(:casts, :new) }
-		it { should allow(:casts, :destroy) }
-		
-		it { should allow(:employees, :index) }
-		it { should allow(:employees, :new) }
-		it { should allow(:employees, :create) }
-		it { should allow(:employees, :edit) }
-		it { should allow(:employees, :update) }
 		it { should allow(:employees, :destroy) }
-		it { should allow(:employees, :show) }
-		it { should allow(:employees, :inactive) }
-		it { should allow(:employees, :activate) }
-		it { should allow(:employees, :inactivate) }
-		
-		it { should allow(:users, :index) }
-		it { should allow(:users, :new) }
-		it { should allow(:users, :create) }
-		it { should allow(:users, :edit) }
-		it { should allow(:users, :update) }
-		
-		it { should allow(:events, :index) }
-		
-		it { should allow(:rehearsals, :new) }
-		it { should allow(:rehearsals, :create) }
-		it { should allow(:rehearsals, :edit) }
-		it { should allow(:rehearsals, :update) }
+		it { should allow(:locations, :destroy) }
+		it { should allow(:pieces, :destroy) }
 		
 		it { should allow(:company_classes, :new) }
 		it { should allow(:company_classes, :create) }
