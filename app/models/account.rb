@@ -2,17 +2,21 @@
 #
 # Table name: accounts
 #
-#  id         :integer          not null, primary key
-#  name       :string(100)      not null
-#  time_zone  :string(100)      not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id                           :integer          not null, primary key
+#  name                         :string(100)      not null
+#  time_zone                    :string(100)      not null
+#  stripe_customer_token        :string(100)
+#  current_subscription_plan_id :integer          not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
 #
 
 class Account < ActiveRecord::Base
-  attr_accessible :name, :time_zone
+  attr_accessible :name, :time_zone, :stripe_card_token, :current_subscription_plan_id
   attr_accessible :addresses_attributes, :phones_attributes, :employees_attributes
+  attr_accessor :stripe_card_token
   
+  belongs_to :current_subscription_plan, class_name: "SubscriptionPlan"
   has_one :agma_profile, dependent: :destroy
   has_many :employees, dependent: :destroy
   has_many :users, dependent: :destroy
@@ -33,6 +37,8 @@ class Account < ActiveRecord::Base
   
   validates :name, presence: true, length: { maximum: 100 }
   validates :time_zone,	presence: true, length: { maximum: 100 }, inclusion: { in: ActiveSupport::TimeZone.zones_map(&:name) }
+  validates :stripe_customer_token, length: { maximum: 100 }
+  validates :current_subscription_plan_id,	presence: true
   
   default_scope order: 'name ASC'
   
@@ -43,6 +49,18 @@ class Account < ActiveRecord::Base
   def self.current_id
   	Thread.current[:account_id]
   end
+  
+  def save_with_payment
+  	if valid?
+  		customer = Stripe::Customer.create(description: name, plan: current_subscription_plan_id, card: stripe_card_token )
+  		self.stripe_customer_token = customer.id
+  		save!
+  	end
+  rescue Stripe::InvalidRequestError => e
+  	logger.error "Stripe error while creating account: #{e.message}"
+  	errors.add :base, "There was a problem with your credit card."
+  	false
+	end
   
  protected
   

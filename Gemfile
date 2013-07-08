@@ -8,6 +8,9 @@ gem 'less-rails'
 gem 'therubyracer'
 gem 'prawn'
 
+# Subscription payment processing
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
+
 group :development, :test do
   gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '~> 2.10.0'

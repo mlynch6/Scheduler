@@ -23,6 +23,11 @@ form {
 	.field_with_errors { display: inline; }
 }
 
+/*** ERRORS ***/
+#stripe_error {
+	display: none;
+	}
+
 /*** PAGINATION AND FILTERS ***/
 .pagination {
 	margin: 0 18px;
