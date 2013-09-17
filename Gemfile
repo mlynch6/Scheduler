@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.13'		#matches version on Hostmoster
 gem 'will_paginate', '3.0.3'
 gem 'validates_timeliness', '~> 3.0'
 gem 'jquery-rails'
