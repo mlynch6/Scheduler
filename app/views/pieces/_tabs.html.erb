@@ -1,9 +1,9 @@
 <% class_active = " class=""active""" %>
 <ul class="nav nav-tabs">
 	<% if allow? "scenes", "index" %>
-		<li<%= class_active if yield(:current) == "Scenes" %>><%= link_to "Scenes", piece_scenes_path(@piece) %></li>
+		<li<%= class_active if yield(:current) == "Scenes" %>><%= link_to content_tag(:i, nil, class: "icon-film")+" Scenes", piece_scenes_path(@piece) %></li>
 	<% end %>
 	<% if allow? "characters", "index" %>
-		<li<%= class_active if yield(:current) == "Characters" %>><%= link_to "Characters", piece_characters_path(@piece) %></li>
+		<li<%= class_active if yield(:current) == "Characters" %>><%= link_to content_tag(:i, nil, class: "icon-user")+" Characters", piece_characters_path(@piece) %></li>
 	<% end %>
 </ul>

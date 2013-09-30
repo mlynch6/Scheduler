@@ -1,12 +1,15 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.13'		#matches version on Hostmoster
 gem 'will_paginate', '3.0.3'
 gem 'validates_timeliness', '~> 3.0'
 gem 'jquery-rails'
 gem 'less-rails'
 gem 'therubyracer'
 gem 'prawn'
+
+# Subscription payment processing
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
@@ -21,7 +24,7 @@ group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.2.3'
-  gem 'twitter-bootstrap-rails'
+  gem 'twitter-bootstrap-rails', '~> 2.2.8'
   gem 'jquery-ui-rails'
   gem 'chosen-rails'
 end
@@ -29,6 +32,7 @@ end
 group :development do
   gem 'annotate', '~> 2.5.0'
   gem 'populator', '1.0.0'
+  gem 'bullet'
 end
 
 group :test do

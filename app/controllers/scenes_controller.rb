@@ -1,7 +1,7 @@
 class ScenesController < ApplicationController
 	def index
 		@piece = Piece.find(params[:piece_id])
-		@scenes = @piece.scenes
+		@scenes = @piece.scenes.includes(:characters)
 		respond_to do |format|
 			format.html
 			format.pdf do

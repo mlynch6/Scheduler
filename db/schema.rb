@@ -11,13 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207144544) do
+ActiveRecord::Schema.define(:version => 20131207144548) do
 
   create_table "accounts", :force => true do |t|
-    t.string   "name",       :limit => 100, :null => false
-    t.string   "time_zone",  :limit => 100, :null => false
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
+    t.string   "name",                         :limit => 100, :null => false
+    t.string   "time_zone",                    :limit => 100, :null => false
+    t.string   "stripe_customer_token",        :limit => 100
+    t.integer  "current_subscription_plan_id",                :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
   end
 
   create_table "addresses", :force => true do |t|
@@ -61,6 +63,25 @@ ActiveRecord::Schema.define(:version => 20131207144544) do
   add_index "appearances", ["character_id"], :name => "index_appearances_on_character_id"
   add_index "appearances", ["scene_id", "character_id"], :name => "index_appearances_on_scene_id_and_character_id", :unique => true
   add_index "appearances", ["scene_id"], :name => "index_appearances_on_scene_id"
+
+  create_table "castings", :force => true do |t|
+    t.integer  "cast_id",      :null => false
+    t.integer  "character_id", :null => false
+    t.integer  "employee_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "castings", ["cast_id", "character_id"], :name => "index_castings_on_cast_id_and_character_id", :unique => true
+
+  create_table "casts", :force => true do |t|
+    t.integer  "season_piece_id",               :null => false
+    t.string   "name",            :limit => 20, :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "casts", ["season_piece_id", "name"], :name => "index_casts_on_season_piece_id_and_name", :unique => true
 
   create_table "characters", :force => true do |t|
     t.integer  "account_id",               :null => false
@@ -161,6 +182,17 @@ ActiveRecord::Schema.define(:version => 20131207144544) do
   add_index "scenes", ["account_id"], :name => "index_scenes_on_account_id"
   add_index "scenes", ["piece_id"], :name => "index_scenes_on_piece_id"
 
+  create_table "season_pieces", :force => true do |t|
+    t.integer  "season_id",  :null => false
+    t.integer  "piece_id",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "season_pieces", ["piece_id"], :name => "index_season_pieces_on_piece_id"
+  add_index "season_pieces", ["season_id", "piece_id"], :name => "index_season_pieces_on_season_id_and_piece_id", :unique => true
+  add_index "season_pieces", ["season_id"], :name => "index_season_pieces_on_season_id"
+
   create_table "seasons", :force => true do |t|
     t.integer  "account_id",               :null => false
     t.string   "name",       :limit => 30, :null => false
@@ -171,6 +203,13 @@ ActiveRecord::Schema.define(:version => 20131207144544) do
   end
 
   add_index "seasons", ["account_id"], :name => "index_seasons_on_account_id"
+
+  create_table "subscription_plans", :force => true do |t|
+    t.string   "name",       :limit => 50,                               :null => false
+    t.decimal  "amount",                   :precision => 7, :scale => 2, :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.integer  "account_id",                    :null => false

@@ -12,9 +12,6 @@ en:
         addr: "Address"
         addr2: "Address 2"
         zipcode: "Zip Code"
-      phone:
-        phone_type: "Phone Type"
-        phone_num: "Phone #"
       agma_profile:
         rehearsal_start: "Rehearsal Start"
         rehearsal_start_time: "Rehearsal Start"
@@ -26,29 +23,8 @@ en:
         class_break_min: "Class Break"
         rehearsal_break_min_per_hr: "Rehearsal Break"
         costume_increment_min: "Costume Fitting Increments"
-      location:
-        active: "Status"
-      season:
-        start_dt: "Start Date"
-        end_dt: "End Date"
-      piece:
-        active: "Status"
-      scene:
-        character_ids: "Characters"
-      employee:
-        first_name: "First Name"
-        last_name: "Last Name"
-        active: "Status"
-      user:
-        password_digest: "Password"
-        password_confirmation: "Confirm Password"
-      rehearsal:
-        start_at: "Start At"
-        end_at: "End At"
-        start_date: "Date"
-        start_time: "Start Time"
-        end_time: "End Time"
-        employee_ids: "Invitees"
+      character:
+        name: "Character"
       company_class:
         start_at: "Start At"
         end_at: "End At"
@@ -63,4 +39,32 @@ en:
         start_time: "Start Time"
         end_time: "End Time"
         employee_ids: "Invitees"
+      employee:
+        first_name: "First Name"
+        last_name: "Last Name"
+        active: "Status"
+      location:
+        active: "Status"
+      phone:
+        phone_type: "Phone Type"
+        phone_num: "Phone #"
+      piece:
+        active: "Status"
+      rehearsal:
+        start_at: "Start At"
+        end_at: "End At"
+        start_date: "Date"
+        start_time: "Start Time"
+        end_time: "End Time"
+        employee_ids: "Invitees"
+      season:
+        start_dt: "Start Date"
+        end_dt: "End Date"
+        piece_ids: "Pieces"
+      scene:
+        name: "Scene"
+        character_ids: "Characters"
+      user:
+        password_digest: "Password"
+        password_confirmation: "Confirm Password"
         

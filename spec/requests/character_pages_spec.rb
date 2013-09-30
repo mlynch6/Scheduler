@@ -102,7 +102,7 @@ describe "Character Pages:" do
 				visit new_piece_character_path(piece)
 				
 		  	new_name = Faker::Lorem.word
-				fill_in "Name", with: new_name
+				fill_in "Character", with: new_name
 				click_button 'Create'
 
 				should have_selector('div.alert-success')
@@ -131,7 +131,7 @@ describe "Character Pages:" do
 	  	piece = FactoryGirl.create(:piece, account: current_account)
 			character = FactoryGirl.create(:character, account: current_account, piece: piece)
 	  	visit edit_character_path(character)
-	  	fill_in "Name", with: ""
+	  	fill_in "Character", with: ""
 	  	click_button 'Update'
 	
 			should have_selector('div.alert-error')
@@ -161,7 +161,7 @@ describe "Character Pages:" do
 	  	visit edit_character_path(character)
 			
 			new_name = Faker::Lorem.word
-			fill_in "Name", with: new_name
+			fill_in "Character", with: new_name
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')

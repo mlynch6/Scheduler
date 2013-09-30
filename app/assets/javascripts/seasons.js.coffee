@@ -7,3 +7,4 @@ jQuery ->
 		dateFormat: 'mm/dd/yy'
 	$('#season_end_dt').datepicker
 		dateFormat: 'mm/dd/yy'
+	$('#season_piece_ids').chosen()

@@ -13,8 +13,11 @@
 
 class Season < ActiveRecord::Base
   attr_accessible :name, :start_dt, :end_dt
+  attr_accessible :piece_ids
   
   belongs_to :account
+  has_many :season_pieces, dependent: :destroy
+	has_many :pieces, through: :season_pieces
   
   validates :name, presence: true, length: { maximum: 30 }
   validates_date :start_dt

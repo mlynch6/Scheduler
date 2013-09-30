@@ -2,19 +2,23 @@
 #
 # Table name: accounts
 #
-#  id         :integer          not null, primary key
-#  name       :string(100)      not null
-#  time_zone  :string(100)      not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id                           :integer          not null, primary key
+#  name                         :string(100)      not null
+#  time_zone                    :string(100)      not null
+#  stripe_customer_token        :string(100)
+#  current_subscription_plan_id :integer          not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
 #
 
 require 'spec_helper'
 
 describe Account do
+	let(:subscription) { FactoryGirl.create(:subscription_plan) }
 	let(:account) { FactoryGirl.create(:account,
 										:name => 'Milwaukee Ballet',
-										:time_zone => 'Eastern Time (US & Canada)') }
+										:time_zone => 'Eastern Time (US & Canada)',
+										:current_subscription_plan => subscription) }
   before do
 		@account = FactoryGirl.build(:account)
 	end
@@ -24,8 +28,11 @@ describe Account do
 	context "accessible attributes" do
 		it { should respond_to(:name) }
   	it { should respond_to(:time_zone) }
+  	it { should respond_to(:stripe_card_token) }
+  	it { should respond_to(:stripe_customer_token) }
   	
   	it { should respond_to(:agma_profile) }
+  	it { should respond_to(:current_subscription_plan) }
   	it { should respond_to(:addresses) }
   	it { should respond_to(:phones) }
   	it { should respond_to(:employees) }
@@ -68,6 +75,16 @@ describe Account do
   		@account.time_zone = "invalid"
   		should_not be_valid
   	end
+  	
+  	it "when stripe_customer_token is too long" do
+  		@account.stripe_customer_token = "a"*101
+  		should_not be_valid
+  	end
+  	
+  	it "when current_subscription_plan_id is blank" do
+  		@account.current_subscription_plan_id = ""
+  		should_not be_valid
+  	end
   end
   
   context "(Associations)" do
@@ -82,6 +99,12 @@ describe Account do
 				p = account.agma_profile
 				account.destroy
 				AgmaProfile.find_by_id(p.id).should be_nil
+			end
+		end
+		
+		describe "current_subscription_plan" do
+			it "belongs to a Subscription Plan" do
+				account.current_subscription_plan.should == subscription
 			end
 		end
   	
@@ -284,16 +307,32 @@ describe Account do
 	  	Account.current_id.should == account.id
 	  end
 	end
-end
+	
+	context "(Methods)" do  	
+		describe "save_with_payment" do
+			before do
+				@account.save_with_payment
+			end
+	
+	  	it "saves record" do
+	  		@account.id.should_not be_nil
+	  	end
+	  	
+	  	it "creates record with stripe_customer_token" do
+	  		@account.stripe_customer_token.should_not be_empty
+	  	end
+	  end
+  end
 
-describe Account, "(Scopes)" do
-	before { Account.delete_all }
-	let!(:second_account) { FactoryGirl.create(:account, name: "Beta Account") }
-	let!(:first_account) { FactoryGirl.create(:account, name: "Alpha Account") }
-		
-	describe "default_scope" do
-		it "returns the records in alphabetical order" do
-			Account.all.should == [first_account, second_account]
+	context "(Scopes)" do
+		before { Account.delete_all }
+		let!(:second_account) { FactoryGirl.create(:account, name: "Beta Account") }
+		let!(:first_account) { FactoryGirl.create(:account, name: "Alpha Account") }
+			
+		describe "default_scope" do
+			it "returns the records in alphabetical order" do
+				Account.all.should == [first_account, second_account]
+			end
 		end
 	end
 end

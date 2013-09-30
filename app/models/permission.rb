@@ -13,7 +13,10 @@ class Permission
 				allow [:users, :seasons], [:index]
 				
 				#show
-				allow [:accounts, :agma_profiles, :employees], [:show]
+				allow [:accounts, :agma_profiles, :employees, :seasons], [:show]
+				
+				#new only
+				allow [:casts], [:new]
 				
 				#new & create
 				allow [:addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:new, :create]
@@ -22,7 +25,7 @@ class Permission
 				allow [:accounts, :agma_profiles, :addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:edit, :update]
 				
 				#destroy
-				allow [:addresses, :phones, :seasons, :scenes, :characters], [:destroy]
+				allow [:addresses, :phones, :seasons, :scenes, :characters, :casts], [:destroy]
 				
 				#activate & inactive & inactivate
 				allow [:employees, :locations, :pieces], [:inactive, :activate, :inactivate]

@@ -1,0 +1,39 @@
+<% if @account.stripe_card_token.present? %>
+	<p class="offset2">Credit Card has been provided</p>
+<% else %>
+	<div class="control-group">
+		<%= label_tag :cardholder_name, "Name on Credit Card", class: 'control-label required' %>
+		<div class="controls">
+			<%= text_field_tag :cardholder_name, nil, name: nil %>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<%= label_tag :card_number, "Credit Card Number", class: 'control-label required' %>
+		<div class="controls">
+			<%= text_field_tag :card_number, nil, name: nil %>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<%= label_tag :card_month, "Card Expiration", class: 'control-label required' %>
+		<div class="controls">
+			<%= select_month nil, { add_month_numbers: true }, { name: nil, id: "card_month", class: "span2" } %>
+			<%= select_year nil, { start_year: Date.today.year, end_year: Date.today.year+5 }, { name: nil, id: "card_year", class: "input-small" } %>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<%= label_tag :card_code, "Security Code (CVC)", class: 'control-label required' %>
+		<div class="controls">
+			<%= text_field_tag :card_code, nil, name: nil, class: "input-mini" %>
+		</div>
+	</div>
+<% end %>
+
+<div id="stripe_error" class="offset2 alert alert-error">
+	<noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings, then try again.</noscript>
+</div>
+
+<%= f.hidden_field :stripe_card_token %>
+<%= f.hidden_field :current_subscription_plan_id, value: 1 %>

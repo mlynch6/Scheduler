@@ -37,9 +37,8 @@ class AccountsController < ApplicationController
   	@user.account = @account
   	@user.new_registration = true
   	
-  	if @account.save
+  	if @account.save_with_payment
   		@user.set_admin_role
-  		session[:user_id] = @user.id
   		redirect_to login_path, :notice => "Congratulations! You have successfully created an account for #{@account.name}." 
   	else
   		form_setup

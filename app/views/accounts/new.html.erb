@@ -36,6 +36,11 @@
 				<% end %>
 			</fieldset>
 		<% end %>
+		
+		<fieldset>
+			<legend>5. Payment Information</legend>
+			<%= render 'payment_fields', :f => f %>
+		</fieldset>
 				
 		<p class="offset2"><small>By clicking 'Create Account', you agree to the <a href="#">Terms of Service</a>
 			and <a href="#">Privacy Policy</a>.
@@ -48,8 +53,7 @@
 <div class="span3">
 	<div class="well">
 		<h3>Free 30 day trial</h3>
-		<p>There are no credit cards required for signup, 
-			and your account can be cancelled at anytime.
+		<p>Your account can be cancelled at anytime.
 		</p>
 				
 		<h3>Privacy</h3>
