@@ -5,6 +5,8 @@
 #  id                           :integer          not null, primary key
 #  name                         :string(100)      not null
 #  time_zone                    :string(100)      not null
+#  status                       :string(20)       not null
+#  cancelled_at                 :datetime
 #  stripe_customer_token        :string(100)
 #  current_subscription_plan_id :integer          not null
 #  created_at                   :datetime         not null
@@ -28,6 +30,8 @@ describe Account do
 	context "accessible attributes" do
 		it { should respond_to(:name) }
   	it { should respond_to(:time_zone) }
+  	it { should respond_to(:status) }
+  	it { should respond_to(:cancelled_at) }
   	it { should respond_to(:stripe_card_token) }
   	it { should respond_to(:stripe_customer_token) }
   	
@@ -42,10 +46,44 @@ describe Account do
   	it { should respond_to(:pieces) }
   	it { should respond_to(:scenes) }
   	it { should respond_to(:events) }
+  	
+  	it { should respond_to(:save_with_payment) }
+  	it { should respond_to(:list_subscription_invoices) }
+  	it { should respond_to(:cancel_subscription) }
+  	
+  	it "should not allow access to status" do
+      expect do
+        Account.new(status: 'Testing')
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+    
+    it "should not allow access to cancelled_at" do
+      expect do
+        Account.new(cancelled_at: Time.zone.now)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
   end
 	
   context "(Valid)" do  	
   	it "with minimum attributes" do
+  		should be_valid
+  	end
+  	
+  	it "when status is valid value" do
+  		statuses = ["Registering", "Trialing", "Active", "Past_due", "Canceled"]
+  		statuses.each do |valid_status|
+  			@account.status = valid_status
+  			should be_valid
+  		end
+  	end
+  	
+  	it "when cancelled_at is blank" do
+  		@account.cancelled_at = " "
+  		should be_valid
+  	end
+  	
+  	it "when cancelled_at is valid" do
+  		@account.cancelled_at = Time.zone.now
   		should be_valid
   	end
   end
@@ -74,6 +112,33 @@ describe Account do
   	it "when time_zone is invalid" do
   		@account.time_zone = "invalid"
   		should_not be_valid
+  	end
+  	
+  	it "when status is blank" do
+  		account.status = " "
+  		account.save
+  		account.should_not be_valid
+  	end
+  	
+  	it "when status is too long" do
+  		@account.status = "a"*21
+  		should_not be_valid
+  	end
+  	
+  	it "when status is invalid" do
+  		statuses = ["abc", "Unpaid"]
+  		statuses.each do |invalid_status|
+  			@account.status = invalid_status
+  			should_not be_valid
+  		end
+  	end
+  	
+  	it "when cancelled_at in is invalid" do
+  		timestamps = ["abc", "2/31/2012", "13:00:00", "2012-02-31 09:00:00"]
+  		timestamps.each do |invalid_timestamp|
+  			@account.cancelled_at = invalid_timestamp
+  			should_not be_valid
+  		end
   	end
   	
   	it "when stripe_customer_token is too long" do
@@ -306,13 +371,40 @@ describe Account do
 	  	Account.current_id = account.id
 	  	Account.current_id.should == account.id
 	  end
+	  
+	  it "status" do
+	  	account.status = "Trialing"
+	  	account.save
+	  	account.reload.status.should == 'Trialing'
+	  end
+	  
+	  it "cancelled_at" do
+	  	tm = Time.zone.now
+	  	account.cancelled_at = tm
+	  	account.save
+	  	account.cancelled_at.should == tm
+	  end
+	end
+	
+	context "(Defaults)" do
+		it "defaults the status to 'Active'" do
+	  	account.reload.status.should == "Active"
+	  end
 	end
 	
 	context "(Methods)" do  	
 		describe "save_with_payment" do
 			before do
+				token = Stripe::Token.create(:card => { :number => "4242424242424242", :exp_month => 7, :exp_year => Date.today.year+1, :cvc => 314 })
+				account.stripe_card_token = token.id
 				@account.save_with_payment
 			end
+			
+			after do
+    		#Cleanup Stripe Customer
+    		customer = Stripe::Customer.retrieve(@account.stripe_customer_token)
+    		customer.delete
+    	end
 	
 	  	it "saves record" do
 	  		@account.id.should_not be_nil
@@ -320,6 +412,40 @@ describe Account do
 	  	
 	  	it "creates record with stripe_customer_token" do
 	  		@account.stripe_customer_token.should_not be_empty
+	  	end
+	  end
+	  
+	  describe "list_subscription_invoices" do
+			before do
+				@invoices = account.list_subscription_invoices
+			end
+	
+	  	it "returns a list from stripe" do
+	  		@invoices.should_not be_nil
+	  	end
+	  end
+	  
+	  describe "cancel_subscription" do
+			before do
+				token = Stripe::Token.create(:card => { :number => "4242424242424242", :exp_month => 7, :exp_year => Date.today.year+1, :cvc => 314 })
+				account.stripe_card_token = token.id
+				account.save_with_payment
+				
+				account.cancel_subscription
+			end
+			
+			after do
+    		#Cleanup Stripe Customer
+    		customer = Stripe::Customer.retrieve(account.stripe_customer_token)
+    		customer.delete
+    	end
+	
+	  	it "sets status to Cancelled" do
+	  		account.status.should == "Canceled"
+	  	end
+	  	
+	  	it "sets cancelled_at" do
+	  		account.cancelled_at.should_not be_nil
 	  	end
 	  end
   end

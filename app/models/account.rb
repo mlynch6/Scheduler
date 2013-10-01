@@ -5,6 +5,8 @@
 #  id                           :integer          not null, primary key
 #  name                         :string(100)      not null
 #  time_zone                    :string(100)      not null
+#  status                       :string(20)       not null
+#  cancelled_at                 :datetime
 #  stripe_customer_token        :string(100)
 #  current_subscription_plan_id :integer          not null
 #  created_at                   :datetime         not null
@@ -12,6 +14,8 @@
 #
 
 class Account < ActiveRecord::Base
+	STATUS_VALUES = ["Registering", "Trialing", "Active", "Past_due", "Canceled"]
+
   attr_accessible :name, :time_zone, :stripe_card_token, :current_subscription_plan_id
   attr_accessible :addresses_attributes, :phones_attributes, :employees_attributes
   attr_accessor :stripe_card_token
@@ -33,10 +37,13 @@ class Account < ActiveRecord::Base
   accepts_nested_attributes_for :phones
   accepts_nested_attributes_for :employees
   
+  before_validation :set_defaults, :if => "self.new_record?"
   after_create :create_profile
   
   validates :name, presence: true, length: { maximum: 100 }
   validates :time_zone,	presence: true, length: { maximum: 100 }, inclusion: { in: ActiveSupport::TimeZone.zones_map(&:name) }
+  validates :status, presence: true, length: { maximum: 20 }, inclusion: { in: STATUS_VALUES }
+  validates_datetime :cancelled_at, allow_blank: true
   validates :stripe_customer_token, length: { maximum: 100 }
   validates :current_subscription_plan_id,	presence: true
   
@@ -57,12 +64,31 @@ class Account < ActiveRecord::Base
   		save!
   	end
   rescue Stripe::InvalidRequestError => e
-  	logger.error "Stripe error while creating account: #{e.message}"
+  	logger.error "Stripe error while creating account for #{name}: #{e.message}"
   	errors.add :base, "There was a problem with your credit card."
   	false
 	end
+	
+	def list_subscription_invoices
+  	Stripe::Invoice.all(customer: stripe_customer_token, count: 12 )
+  rescue Stripe::InvalidRequestError => e
+  	logger.error "Stripe error while listing invoices: #{e.message}"
+  	errors.add :base, "There was a problem retreiving the invoices."
+  	false
+	end
+	
+	def cancel_subscription
+		response = stripe_customer.cancel_subscription
+		self.status = 'Canceled'
+  	self.cancelled_at = Time.zone.now
+  	save!
+	end
   
- protected
+ private
+  
+  def set_defaults
+		self.status = 'Active' if status.blank?
+	end
   
   def create_profile
 		p = AgmaProfile.new
@@ -77,4 +103,8 @@ class Account < ActiveRecord::Base
 		p.costume_increment_min = 15
 		p.save
 	end
+	
+	def stripe_customer
+    @stripe_customer ||= Stripe::Customer.retrieve(stripe_customer_token)
+  end
 end
