@@ -444,7 +444,7 @@ describe Account do
 	  		account.status.should == "Canceled"
 	  	end
 	  	
-	  	it "sets cancelled_at" do
+	  	it "sets cancelled_at date/time" do
 	  		account.cancelled_at.should_not be_nil
 	  	end
 	  end

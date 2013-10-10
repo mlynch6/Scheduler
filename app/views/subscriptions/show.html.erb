@@ -1,0 +1,16 @@
+<% provide(:title, 'My Subscription') %>
+<% provide(:header_current, 'Administration') %>
+
+<h1>My Subscription</h1>
+
+<h2>Payment History</h2>
+
+<div class="text-center">
+	<strong>Next payment will be processed on XX</strong>
+</div>
+
+<% if allow? "subscriptions", "edit" %>
+	<div class="text-center">
+		<%= link_to 'Change Subscription & Payment Method', subscriptions_edit_path, :class => 'btn' %>
+	</div>
+<% end %>

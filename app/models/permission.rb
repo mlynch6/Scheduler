@@ -10,10 +10,10 @@ class Permission
 			
 			if user.role == "Administrator"
 				#index
-				allow [:users, :seasons], [:index]
+				allow [:users, :seasons, :casts], [:index]
 				
 				#show
-				allow [:accounts, :agma_profiles, :employees, :seasons], [:show]
+				allow [:accounts, :subscriptions, :agma_profiles, :employees, :seasons], [:show]
 				
 				#new only
 				allow [:casts], [:new]
@@ -22,10 +22,10 @@ class Permission
 				allow [:addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:new, :create]
 				
 				#edit & update
-				allow [:accounts, :agma_profiles, :addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:edit, :update]
+				allow [:accounts, :subscriptions, :agma_profiles, :addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:edit, :update]
 				
 				#destroy
-				allow [:addresses, :phones, :seasons, :scenes, :characters, :casts], [:destroy]
+				allow [:subscriptions, :addresses, :phones, :seasons, :scenes, :characters, :casts], [:destroy]
 				
 				#activate & inactive & inactivate
 				allow [:employees, :locations, :pieces], [:inactive, :activate, :inactivate]

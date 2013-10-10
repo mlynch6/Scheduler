@@ -79,9 +79,15 @@ class Account < ActiveRecord::Base
 	
 	def cancel_subscription
 		response = stripe_customer.cancel_subscription
-		self.status = 'Canceled'
-  	self.cancelled_at = Time.zone.now
-  	save!
+		if response.status == 'canceled'
+			self.status = 'Canceled'
+	  	self.cancelled_at = Time.zone.now
+	  	save!
+	 	end
+  rescue Stripe::InvalidRequestError => e
+  	logger.error "Stripe error while canceling subscription: #{e.message}"
+  	errors.add :base, "There was a problem canceling the subscription."
+  	false
 	end
   
  private

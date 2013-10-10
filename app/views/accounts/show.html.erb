@@ -18,7 +18,7 @@
 	</div>
 <% if @account.cancelled_at %>
 	<div class="row">
-		<div class="label-ui span2">Cancelled On</div>
+		<div class="label-ui span2"><%= Account.human_attribute_name(:cancelled_at) %></div>
 		<div class="text-ui span6"><%= @account.cancelled_at.to_s(:timestamp) %></div>
 	</div>
 <% end %>

@@ -160,45 +160,65 @@ shared_examples "an administrator" do
 		it { should allow(:locations, :activate) }
 		it { should allow(:locations, :inactivate) }
 	end
+	
+	context "subscriptions" do
+		it { should allow(:subscriptions, :edit) }
+		it { should allow(:subscriptions, :update) }
+		it { should allow(:subscriptions, :show) }
+		it { should allow(:subscriptions, :destroy) }
+	end
 end
 
-describe Permission do
-	context "as guest" do
-		subject { Permission.new(nil) }
-		
-		it_behaves_like "a guest"
-		
-		it { should_not allow(:static_pages, :dashboard) }
-
+shared_examples "a NON-administrator" do
+	context "accounts" do
 		it { should_not allow(:accounts, :edit) }
 		it { should_not allow(:accounts, :update) }
 		it { should_not allow(:accounts, :show) }
-		
+	end
+	
+	context "addresses" do
 		it { should_not allow(:addresses, :new) }
 		it { should_not allow(:addresses, :create) }
 		it { should_not allow(:addresses, :edit) }
 		it { should_not allow(:addresses, :update) }
 		it { should_not allow(:addresses, :destroy) }
-		
+	end
+	
+	context "phones" do
 		it { should_not allow(:phones, :new) }
 		it { should_not allow(:phones, :create) }
 		it { should_not allow(:phones, :edit) }
 		it { should_not allow(:phones, :update) }
 		it { should_not allow(:phones, :destroy) }
-		
+	end
+	
+	context "agma_profiles" do
 		it { should_not allow(:agma_profiles, :edit) }
 		it { should_not allow(:agma_profiles, :update) }
 		it { should_not allow(:agma_profiles, :show) }
-		
-		it { should_not allow(:seasons, :index) }
-		it { should_not allow(:seasons, :new) }
-		it { should_not allow(:seasons, :create) }
-		it { should_not allow(:seasons, :edit) }
-		it { should_not allow(:seasons, :update) }
-		it { should_not allow(:seasons, :destroy) }
-		it { should_not allow(:seasons, :show) }
-
-		it { should_not allow(:locations, :index) }
+	end
+	
+	context "employees" do
+		it { should_not allow(:employees, :new) }
+		it { should_not allow(:employees, :create) }
+		it { should_not allow(:employees, :edit) }
+		it { should_not allow(:employees, :update) }
+		it { should_not allow(:employees, :show) }
+		it { should_not allow(:employees, :destroy) }
+		it { should_not allow(:employees, :inactive) }
+		it { should_not allow(:employees, :activate) }
+		it { should_not allow(:employees, :inactivate) }
+	end
+	
+	context "users" do
+		it { should_not allow(:users, :index) }
+		it { should_not allow(:users, :new) }
+		it { should_not allow(:users, :create) }
+		it { should_not allow(:users, :edit) }
+		it { should_not allow(:users, :update) }
+	end
+	
+	context "locations" do
 		it { should_not allow(:locations, :new) }
 		it { should_not allow(:locations, :create) }
 		it { should_not allow(:locations, :edit) }
@@ -207,6 +227,34 @@ describe Permission do
 		it { should_not allow(:locations, :inactive) }
 		it { should_not allow(:locations, :activate) }
 		it { should_not allow(:locations, :inactivate) }
+	end
+	
+	context "subscriptions" do
+		it { should_not allow(:subscriptions, :edit) }
+		it { should_not allow(:subscriptions, :update) }
+		it { should_not allow(:subscriptions, :show) }
+		it { should_not allow(:subscriptions, :destroy) }
+	end
+end
+
+describe Permission do
+	context "as guest" do
+		subject { Permission.new(nil) }
+		
+		it_behaves_like "a guest"
+		it_behaves_like "a NON-administrator"
+		
+		it { should_not allow(:static_pages, :dashboard) }
+		it { should_not allow(:employees, :index) }
+		it { should_not allow(:locations, :index) }
+		
+		it { should_not allow(:seasons, :index) }
+		it { should_not allow(:seasons, :new) }
+		it { should_not allow(:seasons, :create) }
+		it { should_not allow(:seasons, :edit) }
+		it { should_not allow(:seasons, :update) }
+		it { should_not allow(:seasons, :destroy) }
+		it { should_not allow(:seasons, :show) }
 		
 		it { should_not allow(:pieces, :index) }
 		it { should_not allow(:pieces, :new) }
@@ -238,23 +286,6 @@ describe Permission do
 		it { should_not allow(:casts, :new) }
 		it { should_not allow(:casts, :destroy) }
 		
-		it { should_not allow(:employees, :index) }
-		it { should_not allow(:employees, :new) }
-		it { should_not allow(:employees, :create) }
-		it { should_not allow(:employees, :edit) }
-		it { should_not allow(:employees, :update) }
-		it { should_not allow(:employees, :destroy) }
-		it { should_not allow(:employees, :show) }
-		it { should_not allow(:employees, :inactive) }
-		it { should_not allow(:employees, :activate) }
-		it { should_not allow(:employees, :inactivate) }
-		
-		it { should_not allow(:users, :index) }
-		it { should_not allow(:users, :new) }
-		it { should_not allow(:users, :create) }
-		it { should_not allow(:users, :edit) }
-		it { should_not allow(:users, :update) }
-		
 		it { should_not allow(:events, :index) }
 		
 		it { should_not allow(:rehearsals, :new) }
@@ -278,26 +309,7 @@ describe Permission do
 		subject { Permission.new(user) }
 		
 		it_behaves_like "an employee"
-		
-		it { should_not allow(:accounts, :edit) }
-		it { should_not allow(:accounts, :update) }
-		it { should_not allow(:accounts, :show) }
-		
-		it { should_not allow(:addresses, :new) }
-		it { should_not allow(:addresses, :create) }
-		it { should_not allow(:addresses, :edit) }
-		it { should_not allow(:addresses, :update) }
-		it { should_not allow(:addresses, :destroy) }
-		
-		it { should_not allow(:phones, :new) }
-		it { should_not allow(:phones, :create) }
-		it { should_not allow(:phones, :edit) }
-		it { should_not allow(:phones, :update) }
-		it { should_not allow(:phones, :destroy) }
-		
-		it { should_not allow(:agma_profiles, :edit) }
-		it { should_not allow(:agma_profiles, :update) }
-		it { should_not allow(:agma_profiles, :show) }
+		it_behaves_like "a NON-administrator"
 		
 		it { should_not allow(:seasons, :index) }
 		it { should_not allow(:seasons, :new) }
@@ -308,14 +320,7 @@ describe Permission do
 		it { should_not allow(:seasons, :show) }
 		
 		it { should allow(:locations, :index) }
-		it { should_not allow(:locations, :new) }
-		it { should_not allow(:locations, :create) }
-		it { should_not allow(:locations, :edit) }
-		it { should_not allow(:locations, :update) }
-		it { should_not allow(:locations, :destroy) }
-		it { should_not allow(:locations, :inactive) }
-		it { should_not allow(:locations, :activate) }
-		it { should_not allow(:locations, :inactivate) }
+		it { should allow(:employees, :index) }
 		
 		it { should allow(:pieces, :index) }
 		it { should_not allow(:pieces, :new) }
@@ -346,23 +351,6 @@ describe Permission do
 		it { should_not allow(:casts, :index) }
 		it { should_not allow(:casts, :new) }
 		it { should_not allow(:casts, :destroy) }
-		
-		it { should allow(:employees, :index) }
-		it { should_not allow(:employees, :new) }
-		it { should_not allow(:employees, :create) }
-		it { should_not allow(:employees, :edit) }
-		it { should_not allow(:employees, :update) }
-		it { should_not allow(:employees, :destroy) }
-		it { should_not allow(:employees, :show) }
-		it { should_not allow(:employees, :inactive) }
-		it { should_not allow(:employees, :activate) }
-		it { should_not allow(:employees, :inactivate) }
-		
-		it { should_not allow(:users, :index) }
-		it { should_not allow(:users, :new) }
-		it { should_not allow(:users, :create) }
-		it { should_not allow(:users, :edit) }
-		it { should_not allow(:users, :update) }
 		
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }

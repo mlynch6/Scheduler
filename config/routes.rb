@@ -42,8 +42,10 @@ Scheduler::Application.routes.draw do
   resources :scenes, :characters, only: [:edit, :update, :destroy] do
   	collection { post :sort }
   end
-  get 'pieces/:season_piece_id/casts/new', to: 'casts#new', as: :new_season_piece_cast
-  resources :casts,							:only => :destroy
+  resources :season_pieces, only: [] do
+  	resources :casts,						:only => [:new, :index]
+  end
+  resources :casts,							:only => [:destroy]
   
   resources :events,						:only => :index
   resources :rehearsals,				:only => [:new, :create, :edit, :update]
@@ -54,6 +56,10 @@ Scheduler::Application.routes.draw do
 	match 'features' => 'static_pages#features'   
 	match 'pricing' => 'static_pages#pricing' 
 	match 'contact' => 'static_pages#contact'
+	
+	match 'subscriptions/current' => 'subscriptions#show'
+	match 'subscriptions/edit' => 'subscriptions#edit'
+	match 'subscriptions/cancel' => 'subscriptions#destroy'
 	
   # The priority is based upon order of creation:
   # first created -> highest priority.
