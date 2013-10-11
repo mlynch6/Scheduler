@@ -14,7 +14,7 @@
 #
 
 class Account < ActiveRecord::Base
-	STATUS_VALUES = ["Registering", "Trialing", "Active", "Past_due", "Canceled"]
+	STATUS_VALUES = ["Active", "Canceled"]
 
   attr_accessible :name, :time_zone, :stripe_card_token, :current_subscription_plan_id
   attr_accessible :addresses_attributes, :phones_attributes, :employees_attributes
@@ -74,6 +74,15 @@ class Account < ActiveRecord::Base
   rescue Stripe::InvalidRequestError => e
   	logger.error "Stripe error while listing invoices: #{e.message}"
   	errors.add :base, "There was a problem retreiving the invoices."
+  	false
+	end
+	
+	def next_invoice_date
+  	next_invoice = Stripe::Invoice.upcoming(:customer => stripe_customer_token)
+  	Time.zone.at(next_invoice.next_payment_attempt).to_date
+  rescue Stripe::InvalidRequestError => e
+  	logger.error "Stripe error while retrieving next invoice: #{e.message}"
+  	errors.add :base, "There was a problem retreiving the next invoice."
   	false
 	end
 	

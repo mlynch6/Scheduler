@@ -6,7 +6,7 @@
 <h2>Payment History</h2>
 
 <div class="text-center">
-	<strong>Next payment will be processed on XX</strong>
+	<h3>Next payment will be processed on <%= @account.next_invoice_date.strftime('%B %-d, %Y') %></h3>
 </div>
 
 <% if allow? "subscriptions", "edit" %>

@@ -4,8 +4,17 @@ describe "Subscription Pages:" do
   subject { page }
 	
 	context "#show" do
-		it "has correct title" do
+		before do
 			log_in
+			create_stripe_account(current_account)
+			visit subscriptions_current_path
+		end
+		
+		after do
+			destroy_stripe_account(current_account)
+		end
+		
+		it "has correct title" do
 			click_link "My Subscription"
 	  	
 	  	should have_selector('title', text: 'My Subscription')
@@ -13,24 +22,20 @@ describe "Subscription Pages:" do
 		end
 		
 		it "has links" do
-			log_in
-			visit subscriptions_current_path
-	  	
 	  	should have_link('Change Subscription & Payment Method')
 		end
 		
 		it "displays correct data" do
-			log_in
-			visit subscriptions_current_path
-	  	
 			pending
 		end
 		
 		it "has payment history shown" do
-			log_in
-			visit subscriptions_current_path
-
 			should have_selector('h2', text: 'Payment History')
+		end
+		
+		it "shows next payment date" do
+			should have_selector('h3', text: 'Next payment will be processed on')
+			should have_content(current_account.next_invoice_date.strftime('%B %-d, %Y'))
 		end
 	end
 	
@@ -63,11 +68,11 @@ describe "Subscription Pages:" do
 	context "#destroy" do
 		before do
 			log_in
-			create_stripe_account
+			create_stripe_account(current_account)
 		end
 		
 		after do
-			destroy_stripe_account
+			destroy_stripe_account(current_account)
 		end
 		
 		it "should cancel the subscription" do

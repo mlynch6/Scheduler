@@ -70,7 +70,7 @@ describe Account do
   	end
   	
   	it "when status is valid value" do
-  		statuses = ["Registering", "Trialing", "Active", "Past_due", "Canceled"]
+  		statuses = ["Active", "Canceled"]
   		statuses.each do |valid_status|
   			@account.status = valid_status
   			should be_valid
@@ -373,9 +373,9 @@ describe Account do
 	  end
 	  
 	  it "status" do
-	  	account.status = "Trialing"
+	  	account.status = "Canceled"
 	  	account.save
-	  	account.reload.status.should == 'Trialing'
+	  	account.reload.status.should == 'Canceled'
 	  end
 	  
 	  it "cancelled_at" do
@@ -395,23 +395,15 @@ describe Account do
 	context "(Methods)" do  	
 		describe "save_with_payment" do
 			before do
-				token = Stripe::Token.create(:card => { :number => "4242424242424242", :exp_month => 7, :exp_year => Date.today.year+1, :cvc => 314 })
-				account.stripe_card_token = token.id
-				@account.save_with_payment
+				create_stripe_account(account)
 			end
 			
 			after do
-    		#Cleanup Stripe Customer
-    		customer = Stripe::Customer.retrieve(@account.stripe_customer_token)
-    		customer.delete
+    		destroy_stripe_account(account)
     	end
-	
-	  	it "saves record" do
-	  		@account.id.should_not be_nil
-	  	end
 	  	
 	  	it "creates record with stripe_customer_token" do
-	  		@account.stripe_customer_token.should_not be_empty
+	  		account.stripe_customer_token.should_not be_nil
 	  	end
 	  end
 	  
@@ -425,19 +417,29 @@ describe Account do
 	  	end
 	  end
 	  
+	  describe "next_invoice_date" do
+			before do
+				create_stripe_account(account)
+			end
+			
+			after do
+    		destroy_stripe_account(account)
+    	end
+	
+	  	it "returns next invoice date" do
+	  		#Newly created subscription should invoice after 30 day trial
+	  		account.next_invoice_date.should == (Time.zone.today + 30.days)
+	  	end
+	  end
+	  
 	  describe "cancel_subscription" do
 			before do
-				token = Stripe::Token.create(:card => { :number => "4242424242424242", :exp_month => 7, :exp_year => Date.today.year+1, :cvc => 314 })
-				account.stripe_card_token = token.id
-				account.save_with_payment
-				
+				create_stripe_account(account)
 				account.cancel_subscription
 			end
 			
 			after do
-    		#Cleanup Stripe Customer
-    		customer = Stripe::Customer.retrieve(account.stripe_customer_token)
-    		customer.delete
+				destroy_stripe_account(account)
     	end
 	
 	  	it "sets status to Cancelled" do

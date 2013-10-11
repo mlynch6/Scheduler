@@ -1,8 +1,7 @@
 class SubscriptionsController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
 
 	def show
-		
 	end
 	
 	def edit

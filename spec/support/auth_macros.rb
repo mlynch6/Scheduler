@@ -25,14 +25,14 @@ module AuthMacros
     @_current_user.account
   end
   
-  def create_stripe_account
+  def create_stripe_account(account)
   	token = Stripe::Token.create(:card => { :number => "4242424242424242", :exp_month => 7, :exp_year => Date.today.year+1, :cvc => 314 })
-		current_account.stripe_card_token = token.id
-		current_account.save_with_payment
+		account.stripe_card_token = token.id
+		account.save_with_payment
 	end
 	
-	def destroy_stripe_account
-  	customer = Stripe::Customer.retrieve(current_account.stripe_customer_token)
+	def destroy_stripe_account(account)
+  	customer = Stripe::Customer.retrieve(account.stripe_customer_token)
     customer.delete
 	end
   
