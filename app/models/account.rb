@@ -69,8 +69,9 @@ class Account < ActiveRecord::Base
   	false
 	end
 	
-	def list_subscription_invoices
-  	Stripe::Invoice.all(customer: stripe_customer_token, count: 12 )
+	def list_invoices
+  	invoices = Stripe::Invoice.all(:customer => stripe_customer_token, :count => 12 )
+  	invoices.data
   rescue Stripe::InvalidRequestError => e
   	logger.error "Stripe error while listing invoices: #{e.message}"
   	errors.add :base, "There was a problem retreiving the invoices."

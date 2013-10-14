@@ -1,5 +1,6 @@
 module ApplicationHelper
-
+	include ActionView::Helpers::NumberHelper
+	
 	#Returns a base title with an optional page title 
 	def full_title(page_title)
 		base_title = "Scheduler"

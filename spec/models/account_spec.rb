@@ -48,7 +48,8 @@ describe Account do
   	it { should respond_to(:events) }
   	
   	it { should respond_to(:save_with_payment) }
-  	it { should respond_to(:list_subscription_invoices) }
+  	it { should respond_to(:list_invoices) }
+  	it { should respond_to(:next_invoice_date) }
   	it { should respond_to(:cancel_subscription) }
   	
   	it "should not allow access to status" do
@@ -407,13 +408,23 @@ describe Account do
 	  	end
 	  end
 	  
-	  describe "list_subscription_invoices" do
+	  describe "list_invoices" do
 			before do
-				@invoices = account.list_subscription_invoices
+				create_stripe_account(account)
+				@invoices = account.list_invoices
 			end
+			
+			after do
+    		destroy_stripe_account(account)
+    	end
 	
 	  	it "returns a list from stripe" do
-	  		@invoices.should_not be_nil
+	  		@invoices.count.should == 1
+	  		@invoices.first.paid.should be_true
+	  	end
+	  	
+	  	it "handles an error" do
+	  		pending
 	  	end
 	  end
 	  
@@ -429,6 +440,10 @@ describe Account do
 	  	it "returns next invoice date" do
 	  		#Newly created subscription should invoice after 30 day trial
 	  		account.next_invoice_date.should == (Time.zone.today + 30.days)
+	  	end
+	  	
+	  	it "handles an error" do
+	  		pending
 	  	end
 	  end
 	  
@@ -448,6 +463,10 @@ describe Account do
 	  	
 	  	it "sets cancelled_at date/time" do
 	  		account.cancelled_at.should_not be_nil
+	  	end
+	  	
+	  	it "handles an error" do
+	  		pending
 	  	end
 	  end
   end

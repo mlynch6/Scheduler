@@ -2,6 +2,7 @@ class SubscriptionsController < ApplicationController
 	before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
 
 	def show
+		@invoices = @account.list_invoices
 	end
 	
 	def edit
@@ -15,10 +16,6 @@ class SubscriptionsController < ApplicationController
 			form_setup
 			render 'edit'
 		end
-	end
-	
-	def show
-		@account = Account.joins(:agma_profile).find(Account.current_id)
 	end
 	
 	def destroy
