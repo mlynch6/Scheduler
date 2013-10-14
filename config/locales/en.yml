@@ -7,6 +7,8 @@ en:
       account:
         name: "Company"
         time_zone: "Time Zone"
+        cancelled_at: "Canceled On"
+        current_subscription_plan: "Current Subscription"
       address:
         addr_type: "Address Type"
         addr: "Address"

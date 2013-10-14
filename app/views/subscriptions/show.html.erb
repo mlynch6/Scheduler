@@ -1,0 +1,38 @@
+<% provide(:title, 'My Subscription') %>
+<% provide(:header_current, 'Administration') %>
+
+<h1>My Subscription</h1>
+<div class="show-ui">
+	<div class="row">
+		<div class="label-ui span2"><%= Account.human_attribute_name(:current_subscription_plan) %></div>
+		<div class="text-ui span6"><%= @account.current_subscription_plan.name %></div>
+	</div>
+	
+	<div class="row">
+		<div class="label-ui span2">Next Payment On</div>
+		<div class="text-ui span6"><%= @account.next_invoice_date.strftime('%B %-d, %Y') %></div>
+	</div>
+</div>
+
+<% if allow? "subscriptions", "edit" %>
+	<div class="offset1">
+		<%= edit_button 'Change Subscription & Payment Method', subscriptions_edit_path %>
+	</div>
+<% end %>
+
+<h2>Payment History</h2>
+<div class="row">
+	<div class="offset1 span6">
+		<table class="table table-striped">
+		  <tbody>
+		  	<% @invoices.each do |invoice| %>
+				  <tr>
+				  	<td><%= Time.zone.at(invoice.date).to_date %></td>
+				  	<td><span class="text-right"><%= number_to_currency(invoice.total/100) %></span></td>
+				  	<td>Printable Receipt (PDF)</td>
+				  </tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

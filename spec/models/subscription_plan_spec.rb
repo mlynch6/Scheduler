@@ -76,6 +76,8 @@ describe SubscriptionPlan do
 	
   context "(Associations)" do
 		describe "accounts" do
+			before { Account.delete_all }
+			
 			let!(:account1) { FactoryGirl.create(:account, current_subscription_plan: subscription) }
 			let!(:account2) { FactoryGirl.create(:account, current_subscription_plan: subscription) }
 	

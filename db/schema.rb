@@ -16,6 +16,8 @@ ActiveRecord::Schema.define(:version => 20131207144548) do
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
     t.string   "time_zone",                    :limit => 100, :null => false
+    t.string   "status",                       :limit => 20,  :null => false
+    t.datetime "cancelled_at"
     t.string   "stripe_customer_token",        :limit => 100
     t.integer  "current_subscription_plan_id",                :null => false
     t.datetime "created_at",                                  :null => false

@@ -13,6 +13,9 @@
 					<% if allow? "agma_profiles", "show" %>
 						<li><%= link_to "Contract Settings", agma_profile_path(AgmaProfile.first) %></li>
 					<% end %>
+					<% if allow? "subscriptions", "show" %>
+						<li><%= link_to "My Subscription", subscriptions_current_path %></li>
+					<% end %>
 					<li class="divider"></li>
 					
 					<% if allow? "locations", "index" %>
@@ -71,6 +74,8 @@
 
 <ul class="nav pull-right">
 	<li class="divider-vertical"></li>
-	<li><%= link_to current_user.username, edit_user_path(current_user) %></li>
+	<% if allow? "users", "edit" %>
+		<li><%= link_to current_user.username, edit_user_path(current_user) %></li>
+	<% end %>
 	<li><%= link_to "Sign Out", logout_path %></li>
 </ul>

@@ -23,8 +23,7 @@ describe "Account Pages:" do
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Create Account"
 	    	
-	    	should have_selector('title', text: 'Create Account')
-	    	should have_selector('h1', text: 'Create an Account')
+	    	should have_selector('div.alert-error')
 	    	should have_content('card number is incorrect')
 	    end
 	    
@@ -35,8 +34,7 @@ describe "Account Pages:" do
 		  	fill_in "Security Code", with: "99"
 		  	click_button "Create Account"
 	    	
-	    	should have_selector('title', text: 'Create Account')
-	    	should have_selector('h1', text: 'Create an Account')
+	    	should have_selector('div.alert-error')
 	    	should have_content('security code is invalid')
 	    end
 		  
@@ -48,8 +46,6 @@ describe "Account Pages:" do
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Create Account"
 	    	
-	    	should have_selector('title', text: 'Create Account')
-	    	should have_selector('h1', text: 'Create an Account')
 	    	should have_selector('div.alert-error')
 	    	should have_content('Credit Card has been provided')
 	    end
@@ -57,6 +53,7 @@ describe "Account Pages:" do
     
     describe "valid Signup" do
     	let(:company_name) { "New York City Ballet #{Time.now}" }
+    	let(:username) { "pmartin#{DateTime.now.seconds_since_midnight}" }
     	before do
     		visit signup_path
     		fill_in "Company", with: company_name
@@ -74,7 +71,7 @@ describe "Account Pages:" do
     		select  "Artistic Director", from: "Role"
     		fill_in "Email", with: "peter.martin@nycb.org"
     		
-    		fill_in "Username", with: "pmartin"
+    		fill_in "Username", with: username
     		fill_in "Password", with: "password"
     		fill_in "Confirm Password", with: "password"
     		
@@ -82,42 +79,54 @@ describe "Account Pages:" do
     		fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "213"
+		  	
+		  	click_button "Create Account"
+		  	
+		  	should have_selector('div.alert-success')
     	end
     	
-    	it "creates the Account" do
-    		click_button "Create Account"
-    		should have_selector('div.alert-success')
+    	after do
+    		#Cleanup Stripe Customer
+    		customer = Stripe::Customer.retrieve(Account.last.stripe_customer_token)
+    		customer.delete
+    	end
+    	
+    	it "creates the Account", js: true do
     		should have_content(company_name)
+    		account = User.unscoped.find_by_username(username).account
+    		account.name.should == company_name
     	end
     	
-    	it "creates the Agma Profile" do
-				expect { click_button "Create Account" }.to change(AgmaProfile.unscoped, :count).by(1)
+    	it "creates the Agma Profile", js: true do
+				account = User.unscoped.find_by_username(username).account
+				account.agma_profile.should_not be_nil
     	end
     	
-    	it "creates an Address" do
-				expect { click_button "Create Account" }.to change(Address.unscoped, :count).by(1)
-				Address.unscoped.last.addr_type.should == "Work"
+    	it "creates an Address", js: true do
+				account = User.unscoped.find_by_username(username).account
+				account.addresses.count.should == 1
+				account.addresses.first.addr_type.should == "Work"
     	end
     	
-    	it "creates a Phone Number" do
-				expect { click_button "Create Account" }.to change(Phone.unscoped, :count).by(1)
-				phone = Phone.unscoped.last
-				phone.phone_type.should == "Work"
-				phone.primary.should be_true
+    	it "creates a Phone Number", js: true do
+				account = User.unscoped.find_by_username(username).account
+				account.phones.count.should == 1
+				account.phones.first.phone_type.should == "Work"
     	end
     	
-    	it "creates an Employee" do
-				expect { click_button "Create Account" }.to change(Employee.unscoped, :count).by(1)
+    	it "creates an Employee", js: true do
+    		account = User.unscoped.find_by_username(username).account
+				account.employees.count.should == 1
     	end
     	
-    	it "creates a User" do
-				expect { click_button "Create Account" }.to change(User.unscoped, :count).by(1)
-    		User.unscoped.last.role.should == "Administrator"
+    	it "creates a User", js: true do
+    		user = User.unscoped.find_by_username(username)
+		  	user.should_not be_nil
+    		user.role.should == "Administrator"
     	end
     	
-    	it "redirects to Sign In page" do
-    		click_button "Create Account"
-    		should have_selector('title', text: 'Sign In')
+    	it "redirects to Sign In page", js: true do
+    		should have_selector('h1', text: 'Sign In')
     	end
     end
 	end
@@ -135,8 +144,10 @@ describe "Account Pages:" do
 			log_in
 			visit account_path(current_account)
 	  	
-			should have_selector('div.text-ui', text: current_account.name)
-			should have_selector('div.text-ui', text: current_account.time_zone)
+			should have_content(current_account.name)
+			should have_content(current_account.time_zone)
+			should have_content(current_account.status)
+			should have_content(current_account.cancelled_at)
 		end
 		
 		it "has addresses shown" do
