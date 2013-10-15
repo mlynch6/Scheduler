@@ -3,6 +3,7 @@ class SubscriptionsController < ApplicationController
 
 	def show
 		@invoices = @account.list_invoices
+		@next_invoice_date = @account.next_invoice_date
 	end
 	
 	def edit
