@@ -423,8 +423,11 @@ describe Account do
 	  		@invoices.first.paid.should be_true
 	  	end
 	  	
-	  	it "handles an error" do
-	  		pending
+	  	it "handles a Stripe error" do
+	  		#No Stripe Customer
+	  		@account.save
+	  		@account.list_invoices
+	  		@account.errors.messages.count.should == 1
 	  	end
 	  end
 	  
@@ -442,8 +445,13 @@ describe Account do
 	  		account.next_invoice_date.should == (Time.zone.today + 30.days)
 	  	end
 	  	
-	  	it "handles an error" do
-	  		pending
+	  	it "handles a Stripe error" do
+	  		#No Next Invoice when Subscription is canceled
+	  		account.cancel_subscription
+	  		next_invoice_date = account.next_invoice_date
+	  		
+	  		next_invoice_date.should be_nil
+	      account.errors.messages[:base].count.should == 1
 	  	end
 	  end
 	  
@@ -465,8 +473,10 @@ describe Account do
 	  		account.cancelled_at.should_not be_nil
 	  	end
 	  	
-	  	it "handles an error" do
-	  		pending
+	  	it "handles a Stripe error" do
+	  		#Cannot cancel subscription when already canceled
+	  		account.cancel_subscription
+	      account.errors.messages[:base].count.should == 1
 	  	end
 	  end
   end

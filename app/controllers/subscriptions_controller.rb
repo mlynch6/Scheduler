@@ -4,6 +4,12 @@ class SubscriptionsController < ApplicationController
 	def show
 		@invoices = @account.list_invoices
 		@next_invoice_date = @account.next_invoice_date
+		
+		if !@account.errors.messages[:base].nil?
+			@account.errors.messages[:base].each do |msg|
+				flash[:error] = msg
+			end
+		end
 	end
 	
 	def edit

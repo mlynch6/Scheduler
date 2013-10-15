@@ -37,6 +37,13 @@ describe "Subscription Pages:" do
 				should have_content("$0.00")	#Trial Period
 			end
 		end
+		
+		it "shows Stripe error" do
+			current_account.cancel_subscription
+			visit subscriptions_current_path
+			
+			should have_selector('div.alert-error')
+		end
 	end
 	
 	context "#edit" do
@@ -65,6 +72,10 @@ describe "Subscription Pages:" do
 		
 		it "can update the credit card" do
 			pending
+		end
+		
+		it "does not display Next Payment Date when subscription is canceled" do
+	  	should_not have_content((Time.zone.today + 30.days).strftime('%B %-d, %Y'))
 		end
 	end
 	

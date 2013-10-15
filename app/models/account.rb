@@ -70,6 +70,8 @@ class Account < ActiveRecord::Base
 	end
 	
 	def list_invoices
+		#if passing nil as customer, then invoices from all customers sent back
+		self.stripe_customer_token = 0 if stripe_customer_token.blank?
   	invoices = Stripe::Invoice.all(:customer => stripe_customer_token, :count => 12 )
   	invoices.data
   rescue Stripe::InvalidRequestError => e
@@ -84,7 +86,7 @@ class Account < ActiveRecord::Base
   rescue Stripe::InvalidRequestError => e
   	logger.error "Stripe error while retrieving next invoice: #{e.message}"
   	errors.add :base, "There was a problem retreiving the next invoice."
-  	false
+  	nil
 	end
 	
 	def cancel_subscription
