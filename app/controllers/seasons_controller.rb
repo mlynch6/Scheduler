@@ -1,10 +1,11 @@
 class SeasonsController < ApplicationController
+	before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
+	
 	def index
   	@seasons = Season.paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
 	def show
-  	@season = Season.find(params[:id])
   	@season_pieces = @season.season_pieces.includes(:piece, :casts)
 	end
 	
@@ -24,14 +25,12 @@ class SeasonsController < ApplicationController
 	end
 	
 	def edit
-		@season = Season.find(params[:id])
 		@season.start_dt = @season.start_dt.to_s(:default)
 		@season.end_dt = @season.end_dt.to_s(:default)
 		form_setup(@season)
 	end
 	
 	def update
-		@season = Season.find(params[:id])
 		if @season.update_attributes(params[:season])
 			redirect_to seasons_path, :notice => "Successfully updated the season."
 		else
@@ -41,12 +40,15 @@ class SeasonsController < ApplicationController
 	end
 	
 	def destroy
-		Season.find(params[:id]).destroy
+		@season.destroy
 		redirect_to seasons_path, :notice => "Successfully deleted the season."
 	end
 
-	private
-
+private
+	def get_resource
+		@season = Season.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup(season)
 		@pieces = Piece.active.map { |piece| [piece.name, piece.id] }

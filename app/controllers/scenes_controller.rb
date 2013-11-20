@@ -1,4 +1,6 @@
 class ScenesController < ApplicationController
+	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	
 	def index
 		@piece = Piece.find(params[:piece_id])
 		@scenes = @piece.scenes.includes(:characters)
@@ -30,13 +32,11 @@ class ScenesController < ApplicationController
 	end
 	
 	def edit
-		@scene = Scene.includes(:piece).find(params[:id])
 		@piece = @scene.piece
 		form_setup(@piece)
 	end
 	
 	def update
-		@scene = Scene.includes(:piece).find(params[:id])
 		@piece = @scene.piece
 		
 		if @scene.update_attributes(params[:scene])
@@ -48,7 +48,6 @@ class ScenesController < ApplicationController
 	end
 	
 	def destroy
-		@scene = Scene.find(params[:id])
 		@scene.destroy
 		redirect_to piece_scenes_path(@scene.piece_id), :notice => "Successfully deleted the scene."
 	end
@@ -60,7 +59,10 @@ class ScenesController < ApplicationController
 		render nothing: true
 	end
 	
-	private
+private
+	def get_resource
+		@scene = Scene.find(params[:id])
+	end
 
 	#setup for form - dropdowns, etc
 	def form_setup(piece)

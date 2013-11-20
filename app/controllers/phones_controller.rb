@@ -1,5 +1,6 @@
 class PhonesController < ApplicationController
 	before_filter :load_phoneable
+	before_filter :get_resource, :only => [:edit, :update, :destroy]
 
   def new
   	form_setup
@@ -17,12 +18,10 @@ class PhonesController < ApplicationController
   end
   
   def edit
-		@phone = Phone.find(params[:id])
 		form_setup
 	end
 	
 	def update
-		@phone = Phone.find(params[:id])
 		if @phone.update_attributes(params[:phone])
 			redirect_to [@phoneable], :notice => "Successfully updated the phone number."
 		else
@@ -32,11 +31,15 @@ class PhonesController < ApplicationController
 	end
 	
 	def destroy
-		Phone.find(params[:id]).destroy
+		@phone.destroy
 		redirect_to [@phoneable], :notice => "Successfully deleted the phone number."
 	end
 
 private
+	def get_resource
+		@phone = Phone.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup
 	end
