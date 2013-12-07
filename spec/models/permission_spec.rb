@@ -167,6 +167,11 @@ shared_examples "an administrator" do
 		it { should allow(:subscriptions, :show) }
 		it { should allow(:subscriptions, :destroy) }
 	end
+	
+	context "payments" do
+		it { should allow(:payments, :edit) }
+		it { should allow(:payments, :update) }
+	end
 end
 
 shared_examples "a NON-administrator" do
@@ -234,6 +239,11 @@ shared_examples "a NON-administrator" do
 		it { should_not allow(:subscriptions, :update) }
 		it { should_not allow(:subscriptions, :show) }
 		it { should_not allow(:subscriptions, :destroy) }
+	end
+	
+	context "payments" do
+		it { should_not allow(:payments, :edit) }
+		it { should_not allow(:payments, :update) }
 	end
 end
 

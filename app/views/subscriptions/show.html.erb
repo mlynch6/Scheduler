@@ -5,7 +5,7 @@
 <div class="show-ui">
 	<div class="row">
 		<div class="label-ui span2"><%= Account.human_attribute_name(:current_subscription_plan) %></div>
-		<div class="text-ui span6"><%= @account.current_subscription_plan.name %></div>
+		<div class="text-ui span6"><%= @account.current_subscription_plan.name %> &nbsp;<%= link_to '[change]', subscriptions_edit_path %></div>
 	</div>
 	
 	<div class="row">
@@ -14,9 +14,9 @@
 	</div>
 </div>
 
-<% if allow? "subscriptions", "edit" %>
+<% if allow? "payments", "edit" %>
 	<div class="offset1">
-		<%= edit_button 'Change Subscription & Payment Method', subscriptions_edit_path %>
+		<%= edit_button 'Change Payment Method', payments_edit_path %>
 	</div>
 <% end %>
 

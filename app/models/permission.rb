@@ -22,7 +22,7 @@ class Permission
 				allow [:addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:new, :create]
 				
 				#edit & update
-				allow [:accounts, :subscriptions, :agma_profiles, :addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:edit, :update]
+				allow [:accounts, :subscriptions, :payments, :agma_profiles, :addresses, :phones, :employees, :users, :seasons, :locations, :pieces, :scenes, :characters, :rehearsals, :company_classes, :costume_fittings], [:edit, :update]
 				
 				#destroy
 				allow [:subscriptions, :addresses, :phones, :seasons, :scenes, :characters, :casts], [:destroy]

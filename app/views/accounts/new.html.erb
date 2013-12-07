@@ -39,7 +39,8 @@
 		
 		<fieldset>
 			<legend>5. Payment Information</legend>
-			<%= render 'payment_fields', :f => f %>
+			<%= f.hidden_field :current_subscription_plan_id, value: params[:plan] %>
+			<%= render 'payments/form', :f => f %>
 		</fieldset>
 				
 		<p class="offset2"><small>By clicking 'Create Account', you agree to the <a href="#">Terms of Service</a>

@@ -1,10 +1,17 @@
 <% if @account.stripe_card_token.present? %>
 	<p class="offset2">Credit Card has been provided</p>
 <% else %>
+	<div id="stripe_error" class="offset2 alert alert-error">
+		<noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings, then try again.</noscript>
+	</div>
+
 	<div class="control-group">
-		<%= label_tag :cardholder_name, "Name on Credit Card", class: 'control-label required' %>
+		<%= label_tag :accepted_cards, "Accepted Cards", class: 'control-label' %>
 		<div class="controls">
-			<%= text_field_tag :cardholder_name, nil, name: nil %>
+			<%= image_tag('visa.png') %>
+			<%= image_tag('mastercard.png') %>
+			<%= image_tag('discover.png') %>
+			<%= image_tag('american_express.png') %>
 		</div>
 	</div>
 	
@@ -24,16 +31,12 @@
 	</div>
 	
 	<div class="control-group">
-		<%= label_tag :card_code, "Security Code (CVC)", class: 'control-label required' %>
+		<%= label_tag :card_code, "Security Code (CVV)", class: 'control-label required' %>
 		<div class="controls">
 			<%= text_field_tag :card_code, nil, name: nil, class: "input-mini" %>
+			<%= image_tag('cvv.png') %>
 		</div>
 	</div>
 <% end %>
 
-<div id="stripe_error" class="offset2 alert alert-error">
-	<noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings, then try again.</noscript>
-</div>
-
 <%= f.hidden_field :stripe_card_token %>
-<%= f.hidden_field :current_subscription_plan_id, value: 1 %>

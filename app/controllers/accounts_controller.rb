@@ -49,14 +49,14 @@ class AccountsController < ApplicationController
   end
   
   def edit
-		form_setup
+		#form_setup
 	end
 	
 	def update
 		if @account.update_attributes(params[:account])
 			redirect_to account_path(@account), :notice => "Successfully updated the Company Information"
 		else
-			form_setup
+			#form_setup
 			render 'edit'
 		end
 	end
@@ -72,5 +72,6 @@ private
 
 	#setup for form - dropdowns, etc
 	def form_setup
+		@plans = SubscriptionPlan.all.map { |plan| [plan.name_and_amount, plan.id] }
 	end
 end

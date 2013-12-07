@@ -4,12 +4,7 @@ class SubscriptionsController < ApplicationController
 	def show
 		@invoices = @account.list_invoices
 		@next_invoice_date = @account.next_invoice_date
-		
-		if !@account.errors.messages[:base].nil?
-			@account.errors.messages[:base].each do |msg|
-				flash[:error] = msg
-			end
-		end
+		show_stripe_errors
 	end
 	
 	def edit
@@ -17,8 +12,10 @@ class SubscriptionsController < ApplicationController
 	end
 	
 	def update
-		if @account.update_attributes(params[:account])
-			redirect_to account_path(@account), :notice => "Successfully updated the Company Information"
+		@account.current_subscription_plan_id = params[:account][:current_subscription_plan_id]
+		
+		if @account.edit_subscription_plan
+			redirect_to subscriptions_current_path, :notice => "Successfully updated your Subscription"
 		else
 			form_setup
 			render 'edit'
@@ -26,21 +23,29 @@ class SubscriptionsController < ApplicationController
 	end
 	
 	def destroy
-		@account.cancel_subscription
-  	redirect_to account_path(@account), :notice => "Your subscription has been canceled."
-  rescue Stripe::InvalidRequestError => e
-  	logger.error "Stripe error while canceling subscription for #{@account.id}-#{@account.name}: #{e.message}"
-  	flash[:error] = "There was a problem cancelling your subscription."
-  	redirect_to subscriptions_current_path
+		if @account.cancel_subscription
+  		redirect_to account_path(@account), :notice => "Your subscription has been canceled."
+  	else
+	  	show_stripe_errors
+	  	redirect_to subscriptions_current_path
+	  end
 	end
 	
-	private
-
-	#setup for form - dropdowns, etc
-	def form_setup
-	end
-	
+private
 	def get_resource
 		@account = Account.find(Account.current_id)
+	end
+	
+	#setup for form - dropdowns, etc
+	def form_setup
+		@plans = SubscriptionPlan.all.map { |plan| [plan.name_and_amount, plan.id] }
+	end
+	
+	def show_stripe_errors
+		if ! @account.errors.messages[:payment].nil?
+			@account.errors.messages[:payment].each do |msg|
+				flash[:error] = msg
+			end
+		end
 	end
 end

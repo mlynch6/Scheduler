@@ -51,6 +51,8 @@ describe Account do
   	it { should respond_to(:list_invoices) }
   	it { should respond_to(:next_invoice_date) }
   	it { should respond_to(:cancel_subscription) }
+  	it { should respond_to(:edit_subscription_payment) }
+  	it { should respond_to(:edit_subscription_plan) }
   	
   	it "should not allow access to status" do
       expect do
@@ -451,7 +453,7 @@ describe Account do
 	  		next_invoice_date = account.next_invoice_date
 	  		
 	  		next_invoice_date.should be_nil
-	      account.errors.messages[:base].count.should == 1
+	      account.errors.messages[:payment].count.should == 1
 	  	end
 	  end
 	  
@@ -476,7 +478,73 @@ describe Account do
 	  	it "handles a Stripe error" do
 	  		#Cannot cancel subscription when already canceled
 	  		account.cancel_subscription
-	      account.errors.messages[:base].count.should == 1
+	      account.errors.messages[:payment].count.should == 1
+	  	end
+	  end
+	  
+	  describe "edit_subscription_payment" do
+			before do
+				create_stripe_account(account)
+				response = Stripe::Token.create(:card => {:number => '5105105105105100', :exp_month => 12, :exp_year => (Date.today.year+1).to_s, :cvc => '213'} )
+				account.stripe_card_token = response.id
+				account.current_subscription_plan_id = 1 #ensure valid stripe subscription
+				account.edit_subscription_payment
+			end
+			
+			after do
+    		destroy_stripe_account(account)
+    	end
+	  	
+	  	it "changes credit card info on Stripe account" do
+	  		account.errors.messages[:payment].should be_nil
+	  		stripe_customer = Stripe::Customer.retrieve(account.stripe_customer_token)
+	  		stripe_customer.cards.count.should == 1
+	  		stripe_customer.cards.first.last4.should == '5100'
+	  	end
+	  	
+	  	it "handles a Stripe error" do
+	  		#Cannot use credit card token more than once
+				account.edit_subscription_payment
+				
+	  		account.errors.messages[:payment].count.should == 1
+	  		
+	  		stripe_customer = Stripe::Customer.retrieve(account.stripe_customer_token)
+	  		stripe_customer.cards.first.last4.should_not == '5108'
+	  	end
+	  end
+	  
+	  describe "edit_subscription_plan" do
+			before do
+				create_stripe_account(account)
+			end
+			
+			after do
+    		destroy_stripe_account(account)
+    	end
+	  	
+	  	it "changes subscription plan on account" do
+	  		account.current_subscription_plan = SubscriptionPlan.find(2) #valid stripe subscription
+				account.edit_subscription_plan
+				
+	  		account.reload.current_subscription_plan.id.should == 2
+	  	end
+	  	
+	  	it "changes subscription info on Stripe account" do
+	  		account.current_subscription_plan_id = 2 #valid stripe subscription
+				account.edit_subscription_plan
+				
+	  		account.errors.messages[:payment].should be_nil
+	  		stripe_customer = Stripe::Customer.retrieve(account.stripe_customer_token)
+	  		stripe_customer.subscription.plan.id.should == "2"
+	  	end
+	  	
+	  	it "handles a Stripe error" do
+	  		account.current_subscription_plan_id = 80 #invalid stripe subscription
+				account.edit_subscription_plan
+				
+	  		account.errors.messages[:payment].count.should == 1
+	  		stripe_customer = Stripe::Customer.retrieve(account.stripe_customer_token)
+	  		stripe_customer.subscription.plan.id.should == "1"
 	  	end
 	  end
   end
