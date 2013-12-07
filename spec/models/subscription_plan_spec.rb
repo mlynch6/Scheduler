@@ -96,4 +96,10 @@ describe SubscriptionPlan do
 	  	subscription.reload.amount.should == 15.25
 	  end
   end
+  
+  context "(Methods)" do
+  	it "name_and_amount" do
+		  subscription.name_and_amount.should == "Basic Subscription ($15.25)"
+	  end
+  end
 end

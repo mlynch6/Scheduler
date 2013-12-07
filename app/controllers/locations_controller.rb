@@ -1,5 +1,5 @@
 class LocationsController < ApplicationController
-	#rescue_from ActiveRecord::RecordNotFound, :with => :redirect_index
+	before_filter :get_resource, :only => [:edit, :update, :destroy, :activate, :inactivate]
 
   def index
   	@locations = Location.active.paginate(page: params[:page], per_page: params[:per_page])
@@ -25,12 +25,10 @@ class LocationsController < ApplicationController
 	end
 	
 	def edit
-		@location = Location.find(params[:id])
 		form_setup
 	end
 	
 	def update
-		@location = Location.find(params[:id])
 		if @location.update_attributes(params[:location])
 			redirect_to locations_path, :notice => "Successfully updated the location."
 		else
@@ -40,28 +38,26 @@ class LocationsController < ApplicationController
 	end
 	
 	def destroy
-		Location.find(params[:id]).destroy
+		@location.destroy
 		redirect_to locations_path, :notice => "Successfully deleted the location."
 	end
 	
 	def activate
-		Location.find(params[:id]).activate
+		@location.activate
 		redirect_to inactive_locations_path, :notice => "Successfully activated the location."
 	end
 	
 	def inactivate
-		Location.find(params[:id]).inactivate
+		@location.inactivate
 		redirect_to locations_path, :notice => "Successfully inactivated the location."
 	end
 
-	private
-
+private
+	def get_resource
+		@location = Location.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup
 	end
-	
-#	def redirect_index
-#		flash[:error] = "Record Not Found"
-#		redirect_to :action => :index
-#	end
 end

@@ -1,4 +1,6 @@
 class CostumeFittingsController < ApplicationController
+	before_filter :get_resource, :only => [:show, :edit, :update]
+	
   def new
   	form_setup
 		@fitting = CostumeFitting.new
@@ -18,11 +20,9 @@ class CostumeFittingsController < ApplicationController
 	end
 	
 	def show
-		@fitting = CostumeFitting.find(params[:id])
 	end
 	
 	def edit
-		@fitting = CostumeFitting.find(params[:id])
 		@fitting.start_date = @fitting.start_date
 		@fitting.start_time = @fitting.start_time
 		@fitting.end_time = @fitting.end_time
@@ -30,7 +30,6 @@ class CostumeFittingsController < ApplicationController
 	end
 	
 	def update
-		@fitting = CostumeFitting.find(params[:id])
 		if @fitting.update_attributes(params[:costume_fitting])
 			flash[:success] = "Successfully updated the costume fitting."
 			show_warnings
@@ -41,7 +40,10 @@ class CostumeFittingsController < ApplicationController
 		end
 	end
   
-  private
+private
+	def get_resource
+		@fitting = CostumeFitting.find(params[:id])
+	end
 
 	#setup for form - dropdowns, etc
 	def form_setup

@@ -1,4 +1,6 @@
 class RehearsalsController < ApplicationController
+	before_filter :get_resource, :only => [:show, :edit, :update]
+	
   def new
   	form_setup
 		@rehearsal = Rehearsal.new
@@ -18,11 +20,9 @@ class RehearsalsController < ApplicationController
 	end
 	
 	def show
-		@rehearsal = Rehearsal.find(params[:id])
 	end
 	
 	def edit
-		@rehearsal = Rehearsal.find(params[:id])
 		@rehearsal.start_date = @rehearsal.start_date
 		@rehearsal.start_time = @rehearsal.start_time
 		@rehearsal.end_time = @rehearsal.end_time
@@ -30,7 +30,6 @@ class RehearsalsController < ApplicationController
 	end
 	
 	def update
-		@rehearsal = Rehearsal.find(params[:id])
 		if @rehearsal.update_attributes(params[:rehearsal])
 			flash[:success] = "Successfully updated the rehearsal."
 			show_warnings(@rehearsal.start_date)
@@ -41,8 +40,11 @@ class RehearsalsController < ApplicationController
 		end
 	end
   
-  private
-
+private
+	def get_resource
+		@rehearsal = Rehearsal.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup
 		@locations = Location.active.map { |location| [location.name, location.id] }

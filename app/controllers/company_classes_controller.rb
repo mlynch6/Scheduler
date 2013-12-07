@@ -1,4 +1,6 @@
 class CompanyClassesController < ApplicationController
+	before_filter :get_resource, :only => [:show, :edit, :update]
+	
   def new
   	form_setup
 		@cclass = CompanyClass.new
@@ -18,11 +20,9 @@ class CompanyClassesController < ApplicationController
 	end
 	
 	def show
-		@cclass = CompanyClass.find(params[:id])
 	end
 	
 	def edit
-		@cclass = CompanyClass.find(params[:id])
 		@cclass.start_date = @cclass.start_date
 		@cclass.start_time = @cclass.start_time
 		@cclass.end_time = @cclass.end_time
@@ -30,7 +30,6 @@ class CompanyClassesController < ApplicationController
 	end
 	
 	def update
-		@cclass = CompanyClass.find(params[:id])
 		if @cclass.update_attributes(params[:company_class])
 			flash[:success] = "Successfully updated the company class."
 			show_warnings
@@ -42,6 +41,9 @@ class CompanyClassesController < ApplicationController
 	end
   
   private
+	def get_resource
+		@cclass = CompanyClass.find(params[:id])
+	end
 
 	#setup for form - dropdowns, etc
 	def form_setup

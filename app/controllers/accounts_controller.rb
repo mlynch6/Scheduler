@@ -1,4 +1,6 @@
 class AccountsController < ApplicationController
+	before_filter :get_resource, :only => [:edit, :update]
+	
    def new
   	@account = Account.new
   	
@@ -47,16 +49,14 @@ class AccountsController < ApplicationController
   end
   
   def edit
-		@account = Account.find(Account.current_id)
-		form_setup
+		#form_setup
 	end
 	
 	def update
-		@account = Account.find(Account.current_id)
 		if @account.update_attributes(params[:account])
 			redirect_to account_path(@account), :notice => "Successfully updated the Company Information"
 		else
-			form_setup
+			#form_setup
 			render 'edit'
 		end
 	end
@@ -65,9 +65,13 @@ class AccountsController < ApplicationController
 		@account = Account.joins(:agma_profile).find(Account.current_id)
 	end
 	
-	private
+private
+	def get_resource
+		@account = Account.find(Account.current_id)
+	end
 
 	#setup for form - dropdowns, etc
 	def form_setup
+		@plans = SubscriptionPlan.all.map { |plan| [plan.name_and_amount, plan.id] }
 	end
 end

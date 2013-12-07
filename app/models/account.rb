@@ -59,22 +59,30 @@ class Account < ActiveRecord::Base
   
   def save_with_payment
   	if valid?
+  		self.errors.messages[:payment] = nil
   		customer = Stripe::Customer.create(description: name, plan: current_subscription_plan_id, card: stripe_card_token )
   		self.stripe_customer_token = customer.id
   		save!
   	end
   rescue Stripe::InvalidRequestError => e
   	logger.error "Stripe error while creating account for #{name}: #{e.message}"
-  	errors.add :base, "There was a problem with your credit card."
+  	errors.add :payment, "There was a problem with your credit card."
+  	false
+  rescue Stripe::CardError => e
+  	logger.error "Stripe error while creating account for #{name}: #{e.message}"
+  	errors.add :payment, "There was a problem with your credit card: #{e.message}"
+  	self.stripe_card_token = ""
   	false
 	end
 	
 	def list_invoices
+		#if passing nil as customer, then invoices from all customers sent back
+		self.stripe_customer_token = 0 if stripe_customer_token.blank?
   	invoices = Stripe::Invoice.all(:customer => stripe_customer_token, :count => 12 )
   	invoices.data
   rescue Stripe::InvalidRequestError => e
   	logger.error "Stripe error while listing invoices: #{e.message}"
-  	errors.add :base, "There was a problem retreiving the invoices."
+  	errors.add :payment, "There was a problem retreiving the invoices."
   	false
 	end
 	
@@ -83,8 +91,8 @@ class Account < ActiveRecord::Base
   	Time.zone.at(next_invoice.next_payment_attempt).to_date
   rescue Stripe::InvalidRequestError => e
   	logger.error "Stripe error while retrieving next invoice: #{e.message}"
-  	errors.add :base, "There was a problem retreiving the next invoice."
-  	false
+  	errors.add :payment, "There was a problem retreiving the next invoice."
+  	nil
 	end
 	
 	def cancel_subscription
@@ -96,10 +104,38 @@ class Account < ActiveRecord::Base
 	 	end
   rescue Stripe::InvalidRequestError => e
   	logger.error "Stripe error while canceling subscription: #{e.message}"
-  	errors.add :base, "There was a problem canceling the subscription."
+  	errors.add :payment, "There was a problem canceling the subscription."
   	false
 	end
   
+  
+  def edit_subscription_payment
+  	self.errors.messages[:payment] = nil
+  	response = stripe_customer.update_subscription(:plan => current_subscription_plan_id, :card => stripe_card_token, :prorate => true)
+  	true
+  rescue Stripe::InvalidRequestError => e
+  	logger.error "Stripe error while updating the subscription payment for #{name}: #{e.message}"
+  	errors.add :payment, "There was a problem with your credit card."
+  	false
+  rescue Stripe::CardError => e
+  	logger.error "Stripe error while updating the subscription payment for #{name}: #{e.message}"
+  	errors.add :payment, "There was a problem with your credit card: #{e.message}"
+  	self.stripe_card_token = ""
+  	false
+	end
+	
+	def edit_subscription_plan
+		if valid?
+  		self.errors.messages[:payment] = nil
+  		response = stripe_customer.update_subscription(:plan => current_subscription_plan_id, :prorate => true)
+  		save!
+  	end
+  rescue Stripe::InvalidRequestError => e
+  	logger.error "Stripe error while updating the subscription plan for #{name}: #{e.message}"
+  	errors.add :payment, "There was a problem changing your subscription."
+  	false
+	end
+	
  private
   
   def set_defaults

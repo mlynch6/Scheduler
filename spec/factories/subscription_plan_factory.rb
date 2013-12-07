@@ -11,7 +11,7 @@
 
 FactoryGirl.define do
 	factory :subscription_plan do
-		name				"Dance Company"
+		sequence(:name)	{ |n| "Subscription Plan #{n}" }
 		amount			15.10
 	end
 end

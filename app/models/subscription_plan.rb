@@ -8,6 +8,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+include ActionView::Helpers::NumberHelper
 
 class SubscriptionPlan < ActiveRecord::Base
   attr_accessible :name, :amount
@@ -16,4 +17,8 @@ class SubscriptionPlan < ActiveRecord::Base
   
   validates :name, presence: true, length: { maximum: 50 }
   validates :amount, presence: true, :numericality => {:greater_than_or_equal_to => 0, :less_than => 1000000 }
+  
+  def name_and_amount
+  	name+" ("+number_to_currency(amount)+")"
+	end
 end

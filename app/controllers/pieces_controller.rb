@@ -1,4 +1,6 @@
 class PiecesController < ApplicationController
+	before_filter :get_resource, :only => [:edit, :update, :destroy, :activate, :inactivate]
+	
 	def index
 		@pieces = Piece.active.paginate(page: params[:page], per_page: params[:per_page])
 	end
@@ -23,12 +25,10 @@ class PiecesController < ApplicationController
 	end
 	
 	def edit
-		@piece = Piece.find(params[:id])
 		form_setup
 	end
 	
 	def update
-		@piece = Piece.find(params[:id])
 		if @piece.update_attributes(params[:piece])
 			redirect_to pieces_path, :notice => "Successfully updated the piece."
 		else
@@ -38,22 +38,25 @@ class PiecesController < ApplicationController
 	end
 	
 	def destroy
-		Piece.find(params[:id]).destroy
+		@piece.destroy
 		redirect_to pieces_path, :notice => "Successfully deleted the piece."
 	end
 	
 	def activate
-		Piece.find(params[:id]).activate
+		@piece.activate
 		redirect_to inactive_pieces_path, :notice => "Successfully activated the piece."
 	end
 	
 	def inactivate
-		Piece.find(params[:id]).inactivate
+		@piece.inactivate
 		redirect_to pieces_path, :notice => "Successfully inactivated the piece."
 	end
 
-	private
-
+private
+	def get_resource
+		@piece = Piece.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup
 	end

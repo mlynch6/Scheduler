@@ -28,7 +28,7 @@ module AuthMacros
   def create_stripe_account(account)
   	token = Stripe::Token.create(:card => { :number => "4242424242424242", :exp_month => 7, :exp_year => Date.today.year+1, :cvc => 314 })
 		account.stripe_card_token = token.id
-		account.current_subscription_plan_id = SubscriptionPlan.first.id
+		account.current_subscription_plan_id = 1	#valid Stripe subscription
 		account.save_with_payment
 	end
 	

@@ -1,4 +1,6 @@
 class CharactersController < ApplicationController
+	before_filter :get_resource, :only => [:destroy]
+
 	def index
 		@piece = Piece.find(params[:piece_id])
 		@characters = @piece.characters
@@ -41,7 +43,6 @@ class CharactersController < ApplicationController
 	end
 	
 	def destroy
-		@character = Character.find(params[:id])
 		@character.destroy
 		redirect_to piece_characters_path(@character.piece_id), :notice => "Successfully deleted the character."
 	end
@@ -54,7 +55,10 @@ class CharactersController < ApplicationController
 	end
 	
 private
-
+	def get_resource
+		@character = Character.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup
 	end

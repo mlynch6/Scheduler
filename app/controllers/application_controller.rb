@@ -17,7 +17,7 @@ private
 	helper_method :current_user
 	
 	def scope_current_account
-		Account.current_id = Employee.unscoped.find(current_user.employee_id).account_id if current_user
+		Account.current_id = current_user.account_id if current_user
 		yield
 	ensure
 		Account.current_id = nil

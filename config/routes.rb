@@ -59,7 +59,11 @@ Scheduler::Application.routes.draw do
 	
 	match 'subscriptions/current' => 'subscriptions#show'
 	match 'subscriptions/edit' => 'subscriptions#edit'
+	match 'subscriptions/update' => 'subscriptions#update'
 	match 'subscriptions/cancel' => 'subscriptions#destroy'
+	
+	match 'payments/edit' => 'payments#edit'
+	match 'payments/update' => 'payments#update'
 	
   # The priority is based upon order of creation:
   # first created -> highest priority.

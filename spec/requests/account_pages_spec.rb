@@ -3,12 +3,14 @@ require 'spec_helper'
 describe "Account Pages:" do
   subject { page }
 	
-	context "#new" do	
-		it "has correct title" do
+	context "#new" do
+		before do
 			visit root_path
 			click_link "Pricing & Signup"
 			click_link "Sign Up"
-	  	
+		end
+		
+		it "has correct title" do	  	
 	  	should have_selector('title', text: 'Create Account')
 	    should have_selector('h1', text: 'Create an Account')
 	    should have_link('Terms of Service')
@@ -17,7 +19,6 @@ describe "Account Pages:" do
 		
 	  describe "invalid Signup" do
 		  it "with invalid credit card number shows error", js: true do
-		  	visit signup_path
 		  	fill_in "Credit Card Number", with: "4242424242424241"
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "213"
@@ -28,7 +29,6 @@ describe "Account Pages:" do
 	    end
 	    
 	    it "with invalid credit card CVC shows error", js: true do
-		  	visit signup_path
 		  	fill_in "Credit Card Number", with: "4242424242424242"
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "99"
@@ -39,9 +39,7 @@ describe "Account Pages:" do
 	    end
 		  
 		  it "valid credit card with incomplete account information shows error", js: true do
-		  	visit signup_path
-		  	fill_in "Name on Credit Card", with: "Peter Martin"
-    		fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
+		  	fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Create Account"
@@ -49,13 +47,45 @@ describe "Account Pages:" do
 	    	should have_selector('div.alert-error')
 	    	should have_content('Credit Card has been provided')
 	    end
+	    
+	    it "with card declined error", js: true do
+	    	company_name = "New York City Ballet #{Time.now}"
+    		username = "pmartin#{DateTime.now.seconds_since_midnight}"
+    	
+	    	fill_in "Company", with: company_name
+    		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
+    		fill_in "Phone #", with: "414-543-1000"
+		  	
+		  	fill_in "Address", with: Faker::Address.street_address
+				fill_in "Address 2", with: Faker::Address.street_address
+				fill_in "City", with: Faker::Address.city
+				select "New York", from: "State"
+				fill_in "Zip Code", with: Faker::Address.zip.first(5)
+    		
+    		fill_in "First Name", with: "Peter"
+    		fill_in "Last Name", with: "Martin"
+    		select  "Artistic Director", from: "Role"
+    		fill_in "Email", with: "peter.martin@nycb.org"
+    		
+    		fill_in "Username", with: username
+    		fill_in "Password", with: "password"
+    		fill_in "Confirm Password", with: "password"
+    		
+		  	fill_in "Credit Card Number", with: "4000000000000002" #always returns card declined
+		  	select (Date.today.year+1).to_s, from: "card_year"
+		  	fill_in "Security Code", with: "213"
+		  	click_button "Create Account"
+	    	
+	    	should have_selector('div.alert-error')
+	    	should have_content('card was declined')
+	    	should have_content('Credit Card Number')
+	    end
 	  end
     
     describe "valid Signup" do
     	let(:company_name) { "New York City Ballet #{Time.now}" }
     	let(:username) { "pmartin#{DateTime.now.seconds_since_midnight}" }
     	before do
-    		visit signup_path
     		fill_in "Company", with: company_name
     		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
     		fill_in "Phone #", with: "414-543-1000"
@@ -75,7 +105,6 @@ describe "Account Pages:" do
     		fill_in "Password", with: "password"
     		fill_in "Confirm Password", with: "password"
     		
-    		fill_in "Name on Credit Card", with: "Peter Martin"
     		fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "213"
@@ -86,9 +115,7 @@ describe "Account Pages:" do
     	end
     	
     	after do
-    		#Cleanup Stripe Customer
-    		customer = Stripe::Customer.retrieve(Account.last.stripe_customer_token)
-    		customer.delete
+    		destroy_stripe_account(User.unscoped.find_by_username(username).account)
     	end
     	
     	it "creates the Account", js: true do

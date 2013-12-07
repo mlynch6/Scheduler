@@ -27,7 +27,15 @@ describe "Subscription Pages:" do
 		end
 		
 		it "has links" do
-	  	should have_link('Change Subscription & Payment Method')
+			should have_link('[change]')
+	  	should have_link('Change Payment Method')
+		end
+		
+		it "does not display Next Payment Date when subscription is canceled" do
+			current_account.cancel_subscription
+			visit subscriptions_current_path
+			
+	  	should_not have_content((Time.zone.today + 30.days).strftime('%B %-d, %Y'))
 		end
 		
 		it "shows payment history" do
@@ -37,13 +45,21 @@ describe "Subscription Pages:" do
 				should have_content("$0.00")	#Trial Period
 			end
 		end
+		
+		it "shows Stripe error" do
+			current_account.cancel_subscription
+			visit subscriptions_current_path
+			
+			should have_selector('div.alert-error')
+		end
 	end
 	
 	context "#edit" do
 		before do
 			log_in
 			create_stripe_account(current_account)
-			visit subscriptions_edit_path
+			visit subscriptions_current_path
+			click_link "[change]"
 		end
 		
 		after do
@@ -51,20 +67,21 @@ describe "Subscription Pages:" do
 		end
 		
 		it "has correct title" do
-			click_link "My Subscription"
-			click_link "Change Subscription & Payment Method"
-	  	
-	  	should have_selector('title', text: 'Edit Subscription')
-			should have_selector('h1', text: 'Edit Subscription')
+			should have_selector('title', text: 'Change Subscription')
+			should have_selector('h1', text: 'Change Subscription')
 		end
 		
 		it "has links" do
-	  	should have_link('My Subscription')
-	  	should have_link('Cancel Subscription')
+			should have_link('Cancel Subscription')
 		end
 		
-		it "can update the credit card" do
-			pending
+		it "should change the subscription" do
+			select "Dance Company", from: "Subscription"
+			click_button "Update"
+			
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'My Subscription')
+			should have_content('Dance Company')
 		end
 	end
 	
@@ -72,6 +89,8 @@ describe "Subscription Pages:" do
 		before do
 			log_in
 			create_stripe_account(current_account)
+			visit subscriptions_edit_path
+			click_link "Cancel Subscription"
 		end
 		
 		after do
@@ -79,9 +98,6 @@ describe "Subscription Pages:" do
 		end
 		
 		it "should cancel the subscription" do
-			visit subscriptions_edit_path
-			click_link "Cancel Subscription"
-			
 			should have_selector('title', text: 'Company Information')
 			should have_selector('div.alert-success')
 			

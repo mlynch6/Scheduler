@@ -1,5 +1,5 @@
 class EmployeesController < ApplicationController
-	#rescue_from ActiveRecord::RecordNotFound, :with => :redirect_index
+	before_filter :get_resource, :only => [:show, :edit, :update, :destroy, :activate, :inactivate]
 
   def index
   	@employees = Employee.active.paginate(page: params[:page], per_page: params[:per_page])
@@ -25,16 +25,13 @@ class EmployeesController < ApplicationController
 	end
 	
 	def show
-		@employee = Employee.find(params[:id])
 	end
 	
 	def edit
-		@employee = Employee.find(params[:id])
 		form_setup
 	end
 	
 	def update
-		@employee = Employee.find(params[:id])
 		if @employee.update_attributes(params[:employee])
 			redirect_to employees_path, :notice => "Successfully updated the employee."
 		else
@@ -44,28 +41,26 @@ class EmployeesController < ApplicationController
 	end
 	
 	def destroy
-		Employee.find(params[:id]).destroy
+		@employee.destroy
 		redirect_to employees_path, :notice => "Successfully deleted the employee."
 	end
 	
 	def activate
-		Employee.find(params[:id]).activate
+		@employee.activate
 		redirect_to inactive_employees_path, :notice => "Successfully activated the employee."
 	end
 	
 	def inactivate
-		Employee.find(params[:id]).inactivate
+		@employee.inactivate
 		redirect_to employees_path, :notice => "Successfully inactivated the employee."
 	end
 
-	private
-
+private
+	def get_resource
+		@employee = Employee.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup
 	end
-	
-#	def redirect_index
-#		flash[:error] = "Record Not Found"
-#		redirect_to :action => :index
-#	end
 end

@@ -1,5 +1,6 @@
 class AddressesController < ApplicationController
 	before_filter :load_addressable
+	before_filter :get_resource, :only => [:edit, :update, :destroy]
 	
   def new
   	form_setup
@@ -17,12 +18,10 @@ class AddressesController < ApplicationController
   end
   
   def edit
-		@address = Address.find(params[:id])
 		form_setup
 	end
 	
 	def update
-		@address = Address.find(params[:id])
 		if @address.update_attributes(params[:address])
 			redirect_to [@addressable], :notice => "Successfully updated the address."
 		else
@@ -32,11 +31,15 @@ class AddressesController < ApplicationController
 	end
 	
 	def destroy
-		Address.find(params[:id]).destroy
+		@address.destroy
 		redirect_to [@addressable], :notice => "Successfully deleted the address."
 	end
 
 private
+	def get_resource
+		@address = Address.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup
 	end

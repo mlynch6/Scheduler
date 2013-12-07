@@ -1,6 +1,7 @@
-class AgmaProfilesController < ApplicationController  
+class AgmaProfilesController < ApplicationController 
+	before_filter :get_resource, :only => [:show]
+	
   def show
-		@agma_profile = AgmaProfile.find(params[:id])
 	end
   
   def edit
@@ -18,8 +19,11 @@ class AgmaProfilesController < ApplicationController
 		end
 	end
 	
-	private
-
+private
+	def get_resource
+		@agma_profile = AgmaProfile.find(params[:id])
+	end
+	
 	#setup for form - dropdowns, etc
 	def form_setup
 		@times = Lovs.time_array(15)

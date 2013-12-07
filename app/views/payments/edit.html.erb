@@ -1,0 +1,17 @@
+<% provide(:title, 'Change Payment Method') %>
+<% provide(:header_current, 'Administration') %>
+
+<h1>Change Payment Method</h1>
+
+<p class="muted">Fill out the form below to change your subscription credit card. 
+	If you do not want to change your payment method, you can go back to
+	<%= link_to "My Subscription", subscriptions_current_path %>.
+</p>
+
+<% if allow? "payments", "edit" %>
+	<%= form_for @account, :url => payments_update_path, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal', :id => 'edit_payment' } do |f| %>
+		<%= f.error_messages %>
+		<%= render 'form', :f => f %>
+		<%= f.submit 'Update', :class => 'btn btn-primary' %>
+	<% end %>
+<% end %>
