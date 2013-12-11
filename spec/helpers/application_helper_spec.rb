@@ -38,4 +38,14 @@ describe ApplicationHelper do
 			active_inactive(false).should == 'Inactive'
 		end
 	end
+	
+	context 'min_to_formatted_time' do
+		it "formats am time" do
+			min_to_formatted_time(60).should == "1:00 AM"
+		end
+		
+		it "formats pm time" do
+			min_to_formatted_time(900).should == "3:00 PM"
+		end
+	end
 end

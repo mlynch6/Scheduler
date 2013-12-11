@@ -15,9 +15,11 @@
 #
 
 require 'spec_helper'
+require 'application_helper'
 
 describe Rehearsal do
 	let(:account) { FactoryGirl.create(:account) }
+	let(:profile) { account.agma_profile }
 	let(:location) { FactoryGirl.create(:location, account: account) }
 	let(:piece) { FactoryGirl.create(:piece, account: account) }
 	let(:rehearsal) { FactoryGirl.create(:rehearsal,
@@ -30,13 +32,6 @@ describe Rehearsal do
 											piece: piece) }
 	before do
 		Account.current_id = account.id
-		profile = account.agma_profile
-  	profile.rehearsal_start_time = "9AM"
-  	profile.rehearsal_end_time = "5PM"
-  	profile.rehearsal_increment_min = 30
-  	profile.class_break_min = 15
-  	profile.rehearsal_break_min_per_hr = 5
-  	profile.save
 		@rehearsal = FactoryGirl.build(:rehearsal)
 	end
 	
@@ -60,20 +55,20 @@ describe Rehearsal do
   	end
   	
   	it "when start_time is the same as AgmaProfile rehearsal_start" do
-  		@rehearsal.start_time = "9AM"
-  		@rehearsal.end_time = "10AM"
+  		@rehearsal.start_time = profile.rehearsal_start_time
+  		@rehearsal.end_time = min_to_formatted_time(profile.rehearsal_start_min + 60)
   		should be_valid
   	end
   	
   	it "when end_time is the same as AgmaProfile rehearsal_end" do
-  		@rehearsal.start_time = "4PM"
-  		@rehearsal.end_time = "5PM"
+  		@rehearsal.start_time = min_to_formatted_time(profile.rehearsal_end_min - 60)
+  		@rehearsal.end_time = profile.rehearsal_end_time
   		should be_valid
   	end
   	
   	it "when duration is a multiple of AgmaProfile rehearsal_increment_min" do
-  		@rehearsal.start_time = "4PM"
-  		@rehearsal.end_time = "4:30 PM"
+  		@rehearsal.start_time = profile.rehearsal_start_time
+  		@rehearsal.end_time = min_to_formatted_time(profile.rehearsal_start_min + profile.rehearsal_increment_min)
   		should be_valid
   	end
   	
@@ -81,12 +76,12 @@ describe Rehearsal do
   		FactoryGirl.create(:company_class,
 					account: account,
 					start_date: Time.zone.today,
-					start_time: "9AM",
-					end_time: "10AM")
+					start_time: profile.rehearsal_start_time,
+					end_time: min_to_formatted_time(profile.rehearsal_start_min + 60))
 					
 			@rehearsal.start_date = Time.zone.today
-  		@rehearsal.start_time = "10:15AM"
-  		@rehearsal.end_time = "10:45 AM"
+  		@rehearsal.start_time = min_to_formatted_time(profile.rehearsal_start_min + 60 + profile.class_break_min)
+  		@rehearsal.end_time = min_to_formatted_time(profile.rehearsal_start_min + 60 + profile.class_break_min + profile.rehearsal_increment_min)
   		should be_valid
   	end
   end
@@ -98,20 +93,20 @@ describe Rehearsal do
   	end
   	
   	it "when duration is NOT multiple of AgmaProfile rehearsal_increment_min" do
-  		@rehearsal.start_time = "4PM"
-  		@rehearsal.end_time = "4:15 PM"
+  		@rehearsal.start_time = profile.rehearsal_start_time
+  		@rehearsal.end_time = min_to_formatted_time(profile.rehearsal_start_min + profile.rehearsal_increment_min - 5)
   		should_not be_valid
   	end
   	
   	it "when start_time is before AgmaProfile rehearsal_start" do
-  		@rehearsal.start_time = "8 AM"
-  		@rehearsal.end_time = "10 AM"
+  		@rehearsal.start_time = min_to_formatted_time(profile.rehearsal_start_min - 15)
+  		@rehearsal.end_time = min_to_formatted_time(profile.rehearsal_start_min - 15 + profile.rehearsal_increment_min)
   		should_not be_valid
   	end
   	
   	it "when end_time is after AgmaProfile rehearsal_end" do
-  		@rehearsal.start_time = "4 PM"
-  		@rehearsal.end_time = "6 PM"
+  		@rehearsal.start_time = min_to_formatted_time(profile.rehearsal_end_min - 5)
+  		@rehearsal.end_time = min_to_formatted_time(profile.rehearsal_end_min - 5 + profile.rehearsal_increment_min)
   		should_not be_valid
   	end
   	
@@ -119,20 +114,21 @@ describe Rehearsal do
   		let!(:company_class) { FactoryGirl.create(:company_class,
 					account: account,
 					start_date: Time.zone.today,
-					start_time: "9AM",
-					end_time: "10AM") }
+					start_time: profile.rehearsal_start_time,
+					end_time: min_to_formatted_time(profile.rehearsal_start_min + profile.rehearsal_increment_min)
+					) }
 			
   		it "is at the beginning of the Company Class break" do
 				@rehearsal.start_date = Time.zone.today
-	  		@rehearsal.start_time = "10AM"
-	  		@rehearsal.end_time = "10:30 AM"
+	  		@rehearsal.start_time = company_class.end_time
+	  		@rehearsal.end_time = min_to_formatted_time(profile.rehearsal_start_min + 2*profile.rehearsal_increment_min)
 	  		should_not be_valid
 	  	end
   		
   		it "is during the Company Class break" do
 				@rehearsal.start_date = Time.zone.today
-	  		@rehearsal.start_time = "10:05 AM"
-	  		@rehearsal.end_time = "10:35 AM"
+	  		@rehearsal.start_time = min_to_formatted_time(profile.rehearsal_start_min + profile.rehearsal_increment_min + 5)
+	  		@rehearsal.end_time = min_to_formatted_time(profile.rehearsal_start_min + 2*profile.rehearsal_increment_min + 5)
 	  		should_not be_valid
   		end
   	end

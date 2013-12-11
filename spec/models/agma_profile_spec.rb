@@ -4,8 +4,8 @@
 #
 #  id                         :integer          not null, primary key
 #  account_id                 :integer          not null
-#  rehearsal_start            :time             not null
-#  rehearsal_end              :time             not null
+#  rehearsal_start_min        :integer          not null
+#  rehearsal_end_min          :integer          not null
 #  rehearsal_max_hrs_per_week :integer          not null
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
@@ -29,8 +29,8 @@ describe AgmaProfile do
 	subject { @profile }
 
 	context "accessible attributes" do
-		it { should respond_to(:rehearsal_start_time) }
-  	it { should respond_to(:rehearsal_end_time) }
+		it { should respond_to(:rehearsal_start_min) }
+  	it { should respond_to(:rehearsal_end_min) }
   	it { should respond_to(:rehearsal_max_hrs_per_week) }
   	it { should respond_to(:rehearsal_max_hrs_per_day) }
   	it { should respond_to(:rehearsal_increment_min) }
@@ -39,18 +39,9 @@ describe AgmaProfile do
   	it { should respond_to(:costume_increment_min) }
   	
   	it { should respond_to(:account) }
-		
-		it "should not allow access to rehearsal_start" do
-      expect do
-        AgmaProfile.new(rehearsal_start: '9 AM')
-      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    
-    it "should not allow access to rehearsal_end" do
-      expect do
-        AgmaProfile.new(rehearsal_end: '5 PM')
-      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end
+  	
+  	it { should respond_to(:rehearsal_start_time) }
+  	it { should respond_to(:rehearsal_end_time) }
   end
 	
   context "(Valid)" do
@@ -59,52 +50,65 @@ describe AgmaProfile do
   	end
   	
   	it "when class_break_min = 0" do
-	  		@profile.class_break_min = 0
-	  		should be_valid
-	  	end
+	  	@profile.class_break_min = 0
+	  	should be_valid
+	  end
   end
 
 	context "(Invalid)" do
-		context "when rehearsal_start_time" do
+		context "when rehearsal_start_min" do
 			it "is blank" do
-				@profile.rehearsal_start_time = " "
+				@profile.rehearsal_start_min = " "
 				should_not be_valid
 			end
 			
-			it "is invalid time" do
-				tms = ["abc", "8", "25:00"]
-	  		tms.each do |invalid_time|
-	  			@profile.rehearsal_start_time = invalid_time
+			it "not an integer" do
+	  		vals = ["abc", 8.6]
+	  		vals.each do |invalid_integer|
+	  			@profile.rehearsal_start_min = invalid_integer
 	  			should_not be_valid
 	  		end
-			end
-		end
-  	
-  	context "when rehearsal_end_time" do
-			it "is blank" do
-	  		@profile.rehearsal_end_time = " "
+	  	end
+	  	
+	  	it "< 0" do
+	  		@profile.rehearsal_start_min = -1
 	  		should_not be_valid
 	  	end
 	  	
-	  	it "is invalid time" do
-				tms = ["abc", "8", "25:00"]
-	  		tms.each do |invalid_time|
-	  			@profile.rehearsal_end_time = invalid_time
+	  	it "> 1439 (max min in a day)" do
+	  		@profile.rehearsal_start_min = 1440
+	  		should_not be_valid
+	  	end
+		end
+  	
+  	context "when rehearsal_end_min" do
+			it "is blank" do
+				@profile.rehearsal_end_min = " "
+				should_not be_valid
+			end
+			
+			it "not an integer" do
+	  		vals = ["abc", 8.6]
+	  		vals.each do |invalid_integer|
+	  			@profile.rehearsal_end_min = invalid_integer
 	  			should_not be_valid
 	  		end
-			end
+	  	end
 	  	
-	  	it "same as rehearsal_start_time" do
-				@profile.rehearsal_start_time = "11AM"
-				@profile.rehearsal_end_time = @profile.rehearsal_start_time
-		  	should_not be_valid
-		  end
-		  
-			it "is before rehearsal_start_time" do
-				@profile.rehearsal_start_time = "11AM"
-				@profile.rehearsal_end_time = "10 AM"
-		  	should_not be_valid
-		  end
+	  	it "< 0" do
+	  		@profile.rehearsal_end_min = -1
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "> 1439 (max min in a day)" do
+	  		@profile.rehearsal_end_min = 1440
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "<= rehearsal_start_min" do
+	  		@profile.rehearsal_end_min = @profile.rehearsal_start_min
+	  		should_not be_valid
+	  	end
 		end
   	
   	context "when rehearsal_max_hrs_per_week" do
@@ -295,66 +299,104 @@ describe AgmaProfile do
   end
   
 	context "correct value is returned for" do
-		it "rehearsal_start" do
-			@profile.rehearsal_start_time = "9AM"
+		it "rehearsal_start_min" do
+			@profile.rehearsal_start_min = 480
 			@profile.save
-	  	account.agma_profile.rehearsal_start.to_s(:hr12).should == '9:00 AM'
+			account.agma_profile.rehearsal_start_min.should == 480
 	  end
 	  
-	  it "rehearsal_start_time" do
-	  	@profile.rehearsal_start_time = "9AM"
+	  it "rehearsal_end_min" do
+	  	@profile.rehearsal_end_min = 960
 			@profile.save
-	  	account.agma_profile.rehearsal_start_time.should == '9AM'
-	  end
-	  
-	  it "rehearsal_end" do
-	  	@profile.rehearsal_end_time = "5 PM"
-			@profile.save
-	  	account.agma_profile.rehearsal_end.to_s(:hr12).should == '5:00 PM'
-	  end
-	  
-	  it "rehearsal_end_time" do
-	  	@profile.rehearsal_end_time = "5 PM"
-			@profile.save
-	  	account.agma_profile.rehearsal_end_time.should == '5 PM'
+			account.agma_profile.rehearsal_end_min.should == 960
 	  end
 	  
 	  it "rehearsal_max_hrs_per_week" do
-			@profile.rehearsal_max_hrs_per_week = 30
+	  	@profile.rehearsal_max_hrs_per_week = 40
 			@profile.save
-	  	account.agma_profile.rehearsal_max_hrs_per_week.should == 30
+			account.agma_profile.rehearsal_max_hrs_per_week.should == 40
 	  end
 	  
 	  it "rehearsal_max_hrs_per_day" do
-	  	@profile.rehearsal_max_hrs_per_day = 6
+	  	@profile.rehearsal_max_hrs_per_day = 7
 			@profile.save
-	  	account.agma_profile.rehearsal_max_hrs_per_day.should == 6
+			account.agma_profile.rehearsal_max_hrs_per_day.should == 7
 	  end
 	  
 	  it "rehearsal_increment_min" do
-			@profile.rehearsal_increment_min = 60
+			@profile.rehearsal_increment_min = 30
 			@profile.save
-	  	account.agma_profile.rehearsal_increment_min.should == 60
+			account.agma_profile.rehearsal_increment_min.should == 30
 	  end
 	  
 	  it "class_break_min" do
-			@profile.class_break_min = 15
+			@profile.class_break_min = 10
 			@profile.save
-	  	account.agma_profile.class_break_min.should == 15
+			account.agma_profile.class_break_min.should == 10
 	  end
 	  
 	  it "rehearsal_break_min_per_hr" do
-			@profile.rehearsal_break_min_per_hr = 10
+	  	@profile.rehearsal_break_min_per_hr = 5
 			@profile.save
-	  	account.agma_profile.rehearsal_break_min_per_hr.should == 10
+			account.agma_profile.rehearsal_break_min_per_hr.should == 5
 	  end
 	  
 	  it "costume_increment_min" do
-	  	@profile.costume_increment_min = 10
+	  	@profile.costume_increment_min = 15
 			@profile.save
-	  	account.agma_profile.costume_increment_min.should == 10
+			account.agma_profile.costume_increment_min.should == 15
 	  end
   end
+
+	context "(Defaults)" do
+		let(:account_defaults) { FactoryGirl.create(:account) }
+		
+		it "defaults the rehearsal_start_min to '540'" do
+	  	account_defaults.agma_profile.rehearsal_start_min.should == 540
+	  end
+	  
+	  it "defaults the rehearsal_end_min to '1080'" do
+	  	account_defaults.agma_profile.rehearsal_end_min.should == 1080
+	  end
+	  
+	  it "defaults the rehearsal_max_hrs_per_week to '30'" do
+	  	account_defaults.agma_profile.rehearsal_max_hrs_per_week.should == 30
+	  end
+	  
+	  it "defaults the rehearsal_max_hrs_per_day to '6'" do
+	  	account_defaults.agma_profile.rehearsal_max_hrs_per_day.should == 6
+	  end
+	  
+	  it "defaults the rehearsal_increment_min to '30'" do
+	  	account_defaults.agma_profile.rehearsal_increment_min.should == 30
+	  end
+	  
+	  it "defaults the class_break_min to '15'" do
+	  	account_defaults.agma_profile.class_break_min.should == 15
+	  end
+	  
+	  it "defaults the rehearsal_break_min_per_hr to '5'" do
+	  	account_defaults.agma_profile.rehearsal_break_min_per_hr.should == 5
+	  end
+	  
+	  it "defaults the costume_increment_min to '15'" do
+	  	account_defaults.agma_profile.costume_increment_min.should == 15
+	  end
+	end
+	
+	context "(Methods)" do  
+		it "rehearsal_start_time" do
+			@profile.rehearsal_start_min = 480
+			@profile.save
+			account.agma_profile.rehearsal_start_time.should == "8:00 AM"
+	  end
+	  
+	  it "rehearsal_end_time" do
+	  	@profile.rehearsal_end_min = 960
+			@profile.save
+			account.agma_profile.rehearsal_end_time.should == "4:00 PM"
+	  end
+	end
 
 	describe "(Scopes)" do
 		let!(:wrong_acnt) { FactoryGirl.create(:account) }

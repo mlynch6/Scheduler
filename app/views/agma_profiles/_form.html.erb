@@ -1,6 +1,6 @@
-<%= f.select :rehearsal_start_time, @times, {}, { :class => 'input-small', 
+<%= f.select :rehearsal_start_min, @times, {}, { :class => 'input-small', 
 				:help_text =>'Class & Rehearsals will start no earlier than this' } %>
-<%= f.select :rehearsal_end_time, @times, {}, { :class => 'input-small',
+<%= f.select :rehearsal_end_min, @times, {}, { :class => 'input-small',
 				:help_text => 'Class & Rehearsals will end no later than this' } %>
 <%= f.text_w_add_on :rehearsal_max_hrs_per_week, {
 				:class => 'input-mini',
