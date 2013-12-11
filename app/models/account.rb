@@ -143,17 +143,7 @@ class Account < ActiveRecord::Base
 	end
   
   def create_profile
-		p = AgmaProfile.new
-		p.account_id = id
-		p.rehearsal_start_time = '9 AM'
-		p.rehearsal_end_time = '6 PM'
-		p.rehearsal_max_hrs_per_week = 30
-		p.rehearsal_max_hrs_per_day = 6
-		p.rehearsal_increment_min = 30
-		p.class_break_min = 15
-		p.rehearsal_break_min_per_hr = 5
-		p.costume_increment_min = 15
-		p.save
+		self.create_agma_profile
 	end
 	
 	def stripe_customer

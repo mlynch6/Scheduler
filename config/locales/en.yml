@@ -16,10 +16,8 @@ en:
         addr2: "Address 2"
         zipcode: "Zip Code"
       agma_profile:
-        rehearsal_start: "Rehearsal Start"
-        rehearsal_start_time: "Rehearsal Start"
-        rehearsal_end: "Rehearsal End"
-        rehearsal_end_time: "Rehearsal End"
+        rehearsal_start_min: "Rehearsal Start"
+        rehearsal_end_min: "Rehearsal End"
         rehearsal_max_hrs_per_week: "Max Hours/Week"
         rehearsal_max_hrs_per_day: "Max Hours/Day"
         rehearsal_increment_min: "Rehearsal Increments"
