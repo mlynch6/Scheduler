@@ -45,7 +45,7 @@ group :test do
 end
 
 #group :production do
-  gem 'pg', '0.12.2'
+  gem 'pg', '~>0.12.2'
   gem 'activerecord-postgresql-adapter'
 #end
 
@@ -56,7 +56,7 @@ gem 'bcrypt-ruby', '~> 3.0.1'
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-gem 'unicorn'
+gem 'unicorn', '~> 4.7.0'
 
 # Deploy with Capistrano
 gem 'capistrano', '~> 3.0.1'
