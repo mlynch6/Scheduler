@@ -1,0 +1,92 @@
+namespace :software do
+	
+	desc "Install onto the VPS server"
+	task :install do
+		invoke 'software:apt_get_update'
+		invoke 'software:python_software_properties'
+		invoke 'software:curl'
+	  
+	  invoke 'git:install'
+  	invoke 'nginx:install'
+  	invoke 'postgreSQL:install'
+  	#gem install activerecord-postgresql-adapter
+  	
+  	invoke 'nodejs:install'
+  	invoke 'rbenv:install'
+#		invoke 'postfix:install'
+  end
+  after 'software:install', 'software:setup'
+  
+  desc "Setup/configure software on the VPS server"
+  task :setup do
+  	invoke 'software:create_capistrano_dir'
+	  invoke 'git:setup'
+		invoke 'nginx:setup'
+		invoke 'postgreSQL:create_database'
+#		invoke 'postfix:setup'
+
+		#Capistrano deployment check
+		invoke 'deploy:check'
+		
+		#Create config files
+		invoke 'database:yml'
+  end
+  after 'software:setup', 'software:check'
+  
+  desc "Check versions of installed software"
+  task :check do
+  	invoke 'software:check_write_permissions'
+	  invoke 'git:check'
+  	invoke 'nginx:check'
+  	invoke 'postgreSQL:check'
+  	invoke 'nodejs:check'
+  	invoke 'rbenv:check'
+#		invoke 'postfix:check'
+  end
+
+	desc "Download most recent packages to server"
+	task :apt_get_update do
+		on roles(:all) do |host|
+			execute 'sudo apt-get -y update'
+		end
+	end
+	
+	desc "Install python-software-properties"
+	task :python_software_properties do
+		on roles(:all) do |host|
+			execute 'sudo apt-get -y install python-software-properties'
+		end
+	end
+	
+	desc "Install curl"
+	task :curl do
+		on roles(:all) do |host|
+			execute 'sudo apt-get -y install curl'
+		end
+	end
+
+	desc "Check that we can access everything"
+	task :create_capistrano_dir do
+		on roles(:all) do |host|
+			execute 'sudo mkdir /var/www'
+			execute "sudo mkdir #{fetch(:deploy_to)}"
+			execute "sudo chown deploy:deploy #{fetch(:deploy_to)}"
+			execute 'umask 0002'
+			execute "chmod g+s #{fetch(:deploy_to)}"
+			execute "mkdir #{fetch(:deploy_to)}/releases"
+			execute "mkdir #{fetch(:deploy_to)}/shared"
+		end
+	end
+
+	desc "Check that we can access everything"
+	task :check_write_permissions do
+		on roles(:all) do |host|
+			if test("[ -w #{fetch(:deploy_to)} ]")
+				info "#{fetch(:deploy_to)} is writable on #{host}"
+			else
+				error "#{fetch(:deploy_to)} is not writable on #{host}"
+			end
+		end
+	end
+
+end

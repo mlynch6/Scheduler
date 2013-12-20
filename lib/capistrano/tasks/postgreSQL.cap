@@ -1,0 +1,25 @@
+namespace :postgreSQL do
+	desc "Install postgreSQL DB"
+	task :install do
+		on roles(:db) do |host|
+			execute 'sudo add-apt-repository ppa:pitti/postgresql'
+			execute 'sudo apt-get -y update'
+			execute 'sudo apt-get -y install postgresql libpq-dev'
+		end
+  end
+  
+  desc "Create postgreSQL DB for application"
+	task :create_database do
+		on roles(:db) do |host|
+			execute "sudo -u postgres psql -c \"create user #{fetch(:application)} with password '#{fetch(:application)}';\""
+    	execute "sudo -u postgres psql -c \"create database #{fetch(:application)}_#{fetch(:stage)} owner #{fetch(:application)};\""
+		end
+  end
+  
+  desc "Check postgreSQL version"
+	task :check do
+		on roles(:db) do |host|
+			execute 'psql --version'
+		end
+  end
+end

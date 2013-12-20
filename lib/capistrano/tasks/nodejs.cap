@@ -1,0 +1,17 @@
+namespace :nodejs do
+	desc "Install latest stable release of Node.js"
+	task :install do
+		on roles(:app) do |host|
+			execute 'sudo add-apt-repository ppa:chris-lea/node.js'
+			execute 'sudo apt-get -y update'
+			execute 'sudo apt-get -y install nodejs'
+		end
+  end
+  
+  desc "Check Node.js version"
+  task :check do
+  	on roles(:app) do |host|
+  		execute 'node --version'
+  	end
+  end
+end

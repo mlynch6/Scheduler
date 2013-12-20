@@ -1,0 +1,10 @@
+namespace :unicorn do 
+  %w[start stop restart].each do |command|
+	  desc "#{command} unicorn server"
+		task command do
+			on roles(:app) do |host|
+				execute "/etc/init.d/unicorn_#{fetch(:application)} #{command}"
+			end
+	  end
+	end
+end

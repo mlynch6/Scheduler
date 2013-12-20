@@ -45,7 +45,6 @@ group :test do
 end
 
 group :production do
-	gem 'activerecord-postgresql-adapter'
   gem 'pg', '0.12.2'
 end
 
