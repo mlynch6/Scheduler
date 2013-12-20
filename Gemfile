@@ -45,7 +45,7 @@ group :test do
 end
 
 group :production do
-  #gem 'pg', '0.12.2'
+  gem 'pg', '0.12.2'
 end
 
 # To use ActiveModel has_secure_password
@@ -55,10 +55,12 @@ gem 'bcrypt-ruby', '~> 3.0.1'
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano', '~> 3.0.1'
+gem 'capistrano-rails', '~> 1.1.0'
+gem 'capistrano-bundler'
 
 # To use debugger
 # gem 'debugger'

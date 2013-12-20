@@ -1,0 +1,38 @@
+namespace :rbenv do
+	desc "Install rbenv, Ruby, and the Bundler gem"
+	task :install do
+		on roles(:app) do |host|
+			execute 'curl https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash'
+			
+			#Add rbenv
+			execute :echo, '\'export RBENV_ROOT="${HOME}/.rbenv"\' > /tmp/rbenvrc'
+			execute :echo, '\'if [ -d "${RBENV_ROOT}" ]; then\' >> /tmp/rbenvrc'
+			execute :echo, '\'  export PATH="${RBENV_ROOT}/bin:${PATH}"\' >> /tmp/rbenvrc'
+			execute :echo, '\'  eval "$(rbenv init -)"\' >> /tmp/rbenvrc'
+			execute :echo, '"fi" >> /tmp/rbenvrc'
+
+			#Add to rbenv above to .bashrc file
+			execute :cat, "/tmp/rbenvrc ~/.bashrc > ~/.bashrc.tmp"
+			execute :mv, '~/.bashrc.tmp', '~/.bashrc'
+			
+			execute 'export PATH="$HOME/.rbenv/bin:$PATH"'
+			execute 'eval "$(rbenv init -)"'
+			execute 'source ~/.bashrc'
+			
+			execute "rbenv #{fetch(:rbenv_bootstrap)}"
+			execute "rbenv install #{fetch(:ruby_version)}"
+			execute "rbenv global #{fetch(:ruby_version)}"
+			execute 'gem install bundler --no-ri --no-rdoc'
+			execute 'rbenv rehash'
+		end
+  end
+  
+  desc "Check rbenv & Ruby version"
+	task :check do
+		on roles(:app) do |host|
+			execute :rbenv, 'versions'
+			execute 'ruby -v'
+			execute 'bundle -v'
+		end
+  end
+end

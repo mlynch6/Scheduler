@@ -1,0 +1,21 @@
+namespace :postfix do
+	desc "Install the postfix for emailing"
+	task :install do
+  	on roles(:app) do |host|
+  		info 'Please execute "sudo apt-get -y install postfix" manually.  Inputs required for installation.'
+		end
+	end
+	
+	task :setup do
+		on roles(:app) do |host|
+			info 'NEED TO CONFIGURE POSTFIX.CONF'
+		end
+	end
+	
+	desc "Check postfix version"
+	task :check do
+		on roles(:app) do |host|
+			execute 'postconf -d | grep mail_version'
+		end
+  end
+end

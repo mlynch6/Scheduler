@@ -1,0 +1,20 @@
+namespace :database do
+	desc "Create database.yml in shared path"
+	task :yml do
+		on roles(:app) do |host|
+			default_template = <<-EOF
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: #{fetch(:application)}_database
+  host: #{fetch(:db_ip)}
+  pool: 5
+  username: #{fetch(:application)}
+  password: #{fetch(:db_password)}
+EOF
+
+			execute :echo, "\"#{default_template}\" > /tmp/database.yml"
+			execute :mv, '/tmp/database.yml', "#{shared_path}/config/database.yml"
+		end
+	end
+end

@@ -1,0 +1,77 @@
+namespace :nginx do
+	desc "Install latest stable release of nginx"
+	task :install do
+		on roles(:web) do |host|
+			execute 'sudo add-apt-repository ppa:nginx/stable'
+			execute 'sudo apt-get -y update'
+			execute 'sudo apt-get -y install nginx'
+		end
+  end
+  after 'nginx:install', 'nginx:start'
+  
+  desc "Setup nginx"
+  task :setup do
+  	on roles(:web) do |host|
+  		unless test "[ -f /etc/nginx/nginx.conf.old ]"
+  			execute 'sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old'
+  		end
+  		
+			default_template = <<-EOF
+upstream unicorn {
+	server unix:/tmp/unicon.#{fetch(:application)}.sock fail_timeout=0;
+}
+
+server {
+	listen 80 default deferred;
+#	server_name localhost;
+	root #{fetch(:deploy_to)}/public;
+	
+	location ^~ /assets/ {
+		gzip_static on;
+		expires max;
+		add_header Cache-Control public;
+	}
+
+	try_files $uri/index.html $uri @unicorn;
+	location @unicorn {
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
+		proxy_redirect off;
+		proxy_pass http://unicorn;
+	}
+
+	error_page 500 502 503 504 /500.html;
+	client_max_body_size 4G;
+	keepalive_timeout 10;
+}
+EOF
+			execute :echo, "\"#{default_template}\" > /tmp/nginx.conf"
+			execute :mv, '/tmp/nginx.conf', "#{shared_path}/config/nginx.conf"
+			if test "[ -L /etc/nginx/sites-enabled/#{fetch(:application)} ]"
+				execute "sudo rm /etc/nginx/sites-enabled/#{fetch(:application)}"
+			end
+			execute "sudo ln -s #{shared_path}/config/nginx.conf /etc/nginx/sites-enabled/#{fetch(:application)}"
+			
+			#Remove default config file
+			if test "[ -L /etc/nginx/sites-enabled/default ]"
+				execute 'sudo rm /etc/nginx/sites-enabled/default'
+			end
+  	end
+  end
+  
+  desc "Check nginx version"
+  task :check do
+  	on roles(:web) do |host|
+  		execute 'nginx -v'
+  	end
+  end
+  
+  %w[start stop restart].each do |command|
+	  desc "#{command} nginx"
+		task command do
+			on roles(:web) do |host|
+				execute "sudo service nginx #{command}"
+			end
+	  end
+	end
+end

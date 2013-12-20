@@ -1,0 +1,16 @@
+namespace :git do
+	desc "Install latest stable release of nginx"
+	task :install do
+		on roles(:all) do |host|
+			execute 'sudo apt-get -y install git-core'
+		end
+  end
+  
+  desc "Setup git globals"
+  task :setup do
+  	on roles(:all) do |host|
+  		execute "git config --global user.name \"#{fetch(:git_username)}\""
+  		execute "git config --global user.email #{fetch(:git_email)}"
+  	end
+  end
+end
