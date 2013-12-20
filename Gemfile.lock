@@ -283,7 +283,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   less-rails
-  pg
+  pg (~> 0.12.2)
   populator (= 1.0.0)
   prawn
   rails (= 3.2.13)
