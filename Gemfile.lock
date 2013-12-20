@@ -31,6 +31,8 @@ GEM
       activesupport (= 3.2.13)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-postgresql-adapter (0.0.1)
+      pg
     activeresource (3.2.13)
       activemodel (= 3.2.13)
       activesupport (= 3.2.13)
@@ -263,6 +265,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-postgresql-adapter
   annotate (~> 2.5.0)
   bcrypt-ruby (~> 3.0.1)
   bullet
@@ -280,7 +283,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   less-rails
-  pg (= 0.12.2)
+  pg
   populator (= 1.0.0)
   prawn
   rails (= 3.2.13)
@@ -293,6 +296,6 @@ DEPENDENCIES
   therubyracer
   twitter-bootstrap-rails (~> 2.2.8)
   uglifier (>= 1.2.3)
-  unicorn
+  unicorn (~> 4.7.0)
   validates_timeliness (~> 3.0)
   will_paginate (= 3.0.3)
