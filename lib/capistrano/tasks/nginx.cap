@@ -12,13 +12,20 @@ namespace :nginx do
   desc "Setup nginx"
   task :setup do
   	on roles(:web) do |host|
+  		#Archive orig nginx.conf file
   		unless test "[ -f /etc/nginx/nginx.conf.old ]"
   			execute 'sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old'
   		end
   		
-			default_template = <<-EOF
+  		#Remove default from sites-enabled
+			if test "[ -L /etc/nginx/sites-enabled/default ]"
+				execute 'sudo rm /etc/nginx/sites-enabled/default'
+			end
+  		
+  		#Create config file
+  		default_template = <<-EOF
 upstream unicorn {
-	server unix:/tmp/unicon.#{fetch(:application)}.sock fail_timeout=0;
+	server unix:/tmp/unicorn.#{fetch(:application)}.sock fail_timeout=0;
 }
 
 server {
@@ -47,15 +54,14 @@ server {
 EOF
 			execute :echo, "\"#{default_template}\" > /tmp/nginx.conf"
 			execute :mv, '/tmp/nginx.conf', "#{shared_path}/config/nginx.conf"
+  		
+			#Remove old application from sites-enabled
 			if test "[ -L /etc/nginx/sites-enabled/#{fetch(:application)} ]"
 				execute "sudo rm /etc/nginx/sites-enabled/#{fetch(:application)}"
 			end
-			execute "sudo ln -s #{shared_path}/config/nginx.conf /etc/nginx/sites-enabled/#{fetch(:application)}"
 			
-			#Remove default config file
-			if test "[ -L /etc/nginx/sites-enabled/default ]"
-				execute 'sudo rm /etc/nginx/sites-enabled/default'
-			end
+			#Create new application directory in sites-enabled
+			execute "sudo ln -s #{shared_path}/config/nginx.conf /etc/nginx/sites-enabled/#{fetch(:application)}"
   	end
   end
   

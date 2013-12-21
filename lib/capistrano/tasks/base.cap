@@ -21,15 +21,16 @@ namespace :software do
   task :setup do
   	invoke 'software:create_capistrano_dir'
 	  invoke 'git:setup'
-		invoke 'nginx:setup'
 		invoke 'postgreSQL:create_database'
 #		invoke 'postfix:setup'
 
-		#Capistrano deployment check
-		invoke 'deploy:check'
-		
 		#Create config files
 		invoke 'database:yml'
+		invoke 'nginx:setup'
+		invoke 'unicorn:setup'
+
+		#Capistrano deployment check
+		invoke 'deploy:check'
   end
   after 'software:setup', 'software:check'
   
@@ -68,13 +69,17 @@ namespace :software do
 	desc "Check that we can access everything"
 	task :create_capistrano_dir do
 		on roles(:all) do |host|
-			execute 'sudo mkdir /var/www'
-			execute "sudo mkdir #{fetch(:deploy_to)}"
-			execute "sudo chown deploy:deploy #{fetch(:deploy_to)}"
-			execute 'umask 0002'
-			execute "chmod g+s #{fetch(:deploy_to)}"
-			execute "mkdir #{fetch(:deploy_to)}/releases"
-			execute "mkdir #{fetch(:deploy_to)}/shared"
+			unless test "[ -d /var/www ]"
+				execute 'sudo mkdir /var/www'
+			end
+			unless test "[ -d #{fetch(:deploy_to)} ]"
+				execute "sudo mkdir #{fetch(:deploy_to)}"
+				execute "sudo chown deploy:deploy #{fetch(:deploy_to)}"
+				execute 'umask 0002'
+				execute "chmod g+s #{fetch(:deploy_to)}"
+				execute "mkdir #{fetch(:deploy_to)}/releases"
+				execute "mkdir #{fetch(:deploy_to)}/shared"
+			end
 		end
 	end
 

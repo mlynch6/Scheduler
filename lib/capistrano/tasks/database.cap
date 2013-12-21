@@ -6,10 +6,10 @@ namespace :database do
 production:
   adapter: postgresql
   encoding: unicode
-  database: #{fetch(:application)}_database
-  host: #{fetch(:db_ip)}
+  database: #{fetch(:application)}_#{fetch(:stage)}
+#  host: #{fetch(:db_ip)}
   pool: 5
-  username: #{fetch(:application)}
+  username: deploy
   password: #{fetch(:db_password)}
 EOF
 
