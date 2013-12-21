@@ -11,8 +11,9 @@ namespace :postgreSQL do
   desc "Create postgreSQL DB for application"
 	task :create_database do
 		on roles(:db) do |host|
-			execute "sudo -u postgres psql -c \"create user #{fetch(:application)} with password '#{fetch(:application)}';\""
-    	execute "sudo -u postgres psql -c \"create database #{fetch(:application)}_#{fetch(:stage)} owner #{fetch(:application)};\""
+			execute "sudo -u postgres psql -c \"create user deploy with password '#{fetch(:db_password)}';\""
+			execute "sudo -u postgres psql -c \"alter role deploy superuser createrole createdb replication;\""
+    	execute "sudo -u postgres psql -c \"create database #{fetch(:application)}_#{fetch(:stage)} owner deploy;\""
 		end
   end
   

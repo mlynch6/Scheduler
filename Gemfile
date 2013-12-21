@@ -7,6 +7,7 @@ gem 'jquery-rails'
 gem 'less-rails'
 gem 'therubyracer'
 gem 'prawn'
+gem 'faker', '1.1.2'
 
 # Subscription payment processing
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
@@ -15,7 +16,6 @@ group :development, :test do
   gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '~> 2.10.0'
   gem 'guard-rspec', '0.5.5'
-  gem 'faker', '1.1.2'
 end
 
 # Gems used only for assets and not required
@@ -44,10 +44,12 @@ group :test do
   gem 'factory_girl_rails', '1.4.0'
 end
 
-#group :production do
-  gem 'pg', '~>0.12.2'
-  gem 'activerecord-postgresql-adapter'
-#end
+group :production do
+end
+
+# Use postgreSQL for production
+gem 'pg', '~>0.12.2'
+gem 'activerecord-postgresql-adapter'
 
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby', '~> 3.0.1'
