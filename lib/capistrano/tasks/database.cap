@@ -3,11 +3,11 @@ namespace :database do
 	task :yml do
 		on roles(:app) do |host|
 			default_template = <<-EOF
-production:
+#{fetch(:rails_env)}:
   adapter: postgresql
   encoding: unicode
   database: #{fetch(:application)}_#{fetch(:stage)}
-#  host: #{fetch(:db_ip)}
+  host: #{fetch(:db_ip)}
   pool: 5
   username: deploy
   password: #{fetch(:db_password)}
