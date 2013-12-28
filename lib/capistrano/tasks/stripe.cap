@@ -1,0 +1,13 @@
+namespace :stripe do
+	desc "Setup stripe keys"
+	task :setup do
+		on roles(:app) do |host|
+			default_template = <<-EOF
+Stripe.api_key = \\\"#{fetch(:stripe_private_key)}\\\"
+STRIPE_PUBLIC_KEY = \\\"#{fetch(:stripe_public_key)}\\\"
+EOF
+			execute :echo, "\"#{default_template}\" > /tmp/stripe.rb"
+			execute :mv, '/tmp/stripe.rb', "#{shared_path}/config/initializers/stripe.rb"
+		end
+	end
+end

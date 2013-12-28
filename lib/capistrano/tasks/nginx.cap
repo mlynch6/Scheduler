@@ -7,7 +7,6 @@ namespace :nginx do
 			execute 'sudo apt-get -y install nginx'
 		end
   end
-  after 'nginx:install', 'nginx:start'
   
   desc "Setup nginx"
   task :setup do
@@ -21,47 +20,53 @@ namespace :nginx do
 			if test "[ -L /etc/nginx/sites-enabled/default ]"
 				execute 'sudo rm /etc/nginx/sites-enabled/default'
 			end
-  		
-  		#Create config file
+  	end
+  end
+  after 'nginx:setup', 'nginx:create_config'
+
+  desc "Create nginx.conf file in sites-enabled"
+  task :create_config do
+  	on roles(:web) do |host|
   		default_template = <<-EOF
 upstream unicorn {
-	server unix:/tmp/unicorn.#{fetch(:application)}.sock fail_timeout=0;
+  server unix:/tmp/unicorn.#{fetch(:application)}.sock fail_timeout=0;
 }
 
 server {
-	listen 80 default deferred;
-#	server_name localhost;
-	root #{fetch(:deploy_to)}/public;
-	
-	location ^~ /assets/ {
-		gzip_static on;
-		expires max;
-		add_header Cache-Control public;
-	}
-
-	try_files $uri/index.html $uri @unicorn;
-	location @unicorn {
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header Host $http_host;
-		proxy_redirect off;
-		proxy_pass http://unicorn;
-	}
-
-	error_page 500 502 503 504 /500.html;
-	client_max_body_size 4G;
-	keepalive_timeout 10;
-}
+  listen 80 default deferred;
+  # server_name localhost;
+  root #{current_path}/public;
+  
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
 EOF
 			execute :echo, "\"#{default_template}\" > /tmp/nginx.conf"
-			execute :mv, '/tmp/nginx.conf', "#{shared_path}/config/nginx.conf"
-  		
-			#Remove old application from sites-enabled
-			if test "[ -L /etc/nginx/sites-enabled/#{fetch(:application)} ]"
-				execute "sudo rm /etc/nginx/sites-enabled/#{fetch(:application)}"
-			end
 			
-			#Create new application directory in sites-enabled
-			execute "sudo ln -s #{shared_path}/config/nginx.conf /etc/nginx/sites-enabled/#{fetch(:application)}"
+			execute :echo, "'  try_files $uri/index.html $uri @unicorn;' >> /tmp/nginx.conf"
+			execute :echo, "'  location @unicorn {' >> /tmp/nginx.conf"
+			execute :echo, "'    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> /tmp/nginx.conf"
+			execute :echo, "'    proxy_set_header Host $http_host;' >> /tmp/nginx.conf"
+		
+			default_template = <<-EOF  	
+    proxy_redirect off;
+    proxy_pass http://unicorn;
+  }
+  
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 4G;
+  keepalive_timeout 10;
+}
+EOF
+			execute :echo, "\"#{default_template}\" >> /tmp/nginx.conf"
+			execute :mv, '/tmp/nginx.conf', "#{shared_path}/config/nginx.conf"
+			
+			#Create nginx.conf as linked file in sites-enabled
+			unless test "[ -L /etc/nginx/sites-enabled/#{fetch(:application)} ]"
+				execute "sudo ln -s #{current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{fetch(:application)}"
+			end
   	end
   end
   

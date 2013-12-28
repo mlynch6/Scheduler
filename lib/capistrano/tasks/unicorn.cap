@@ -2,21 +2,21 @@ namespace :unicorn do
 	desc "Setup unicorn"
   task :setup do
 		invoke 'unicorn:create_config'
-#		invoke 'unicorn:create_init'
+		invoke 'unicorn:create_init'
  	end
   
   desc "Setup unicorn.rb config file"
   task :create_config do
   	on roles(:app) do |host|
-  		#execute :echo, "\"working_directory \\\"#{fetch(:deploy_to)}\\\"\" > /tmp/unicorn.rb"
   		default_template = <<-EOF
-working_directory \\\"#{fetch(:deploy_to)}\\\"
-pid \\\"#{fetch(:deploy_to)}/tmp/pids/unicorn.pid\\\"
-stderr_path \\\"#{fetch(:deploy_to)}/log/unicorn.log\\\"
-stdout_path \\\"#{fetch(:deploy_to)}/log/unicorn.log\\\"
+working_directory \\\"#{current_path}\\\"
+pid \\\"#{shared_path}/pids/unicorn.pid\\\"
+stderr_path \\\"#{current_path}/log/unicorn.log\\\"
+stdout_path \\\"#{current_path}/log/unicorn.log\\\"
 
 listen \\\"/tmp/unicorn.#{fetch(:application)}.sock\\\"
 worker_processes 2
+preload_app true
 timeout 30
 EOF
 			execute :echo, "\"#{default_template}\" > /tmp/unicorn.rb"
@@ -27,31 +27,35 @@ EOF
   desc "Setup unicorn_init.sh file"
   task :create_init do
   	on roles(:app) do |host|
+  		execute :echo, "'#!/bin/sh' > /tmp/unicorn_init"
+  		execute :echo, "'### BEGIN INIT INFO' >> /tmp/unicorn_init"
+  		execute :echo, "'# Provides:             unicorn' >> /tmp/unicorn_init"
+  		execute :echo, "'# Required-Start:       $remote_fs $syslog' >> /tmp/unicorn_init"
+  		execute :echo, "'# Required-Stop:        $remote_fs $syslog' >> /tmp/unicorn_init"
 			default_template = <<-EOF
-#!/bin/sh
-### BEGIN INIT INFO
-# Provides: unicorn
-# Required-Start: $remote_fs $syslog
-# Required-Stop: $remote_fs $syslog
-# Default-Start: 2 3 4 5
-# Default-Stop: 0 1 6
-# Short-Description: Manage unicorn server
-# Description: Start, stop, restart unicorn server for a specific application.
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6       
+# Short-Description:    unicorn server init.d script
 ### END INIT INFO
 set -e
 
 # Feel free to change any of the following variables for your app:
-TIMEOUT=${TIMEOUT-60}
-APP_ROOT=#{fetch(:deploy_to)}
-PID=$APP_ROOT/tmp/pids/unicorn.pid
-CMD=///"cd #{fetch(:deploy_to)}; bundle exec unicorn -D -c #{fetch(:deploy_to)}/config/unicorn.rb -E production///"
-AS_USER=deploy
-set -u
-
-#test -f \\\"$INIT_CONF\\\" && . $INIT_CONF
+APP_ROOT=#{current_path}
+PID=#{shared_path}/pids/unicorn.pid
 EOF
-			execute :echo, "\"#{default_template}\" > /tmp/unicorn_init.sh"
-#			execute :mv, '/tmp/unicorn_init.sh', "#{shared_path}/config/unicorn_init.sh"
+			execute :echo, "\"#{default_template}\" >> /tmp/unicorn_init"
+			upload!(File.expand_path('./lib/capistrano/tasks/unicorn_init.template'), '/tmp')
+			execute :cat, "/tmp/unicorn_init /tmp/unicorn_init.template > /tmp/unicorn_init.sh"			
+			execute :chmod, "+x /tmp/unicorn_init.sh"
+			execute :mv, '/tmp/unicorn_init.sh', "#{shared_path}/config/unicorn_init.sh"
+
+			#Create unicorn_init.sh as linked file in /etc/init.d
+			unless test "[ -L /etc/init.d/unicorn_#{fetch(:application)} ]"
+				execute "sudo ln -s #{shared_path}/config/unicorn_init.sh /etc/init.d/unicorn_#{fetch(:application)}"
+			end
+			
+			#Start unicorn at boot
+			execute "sudo update-rc.d -f unicorn_#{fetch(:application)} defaults"
   	end
   end
   
