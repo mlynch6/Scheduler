@@ -1,0 +1,12 @@
+<% provide(:title, 'Edit Subscription Plan') %>
+<% provide(:header_current, 'Adinistration') %>
+
+<h1>Edit Subscription Plan</h1>
+
+<div class="row">
+	<%= form_for @plan, :url => admin_subscription_plan_path(@plan) ,:builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= f.error_messages %>
+		<%= render 'form', :f => f %>
+		<%= f.submit 'Update', :class => 'btn btn-primary' %>
+	<% end %>
+</div>

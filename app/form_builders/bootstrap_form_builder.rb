@@ -81,6 +81,22 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 		end
 	end
 	
+	def currency_field(name, *args)
+		options = args.extract_options!
+	  options = {:class => 'input-small', :placeholder => '0.00'}.merge(options)
+	  args << options
+		
+		content_tag :div, class: "control-group" do
+			field_label(name, *args) + 
+			(content_tag :div, :class => "controls" do
+				(content_tag :div, class: "input-prepend" do
+					content_tag(:span, '$', class: "add-on") +
+					par_text_field(name, *args)
+				end) + help_text(*args)
+			end)
+		end
+	end
+	
 	def uneditable_text_field(name, value, *args)
 		content_tag :div, class: "control-group" do
 			field_label(name, *args) + 

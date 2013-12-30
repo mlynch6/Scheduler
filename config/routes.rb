@@ -65,6 +65,10 @@ Scheduler::Application.routes.draw do
 	match 'payments/edit' => 'payments#edit'
 	match 'payments/update' => 'payments#update'
 	
+	namespace :admin do
+		resources :subscription_plans,:except => [:show]
+	end
+	
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

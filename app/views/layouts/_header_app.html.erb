@@ -33,6 +33,11 @@
 					<% if allow? "users", "index" %>
 						<li><%= link_to "Users", users_path %></li>
 					<% end %>
+					
+					<% if allow? "subscription_plans", "index" %>
+						<li class="divider"></li>
+						<li><%= link_to "Subscription Plans", admin_subscription_plans_path %></li>
+					<% end %>
 				</ul>
 			</li>
 		<% end %>
