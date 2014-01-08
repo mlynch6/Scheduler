@@ -7,11 +7,20 @@ describe "Address Pages:" do
 		context "for Account" do
 			it "has correct title" do
 				log_in
+				click_link "Setup"
 				click_link "Company Information"
 		  	click_link 'Add Address'
 		
 				should have_selector('title', text: 'Add Address')
 				should have_selector('h1', text: 'Add Address')
+			end
+			
+			it "has correct Navigation" do
+				log_in
+				visit new_account_address_path(current_account)
+		
+				should have_selector('li.active', text: 'Setup')
+				should have_selector('li.active', text: 'Company Information')
 			end
 			
 			context "with error" do
@@ -20,7 +29,7 @@ describe "Address Pages:" do
 					visit new_account_address_path(current_account)
 			  	click_button 'Create'
 			
-					should have_selector('div.alert-error')
+					should have_selector('div.alert-danger')
 				end
 				
 				it "doesn't create Address" do
@@ -65,12 +74,22 @@ describe "Address Pages:" do
 		context "for Employee" do
 			it "has correct title" do
 				log_in
-				click_link "Active Employees"
+				click_link "People"
+				click_link "Employees"
 		  	click_link "View"
 		  	click_link 'Add Address'
 		
 				should have_selector('title', text: 'Add Address')
 				should have_selector('h1', text: 'Add Address')
+			end
+			
+			it "has correct Navigation" do
+				log_in
+				employee = FactoryGirl.create(:employee, account: current_account)
+				visit new_employee_address_path(employee)
+		
+				should have_selector('li.active', text: 'People')
+				should have_selector('li.active', text: 'Employees')
 			end
 			
 			context "with error" do
@@ -80,7 +99,7 @@ describe "Address Pages:" do
 					visit new_employee_address_path(employee)
 			  	click_button 'Create'
 			
-					should have_selector('div.alert-error')
+					should have_selector('div.alert-danger')
 				end
 				
 				it "doesn't create Address" do
@@ -130,11 +149,22 @@ describe "Address Pages:" do
 			it "has correct title" do
 				log_in
 				address = FactoryGirl.create(:address, addressable: current_account)
+				
+				click_link "Setup"
 				click_link "Company Information"
 		  	click_link "edit_address_#{address.id}"
 		  	
 		  	should have_selector('title', text: 'Update Address')
 				should have_selector('h1', text: 'Update Address')
+			end
+			
+			it "has correct Navigation" do
+				log_in
+				address = FactoryGirl.create(:address, addressable: current_account)
+				visit edit_account_address_path(current_account, address)
+		
+				should have_selector('li.active', text: 'Setup')
+				should have_selector('li.active', text: 'Company Information')
 			end
 			
 			it "with error shows error message" do
@@ -145,7 +175,7 @@ describe "Address Pages:" do
 				fill_in "Address", with: ""
 		  	click_button 'Update'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 		
 			it "record with valid info saves address" do
@@ -183,12 +213,24 @@ describe "Address Pages:" do
 				log_in
 				employee = FactoryGirl.create(:employee, account: current_account)
 				address = FactoryGirl.create(:address_employee, addressable: employee)
-				click_link "Active Employees"
+				
+				click_link "People"
+				click_link "Employees"
 				click_link "show_#{employee.id}"
 		  	click_link "edit_address_#{address.id}"
 		  	
 		  	should have_selector('title', text: 'Update Address')
 				should have_selector('h1', text: 'Update Address')
+			end
+			
+			it "has correct Navigation" do
+				log_in
+				employee = FactoryGirl.create(:employee, account: current_account)
+				address = FactoryGirl.create(:address_employee, addressable: employee)
+				visit edit_employee_address_path(employee, address)
+		
+				should have_selector('li.active', text: 'People')
+				should have_selector('li.active', text: 'Employees')
 			end
 			
 			it "with error shows error message" do
@@ -200,7 +242,7 @@ describe "Address Pages:" do
 				fill_in "Address", with: ""
 		  	click_button 'Update'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 		
 			it "record with valid info saves address" do

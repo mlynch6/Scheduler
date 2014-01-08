@@ -1,9 +1,4 @@
 <%= f.text_field :first_name %>
 <%= f.text_field :last_name %>
 <%= f.select :role, Employee::ROLES %>
-
-<% if @employee.new_registration %>
-	<%= content_tag :div, f.email_field(:email), class: 'required' %>
-<% else %>
-	<%= f.email_field :email %>
-<% end %>
+<%= f.email_field :email %>

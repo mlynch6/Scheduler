@@ -1,4 +1,4 @@
-<%= f.uneditable_text_field :piece_id, @piece.name %>
+<%= f.static_control :piece_id do @piece.name end %>
 <%= f.text_field :name %>
 <%= f.text_field :track, :class => 'input-small' %>
 <%= f.select :character_ids, @characters, {}, { :multiple => true, :class => 'input-xxlarge' } %>

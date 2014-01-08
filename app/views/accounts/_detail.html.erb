@@ -1,0 +1,23 @@
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Account.human_attribute_name(:name) %></div>
+		<div class="dtl-text col-md-9"><%= @account.name %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Account.human_attribute_name(:time_zone) %></div>
+		<div class="dtl-text col-md-9"><%= @account.time_zone %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Account.human_attribute_name(:status) %></div>
+		<div class="dtl-text col-md-9"><%= @account.status %></div>
+	</div>
+
+<% if @account.cancelled_at %>
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Account.human_attribute_name(:cancelled_at) %></div>
+		<div class="dtl-text col-md-9"><%= @account.cancelled_at.to_s(:timestamp) %></div>
+	</div>
+<% end %>
+</div>

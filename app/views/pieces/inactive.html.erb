@@ -1,9 +1,12 @@
 <% provide(:title, 'Inactive Pieces') %>
-<% provide(:header_current, 'Scheduling') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Inactive Pieces') %>
 
-<h1>Inactive Pieces</h1>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
 
-<div class="row">	
+<% if @pieces.length > 0 %>
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
@@ -17,27 +20,18 @@
 					<td><%= piece.name %></td>
 					<td>
 						<% if allow? "pieces", "activate" %>
-							<%= activate_button nil, activate_piece_path(piece), :class => 'btn-small', :id => "activate_#{piece.id}" %>
+							<%= activate_button nil, activate_piece_path(piece), :class => 'btn-xs', :id => "activate_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "destroy" %>
-							<%= delete_button nil, piece, :class => 'btn-small', :id => "delete_#{piece.id}" %>
+							<%= delete_button nil, piece, :class => 'btn-xs', :id => "delete_#{piece.id}" %>
 						<% end %>
 					</td>
 				</tr>
 			<% end %>
 		</tbody>
 	</table>
-
-	<div class="row">
-		<div class="span10 offset2">
-			<%= will_paginate(class: 'pagination',
-						previous_label: "&laquo;",
-			    	next_label: "&raquo;"
-					)%>
-		</div>
-	</div>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
 	
-	<% unless @pieces.length > 0 %>
-		<div class="alert">No pieces are inactive.</div>
-	<% end %>
-</div>
+<% else %>
+	<p>No pieces are inactive.</p>
+<% end %>

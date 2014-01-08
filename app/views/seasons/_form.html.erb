@@ -1,11 +1,4 @@
 <%= f.text_field :name %>
-
-<div class="row">
-	<div class="span3">
-		<%= f.date_field :start_dt, :label => 'From' %>
-	</div>
-	<div class="span3">
-		<%= f.date_field :end_dt, :label => 'To' %>
-	</div>
-</div>
-<%= f.select :piece_ids, @pieces, {}, { :multiple => true, :class => 'input-xxlarge' } %>
+<%= f.date_field :start_dt, :label => 'From' %>
+<%= f.date_field :end_dt, :label => 'To' %>
+<%= f.select :piece_ids, @pieces, {}, {:multiple => true } %>

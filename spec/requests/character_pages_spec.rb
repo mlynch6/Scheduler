@@ -4,18 +4,26 @@ describe "Character Pages:" do
   subject { page }
 
 	context "#index" do
-  	it "has correct title & table headers" do
+  	it "has correct title" do
   		log_in
   		piece = FactoryGirl.create(:piece, account: current_account)
   		FactoryGirl.create(:character, account: current_account, piece: piece)
-	  	click_link "Active Pieces"
+	  	click_link 'Setup'
+	  	click_link "Pieces"
 	  	click_link "View"
 	  	click_link "Characters"
 	  	
 	  	should have_selector('title', text: "#{piece.name} | Characters")
 		  should have_selector('h1', text: "#{piece.name}")
-		  
-		  should have_selector('th', text: "Characters")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			piece = FactoryGirl.create(:piece, account: current_account)
+	  	visit piece_characters_path(piece)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 		it "without records" do
@@ -23,7 +31,7 @@ describe "Character Pages:" do
 			piece = FactoryGirl.create(:piece, account: current_account)
 	  	visit piece_characters_path(piece)
 	  	
-	    should have_selector('div.alert')
+	    should have_selector('p', text: 'To begin')
 			should_not have_selector('td')
 		end
 	  
@@ -33,11 +41,24 @@ describe "Character Pages:" do
 			4.times { FactoryGirl.create(:character, account: current_account, piece: piece) }
 			visit piece_characters_path(piece)
 	
+			should have_selector('th', text: "Characters")
+	
 			piece.characters.each do |character|
 				should have_selector('td', text: character.name)
 				should have_link('Edit', href: edit_character_path(character))
 				should have_link('Delete', href: character_path(character))
 	    end
+		end
+		
+		it "has links for Super Admin" do
+			log_in
+			piece = FactoryGirl.create(:piece, account: current_account)
+			FactoryGirl.create(:character, account: current_account, piece: piece)
+			visit piece_characters_path(piece)
+	
+			should have_link('Add Character')
+			should have_link('Edit')
+			should have_link('Delete')
 		end
 		
 		it "doesn't have links for Employee" do
@@ -67,13 +88,23 @@ describe "Character Pages:" do
 		it "has correct title" do
 			log_in
   		piece = FactoryGirl.create(:piece, account: current_account)
-	  	click_link "Active Pieces"
+	  	click_link 'Setup'
+	  	click_link "Pieces"
 	  	click_link "View"
 	  	click_link "Characters"
 	  	click_link "Add Character"
 	
 			should have_selector('title', text: "#{piece.name} | Add Character")
 		  should have_selector('h1', text: "Add Character for #{piece.name}")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			piece = FactoryGirl.create(:piece, account: current_account)
+			visit new_piece_character_path(piece)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 		context "with error" do
@@ -83,7 +114,7 @@ describe "Character Pages:" do
 				visit new_piece_character_path(piece)
 		  	click_button 'Create'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 			
 			it "doesn't create Piece" do
@@ -117,13 +148,24 @@ describe "Character Pages:" do
 			log_in
 			piece = FactoryGirl.create(:piece, account: current_account)
 			character = FactoryGirl.create(:character, account: current_account, piece: piece)
-	  	click_link "Active Pieces"
+	  	click_link 'Setup'
+	  	click_link "Pieces"
 	  	click_link "View"
 	  	click_link "Characters"
 	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: "#{piece.name} | Edit Character")
 		  should have_selector('h1', text: "Edit Character for #{piece.name}")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+			character = FactoryGirl.create(:character, account: current_account, piece: piece)
+	  	visit edit_character_path(character)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 	  it "with error shows error message" do
@@ -134,7 +176,7 @@ describe "Character Pages:" do
 	  	fill_in "Character", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	
 		it "with bad record in URL shows 'Record Not Found' error" do

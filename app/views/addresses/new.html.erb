@@ -1,13 +1,24 @@
 <% provide(:title, 'Add Address') %>
-<% provide(:header_current, 'Employees') if @address.addressable_type == "Employee" %>
-<% provide(:header_current, 'Administration') if @address.addressable_type == "Account" %>
 
-<h1>Add Address</h1>
+<% if @address.addressable_type == "Employee" %>
+	<% provide(:header_current, 'People') %>
+	<% provide(:sidebar_current, 'Employees') %>
+<% end %>
 
-<div class="row">
-	<%= form_for [@addressable, @address], builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-		<%= f.error_messages %>
-		<%= render 'form', :f => f %>
-		<%= f.submit 'Create', :class => 'btn btn-primary' %>
-	<% end %>
+<% if @address.addressable_type == "Account" %>
+	<% provide(:header_current, 'Setup') %>
+	<% provide(:sidebar_current, 'Company Info') %>
+<% end %>
+
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
 </div>
+
+<%= form_for [@addressable, @address], builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= f.error_messages %>
+	<%= render 'form', :f => f %>
+	
+	<%= f.submit_group do %>
+		<%= f.submit_primary 'Create' %>
+	<% end %>
+<% end %>

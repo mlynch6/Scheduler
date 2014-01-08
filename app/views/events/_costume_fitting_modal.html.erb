@@ -1,36 +1,25 @@
-<div id="modal_<%= fitting.id %>" class="modal hide fade">
+<div class="modal fade" id="modal_<%= appt.id %>" tabindex="-1" role="dialog" aria-labelledby="modalLabel_<%= appt.id %>" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3><%= fitting.title %></h3>
-		<span class="muted">Costume Fitting in <%= fitting.location.name %></span>
+		<h3 class="modal-title" id="modalLabel_<%= appt.id %>">
+			<%= appt.title %>
+			<small>Costume Fitting</small>
+		</h3>
 	</div>
-	<div class="modal-body show-ui">
-		<div class="row-fluid">
-			<div class="label-ui span4">Date</div>
-			<div class="text-ui span8"><%= fitting.start_date %></div>
-		</div>
-		
-		<div class="row-fluid">
-			<div class="label-ui span4">Time</div>
-			<div class="text-ui span8"><%= "#{fitting.start_time} to #{fitting.end_time}" %></div>
-		</div>
-
-		<div class="row-fluid">
-			<div class="label-ui span4">Invitees</div>
-			<div class="text-ui span8">
-				<ul class="unstyled">
-					<% fitting.employees.each do |employee| %>
-						<li><%= employee.full_name %></li>
-					<% end %>
-				</ul>
-			</div>
-		</div>
+	
+	<div class="modal-body">
+		<%= render 'costume_fittings/detail', fitting: appt %>
 	</div>
 	
 	<div class="modal-footer">
 		<% if allow? "costume_fittings", "edit" %>
-			<%= edit_button "Edit", edit_costume_fitting_path(fitting) %>
+			<%= edit_button "Edit", edit_costume_fitting_path(appt) %>
 		<% end %>
-		<a href="#" class="btn" data-dismiss="modal">Close</a>	
 	</div>
-</div>
+
+</div> <!-- modal-content -->
+</div> <!-- modal-dialog -->
+</div> <!-- modal -->

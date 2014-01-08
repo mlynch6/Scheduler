@@ -17,7 +17,6 @@ subscription =
 	
 	processCard: ->
 		card =
-			name: $('#cardholder_name').val()
 			number: $('#card_number').val()
 			exp_month: $('#card_month').val()
 			exp_year: $('#card_year').val()

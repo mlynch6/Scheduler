@@ -1,9 +1,12 @@
 <% provide(:title, 'Inactive Employees') %>
-<% provide(:header_current, 'Employees') %>
+<% provide(:header_current, 'People') %>
+<% provide(:sidebar_current, 'Inactive Employees') %>
 
-<h1>Inactive Employees</h1>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
 
-<div class="row">
+<% if @employees.length > 0 %>
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
@@ -19,28 +22,18 @@
 					<td><%= employee.role %></td>
 					<td>
 						<% if allow? "employees", "activate" %>
-							<%= activate_button nil, activate_employee_path(employee), :class => 'btn-small', :id => "activate_#{employee.id}" %>
+							<%= activate_button nil, activate_employee_path(employee), :class => 'btn-xs', :id => "activate_#{employee.id}" %>
 						<% end %>
 						<% if allow? "employees", "destroy" %>
-							<%= delete_button nil, employee, :class => 'btn-small', :id => "delete_#{employee.id}" %>
+							<%= delete_button nil, employee, :class => 'btn-xs', :id => "delete_#{employee.id}" %>
 						<% end %>
 					</td>
 				</tr>
 			<% end %>
 		</tbody>
 	</table>
-
-	<div class="row">
-		<div class="span10 offset2">
-			<%= will_paginate(class: 'pagination',
-						previous_label: "&laquo;",
-			    	next_label: "&raquo;"
-					)%>
-		</div>
-	</div>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
 	
-	<% unless @employees.length > 0 %>
-		<div class="alert">No records found</div>
-	<% end %>
-	</div>
-</div>
+<% else %>
+	<p>No employees are inactive.</p>
+<% end %>

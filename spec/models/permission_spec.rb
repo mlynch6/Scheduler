@@ -241,6 +241,10 @@ shared_examples "a NON-administrator" do
 		it { should_not allow(:subscriptions, :destroy) }
 	end
 	
+	context "subscription_plans" do
+		it { should_not allow(:subscription_plans, :index) }
+	end
+	
 	context "payments" do
 		it { should_not allow(:payments, :edit) }
 		it { should_not allow(:payments, :update) }
@@ -397,6 +401,15 @@ describe Permission do
 		it { should allow(:costume_fittings, :create) }
 		it { should allow(:costume_fittings, :edit) }
 		it { should allow(:costume_fittings, :update) }
+		
+		context "for subscription_plans" do
+			it { should_not allow(:subscription_plans, :index) }
+			it { should_not allow(:subscription_plans, :new) }
+			it { should_not allow(:subscription_plans, :create) }
+			it { should_not allow(:subscription_plans, :edit) }
+			it { should_not allow(:subscription_plans, :update) }
+			it { should_not allow(:subscription_plans, :destroy) }
+		end
 	end
 	
 	context "as Super Administrator" do
@@ -405,18 +418,33 @@ describe Permission do
 		
 		it_behaves_like "an administrator"
 		
-		it { should allow(:employees, :destroy) }
-		it { should allow(:locations, :destroy) }
-		it { should allow(:pieces, :destroy) }
+		context "for destroy" do
+			it { should allow(:employees, :destroy) }
+			it { should allow(:locations, :destroy) }
+			it { should allow(:pieces, :destroy) }
+		end
 		
-		it { should allow(:company_classes, :new) }
-		it { should allow(:company_classes, :create) }
-		it { should allow(:company_classes, :edit) }
-		it { should allow(:company_classes, :update) }
+		context "for company_classes" do
+			it { should allow(:company_classes, :new) }
+			it { should allow(:company_classes, :create) }
+			it { should allow(:company_classes, :edit) }
+			it { should allow(:company_classes, :update) }
+		end
 		
-		it { should allow(:costume_fittings, :new) }
-		it { should allow(:costume_fittings, :create) }
-		it { should allow(:costume_fittings, :edit) }
-		it { should allow(:costume_fittings, :update) }
+		context "for costume_fittings" do
+			it { should allow(:costume_fittings, :new) }
+			it { should allow(:costume_fittings, :create) }
+			it { should allow(:costume_fittings, :edit) }
+			it { should allow(:costume_fittings, :update) }
+		end
+		
+		context "for subscription_plans" do
+			it { should allow(:subscription_plans, :index) }
+			it { should allow(:subscription_plans, :new) }
+			it { should allow(:subscription_plans, :create) }
+			it { should allow(:subscription_plans, :edit) }
+			it { should allow(:subscription_plans, :update) }
+			it { should allow(:subscription_plans, :destroy) }
+		end
 	end
 end

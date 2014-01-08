@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Subscription Pages:" do
+describe "Subscription Pages:", focus: true do
   subject { page }
 	
 	context "#show" do
@@ -21,6 +21,11 @@ describe "Subscription Pages:" do
 			should have_selector('h1', text: 'My Subscription')
 		end
 		
+		it "has correct Navigation" do	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'My Subscription')
+		end
+		
 		it "shows correct data" do
 	  	should have_content(current_account.current_subscription_plan.name)
 	  	should have_content(current_account.next_invoice_date.strftime('%B %-d, %Y'))
@@ -39,7 +44,8 @@ describe "Subscription Pages:" do
 		end
 		
 		it "shows payment history" do
-			should have_selector('h2', text: 'Payment History')
+			should have_content('Payment History')
+			
 			current_account.list_invoices.each do |invoice|
 				should have_content(Time.zone.at(invoice.date).to_date)
 				should have_content("$0.00")	#Trial Period
@@ -50,7 +56,7 @@ describe "Subscription Pages:" do
 			current_account.cancel_subscription
 			visit subscriptions_current_path
 			
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	end
 	
@@ -69,6 +75,11 @@ describe "Subscription Pages:" do
 		it "has correct title" do
 			should have_selector('title', text: 'Change Subscription')
 			should have_selector('h1', text: 'Change Subscription')
+		end
+		
+		it "has correct Navigation" do	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'My Subscription')
 		end
 		
 		it "has links" do

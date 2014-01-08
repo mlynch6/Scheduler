@@ -51,8 +51,13 @@ describe "Payment Pages:" do
   	end
 		
 		it "has correct title", js: true do
-	  	#should have_selector('title', text: 'Change Payment Method')
+	  	should have_selector('title', text: 'Change Payment Method')
 			should have_selector('h1', text: 'Change Payment Method')
+		end
+		
+		it "has correct Navigation" do
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'My Subscription')
 		end
 		
 		it "has links", js: true do
@@ -76,7 +81,7 @@ describe "Payment Pages:" do
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Update"
 	    	
-	    	should have_selector('div.alert-error')
+	    	should have_selector('div.alert-danger')
 	    	should have_content('card number is incorrect')
 	    end
 	    
@@ -86,7 +91,7 @@ describe "Payment Pages:" do
 		  	fill_in "Security Code", with: "99"
 		  	click_button "Update"
 	    	
-	    	should have_selector('div.alert-error')
+	    	should have_selector('div.alert-danger')
 	    	should have_content('security code is invalid')
 	    end
 	    
@@ -96,7 +101,7 @@ describe "Payment Pages:" do
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Update"
 	    	
-	    	should have_selector('div.alert-error')
+	    	should have_selector('div.alert-danger')
 	    	should have_content('card was declined')
 	    	should have_content('Credit Card Number')
 	    end

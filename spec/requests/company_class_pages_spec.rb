@@ -6,11 +6,19 @@ describe "CompanyClass Pages:" do
   context "#new" do
   	it "has correct title" do
 			log_in
-	  	click_link 'Daily Schedule'
+	  	click_link 'Calendar'
 	  	click_link 'New Company Class'
 	  	
 	  	should have_selector('title', text: 'New Company Class')
 		  should have_selector('h1', text: 'New Company Class')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit new_company_class_path
+	
+			should have_selector('li.active', text: 'Calendar')
+			should have_selector('li.active', text: 'New Company Class')
 		end
 		
 		it "has only active Locations in dropdown" do
@@ -46,7 +54,7 @@ describe "CompanyClass Pages:" do
 				visit new_company_class_path
 		  	click_button 'Create'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 			
 			it "doesn't create Company Class" do
@@ -153,11 +161,25 @@ describe "CompanyClass Pages:" do
 					account: current_account,
 					location: location,
 					start_date: Time.zone.today)
+			click_link 'Calendar'
 	  	click_link 'Daily Schedule'
 	  	click_link 'Edit'
 	  	
 	  	should have_selector('title', text: 'Edit Company Class')
 			should have_selector('h1', text: 'Edit Company Class')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			cclass = FactoryGirl.create(:company_class,
+					account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+			visit edit_company_class_path(cclass)
+	
+			should have_selector('li.active', text: 'Calendar')
+			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
 	  it "record with error" do
@@ -172,7 +194,7 @@ describe "CompanyClass Pages:" do
 	  	fill_in "Date", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	 
 		it "record with valid info saves company class" do

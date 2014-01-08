@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'		#matches version on Hostmoster
-gem 'will_paginate', '3.0.3'
+gem 'bootstrap-will_paginate', :git => 'git://github.com/yrgoldteeth/bootstrap-will_paginate.git'	#works with Bootstrap 3
 gem 'validates_timeliness', '~> 3.0'
 gem 'jquery-rails'
 gem 'less-rails'
@@ -24,7 +24,7 @@ group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.2.3'
-  gem 'twitter-bootstrap-rails', '~> 2.2.8'
+  gem 'bootstrap-sass', '~> 3.0.3.0'		# Bootstrap 3
   gem 'jquery-ui-rails'
   gem 'chosen-rails'
 end

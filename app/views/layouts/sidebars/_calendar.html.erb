@@ -1,0 +1,33 @@
+<div class="panel panel-primary mash-sidebar hidden-print" role="complementary">
+	<div class="panel-heading">
+		<h3 class="panel-title"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-calendar')%> Calendar</h3>
+	</div>
+	
+	<ul class="list-group">
+		<% if allow? "events", "index" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Daily" %>">
+				<%= link_to "Daily Schedule", events_path %>
+			</li>
+		<% end %>
+		
+		<% if allow? "company_classes", "new" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "New Company Class" %>">
+				<%= new_link "New Company Class", new_company_class_path(date: @date) %>
+			</li>
+		<% end %>
+		
+		<% if allow? "rehearsals", "new" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "New Rehearsal" %>">
+				<%= new_link "New Rehearsal", new_rehearsal_path(date: @date) %>
+			</li>
+		<% end %>
+		
+		<% if allow? "costume_fittings", "new" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "New Costume Fitting" %>">
+				<%= new_link "New Costume Fitting", new_costume_fitting_path(date: @date) %>
+			</li>
+		<% end %>
+	</ul>
+</div>
+
+<div id="datepicker"></div>

@@ -1,51 +1,48 @@
 <% provide(:title, 'Users') %>
-<% provide(:header_current, 'Administration') %>
+<% provide(:header_current, 'People') %>
+<% provide(:sidebar_current, 'Users') %>
 
-<h1>Users</h1>
-
-<div class="row">
-	<div class="row text-center">
-		<% if allow? "users", "new" %>
-			<%= new_button "Add User", new_user_path %>
-		<% end %>
-	</div>
-	
-	<table class="table table-striped">
-		<thead>
-	  	<tr>
-	  		<th>Employee</th>
-	  		<th>Username</th>
-	  		<th style="width:70px;">&nbsp;</th>
-	  	</tr>
-	  </thead>
-	  <tbody>
-	  	<% @users.each do |user| %>
-				<tr>
-					<td><%= user.employee.name %></td>
-					<td><%= user.username %></td>
-					<td>
-						<% if allow? "users", "edit" %>
-							<%= edit_button nil, edit_user_path(user), :class => 'btn-small', :id => "edit_#{user.id}" %>
-						<% end %>
-						<% if allow? "users", "destroy" %>
-							<%= delete_button nil, user, :class => 'btn-small', :id => "delete_#{user.id}" %>
-						<% end %>
-					</td>
-				</tr>
-			<% end %>
-		</tbody>
-	</table>
-
-	<div class="row">
-		<div class="span10 offset2">
-			<%= will_paginate(class: 'pagination',
-						previous_label: "&laquo;",
-			    	next_label: "&raquo;"
-					)%>
-		</div>
-	</div>
-	
-	<% unless @users.length > 0 %>
-		<div class="alert">No users are active. Click on 'Add User' to get started.</div>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+<div class="well well-sm mash-well-link">
+	<% if allow? "users", "new" %>
+		<%= new_link "Add User", new_user_path %>
 	<% end %>
 </div>
+
+<% if @users.length > 0 %>
+<table class="table table-striped">
+	<thead>
+  	<tr>
+  		<th>Employee</th>
+  		<th>Username</th>
+  		<th style="width:70px;">&nbsp;</th>
+  	</tr>
+  </thead>
+  <tbody>
+  	<% @users.each do |user| %>
+			<tr>
+				<td><%= user.employee.name %></td>
+				<td><%= user.username %></td>
+				<td>
+					<% if allow? "users", "edit" %>
+						<%= edit_button nil, edit_user_path(user), :class => 'btn-xs', :id => "edit_#{user.id}" %>
+					<% end %>
+					<% if allow? "users", "destroy" %>
+						<%= delete_button nil, user, :class => 'btn-xs', :id => "delete_#{user.id}" %>
+					<% end %>
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+
+<% else %>
+	<p>You can grant staff members access to your account by creating a user login for them.  
+		Every staff member should have their own username and password to the system. This 
+		allows you to maintain the security of your information and also manage access to 
+		specific features for each staff member.</p>
+	<p>To begin, click the <em class="text-info">Add User</em> link above.</p>
+<% end %>

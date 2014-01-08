@@ -1,26 +1,31 @@
 require 'spec_helper'
 
-describe "Season Pages:", focus: true do
+describe "Season Pages:" do
 	subject { page }
   
   context "#index" do
-  	it "has correct title & table headers" do
+  	it "has correct title" do
   		log_in
+  		click_link "Setup"
 	  	click_link "Seasons"
 	  	
 	  	should have_selector('title', text: 'Seasons')
 		  should have_selector('h1', text: 'Seasons')
-		  
-		  should have_selector('th', text: "Name")
-		  should have_selector('th', text: "Start Date")
-		  should have_selector('th', text: "End Date")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	visit seasons_path
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Seasons')
 		end
 		
 		it "without records" do
 			log_in
 	  	visit seasons_path
 	  	
-	    should have_selector('div.alert')
+	    should have_selector('p', text: 'To begin')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -30,13 +35,28 @@ describe "Season Pages:", focus: true do
 			4.times { FactoryGirl.create(:season, account: current_account) }
 			visit seasons_path(per_page: 3)
 	
+			should have_selector('th', text: "Name")
+		  should have_selector('th', text: "Start Date")
+		  should have_selector('th', text: "End Date")
 			should have_selector('div.pagination')
+			
 			Season.paginate(page: 1, per_page: 3).each do |season|
 				should have_selector('td', text: season.name)
 				should have_link('View', href: season_path(season))
 				should have_link('Edit', href: edit_season_path(season))
 				should have_link('Delete', href: season_path(season))
 	    end
+		end
+		
+		it "has links for Super Admin" do
+			log_in
+			FactoryGirl.create(:season, account: current_account)
+			visit seasons_path
+	
+			should have_link('Add Season')
+			should have_link('View')
+			should have_link('Edit')
+			should have_link('Delete')
 		end
 		
 		it "doesn't have links for Employee" do
@@ -65,11 +85,20 @@ describe "Season Pages:", focus: true do
 	context "#new" do
 		it "has correct title" do
 			log_in
+			click_link "Setup"
 	  	click_link "Seasons"
 	  	click_link "Add Season"
 	
 			should have_selector('title', text: 'Add Season')
 			should have_selector('h1', text: 'Add Season')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	visit new_season_path
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Seasons')
 		end
 		
 		context "with error" do
@@ -78,7 +107,7 @@ describe "Season Pages:", focus: true do
 				visit new_season_path
 				click_button 'Create'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 			
 			it "doesn't create Season" do
@@ -132,11 +161,21 @@ describe "Season Pages:", focus: true do
 		it "has correct title" do
 			log_in
 			season = FactoryGirl.create(:season, account: current_account)
+			click_link "Setup"
 			click_link "Seasons"
 	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: 'Edit Season')
 			should have_selector('h1', text: 'Edit Season')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	season = FactoryGirl.create(:season, account: current_account)
+	  	visit edit_season_path(season)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Seasons')
 		end
 		
 	  it "record with error" do
@@ -146,7 +185,7 @@ describe "Season Pages:", focus: true do
 	  	fill_in "Name", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	 
 		it "record with valid info saves season" do
@@ -180,31 +219,37 @@ describe "Season Pages:", focus: true do
 	end
 	
 	context "#show" do
-  	it "has correct title & table headers" do
+  	it "has correct title" do
   		log_in
   		season = FactoryGirl.create(:season, account: current_account)
+	  	click_link "Setup"
 	  	click_link "Seasons"
 	  	click_link "View"
 	  	
 	  	should have_selector('title', text: season.name)
-	  	should have_selector('title', text: 'Pieces')
 		  should have_selector('h1', text: season.name)
-		  
-		  should have_selector('th', text: "Piece")
-		  should have_selector('th', text: "Casts")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	season = FactoryGirl.create(:season, account: current_account)
+			visit season_path(season)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Seasons')
 		end
 		
 		it "displays correct data" do
 			log_in
 			season = FactoryGirl.create(:season, account: current_account)
 			visit season_path(season)
-	  	
+		  
 			should have_content(season.name)
 			should have_content(season.start_dt)
 			should have_content(season.end_dt)
 		end
 		
-		it "has pieces shown" do
+		it "displays associated pieces" do
 			log_in
 			season = FactoryGirl.create(:season, account: current_account)
 			3.times {
@@ -212,13 +257,16 @@ describe "Season Pages:", focus: true do
 				FactoryGirl.create(:season_piece, season: season, piece: piece)
 			}
 			visit season_path(season)
-
+			
+			should have_selector('th', text: "Piece")
+		  should have_selector('th', text: "Casts")
+		  
 			season.pieces.each do |piece|
 				should have_content(piece.name)
 			end
 		end
 		
-		it "has casts for pieces shown" do
+		it "displays casts for each associated piece" do
 			log_in
 			season = FactoryGirl.create(:season, account: current_account)
 			piece = FactoryGirl.create(:piece, account: current_account)
@@ -232,6 +280,18 @@ describe "Season Pages:", focus: true do
 				should have_link('Add Cast', href: new_season_piece_cast_path(season_piece))
 				should have_link('Delete')
 			end
+		end
+		
+		it "has links for Super Admin" do
+			log_in
+			season = FactoryGirl.create(:season, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			season_piece = FactoryGirl.create(:season_piece, season: season, piece: piece)
+			cast = FactoryGirl.create(:cast, season_piece: season_piece)
+			visit season_path(season)
+	
+			should have_link('Add Cast')
+			should have_link('Delete')
 		end
 		
 		it "has links for Administrator" do

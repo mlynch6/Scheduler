@@ -1,0 +1,31 @@
+<table class="table">
+	<thead>
+		<tr>
+	  	<th>Piece</th>
+	  	<th>Casts</th>
+	  	<th style="width:105px;">&nbsp;</th>
+	  </tr>
+	</thead>
+	<tbody>
+		<% @season_pieces.each do |season_piece| %>
+			<tr>
+				<td><%= season_piece.piece.name %></td>
+				<td><ul class="list-unstyled">
+					<% season_piece.casts.each do |cast| %>
+						<li>
+							<%= cast.name %>
+							<% if allow? "casts", "destroy" %>
+								<%= delete_link nil, cast, :id => "delete_#{cast.id}" %>
+							<% end %>
+						</li>
+					<% end %>
+				</ul></td>
+				<td>
+					<% if allow? "casts", "new" %>
+						<%= new_link "Add Cast", new_season_piece_cast_path(season_piece), :class => 'btn-small', :id => "newCast_#{season_piece.id}" %>
+					<% end %>
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

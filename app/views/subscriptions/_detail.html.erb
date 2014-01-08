@@ -1,0 +1,11 @@
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-md-4"><%= Account.human_attribute_name(:current_subscription_plan) %></div>
+		<div class="dtl-text col-md-8"><%= @account.current_subscription_plan.name %> &nbsp;<%= link_to '[change]', subscriptions_edit_path %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-4">Next Payment On</div>
+		<div class="dtl-text col-md-8"><%= @next_invoice_date.strftime('%B %-d, %Y') if @next_invoice_date %></div>
+	</div>
+</div>

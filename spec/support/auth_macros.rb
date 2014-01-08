@@ -41,8 +41,8 @@ protected
 	
 	def do_user_login
     visit login_path
-    fill_in "Username", with: @_current_user.username
-    fill_in "Password", with: @_current_user.password
+    fill_in "username", with: @_current_user.username
+    fill_in "password", with: @_current_user.password
     click_button "Sign In"
     page.should have_content "Sign Out"
 	end

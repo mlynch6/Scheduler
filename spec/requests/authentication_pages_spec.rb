@@ -10,7 +10,7 @@ describe "Authentication" do
 	  	
 		  should have_selector('title', text: 'Sign In')
 		  should have_selector('h1', text: 'Sign In')
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	    
 		it "valid Sign In logs user in" do

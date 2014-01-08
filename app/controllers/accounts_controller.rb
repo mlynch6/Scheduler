@@ -1,4 +1,5 @@
 class AccountsController < ApplicationController
+	layout "public_application", :only => [:new]
 	before_filter :get_resource, :only => [:edit, :update]
 	
    def new

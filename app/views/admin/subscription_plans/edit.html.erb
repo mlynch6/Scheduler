@@ -1,0 +1,21 @@
+<% provide(:title, 'Edit Subscription Plan') %>
+<% provide(:header_current, 'Administration') %>
+<% provide(:sidebar_current, 'Subscription Plans') %>
+
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+
+<div class="alert alert-warning">
+  <%= content_tag(:span, nil, class: 'glyphicon glyphicon-exclamation-sign') %> 
+  Remember to update the Subscription Plan in the Stripe dashboard.
+</div>
+
+<%= form_for @plan, :url => admin_subscription_plan_path(@plan) ,:builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= f.error_messages %>
+	<%= render 'form', :f => f %>
+	
+	<%= f.submit_group do %>
+		<%= f.submit_primary 'Update' %>
+	<% end %>
+<% end %>

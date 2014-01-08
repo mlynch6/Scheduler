@@ -1,0 +1,43 @@
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-md-3">Location</div>
+		<div class="dtl-text col-md-9"><%= rehearsal.location.name %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3">Date</div>
+		<div class="dtl-text col-md-9"><%= rehearsal.start_date %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3">From</div>
+		<div class="dtl-text col-md-9"><%= rehearsal.start_time %></div>
+	</div>
+
+	<div class="row">
+		<div class="dtl-label col-md-3">To</div>
+		<div class="dtl-text col-md-9"><%= rehearsal.end_time %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3">Piece</div>
+		<div class="dtl-text col-md-9"><%= rehearsal.piece.name %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3">Invitees</div>
+		<div class="dtl-text col-md-9">
+			<ul class="list-unstyled">
+				<% rehearsal.employees.each do |employee| %>
+					<li><%= employee.full_name %></li>
+				<% end %>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<br />
+<div class="alert alert-info">
+	<strong>Break!</strong>
+	<%= rehearsal.break_time %> for <%= rehearsal.break_duration %> minutes
+</div>

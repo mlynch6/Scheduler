@@ -1,65 +1,78 @@
 <% provide(:title, 'Create Account') %>
 <% provide(:header_current, 'Pricing') %>
 
-<h1>Create an Account</h1>
+<div class="row">
+	<div class="col-md-9">
+		<div class="page-header">
+			<h1>Create an Account</h1>
+		</div>
 
-<div class="span9">
-	<%= form_for @account, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-		<%= f.error_messages %>
-		
-		<fieldset>
-			<legend>1. Company Information</legend>
-			<%= render 'form', :f => f %>
-			
-			<%= f.fields_for :phones do |builder| %>
-				<%= render 'phone_fields', :f => builder %>
-			<% end %>
-		</fieldset>
-		
-		<fieldset>
-			<legend>2. Business Address</legend>
-			<%= f.fields_for :addresses do |builder| %>
-				<%= render 'address_fields', :f => builder %>
-			<% end %>
-		</fieldset>
-		
-		<%= f.fields_for :employees do |builder| %>
-			<fieldset>
-			<legend>3. Director</legend>
-				<%= render 'employees/form', :f => builder %>
-			</fieldset>
+		<%= form_for @account, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+			<%= f.error_messages %>
 			
 			<fieldset>
-			<legend>4. Select a Username</legend>
-				<%= builder.fields_for :user do |user_builder| %>
-					<%= render 'user_fields', :f =>  user_builder %>
+				<legend>1. Company Information</legend>
+				<%= render 'form', :f => f %>
+				
+				<%= f.fields_for :phones do |builder| %>
+					<%= render 'phone_fields', :f => builder %>
 				<% end %>
 			</fieldset>
+			
+			<fieldset>
+				<legend>2. Business Address</legend>
+				<%= f.fields_for :addresses do |builder| %>
+					<%= render 'address_fields', :f => builder %>
+				<% end %>
+			</fieldset>
+			
+			<%= f.fields_for :employees do |builder| %>
+				<fieldset>
+				<legend>3. Director</legend>
+					<%= render 'employees/form', :f => builder %>
+				</fieldset>
+				
+				<fieldset>
+				<legend>4. Select a Username</legend>
+					<%= builder.fields_for :user do |user_builder| %>
+						<%= render 'user_fields', :f =>  user_builder %>
+					<% end %>
+				</fieldset>
+			<% end %>
+			
+			<fieldset>
+				<legend>5. Payment Information</legend>
+				<%= f.hidden_field :current_subscription_plan_id, value: (params[:plan] || params[:account][:current_subscription_plan_id]) %>
+				<%= render 'payments/form', :f => f %>
+			</fieldset>
+					
+			<p class="offset2"><small>By clicking 'Create Account', you agree to the <a href="#">Terms of Service</a>
+				and <a href="#">Privacy Policy</a>.
+			</small></p>
+			
+			<%= f.submit_group do %>
+				<%= f.submit 'Create Account', class: 'btn btn-success' %>
+			<% end %>
 		<% end %>
-		
-		<fieldset>
-			<legend>5. Payment Information</legend>
-			<%= f.hidden_field :current_subscription_plan_id, value: params[:plan] %>
-			<%= render 'payments/form', :f => f %>
-		</fieldset>
-				
-		<p class="offset2"><small>By clicking 'Create Account', you agree to the <a href="#">Terms of Service</a>
-			and <a href="#">Privacy Policy</a>.
-		</small></p>
-		
-		<%= f.submit 'Create Account', :class => 'btn btn-success' %>
-	<% end %>
-</div>
 
-<div class="span3">
-	<div class="well">
-		<h3>Free 30 day trial</h3>
-		<p>Your account can be cancelled at anytime.
-		</p>
-				
-		<h3>Privacy</h3>
-		<p>We will never share or sell your private information to anyone. 
-			Please review our <a href="#">privacy policy</a> for more details.
-		</p>
+	</div>
+	
+	<div class="col-md-3">
+		<br />
+		<div class="panel panel-default hidden-print" role="complementary">
+			<div class="panel-heading"><h4>Free 30 day trial</h4></div>
+			<div class="panel-body">
+				<p>Your account can be cancelled at anytime.</p>
+			</div>
+		</div>
+		
+		<div class="panel panel-default hidden-print" role="complementary">
+			<div class="panel-heading"><h4>Privacy</h4></div>
+			<div class="panel-body">
+				<p>We will never share or sell your private information to anyone. 
+				Please review our <a href="#">privacy policy</a> for more details.
+			</p>
+			</div>
+		</div>
 	</div>
 </div>

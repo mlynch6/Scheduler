@@ -15,7 +15,6 @@ describe "Cast Pages:" do
 			
 			should have_selector('div.alert-success')
 			should have_selector('title', text: season.name)
-  		should have_selector('title', text: 'Pieces')
 			should have_content('Cast A')
 			
 			click_link 'Add Cast'
@@ -37,7 +36,6 @@ describe "Cast Pages:" do
 			
 			should have_selector('div.alert-success')
 			should have_selector('title', text: season.name)
-  		should have_selector('title', text: 'Pieces')
 			should_not have_content('Cast A')
 		end
 	end

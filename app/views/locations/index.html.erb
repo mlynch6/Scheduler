@@ -1,15 +1,17 @@
-<% provide(:title, 'Active Locations') %>
-<% provide(:header_current, 'Administration') %>
+<% provide(:title, 'Locations') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Locations') %>
 
-<h1>Active Locations</h1>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+<div class="well well-sm mash-well-link">
+	<% if allow? "locations", "new" %>
+		<%= new_link "Add Location", new_location_path %>
+	<% end %>
+</div>
 
-<div class="row">
-	<div class="row text-center">
-		<% if allow? "locations", "new" %>
-			<%= new_button "Add Location", new_location_path %>
-		<% end %>
-	</div>
-	
+<% if @locations.length > 0 %>
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
@@ -23,30 +25,26 @@
 					<td><%= location.name %></td>
 					<td>
 						<% if allow? "locations", "edit" %>
-							<%= edit_button nil, edit_location_path(location), :class => 'btn-small', :id => "edit_#{location.id}" %>
+							<%= edit_button nil, edit_location_path(location), :class => 'btn-xs', :id => "edit_#{location.id}" %>
 						<% end %>
 						<% if allow? "locations", "inactivate" %>
-							<%= inactivate_button nil, inactivate_location_path(location), :class => 'btn-small', :id => "inactivate_#{location.id}" %>
+							<%= inactivate_button nil, inactivate_location_path(location), :class => 'btn-xs', :id => "inactivate_#{location.id}" %>
 						<% end %>
 						<% if allow? "locations", "destroy" %>
-							<%= delete_button nil, location, :class => 'btn-small', :id => "delete_#{location.id}" %>
+							<%= delete_button nil, location, :class => 'btn-xs', :id => "delete_#{location.id}" %>
 						<% end %>
 					</td>
 				</tr>
 			<% end %>
 		</tbody>
 	</table>
-
-	<div class="row">
-		<div class="span10 offset2">
-			<%= will_paginate(class: 'pagination',
-						previous_label: "&laquo;",
-			    	next_label: "&raquo;"
-					)%>
-		</div>
-	</div>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
 	
-	<% unless @locations.length > 0 %>
-		<div class="alert">No locations are active. Click on 'Add Location' to get started.</div>
-	<% end %>
-</div>
+<% else %>
+	<p>Some businesses have multiple locations that operate as a single entity - with a single 
+		list of staff and students.  If you have more than one location, each physical address 
+		can be entered as a separate location. Each location can then maintain a set of rooms used 
+		for rehearsals, performaces, or classes with a seperate schedule.
+	</p>
+	<p>To begin, click the <em class="text-info">Add Location</em> link above.</p>
+<% end %>

@@ -4,21 +4,28 @@ describe "Piece Pages:" do
 	subject { page }
 
 	context "#index" do
-		it "has correct title & table headers" do
+		it "has correct title" do
 			log_in
-	  	click_link "Active Pieces"
+			click_link "Setup"
+	  	click_link "Pieces"
 	  	
-	  	should have_selector('title', text: 'Active Pieces')
-		  should have_selector('h1', text: 'Active Pieces')
-	  	
-	    should have_selector('th', text: "Name")
+	  	should have_selector('title', text: 'Pieces')
+		  should have_selector('h1', text: 'Pieces')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit pieces_path
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 		it "without records" do
 			log_in
 	  	visit pieces_path
 	  	
-	    should have_selector('div.alert')
+	    should have_selector('p', text: 'To begin')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -27,8 +34,10 @@ describe "Piece Pages:" do
 			log_in
 			4.times { FactoryGirl.create(:piece, account: current_account) }
 			visit pieces_path(per_page: 3)
-	
+			
+			should have_selector('th', text: "Name")
 			should have_selector('div.pagination')
+			
 			Piece.active.paginate(page: 1, per_page: 3).each do |piece|
 				should have_selector('td', text: pieces_path.name)
 				should have_link('View', href: piece_scenes_path(piece))
@@ -36,6 +45,18 @@ describe "Piece Pages:" do
 				should have_link('Inactivate', href: inactivate_pieces_path(piece))
 				should have_link('Delete', href: pieces_path(piece))
 	    end
+		end
+		
+		it "has links for Super Admin" do
+			log_in
+			FactoryGirl.create(:piece, account: current_account)
+			visit pieces_path
+	
+			should have_link('Add Piece')
+			should have_link('View')
+			should have_link('Edit')
+			should have_link('Inactivate')
+			should have_link('Delete')
 		end
 		
 		it "doesn't have links for Employee" do
@@ -71,9 +92,9 @@ describe "Piece Pages:" do
 			click_link "inactivate_#{piece.id}"
 				
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Active Pieces')
+			should have_selector('title', text: 'Pieces')
 				
-			click_link 'Active Pieces'
+			click_link 'Pieces'
 			should_not have_content(piece.name)
 				
 			click_link 'Inactive Pieces'
@@ -82,15 +103,21 @@ describe "Piece Pages:" do
 	end
 	
 	context "#inactive" do
-		it "has correct title & table headers" do
+		it "has correct title" do
 			log_in
-	  	click_link "Active Pieces"
+	  	click_link 'Setup'
 	  	click_link 'Inactive Pieces'
 	  	
 	  	should have_selector('title', text: 'Inactive Pieces')
 		  should have_selector('h1', text: 'Inactive Pieces')
-			
-			should have_selector('th', text: "Name")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit inactive_pieces_path
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Inactive Pieces')
 		end
 			
 		it "without records" do
@@ -98,7 +125,7 @@ describe "Piece Pages:" do
 			current_account.pieces.inactive.delete_all
 	  	visit inactive_pieces_path
 	  	
-	    should have_selector('div.alert')
+	    should have_selector('p', text: 'No pieces are inactive')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 		end
@@ -108,12 +135,23 @@ describe "Piece Pages:" do
 			4.times { FactoryGirl.create(:piece_inactive, account: current_account) }
 			visit inactive_pieces_path(per_page: 3)
 	
+			should have_selector('th', text: "Name")
 			should have_selector('div.pagination')
+			
 			Piece.inactive.paginate(page: 1, per_page: 3).each do |piece|
 				should have_selector('td', text: piece.name)
 				should have_link('Activate', href: activate_piece_path(piece))
 				should have_link('Delete', href: piece_path(piece))
 	    end
+		end
+		
+		it "has links for SuperAdmin" do
+			log_in
+			FactoryGirl.create(:piece_inactive, account: current_account)
+			visit inactive_pieces_path
+	
+			should have_link('Activate')
+			should have_link('Delete')
 		end
 		
 		it "doesn't have links for Employee" do
@@ -148,7 +186,7 @@ describe "Piece Pages:" do
 			click_link 'Inactive Pieces'
 			should_not have_content(piece.name)
 			
-			click_link 'Active Pieces'
+			click_link 'Pieces'
 			should have_content(piece.name)
 		end
 	end
@@ -156,11 +194,20 @@ describe "Piece Pages:" do
 	context "#new" do
 		it "has correct title" do
 			log_in
-	  	click_link "Active Pieces"
+			click_link 'Setup'
+	  	click_link 'Pieces'
 	  	click_link 'Add Piece'
 	
 			should have_selector('title', text: 'Add Piece')
 			should have_selector('h1', text: 'Add Piece')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit new_piece_path
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 		context "with error" do
@@ -169,7 +216,7 @@ describe "Piece Pages:" do
 				visit new_piece_path
 		  	click_button 'Create'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 			
 			it "doesn't create Piece" do
@@ -190,7 +237,7 @@ describe "Piece Pages:" do
 				click_button 'Create'
 
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Active Pieces')
+				should have_selector('title', text: 'Pieces')
 				should have_content(new_name)
 			end
 		end
@@ -200,11 +247,21 @@ describe "Piece Pages:" do
 		it "has correct title" do
 			log_in
 			piece = FactoryGirl.create(:piece, account: current_account)
-	  	click_link "Active Pieces"
+			click_link 'Setup'
+	  	click_link "Pieces"
 	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: 'Edit Piece')
 			should have_selector('h1', text: 'Edit Piece')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+	  	visit edit_piece_path(piece)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 	  it "with error shows error message" do
@@ -214,7 +271,7 @@ describe "Piece Pages:" do
 	  	fill_in "Name", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	
 		it "with bad record in URL shows 'Record Not Found' error" do
@@ -244,7 +301,7 @@ describe "Piece Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Active Pieces')
+			should have_selector('title', text: 'Pieces')
 			should have_content(new_name)
 		end
 	end
@@ -257,9 +314,9 @@ describe "Piece Pages:" do
 			click_link "delete_#{piece.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Active Pieces')
+			should have_selector('title', text: 'Pieces')
 			
-			click_link 'Active Pieces'
+			click_link 'Pieces'
 			should_not have_content(piece.name)
 			
 			click_link 'Inactive Pieces'
