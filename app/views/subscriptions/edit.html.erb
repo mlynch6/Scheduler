@@ -1,22 +1,26 @@
 <% provide(:title, 'Change Subscription') %>
-<% provide(:header_current, 'Administration') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Subscription') %>
 
-<h1>Change Subscription</h1>
-<div class="offset1 span11">
-	<p class="muted">Fill out the form below to change your subscription. 
-		The new subscription will be charged to your current credit card.
-	</p>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+<p class="text-muted">Fill out the form below to change your subscription. 
+	The new subscription will be charged to your current credit card.
+</p>
 
-	<% if allow? "subscriptions", "edit" %>
-		<%= form_for @account, :url => subscriptions_update_path, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-			<%= f.error_messages %>
-			<%= render 'form', :f => f %>
-			<%= f.submit 'Update', :class => 'btn btn-primary' %>
+<% if allow? "subscriptions", "edit" %>
+	<%= form_for @account, :url => subscriptions_update_path, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= f.error_messages %>
+		<%= render 'form', :f => f %>
+		
+		<%= f.submit_group do %>
+			<%= f.submit_primary 'Update' %>
 		<% end %>
 	<% end %>
+<% end %>
 
-	<% if allow? "subscriptions", "destroy" %>
-		<h2>Cancel Your Subscription</h2>
-		<%= delete_button 'Cancel Subscription', subscriptions_cancel_path, :action => 'destroy' %>
-	<% end %>
-</div>
+<% if allow? "subscriptions", "destroy" %>
+	<h2>Cancel Your Subscription</h2>
+	<%= delete_button 'Cancel Subscription', subscriptions_cancel_path, class:'col-md-offset-3' %>
+<% end %>

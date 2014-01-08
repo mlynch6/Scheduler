@@ -1,0 +1,11 @@
+<table class="table table-striped">
+	<tbody>
+		<% @invoices.each do |invoice| %>
+		  <tr>
+		  	<td><%= Time.zone.at(invoice.date).to_date %></td>
+		  	<td><span class="text-right"><%= number_to_currency(invoice.total/100) %></span></td>
+		  	<td>Printable Receipt (PDF)</td>
+		  </tr>
+		<% end %>
+	</tbody>
+</table>

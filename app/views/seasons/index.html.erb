@@ -1,15 +1,17 @@
 <% provide(:title, 'Seasons') %>
-<% provide(:header_current, 'Administration') %>
-
-<h1>Seasons</h1>
-
-<div class="row">
-	<div class="row text-center">
-		<% if allow? "seasons", "new" %>
-			<%= new_button "Add Season", new_season_path %>
-		<% end %>
-	</div>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Seasons') %>
 	
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+<div class="well well-sm mash-well-link">
+	<% if allow? "seasons", "new" %>
+		<%= new_link "Add Season", new_season_path %>
+	<% end %>
+</div>
+
+<% if @seasons.length > 0 %>
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
@@ -27,30 +29,27 @@
 					<td><%= season.end_dt %></td>
 					<td>
 						<% if allow? "seasons", "show" %>
-							<%= view_button nil, season_path(season), :class => 'btn-small', :id => "view_#{season.id}" %>
+							<%= view_button nil, season_path(season), :class => 'btn-xs', :id => "view_#{season.id}" %>
 						<% end %>
 						<% if allow? "seasons", "edit" %>
-							<%= edit_button nil, edit_season_path(season), :class => 'btn-small', :id => "edit_#{season.id}" %>
+							<%= edit_button nil, edit_season_path(season), :class => 'btn-xs', :id => "edit_#{season.id}" %>
 						<% end %>
 						<% if allow? "seasons", "destroy" %>
-							<%= delete_button nil, season, :class => 'btn-small', :id => "delete_#{season.id}" %>
+							<%= delete_button nil, season_path(season), :class => 'btn-xs', :id => "delete_#{season.id}" %>
 						<% end %>
 					</td>
 				</tr>
 			<% end %>
 		</tbody>
 	</table>
-
-	<div class="row">
-		<div class="span10 offset2">
-			<%= will_paginate(class: 'pagination',
-						previous_label: "&laquo;",
-			    	next_label: "&raquo;"
-					)%>
-		</div>
-	</div>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
 	
-	<% unless @seasons.length > 0 %>
-		<div class="alert">No seasons have been found. Click on 'Add Season' to get started.</div>
-	<% end %>
-</div>
+<% else %>
+	<p>A season is a period of time during which classes, reheasrsals, performances, etc are held.
+		A season will have pieces that are being rehearsed and/or performed.
+	</p>
+	<p>Example: <em>2012-2013 Season</em> running from 8/1/2012 to 5/15/2013 <br />
+		&nbsp;&nbsp;&nbsp; Performing 'The Nutcracker', 'Sleeping Beauty', and 'Symphony in C'
+	</p>
+	<p>To begin, click the <em class="text-info">Add Season</em> link above.</p>
+<% end %>

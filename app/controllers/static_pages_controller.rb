@@ -1,4 +1,6 @@
 class StaticPagesController < ApplicationController
+	layout "public_application"
+
   def home
   end
   

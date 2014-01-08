@@ -12,7 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require twitter/bootstrap
-//= require jquery.ui.all
 //= require chosen-jquery
+//= require jquery.ui.datepicker
+//= require jquery.ui.sortable
+//= require bootstrap
 //= require_tree .

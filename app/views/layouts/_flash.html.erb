@@ -1,16 +1,20 @@
 <% flash.each do |key, value| %>
+	<div class="row">
 	<% if key == :warning %>
 		<% if value.kind_of?(Array) %>
 			<% value.each do |v| %>
-				<%= render 'layouts/flash_msg', type: "warning", msg: content_tag(:i, nil, class: 'icon-warning-sign')+" "+v %>
+				<%= render 'layouts/flash_msg', type: "warning", msg: content_tag(:span, nil, class: 'glyphicon glyphicon-warning-sign')+" "+v %>
 			<% end %>
 		<% else %>
-			<%= render 'layouts/flash_msg', type: "warning", msg: content_tag(:i, nil, class: 'icon-warning-sign')+" "+value %>
+			<%= render 'layouts/flash_msg', type: "warning", msg: content_tag(:span, nil, class: 'glyphicon glyphicon-warning-sign')+" "+value %>
 		<% end %>
 	</div>
 	<% elsif key == :notice or key == :success %>
-		<%= render 'layouts/flash_msg', type: "success", msg: content_tag(:i, nil, class: 'icon-ok')+" "+value %>
+		<%= render 'layouts/flash_msg', type: "success", msg: content_tag(:span, nil, class: 'glyphicon glyphicon-ok-sign')+" "+value %>
+	<% elsif key == :error %>
+		<%= render 'layouts/flash_msg', type: "danger", msg: content_tag(:span, nil, class: 'glyphicon glyphicon-exclamation-sign')+" "+value %>
 	<% else %>
 		<%= render 'layouts/flash_msg', type: key, msg: value %>
 	<% end %>
+	</div>
 <% end %>

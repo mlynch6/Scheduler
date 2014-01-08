@@ -37,13 +37,22 @@ describe "Static Pages:" do
 	  should have_selector('h1', text: 'Contact Us')
   end
   
-  it "dashboard" do
-  	log_in
-  	visit dashboard_path
-  	
-		should have_selector('title', text: 'Dashboard')
-	  should have_selector('h1', text: 'Dashboard')
-  end
+  context "dashboard" do
+  	it "has correct title" do
+	  	log_in
+	  	visit dashboard_path
+	  	
+			should have_selector('title', text: 'Dashboard')
+		  should have_selector('h1', text: 'Dashboard')
+	  end
+  
+  	it "has correct Navigation" do
+  		log_in
+	  	visit dashboard_path
+	  	
+			should have_selector('li.active', text: 'Home')
+		end
+	end
   
   describe "terms of service" do
   	pending

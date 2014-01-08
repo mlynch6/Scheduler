@@ -24,7 +24,7 @@ describe "Account Pages:" do
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Create Account"
 	    	
-	    	should have_selector('div.alert-error')
+	    	should have_selector('div.alert-danger')
 	    	should have_content('card number is incorrect')
 	    end
 	    
@@ -34,7 +34,7 @@ describe "Account Pages:" do
 		  	fill_in "Security Code", with: "99"
 		  	click_button "Create Account"
 	    	
-	    	should have_selector('div.alert-error')
+	    	should have_selector('div.alert-danger')
 	    	should have_content('security code is invalid')
 	    end
 		  
@@ -44,7 +44,7 @@ describe "Account Pages:" do
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Create Account"
 	    	
-	    	should have_selector('div.alert-error')
+	    	should have_selector('div.alert-danger')
 	    	should have_content('Credit Card has been provided')
 	    end
 	    
@@ -76,7 +76,7 @@ describe "Account Pages:" do
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Create Account"
 	    	
-	    	should have_selector('div.alert-error')
+	    	should have_selector('div.alert-danger')
 	    	should have_content('card was declined')
 	    	should have_content('Credit Card Number')
 	    end
@@ -161,10 +161,19 @@ describe "Account Pages:" do
 	context "#show" do
 		it "has correct title" do
 			log_in
+			click_link 'Setup'
 			click_link "Company Information"
 	  	
 	  	should have_selector('title', text: 'Company Information')
 			should have_selector('h1', text: 'Company Information')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit account_path(current_account)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Company Information')
 		end
 		
 		it "displays correct data" do
@@ -182,7 +191,7 @@ describe "Account Pages:" do
 			3.times { FactoryGirl.create(:address, addressable: current_account) }
 			visit account_path(current_account)
 
-			should have_selector('h2', text: 'Addresses')
+			should have_selector('h3', text: 'Addresses')
 			current_account.addresses.each do |address|
 				should have_content("#{address.addr_type} Address")
 				should have_content(address.addr)
@@ -202,7 +211,7 @@ describe "Account Pages:" do
 			3.times { FactoryGirl.create(:phone, phoneable: current_account) }
 			visit account_path(current_account)
 
-			should have_selector('h2', text: 'Phone Numbers')
+			should have_selector('h3', text: 'Phone Numbers')
 			current_account.phones.each do |phone|
 				should have_content("#{phone.phone_type}:")
 				should have_content(phone.phone_num)
@@ -226,6 +235,7 @@ describe "Account Pages:" do
 	context "#edit" do
 		it "has correct title" do
 			log_in
+			click_link 'Setup'
 			click_link "Company Information"
 			click_link "Edit"
 	  	
@@ -233,14 +243,23 @@ describe "Account Pages:" do
 			should have_selector('h1', text: 'Edit Company Information')
 		end
 		
+		it "has correct Navigation" do
+			log_in
+			visit edit_account_path(current_account)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Company Information')
+		end
+		
 	  it "record with error" do
-pending "No field on form can currently cause error"
+			pending "No field can currently cause an error"
 	  	log_in
 			visit edit_account_path(current_account)
+	  	
 	  	fill_in "Company", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	 
 		it "record with valid info saves account" do
@@ -254,8 +273,7 @@ pending "No field on form can currently cause error"
 			should have_selector('div.alert-success')
 			should have_selector('title', text: 'Company Information')
 			
-			should have_selector('div.text-ui', text: current_account.name)
-			should have_selector('div.text-ui', text: "Hawaii")
+			should have_content("Hawaii")
 		end
 	end
 end

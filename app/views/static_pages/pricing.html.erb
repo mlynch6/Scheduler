@@ -1,7 +1,14 @@
 <% provide(:title, "Pricing") %>
-<h1>Pricing</h1>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
 
-<p>Options here
-</p>
-
-<p><%= link_to "Sign Up", signup_path(plan: 1) %></p>
+<div class="row">
+	<div class="col-md-2 col-md-offset-5">
+		<div class="well mash-well-primary">
+			<b>Beta Plan</b>
+			<p>Free</p>
+			<p><%= link_to "Sign Up", signup_path(plan: 1), :class => 'btn btn-success' %></p>
+		</div>
+	</div>
+</div>

@@ -1,7 +1,7 @@
 <% if @account.new_record? %>
 	<%= f.text_field :name %>
 <% else %>
-	<%= f.uneditable_text_field :name, @account.name %>
+	<%= f.static_control :name do @account.name end %>
 <% end %>
 
 <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, { :class => 'input-xlarge' } %>

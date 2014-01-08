@@ -6,11 +6,19 @@ describe "Rehearsal Pages:" do
   context "#new" do
   	it "has correct title" do
 			log_in
-	  	click_link 'Daily Schedule'
+	  	click_link 'Calendar'
 	  	click_link 'New Rehearsal'
 	  	
 	  	should have_selector('title', text: 'New Rehearsal')
 		  should have_selector('h1', text: 'New Rehearsal')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit new_rehearsal_path
+	
+			should have_selector('li.active', text: 'Calendar')
+			should have_selector('li.active', text: 'New Rehearsal')
 		end
 		
 		it "has only active Locations in dropdown" do
@@ -56,7 +64,7 @@ describe "Rehearsal Pages:" do
 				visit new_rehearsal_path
 		  	click_button 'Create'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 			
 			it "doesn't create Rehearsal" do
@@ -241,11 +249,27 @@ describe "Rehearsal Pages:" do
 					location: location,
 					piece: piece,
 					start_date: Time.zone.today)
+	  	click_link 'Calendar'
 	  	click_link 'Daily Schedule'
 	  	click_link 'Edit'
 	  	
 	  	should have_selector('title', text: 'Edit Rehearsal')
 			should have_selector('h1', text: 'Edit Rehearsal')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			rehearsal = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: location,
+					piece: piece,
+					start_date: Time.zone.today)
+	  	visit edit_rehearsal_path(rehearsal)
+	
+			should have_selector('li.active', text: 'Calendar')
+			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
 	  it "record with error" do
@@ -262,7 +286,7 @@ describe "Rehearsal Pages:" do
 	  	fill_in "Title", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	 
 		it "record with valid info saves rehearsal" do

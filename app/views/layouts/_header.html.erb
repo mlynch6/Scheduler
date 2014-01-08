@@ -1,12 +1,19 @@
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-			<%= link_to "Scheduler", '#', class: "brand" %>
-			<% if current_user %>
-				<%= render 'layouts/header_app' %>
-			<% else %>
-				<%= render 'layouts/header_home' %>
-			<% end %>
-		</div>
+<nav class="navbar navbar-default navbar-fixed-top" role="banner">
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+		<a class="navbar-brand" href="#">Scheduler</a>
 	</div>
-</div>
+		
+	<div class="collapse navbar-collapse" id="sidebar-collapse-1">
+	<% if current_user %>
+		<%= render 'layouts/header_app' %>
+	<% else %>
+		<%= render 'layouts/header_home' %>
+	<% end %>
+	</div>
+</nav>

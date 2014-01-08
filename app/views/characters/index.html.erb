@@ -1,18 +1,20 @@
 <% provide(:title, "#{@piece.name} | Characters") %>
-<% provide(:header_current, 'Scheduling') %>
-<% provide(:current, 'Characters') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Pieces') %>
 
-<h1><%= @piece.name %></h1>
-
-<div class="row">
+<div class="page-header">
+	<h1><%= @piece.name %></h1>
+</div>
+<div class="well well-sm mash-well-link">
 	<%= render 'pieces/tabs' %>
+	&nbsp;&nbsp;&nbsp;
 	
-	<div class="row text-center">
-		<% if allow? "characters", "new" %>
-			<%= new_button "Add Character", new_piece_character_path(@piece) %>
-		<% end %>
-	</div>
-	
+	<% if allow? "characters", "new" %>
+		<%= new_link "Add Character", new_piece_character_path(@piece) %>
+	<% end %>
+</div>
+
+<% if @characters.length > 0 %>
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
@@ -25,24 +27,25 @@
 				<%= content_tag_for :tr, character do %>
 					<td>
 						<% if allow? "characters", "sort" %>
-							<%= content_tag :i, nil, class: 'handle icon-resize-vertical' %>
+							<%= content_tag :i, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' %>
 						<% end %>
 						<%= character.name %>
 					</td>
 					<td>
 						<% if allow? "characters", "edit" %>
-							<%= edit_button nil, edit_character_path(character), :class => 'btn-small', :id => "edit_#{character.id}" %>
+							<%= edit_button nil, edit_character_path(character), :class => 'btn-xs', :id => "edit_#{character.id}" %>
 						<% end %>
 						<% if allow? "characters", "destroy" %>
-							<%= delete_button nil, character, :class => 'btn-small', :id => "delete_#{character.id}" %>
+							<%= delete_button nil, character, :class => 'btn-xs', :id => "delete_#{character.id}" %>
 						<% end %>
 					</td>
 				<% end %>
 			<% end %>
 		</tbody>
 	</table>
-
-	<% unless @characters.length > 0 %>
-		<div class="alert">There are currently no characters. Click on 'Add Character' to get started.</div>
-	<% end %>
-</div>
+	
+<% else %>
+	<p>There are currently no characters for this piece.
+	</p>
+	<p>To begin, click the <em class="text-info">Add Character</em> link above.</p>
+<% end %>

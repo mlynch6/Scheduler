@@ -1,9 +1,12 @@
 <% provide(:title, 'Inactive Locations') %>
-<% provide(:header_current, 'Administration') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Inactive Locations') %>
 
-<h1>Inactive Locations</h1>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
 
-<div class="row">
+<% if @locations.length > 0 %>
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
@@ -17,27 +20,18 @@
 					<td><%= location.name %></td>
 					<td>
 						<% if allow? "locations", "activate" %>
-							<%= activate_button nil, activate_location_path(location), :class => 'btn-small', :id => "activate_#{location.id}" %>
+							<%= activate_button nil, activate_location_path(location), :class => 'btn-xs', :id => "activate_#{location.id}" %>
 						<% end %>
 						<% if allow? "locations", "destroy" %>
-							<%= delete_button nil, location, :class => 'btn-small', :id => "delete_#{location.id}" %>
+							<%= delete_button nil, location, :class => 'btn-xs', :id => "delete_#{location.id}" %>
 						<% end %>
 					</td>
 				</tr>
 			<% end %>
 		</tbody>
 	</table>
-
-	<div class="row">
-		<div class="span10 offset2">
-			<%= will_paginate(class: 'pagination',
-						previous_label: "&laquo;",
-			    	next_label: "&raquo;"
-					)%>
-		</div>
-	</div>
-
-	<% unless @locations.length > 0 %>
-		<div class="alert">No locations are inactive.</div>
-	<% end %>
-</div>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+	
+<% else %>
+	<p>No locations are inactive.</p>
+<% end %>

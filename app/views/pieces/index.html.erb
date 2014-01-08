@@ -1,15 +1,17 @@
-<% provide(:title, 'Active Pieces') %>
-<% provide(:header_current, 'Scheduling') %>
+<% provide(:title, 'Pieces') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Pieces') %>
 
-<h1>Active Pieces</h1>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+<div class="well well-sm mash-well-link">
+	<% if allow? "pieces", "new" %>
+		<%= new_link "Add Piece", new_piece_path %>
+	<% end %>
+</div>
 
-<div class="row">
-	<div class="row text-center">
-		<% if allow? "pieces", "new" %>
-			<%= new_button "Add Piece", new_piece_path %>
-		<% end %>
-	</div>
-
+<% if @pieces.length > 0 %>
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
@@ -23,33 +25,31 @@
 					<td><%= piece.name %></td>
 					<td>
 						<% if allow? "scenes", "index" %>
-							<%= view_button nil, piece_scenes_path(piece), :class => 'btn-small', :id => "view_#{piece.id}" %>
+							<%= view_button nil, piece_scenes_path(piece), :class => 'btn-xs', :id => "view_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "edit" %>
-							<%= edit_button nil, edit_piece_path(piece), :class => 'btn-small', :id => "edit_#{piece.id}" %>
+							<%= edit_button nil, edit_piece_path(piece), :class => 'btn-xs', :id => "edit_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "inactivate" %>
-							<%= inactivate_button nil, inactivate_piece_path(piece), :class => 'btn-small', :id => "inactivate_#{piece.id}" %>
+							<%= inactivate_button nil, inactivate_piece_path(piece), :class => 'btn-xs', :id => "inactivate_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "destroy" %>
-							<%= delete_button nil, piece, :class => 'btn-small', :id => "delete_#{piece.id}" %>
+							<%= delete_button nil, piece, :class => 'btn-xs', :id => "delete_#{piece.id}" %>
 						<% end %>
 					</td>
 				</tr>
 			<% end %>
 		</tbody>
 	</table>
-
-	<div class="row">
-		<div class="span10">
-			<%= will_paginate(class: 'pagination',
-						previous_label: "&laquo;",
-			    	next_label: "&raquo;"
-					)%>
-		</div>
-	</div>
-
-	<% unless @pieces.length > 0 %>
-		<div class="alert">No pieces are active. Click on 'Add Piece' to get started.</div>
-	<% end %>
-</div>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+	
+<% else %>
+	<p>A piece is a work that is being rehearsed and/or performed.  It consists of one or more 
+		scenes and one or more characters.
+	</p>
+	<p>Example: <em>Serenade</em> running from 8/1/2012 to 5/15/2013 <br />
+		&nbsp;&nbsp;&nbsp; Scenes: 'Sonatina', 'Waltz', 'Russian Dance', and 'Elegy' <br />
+		&nbsp;&nbsp;&nbsp; Characters: 26 Dancers
+	</p>
+	<p>To begin, click the <em class="text-info">Add Piece</em> link above.</p>
+<% end %>

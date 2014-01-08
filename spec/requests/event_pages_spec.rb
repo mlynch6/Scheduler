@@ -6,12 +6,21 @@ describe "Event Pages:" do
   context "#index" do
   	it "has correct title & headers" do
 			log_in
+			click_link "Calendar"
 	  	click_link "Daily Schedule"
 	  	
 	  	should have_selector('title', text: 'Daily Schedule')
 		 	
 		  should have_selector('h2', text: Time.zone.today.strftime('%A, %B %-d, %Y'))
 		  should have_content(Time.zone.today.strftime('%A'))
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit events_path
+	
+			should have_selector('li.active', text: 'Calendar')
+			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
 		it "without records" do
@@ -143,6 +152,17 @@ describe "Event Pages:" do
 		end
 		
 		it "shows Costume Fitting details in popup window"
+		
+		it "has links for Super Admin" do
+			log_in_admin
+			location = FactoryGirl.create(:location, account: current_account)
+			FactoryGirl.create(:event, account: current_account, location: location)
+			visit events_path
+	
+			should have_link('New Company Class')
+			should have_link('New Rehearsal')
+			should have_link('New Costume Fitting')
+		end
 		
 		it "doesn't have links for Employee" do
 			log_in_employee

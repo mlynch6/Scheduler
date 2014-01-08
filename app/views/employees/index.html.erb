@@ -1,56 +1,51 @@
-<% provide(:title, 'Active Employees') %>
-<% provide(:header_current, 'Employees') %>
+<% provide(:title, 'Employees') %>
+<% provide(:header_current, 'People') %>
+<% provide(:sidebar_current, 'Employees') %>
 
-<h1>Active Employees</h1>
-
-<div class="row">
-	<div class="row text-center">
-		<% if allow? "employees", "new" %>
-			<%= new_button "Add Employee", new_employee_path %>
-		<% end %>
-	</div>
-	
-	<div class="row">
-		<table class="table table-striped">
-			<thead>
-		  	<tr>
-		  		<th>Name</th>
-		  		<th>Role</th>
-		  		<th style="width:105px;">&nbsp;</th>
-		  	</tr>
-		  </thead>
-		  <tbody>
-		  	<% @employees.each do |employee| %>
-					<tr>
-						<td><%= employee.name %></td>
-						<td><%= employee.role %></td>
-						<td>
-							<% if allow? "employees", "show" %>
-								<%= view_button nil, employee_path(employee), :class => 'btn-small', :id => "show_#{employee.id}" %>
-							<% end %>
-							<% if allow? "employees", "inactivate" %>
-								<%= inactivate_button nil, inactivate_employee_path(employee), :class => 'btn-small', :id => "inactivate_#{employee.id}" %>
-							<% end %>
-							<% if allow? "employees", "destroy" %>
-								<%= delete_button nil, employee, :class => 'btn-small', :id => "delete_#{employee.id}" %>
-							<% end %>
-						</td>
-					</tr>
-				<% end %>
-			</tbody>
-		</table>
-	</div>
-
-	<div class="row">
-		<div class="span10">
-			<%= will_paginate(class: 'pagination',
-						previous_label: "&laquo;",
-			    	next_label: "&raquo;"
-					)%>
-		</div>
-	</div>
-
-	<% unless @employees.length > 0 %>
-		<div class="alert">No records found</div>
-	<% end %>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
 </div>
+<div class="well well-sm mash-well-link">
+	<% if allow? "employees", "new" %>
+	<%= new_link "Add Employee", new_employee_path %>
+<% end %>
+</div>
+
+<% if @employees.length > 0 %>
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Name</th>
+	  		<th>Role</th>
+	  		<th style="width:105px;">&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @employees.each do |employee| %>
+				<tr>
+					<td><%= employee.name %></td>
+					<td><%= employee.role %></td>
+					<td>
+						<% if allow? "employees", "show" %>
+							<%= view_button nil, employee_path(employee), :class => 'btn-xs', :id => "show_#{employee.id}" %>
+						<% end %>
+						<% if allow? "employees", "inactivate" %>
+							<%= inactivate_button nil, inactivate_employee_path(employee), :class => 'btn-xs', :id => "inactivate_#{employee.id}" %>
+						<% end %>
+						<% if allow? "employees", "destroy" %>
+							<%= delete_button nil, employee, :class => 'btn-xs', :id => "delete_#{employee.id}" %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+	
+<% else %>
+	<p>An employee is any person in your organization who works at your business. You can grant 
+		employee access to your account. Every employee should have their own username (based and 
+		password to the system. This allows you to maintain the security of your information.
+	</p>
+	<p>To begin, click the <em class="text-info">Add Employee</em> link above.</p>
+<% end %>

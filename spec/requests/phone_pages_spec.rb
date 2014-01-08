@@ -7,11 +7,20 @@ describe "Phone Pages:" do
 		context "for Account" do
 			it "has correct title" do
 				log_in
+				click_link "Setup"
 				click_link "Company Information"
 		  	click_link 'Add Phone Number'
 		
 				should have_selector('title', text: 'Add Phone Number')
 				should have_selector('h1', text: 'Add Phone Number')
+			end
+			
+			it "has correct Navigation" do
+				log_in
+				visit new_account_phone_path(current_account)
+		
+				should have_selector('li.active', text: 'Setup')
+				should have_selector('li.active', text: 'Company Information')
 			end
 			
 			context "with error" do
@@ -20,7 +29,7 @@ describe "Phone Pages:" do
 					visit new_account_phone_path(current_account)
 			  	click_button 'Create'
 			
-					should have_selector('div.alert-error')
+					should have_selector('div.alert-danger')
 				end
 				
 				it "doesn't create Phone Number" do
@@ -54,12 +63,22 @@ describe "Phone Pages:" do
 		context "for Employee" do
 			it "has correct title" do
 				log_in
-				click_link "Active Employees"
+				click_link "People"
+				click_link "Employees"
 		  	click_link "View"
 		  	click_link 'Add Phone Number'
 		
 				should have_selector('title', text: 'Add Phone Number')
 				should have_selector('h1', text: 'Add Phone Number')
+			end
+			
+			it "has correct Navigation" do
+				log_in
+				employee = FactoryGirl.create(:employee, account: current_account)
+				visit new_employee_phone_path(employee)
+		
+				should have_selector('li.active', text: 'People')
+				should have_selector('li.active', text: 'Employees')
 			end
 			
 			context "with error" do
@@ -69,7 +88,7 @@ describe "Phone Pages:" do
 					visit new_employee_phone_path(employee)
 			  	click_button 'Create'
 			
-					should have_selector('div.alert-error')
+					should have_selector('div.alert-danger')
 				end
 				
 				it "doesn't create Phone Number" do
@@ -108,11 +127,22 @@ describe "Phone Pages:" do
 			it "has correct title" do
 				log_in
 				phone = FactoryGirl.create(:phone, phoneable: current_account)
+				
+				click_link "Setup"
 				click_link "Company Information"
 		  	click_link "edit_phone_#{phone.id}"
 		  	
-		  	should have_selector('title', text: 'Update Phone Number')
-				should have_selector('h1', text: 'Update Phone Number')
+		  	should have_selector('title', text: 'Edit Phone Number')
+				should have_selector('h1', text: 'Edit Phone Number')
+			end
+			
+			it "has correct Navigation" do
+				log_in
+				phone = FactoryGirl.create(:phone, phoneable: current_account)
+				visit edit_account_phone_path(current_account, phone)
+		
+				should have_selector('li.active', text: 'Setup')
+				should have_selector('li.active', text: 'Company Information')
 			end
 			
 			it "with error shows error message" do
@@ -123,7 +153,7 @@ describe "Phone Pages:" do
 				fill_in "Phone #", with: ""
 		  	click_button 'Update'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 		
 			it "record with valid info saves address" do
@@ -150,12 +180,24 @@ describe "Phone Pages:" do
 				log_in
 				employee = FactoryGirl.create(:employee, account: current_account)
 				phone = FactoryGirl.create(:phone, phoneable: employee)
-				click_link "Active Employees"
+				
+				click_link "People"
+				click_link "Employees"
 				click_link "show_#{employee.id}"
 		  	click_link "edit_phone_#{phone.id}"
 		  	
-		  	should have_selector('title', text: 'Update Phone Number')
-				should have_selector('h1', text: 'Update Phone Number')
+		  	should have_selector('title', text: 'Edit Phone Number')
+				should have_selector('h1', text: 'Edit Phone Number')
+			end
+			
+			it "has correct Navigation" do
+				log_in
+				employee = FactoryGirl.create(:employee, account: current_account)
+				phone = FactoryGirl.create(:phone, phoneable: employee)
+				visit edit_employee_phone_path(employee, phone)
+		
+				should have_selector('li.active', text: 'People')
+				should have_selector('li.active', text: 'Employees')
 			end
 			
 			it "with error shows error message" do
@@ -167,7 +209,7 @@ describe "Phone Pages:" do
 				fill_in "Phone #", with: ""
 		  	click_button 'Update'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 		
 			it "record with valid info saves address" do

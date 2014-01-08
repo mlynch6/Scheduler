@@ -1,54 +1,15 @@
 <% provide(:title, 'Contract Settings') %>
-<% provide(:header_current, 'Administration') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Contract') %>
 
-<h1>Contract Settings</h1>
-
-<div class="show-ui">
-	<h2>Rehearsal Week</h2>
-	
-	<div class="row">
-		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_start_min) %></div>
-		<div class="text-ui span6"><%= @agma_profile.rehearsal_start_time %></div>
-	</div>
-	<div class="row">
-		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_end_min) %></div>
-		<div class="text-ui span6"><%= @agma_profile.rehearsal_end_time %></div>
-	</div>
-	<div class="row">
-		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_max_hrs_per_week) %></div>
-		<div class="text-ui span6"><%= @agma_profile.rehearsal_max_hrs_per_week %> hours/week</div>
-	</div>
-	<div class="row">
-		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_max_hrs_per_day) %></div>
-		<div class="text-ui span6"><%= @agma_profile.rehearsal_max_hrs_per_day %> hours/day</div>
-	</div>
-	<div class="row">
-		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_increment_min) %></div>
-		<div class="text-ui span6"><%= @agma_profile.rehearsal_increment_min %> minutes</div>
-	</div>
-	
-	<h2>Breaks</h2>
-	
-	<div class="row">
-		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:class_break_min) %></div>
-		<div class="text-ui span6"><%= @agma_profile.class_break_min %> minutes</div>
-	</div>
-	<div class="row">
-		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:rehearsal_break_min_per_hr) %></div>
-		<div class="text-ui span6"><%= @agma_profile.rehearsal_break_min_per_hr %> minutes/Hour Rehearsal</div>
-	</div>
-	
-	<h2>Costume Fittings</h2>
-	
-	<div class="row">
-		<div class="label-ui span2"><%= AgmaProfile.human_attribute_name(:costume_increment_min) %></div>
-		<div class="text-ui span6"><%= @agma_profile.costume_increment_min %> minutes</div>
-	</div>
-	
-	
-	<div class="row text-center">
-		<% if allow? "agma_profiles", "edit" %>
-			<%= edit_button "Edit", edit_agma_profile_path(@agma_profile) %>
-		<% end %>
-	</div>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
 </div>
+
+<div class="well well-sm mash-well-link">
+	<% if allow? "agma_profiles", "edit" %>
+		<%= edit_link "Edit", edit_agma_profile_path(@agma_profile) %>
+	<% end %>
+</div>
+
+<%= render 'agma_profiles/detail' %>

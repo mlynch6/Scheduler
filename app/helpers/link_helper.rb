@@ -1,39 +1,32 @@
 module LinkHelper
+	def icon_link(name, icon, *args)
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-"+icon)
+		create_link(name, icon, *args)
+	end
+
 	def new_link(name, *args)
-		options = args.extract_options!
-	  options = {:title => "Add"}.merge(options) if name.blank?
-	  args << options
-	  
-		icon = content_tag(:i, nil, class: "icon-plus")
+		args << default_title('Add', *args)
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus mash-green")
 		create_link(name, icon, *args)
 	end
 	
 	def edit_link(name, *args)
-		options = args.extract_options!
-	  options = {:title => "Edit"}.merge(options) if name.blank?
-	  args << options
-	  
-		icon = content_tag(:i, nil, class: "icon-pencil")
-		create_link(name, icon, *args)
+		args << default_title('Edit', *args)
+		icon_link(name, 'pencil', *args)
 	end
 	
 	def delete_link(name, *args)
-		options = args.extract_options!
-	  options = {:method => :delete, :confirm => "Delete?"}.merge(options)
-	  options = {:title => "Delete"}.merge(options) if name.blank?
-	  args << options
+		args << default_title('Delete', *args)
+	  args << add_delete_method('Delete?', *args)
 	  
-		icon = content_tag(:i, nil, class: "icon-trash")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-trash mash-red")
 		create_link(name, icon, *args)
 	end
 	
 	def view_link(name, *args)
-		options = args.extract_options!
-	  options = {:title => "View"}.merge(options) if name.blank?
-	  args << options
+		args << default_title('View', *args)
 	  
-		icon = content_tag(:i, nil, class: "icon-info-sign")
-		create_link(name, icon, *args)
+		icon_link(name, 'info-sign', *args)
 	end
 	
 	def pdf_link(name, *args)
@@ -41,95 +34,44 @@ module LinkHelper
 		create_link(name, icon, *args)
 	end
 	
-	def excel_link(name, *args)
-		icon = image_tag("file_extension_xls.png")
-		create_link(name, icon, *args)
-	end
-	
 # BUTTONS
 	def new_button(name, *args)
-		options = args.extract_options!
-		if options.include?(:class) 
-			options[:class] = "btn #{options[:class]}"
-		else
-	  	options = {:class => 'btn'}.merge(options)
-	  end
-	  options = {:title => "Add"}.merge(options) if name.blank?
-	  args << options
+	  args << add_class('btn btn-success', *args)
+	  args << default_title('Add', *args)
 	  
-		icon = content_tag(:i, nil, class: "icon-plus")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus")
 		create_link(name, icon, *args)
 	end
 	
 	def edit_button(name, *args)
-		options = args.extract_options!
-		if options.include?(:class) 
-			options[:class] = "btn #{options[:class]}"
-		else
-	  	options = {:class => 'btn'}.merge(options)
-	  end
-	  options = {:title => "Edit"}.merge(options) if name.blank?
-	  args << options
-	  
-		icon = content_tag(:i, nil, class: "icon-pencil")
-		create_link(name, icon, *args)
+		args << add_class('btn btn-default', *args)
+		edit_link(name, *args)
 	end
 	
 	def delete_button(name, *args)
-		options = args.extract_options!
-		if options.include?(:class) 
-			options[:class] = "btn btn-danger #{options[:class]}"
-		else
-	  	options = {:class => 'btn btn-danger'}.merge(options)
-	  end
-	  options = {:method => :delete, :confirm => "Delete?"}.merge(options)
-	  options = {:title => "Delete"}.merge(options) if name.blank?
-	  args << options
+		args << add_class('btn btn-danger', *args)
+		args << default_title('Delete', *args)
+	  args << add_delete_method('Delete?', *args)
 	  
-		icon = content_tag(:i, nil, class: "icon-trash")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-trash")
 		create_link(name, icon, *args)
 	end
 	
 	def view_button(name, *args)
-		options = args.extract_options!
-		if options.include?(:class) 
-			options[:class] = "btn btn-info #{options[:class]}"
-		else
-	  	options = {:class => 'btn btn-info'}.merge(options)
-	  end
-	  options = {:title => "View"}.merge(options) if name.blank?
-	  args << options
-	  
-	  icon = content_tag(:i, nil, class: "icon-info-sign")
-		create_link(name, icon, *args)
+		args << add_class('btn btn-default', *args)
+	  view_link(name, *args)
 	end
 	
 	def activate_button(name, *args)
-		options = args.extract_options!
-		if options.include?(:class) 
-			options[:class] = "btn btn-success #{options[:class]}"
-		else
-	  	options = {:class => 'btn btn-success'}.merge(options)
-	  end
-	  options = {:title => "Activate"}.merge(options) if name.blank?
-	  args << options
-	  
-	  icon = content_tag(:i, nil, class: "icon-thumbs-up")
-		create_link(name, icon, *args)
+		args << add_class('btn btn-success', *args)
+		args << default_title('Activate', *args)
+		icon_link(name, 'thumbs-up', *args)
 	end
 	
 	def inactivate_button(name, *args)
-		options = args.extract_options!
-		if options.include?(:class) 
-			options[:class] = "btn btn-warning #{options[:class]}"
-		else
-	  	options = {:class => 'btn btn-warning'}.merge(options)
-	  end
-	  options = {:title => "Inactivate"}.merge(options) if name.blank?
-	  args << options
-	  
-	  icon = content_tag(:i, nil, class: "icon-thumbs-down")
-		create_link(name, icon, *args)
+		args << add_class('btn btn-warning', *args)
+		args << default_title('Inactivate', *args)
+	  icon_link(name, 'thumbs-down', *args)
 	end
 
 private
@@ -137,5 +79,35 @@ private
 	def create_link(name, icon, *args)
 		text = name.blank? ? nil : " #{name}"
 		link_to icon + text, *args
+	end
+	
+	def add_class(cls, *args)
+		options = args.extract_options!
+		if options.include?(:class) 
+			options[:class] = "#{cls} #{options[:class]}"
+		else
+	  	options = {:class => cls}.merge(options)
+	  end
+	  
+	  options
+	end
+	
+	def add_delete_method(txt, *args)
+		options = args.extract_options!
+		options[:method] = :delete
+		unless options.include?(:confirm) 
+			options[:confirm] = txt
+	  end
+	  
+	  options
+	end
+	
+	def default_title(title, *args)
+		options = args.extract_options!
+		unless options.include?(:title) 
+	  	options[:title] = title
+	  end
+	  
+	  options
 	end
 end

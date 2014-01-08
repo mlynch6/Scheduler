@@ -4,15 +4,21 @@ describe "Subscription Plan Pages:" do
 	subject { page }
 
 	context "#index" do
-		it "has correct title & table headers" do
+		it "has correct title" do
 			log_in
+			click_link "Administration"
 	  	click_link "Subscription Plans"
 	  	
 	  	should have_selector('title', text: 'Subscription Plans')
 		  should have_selector('h1', text: 'Subscription Plans')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	visit admin_subscription_plans_path
 	  	
-	    should have_selector('th', text: "Name")
-	    should have_selector('th', text: "Amount")
+			should have_selector('li.active', text: 'Administration')
+			should have_selector('li.active', text: 'Subscription Plans')
 		end
 		
 		it "without records" do
@@ -20,7 +26,7 @@ describe "Subscription Plan Pages:" do
 			SubscriptionPlan.delete_all
 	  	visit admin_subscription_plans_path
 	  	
-	    should have_selector('div.alert')
+	    should have_selector('p', text: 'To begin')
 			should_not have_selector('td')
 			should_not have_selector('div.pagination')
 			
@@ -32,6 +38,9 @@ describe "Subscription Plan Pages:" do
 			log_in
 			4.times { FactoryGirl.create(:subscription_plan) }
 			visit admin_subscription_plans_path
+	
+			should have_selector('th', text: "Name")
+	    should have_selector('th', text: "Amount")
 	
 			SubscriptionPlan.all.each do |plan|
 				should have_selector('td', text: plan.name)
@@ -55,11 +64,20 @@ describe "Subscription Plan Pages:" do
 	context "#new" do
 		it "has correct title" do
 			log_in
+			click_link 'Administration'
 	  	click_link 'Subscription Plans'
 	  	click_link 'Add Subscription Plan'
 	
 			should have_selector('title', text: 'Add Subscription Plan')
 			should have_selector('h1', text: 'Add Subscription Plan')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	visit new_admin_subscription_plan_path
+	  	
+			should have_selector('li.active', text: 'Administration')
+			should have_selector('li.active', text: 'Subscription Plans')
 		end
 		
 		context "with error" do
@@ -68,7 +86,7 @@ describe "Subscription Plan Pages:" do
 				visit new_admin_subscription_plan_path
 		  	click_button 'Create'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 			
 			it "doesn't create Subscription Plan" do
@@ -102,11 +120,21 @@ describe "Subscription Plan Pages:" do
 		it "has correct title" do
 			log_in
 			plan = FactoryGirl.create(:subscription_plan)
+			click_link 'Administration'
 	  	click_link "Subscription Plans"
 	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: 'Edit Subscription Plan')
 			should have_selector('h1', text: 'Edit Subscription Plan')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	plan = FactoryGirl.create(:subscription_plan)
+	  	visit edit_admin_subscription_plan_path(plan)
+	  	
+			should have_selector('li.active', text: 'Administration')
+			should have_selector('li.active', text: 'Subscription Plans')
 		end
 		
 	  it "with error shows error message" do
@@ -117,7 +145,7 @@ describe "Subscription Plan Pages:" do
 	  	fill_in "Name", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	
 		it "with bad record in URL shows 'Record Not Found' error" do

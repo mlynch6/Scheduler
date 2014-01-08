@@ -1,0 +1,16 @@
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Employee.human_attribute_name(:active) %></div>
+		<div class="dtl-text col-md-9"><%= active_inactive(@employee.active) %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Employee.human_attribute_name(:role) %></div>
+		<div class="dtl-text col-md-9"><%= @employee.role %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Employee.human_attribute_name(:email) %></div>
+		<div class="dtl-text col-md-9"><%= @employee.email %></div>
+	</div>
+</div>

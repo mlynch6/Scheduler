@@ -1,21 +1,23 @@
 <% provide(:title, 'Subscription Plans') %>
-<% provide(:header_current, 'Adinistration') %>
+<% provide(:header_current, 'Administration') %>
+<% provide(:sidebar_current, 'Subscription Plans') %>
 
-<h1>Subscription Plans</h1>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+<div class="well well-sm mash-well-link">
+	<% if allow? "subscription_plans", "new" %>
+		<%= new_link "Add Subscription Plan", new_admin_subscription_plan_path %>
+	<% end %>
+</div>
 
-<div class="row">
-	<div class="row text-center">
-		<% if allow? "subscription_plans", "new" %>
-			<%= new_button "Add Subscription Plan", new_admin_subscription_plan_path %>
-		<% end %>
-	</div>
-
+<% if @plans.length > 0 %>
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
 	  		<th>Name</th>
 	  		<th>Amount</th>
-	  		<th style="width:140px;">&nbsp;</th>
+	  		<th style="width:70px;">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -25,18 +27,19 @@
 					<td><%= number_to_currency(plan.amount) %></td>
 					<td>
 						<% if allow? "subscription_plans", "edit" %>
-							<%= edit_button nil, edit_admin_subscription_plan_path(plan), :class => 'btn-small', :id => "edit_#{plan.id}" %>
+							<%= edit_button nil, edit_admin_subscription_plan_path(plan), :class => 'btn-xs', :id => "edit_#{plan.id}" %>
 						<% end %>
 						<% if allow? "subscription_plans", "destroy" %>
-							<%= delete_button nil, admin_subscription_plan_path(plan), :class => 'btn-small', :id => "delete_#{plan.id}" %>
+							<%= delete_button nil, admin_subscription_plan_path(plan), :class => 'btn-xs', :id => "delete_#{plan.id}" %>
 						<% end %>
 					</td>
 				</tr>
 			<% end %>
 		</tbody>
 	</table>
-
-	<% unless @plans.length > 0 %>
-		<div class="alert">No subscription plans were found. Click on 'Add Subscription Plan' to get started.</div>
-	<% end %>
-</div>
+	
+<% else %>
+	<p>No subscription plans were found.
+	</p>
+	<p>To begin, click the <em class="text-info">Add Subscription Plan</em> link above.</p>
+<% end %>

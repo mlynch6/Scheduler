@@ -4,20 +4,26 @@ describe "Scene Pages:" do
   subject { page }
 
 	context "#index" do
-  	it "has correct title & table headers" do
+  	it "has correct title" do
   		log_in
   		piece = FactoryGirl.create(:piece, account: current_account)
   		FactoryGirl.create(:scene, account: current_account, piece: piece)
-	  	click_link "Active Pieces"
+	  	click_link 'Setup'
+	  	click_link "Pieces"
 	  	click_link "View"
 	  	click_link "Scenes"
 	  	
 	  	should have_selector('title', text: "#{piece.name} | Scenes")
 		  should have_selector('h1', text: "#{piece.name}")
-		  
-		  should have_selector('th', text: "Scene")
-		  should have_selector('th', text: "Characters")
-		  should have_selector('th', text: "Track")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+	  	visit piece_scenes_path(piece)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 		it "without records" do
@@ -25,7 +31,7 @@ describe "Scene Pages:" do
 			piece = FactoryGirl.create(:piece, account: current_account)
 	  	visit piece_scenes_path(piece)
 	  	
-	    should have_selector('div.alert')
+	    should have_selector('p', text: 'To begin')
 			should_not have_selector('td')
 		end
 	  
@@ -41,6 +47,10 @@ describe "Scene Pages:" do
 			}
 			visit piece_scenes_path(piece)
 	
+			should have_selector('th', text: "Scene")
+		  should have_selector('th', text: "Characters")
+		  should have_selector('th', text: "Track")
+		  
 			piece.scenes.each do |scene|
 				should have_selector('td', text: scene.name)
 				scene.characters.each do |character|
@@ -52,6 +62,18 @@ describe "Scene Pages:" do
 	    end
 		end
 		
+		it "has links for Super Admin" do
+			log_in_admin
+			piece = FactoryGirl.create(:piece, account: current_account)
+			FactoryGirl.create(:scene, account: current_account, piece: piece)
+			visit piece_scenes_path(piece)
+	
+			should have_link('Add Scene')
+			should have_link('Download')
+			should have_link('Edit')
+			should have_link('Delete')
+		end
+		
 		it "doesn't have links for Employee" do
 			log_in_employee
 			piece = FactoryGirl.create(:piece, account: current_account)
@@ -59,7 +81,7 @@ describe "Scene Pages:" do
 			visit piece_scenes_path(piece)
 	
 			should_not have_link('Add Scene')
-			should have_link('PDF')
+			should have_link('Download')
 			should_not have_link('Edit')
 			should_not have_link('Delete')
 		end
@@ -71,7 +93,7 @@ describe "Scene Pages:" do
 			visit piece_scenes_path(piece)
 	
 			should have_link('Add Scene')
-			should have_link('PDF')
+			should have_link('Download')
 			should have_link('Edit')
 			should have_link('Delete')
 		end
@@ -87,7 +109,7 @@ describe "Scene Pages:" do
 				}
 			}
 			visit piece_scenes_path(piece)
-			click_link "PDF"
+			click_link "Download"
 
 # HOW TO TEST CONTENTS ??
 #			piece.scenes.each do |scene|
@@ -104,12 +126,22 @@ describe "Scene Pages:" do
 		it "has correct title" do
 			log_in
   		piece = FactoryGirl.create(:piece, account: current_account)
-	  	click_link "Active Pieces"
+  		click_link 'Setup'
+	  	click_link "Pieces"
 	  	click_link "View"
 	  	click_link "Add Scene"
 	
 			should have_selector('title', text: "#{piece.name} | Add Scene")
 		  should have_selector('h1', text: "Add Scene for #{piece.name}")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+			visit new_piece_scene_path(piece)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 		context "with error" do
@@ -119,7 +151,7 @@ describe "Scene Pages:" do
 				visit new_piece_scene_path(piece)
 		  	click_button 'Create'
 		
-				should have_selector('div.alert-error')
+				should have_selector('div.alert-danger')
 			end
 			
 			it "doesn't create Piece" do
@@ -176,12 +208,23 @@ describe "Scene Pages:" do
 			log_in
 			piece = FactoryGirl.create(:piece, account: current_account)
 			scene = FactoryGirl.create(:scene, account: current_account, piece: piece)
-	  	click_link "Active Pieces"
+	  	click_link 'Setup'
+	  	click_link "Pieces"
 	  	click_link "View"
 	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: "#{piece.name} | Edit Scene")
 		  should have_selector('h1', text: "Edit Scene for #{piece.name}")
+		end
+		
+		it "has correct Navigation" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+			scene = FactoryGirl.create(:scene, account: current_account, piece: piece)
+	  	visit edit_scene_path(scene)
+	
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Pieces')
 		end
 		
 	  it "with error shows error message" do
@@ -192,7 +235,7 @@ describe "Scene Pages:" do
 	  	fill_in "Scene", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	
 		it "with bad record in URL shows 'Record Not Found' error" do

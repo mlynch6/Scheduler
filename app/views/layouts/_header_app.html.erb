@@ -1,83 +1,35 @@
-<% class_active = " class=""active""" %>
-<div class="nav-collapse">
-	<ul class="nav">
-		<li<%= class_active if yield(:header_current) == "Home" %>><a href="<%= dashboard_path %>"><i class="icon-home"></i> Home</a></li>
-		
-		<% if allow? "accounts", "show" %>
-			<li class="dropdown<%= " active" if yield(:header_current) == "Administration" %>">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= content_tag(:i, nil, class: "icon-list") %> Administration <%= content_tag(:b, nil, class: "caret") %></a>
-				<ul class="dropdown-menu">
-					<% if allow? "accounts", "show" %>
-						<li><%= link_to "Company Information", account_path(current_user.employee.account_id) %></li>
-					<% end %>
-					<% if allow? "agma_profiles", "show" %>
-						<li><%= link_to "Contract Settings", agma_profile_path(AgmaProfile.first) %></li>
-					<% end %>
-					<% if allow? "subscriptions", "show" %>
-						<li><%= link_to "My Subscription", subscriptions_current_path %></li>
-					<% end %>
-					<li class="divider"></li>
-					
-					<% if allow? "locations", "index" %>
-						<li><%= link_to "Active Locations", locations_path %></li>
-					<% end %>
-					<% if allow? "locations", "inactive" %>
-						<li><%= link_to "Inactive Locations", inactive_locations_path %></li>
-					<% end %>
-					<li class="divider"></li>
-					
-					<% if allow? "seasons", "index" %>
-						<li><%= link_to "Seasons", seasons_path %></li>
-					<% end %>
-					
-					<% if allow? "users", "index" %>
-						<li><%= link_to "Users", users_path %></li>
-					<% end %>
-					
-					<% if allow? "subscription_plans", "index" %>
-						<li class="divider"></li>
-						<li><%= link_to "Subscription Plans", admin_subscription_plans_path %></li>
-					<% end %>
-				</ul>
-			</li>
-		<% end %>
-		
-		<% if allow? "events", "index" %>
-			<li class="dropdown<%= " active" if yield(:header_current) == "Scheduling" %>">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= content_tag(:i, nil, class: "icon-calendar") %> Scheduling <%= content_tag(:b, nil, class: "caret") %></a>
-				<ul class="dropdown-menu">
-					<% if allow? "events", "index" %>
-						<li><%= link_to "Daily Schedule", events_path %></li>
-					<% end %>
-					<li class="divider"></li>
-					
-					<% if allow? "pieces", "index" %>
-						<li><%= link_to "Active Pieces", pieces_path %></li>
-					<% end %>
-					<% if allow? "pieces", "inactive" %>
-						<li><%= link_to "Inactive Pieces", inactive_pieces_path %></li>
-					<% end %>
-				</ul>
-			</li>
-		<% end %>
-		
-		<% if allow? "employees", "index" %>
-			<li class="dropdown<%= " active" if yield(:header_current) == "Employees" %>">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= content_tag(:i, nil, class: "icon-user") %> Employees <%= content_tag(:b, nil, class: "caret") %></a>
-				<ul class="dropdown-menu">
-					<% if allow? "employees", "index" %>
-						<li><%= link_to "Active Employees", employees_path %></li>
-					<% end %>
-					<% if allow? "employees", "inactive" %>
-						<li><%= link_to "Inactive Employees", inactive_employees_path %></li>
-					<% end %>
-				</ul>
-			</li>
-		<% end %>
-	</ul>
-</div>
+<% class_active = ' class=active' %>
+<ul class="nav navbar-nav">
+	<li<%= class_active if yield(:header_current) == "Home" %>>
+		<%= icon_link('Home', 'home', dashboard_path) %>
+	</li>
+	
+	<% if allow? "events", "index" %>
+		<li<%= class_active if yield(:header_current) == "Calendar" %>>
+			<%= icon_link 'Calendar', 'calendar', events_path %>
+		</li>
+	<% end %>
+	
+	<% if allow? "employees", "index" %>
+		<li<%= class_active if yield(:header_current) == "People" %>>
+			<%= icon_link 'People', 'user', employees_path %>
+		</li>
+	<% end %>
+	
+	<% if allow? "accounts", "show" %>
+		<li<%= class_active if yield(:header_current) == "Setup" %>>
+			<%= icon_link 'Setup', 'wrench', account_path(current_user.employee.account_id) %>
+		</li>
+	<% end %>
+	
+	<% if allow? "subscription_plans", "index" %>
+		<li<%= class_active if yield(:header_current) == "Administration" %>>
+			<%= icon_link 'Administration', 'asterisk', admin_subscription_plans_path %>
+		</li>
+	<% end %>
+</ul>
 
-<ul class="nav pull-right">
+<ul class="nav navbar-nav navbar-right">
 	<li class="divider-vertical"></li>
 	<% if allow? "users", "edit" %>
 		<li><%= link_to current_user.username, edit_user_path(current_user) %></li>

@@ -1,6 +1,6 @@
 <%= f.text_field :addr %>
 <%= f.text_field :addr2 %>
 <%= f.text_field :city %>
-<%= f.select :state, Address::STATES %>
-<%= f.text_field :zipcode, :class => 'input-mini' %>
+<%= f.select :state, Address::STATES, {}, field_size: 'col-md-3' %>
+<%= f.text_field :zipcode, field_size: 'col-md-2' %>
 <%= f.hidden_field :addr_type %>

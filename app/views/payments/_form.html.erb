@@ -1,13 +1,13 @@
 <% if @account.stripe_card_token.present? %>
-	<p class="offset2">Credit Card has been provided</p>
+	<p>Credit Card has been provided</p>
 <% else %>
-	<div id="stripe_error" class="offset2 alert alert-error">
+	<div id="stripe_error" class="alert alert-danger">
 		<noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings, then try again.</noscript>
 	</div>
 
-	<div class="control-group">
-		<%= label_tag :accepted_cards, "Accepted Cards", class: 'control-label' %>
-		<div class="controls">
+	<div class="form-group">
+		<%= f.generate_label :accepted_cards, text: "Accepted Cards", class: 'required' %>
+		<div class="col-md-9">
 			<%= image_tag('visa.png') %>
 			<%= image_tag('mastercard.png') %>
 			<%= image_tag('discover.png') %>
@@ -15,27 +15,29 @@
 		</div>
 	</div>
 	
-	<div class="control-group">
-		<%= label_tag :card_number, "Credit Card Number", class: 'control-label required' %>
-		<div class="controls">
-			<%= text_field_tag :card_number, nil, name: nil %>
+	<div class="form-group">
+		<%= f.generate_label :card_number, text: "Credit Card Number", class: 'required' %>
+		<div class="col-md-5">
+			<%= text_field_tag :card_number, nil, name: nil, class: 'form-control' %>
 		</div>
 	</div>
 	
-	<div class="control-group">
-		<%= label_tag :card_month, "Card Expiration", class: 'control-label required' %>
-		<div class="controls">
-			<%= select_month nil, { add_month_numbers: true }, { name: nil, id: "card_month", class: "span2" } %>
-			<%= select_year nil, { start_year: Date.today.year, end_year: Date.today.year+5 }, { name: nil, id: "card_year", class: "input-small" } %>
+	<div class="form-group">
+		<%= f.generate_label :card_month, text: "Credit Expiration", class: 'required' %>
+		<div class="col-md-3">
+			<%= select_month nil, { add_month_numbers: true }, { name: nil, id: "card_month", class: "form-control" } %>
+		</div>
+		<div class="col-md-2">
+			<%= select_year nil, { start_year: Date.today.year, end_year: Date.today.year+5 }, { name: nil, id: "card_year", class: "form-control" } %>
 		</div>
 	</div>
 	
-	<div class="control-group">
-		<%= label_tag :card_code, "Security Code (CVV)", class: 'control-label required' %>
-		<div class="controls">
-			<%= text_field_tag :card_code, nil, name: nil, class: "input-mini" %>
-			<%= image_tag('cvv.png') %>
+	<div class="form-group">
+		<%= f.generate_label :card_code, text: "Security Code", class: 'required' %>
+		<div class="col-md-2">
+			<%= text_field_tag :card_code, nil, name: nil, class: "form-control" %>
 		</div>
+		<%= image_tag('cvv.png') %>
 	</div>
 <% end %>
 

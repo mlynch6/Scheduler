@@ -6,6 +6,7 @@ describe "Agma Profile Pages:" do
 	context "#edit" do
 		before do
 			log_in
+			click_link "Setup"
 			click_link "Contract Settings"
 			click_link "Edit"
 		end
@@ -15,11 +16,16 @@ describe "Agma Profile Pages:" do
 			should have_selector('h1', text: 'Edit Contract Settings')
 		end
 		
+		it "has correct Navigation" do
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Contract Settings')
+		end
+		
 	  it "invalid record shows error" do
 	  	fill_in "Max Hours/Week", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-error')
+			should have_selector('div.alert-danger')
 		end
 	 
 		it "valid record saves profile" do
@@ -50,6 +56,7 @@ describe "Agma Profile Pages:" do
 	context "#show" do
 		before do
 			log_in
+			click_link "Setup"
 			click_link "Contract Settings"
 		end
 		
@@ -58,19 +65,24 @@ describe "Agma Profile Pages:" do
 			should have_selector('h1', text: 'Contract Settings')
 		end
 		
+		it "has correct Navigation" do
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'Contract Settings')
+		end
+		
 		it "has links" do
 	  	should have_link('Edit')
 		end
 		
 		it "displays correct data" do
-			should have_selector('div.text-ui', text: "9:00 AM")
-			should have_selector('div.text-ui', text: "6:00 PM")
-			should have_selector('div.text-ui', text: "30 hours/week")
-			should have_selector('div.text-ui', text: "6 hours/day")
-			should have_selector('div.text-ui', text: "30 minutes")
-			should have_selector('div.text-ui', text: "15 minutes")
-			should have_selector('div.text-ui', text: "5 minutes/Hour Rehearsal")
-			should have_selector('div.text-ui', text: "15 minutes")
+			should have_content("9:00 AM")
+			should have_content("6:00 PM")
+			should have_content("30 hours/week")
+			should have_content("6 hours/day")
+			should have_content("30 minutes")
+			should have_content("15 minutes")
+			should have_content("5 minutes/Hour Rehearsal")
+			should have_content("15 minutes")
 		end
 	end
 end

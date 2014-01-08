@@ -1,10 +1,10 @@
 <% if @user.new_record? %>
 	<%= f.select :employee_id, @employees, { :include_blank => true } %>
-	<%= f.text_field :username %>
+	<%= f.text_field :username, field_size: 'col-md-4' %>
 <% else %>
-	<%= f.uneditable_text_field :employee_id, @user.employee.full_name %>
-	<%= f.uneditable_text_field :username, @user.username %>
+	<%= f.static_control :employee_id do @user.employee.full_name end %>
+	<%= f.static_control :username do @user.username end %>
 <% end %>
-	
-<%= f.password_field :password %>
-<%= f.password_field :password_confirmation %>
+
+<%= f.password_field :password, field_size: 'col-md-4' %>
+<%= f.password_field :password_confirmation, field_size: 'col-md-4' %>

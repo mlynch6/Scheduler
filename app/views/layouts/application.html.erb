@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title><%= full_title(yield(:title)) %></title>
   <%= render 'layouts/shim' %>
@@ -10,19 +10,26 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<%= render 'layouts/header' %>
+	<%= render 'layouts/header' %>
 
-<div class="container">
-	<div class="row">
+	<div class="container">
 		<%= render 'layouts/flash', flash: flash %>
-		<%= yield %>
-	</div>
-	<div class="row">
+		
+		<div class="row">
+			<div class="col-md-9">
+				<%= yield %>
+			</div>
+	
+			<div class="col-md-3">
+				<%= render "layouts/sidebars/#{yield(:header_current).downcase}" %>
+			</div>
+		</div>
+		
 		<%= render 'layouts/footer' %>
+		
+		<div class="row">
+			<%= debug(params) if Rails.env.development? %>
+		</div>
 	</div>
-	<div class="row">
-		<%= debug(params) if Rails.env.development? %>
-	</div>
-</div>
 </body>
 </html>

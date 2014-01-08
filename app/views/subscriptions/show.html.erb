@@ -1,38 +1,31 @@
 <% provide(:title, 'My Subscription') %>
-<% provide(:header_current, 'Administration') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Subscription') %>
 
-<h1>My Subscription</h1>
-<div class="show-ui">
-	<div class="row">
-		<div class="label-ui span2"><%= Account.human_attribute_name(:current_subscription_plan) %></div>
-		<div class="text-ui span6"><%= @account.current_subscription_plan.name %> &nbsp;<%= link_to '[change]', subscriptions_edit_path %></div>
-	</div>
-	
-	<div class="row">
-		<div class="label-ui span2">Next Payment On</div>
-		<div class="text-ui span6"><%= @next_invoice_date.strftime('%B %-d, %Y') if @next_invoice_date %></div>
-	</div>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+<div class="well well-sm mash-well-link">
+	<% if allow? "payments", "edit" %>
+		<%= edit_link 'Change Payment Method', payments_edit_path %>
+	<% end %>
 </div>
 
-<% if allow? "payments", "edit" %>
-	<div class="offset1">
-		<%= edit_button 'Change Payment Method', payments_edit_path %>
-	</div>
-<% end %>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= render 'subscriptions/detail' %>
+  </div>
+</div>
 
-<h2>Payment History</h2>
-<div class="row">
-	<div class="offset1 span6">
-		<table class="table table-striped">
-		  <tbody>
-		  	<% @invoices.each do |invoice| %>
-				  <tr>
-				  	<td><%= Time.zone.at(invoice.date).to_date %></td>
-				  	<td><span class="text-right"><%= number_to_currency(invoice.total/100) %></span></td>
-				  	<td>Printable Receipt (PDF)</td>
-				  </tr>
-				<% end %>
-			</tbody>
-		</table>
-	</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Payment History</h3>
+  </div>
+	<% if @invoices.length > 0 %>
+		<%= render 'subscriptions/payment_history_table' %>
+	<% else %>
+		<div class="panel-body">
+	    <p>No payments found.</p>
+	  </div>
+	<% end %>
 </div>

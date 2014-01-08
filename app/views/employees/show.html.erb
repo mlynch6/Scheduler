@@ -1,59 +1,64 @@
 <% provide(:title, 'Employee') %>
-<% provide(:header_current, 'Employees') %>
+<% provide(:header_current, 'People') %>
+<% provide(:sidebar_current, 'Employees') %>
 
-<h1><%= @employee.full_name %></h1>
+<div class="page-header">
+	<h1><%= @employee.full_name %></h1>
+</div>
+<div class="well well-sm mash-well-link">
+	<% if allow? "employees", "edit" %>
+		<%= edit_link "Edit", edit_employee_path(@employee) %>
+	<% end %>
+</div>
 
-<div class="show-ui">
-	<div class="row">
-		<div class="label-ui span2"><%= Employee.human_attribute_name(:active) %></div>
-		<div class="text-ui span4"><%= active_inactive(@employee.active) %></div>
-	</div>
-	<div class="row">
-		<div class="label-ui span2"><%= Employee.human_attribute_name(:role) %></div>
-		<div class="text-ui span4"><%= @employee.role %></div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= render 'employees/detail' %>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-info">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Addresses</h3>
+		  </div>
+		  <table class="table table-striped">
+				<% @employee.addresses.each do |addr| %>
+					<tr><td>
+						<strong><%= addr.addr_type %> Address</strong>
+						&nbsp;<%= edit_link nil, [:edit, @employee, addr], :id => "edit_address_#{addr.id}" %>
+						&nbsp;<%= delete_link nil, [@employee, addr], :id => "delete_address_#{addr.id}" %>
+						<br />
+						<%= addr.addr %><br />
+						<%= addr.addr2+tag(:br) if addr.addr2.present? %>
+						<%= "#{addr.city}, #{addr.state} #{addr.zipcode}" %>
+					</td></tr>
+				<% end %>
+				<tr><td>
+					<%= new_link "Add Address", [:new, @employee, :address] %>
+				</td></tr>
+			</table>
+		</div>
 	</div>
 	
-	<div class="row text-center">
-		<% if allow? "employees", "edit" %>
-			<%= edit_button "Edit", edit_employee_path(@employee) %>
-		<% end %>
-	</div>
-
-	<div class="row-fluid">
-		<div class="span4">
-			<h2>Addresses</h2>
-			<% @employee.addresses.each do |addr| %>
-				<address>
-					<strong><%= addr.addr_type %> Address</strong>
-					<%= edit_link nil, [:edit, @employee, addr], :id => "edit_address_#{addr.id}" %>
-					<%= delete_link nil, [@employee, addr], :id => "delete_address_#{addr.id}" %>
-					<br />
-					<%= addr.addr %><br />
-					<%= addr.addr2 if addr.addr2.present? %>
-					<%= tag(:br) if addr.addr2.present? %>
-					<%= "#{addr.city}, #{addr.state} #{addr.zipcode}" %><br />
-				</address>
-			<% end %>
-			<%= new_link "Add Address", [:new, @employee, :address] %>
-		</div>
-		
-		<div class="span4">
-			<h2>Phone Numbers</h2>			
-			<% @employee.phones.each do |phone| %>
-				<address>
-					<strong><%= phone.phone_type %>: </strong><%= phone.phone_num %>
-					<%= edit_link nil, [:edit, @employee, phone], :id => "edit_phone_#{phone.id}" %>
-					<%= delete_link nil, [@employee, phone], :id => "delete_phone_#{phone.id}" %>
-				</address>
-			<% end %>
-			<%= new_link "Add Phone Number", [:new, @employee, :phone] %>
-		</div>
-		
-		<div class="span4">
-			<h2>Email</h2>
-			<div class="row-ui">
-				<%= @employee.email %>
-			</div>
+	<div class="col-md-6">
+		<div class="panel panel-info">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Phone Numbers</h3>
+		  </div>
+		  <table class="table table-striped">
+				<% @employee.phones.each do |phone| %>
+					<tr><td>
+						<strong><%= phone.phone_type %>: </strong><%= phone.phone_num %>
+						<%= edit_link nil, [:edit, @employee, phone], :id => "edit_phone_#{phone.id}" %>
+						<%= delete_link nil, [@employee, phone], :id => "delete_phone_#{phone.id}" %>
+					</td></tr>
+				<% end %>
+				<tr><td>
+					<%= new_link "Add Phone Number", [:new, @employee, :phone] %>
+				</td></tr>
+			</table>
 		</div>
 	</div>
 </div>

@@ -1,0 +1,25 @@
+<div class="panel panel-primary mash-sidebar hidden-print" role="complementary">
+	<div class="panel-heading">
+		<h3 class="panel-title"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-user')%> People</h3>
+	</div>
+	
+	<ul class="list-group">
+		<% if allow? "employees", "index" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Employees" %>">
+				<%= link_to "Employees", employees_path %>
+			</li>
+		<% end %>
+		
+		<% if allow? "employees", "inactive" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Inactive Employees" %>">
+				<%= link_to "Inactive Employees", inactive_employees_path %>
+			</li>
+		<% end %>
+		
+		<% if allow? "users", "index" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Users" %>">
+				<%= link_to "Users", users_path %>
+			</li>
+		<% end %>
+	</ul>
+</div>

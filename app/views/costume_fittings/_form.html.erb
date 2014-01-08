@@ -1,16 +1,8 @@
 <%= f.text_field :title, 
 			:placeholder => 'Costume Fitting',
-			:help_text => content_tag(:span, 'Info', class: "label label-info")+" If you do not enter a title, 'Costume Fitting' will be used" %>
+			:help => content_tag(:span, 'Info', class: "label label-info")+" If you do not enter a title, 'Costume Fitting' will be used" %>
 <%= f.select :location_id, @locations, { :include_blank => true } %>
 <%= f.date_field :start_date %>
-
-<div class="row">
-	<div class="span3">
-		<%= f.time_field :start_time, :label => 'From' %>
-	</div>
-	<div class="span3">
-		<%= f.time_field :end_time, :label => 'To' %>
-	</div>
-</div>
-
-<%= f.select :employee_ids, @employees, {}, { :multiple => true, :class => 'input-xxlarge' } %>
+<%= f.time_field :start_time, :label => 'From' %>
+<%= f.time_field :end_time, :label => 'To' %>
+<%= f.select :employee_ids, @employees, {}, { :multiple => true } %>

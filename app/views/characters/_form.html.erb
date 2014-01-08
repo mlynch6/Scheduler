@@ -1,2 +1,2 @@
-<%= f.uneditable_text_field :piece_id, @piece.name %>
+<%= f.static_control :piece_id do @piece.name end %>
 <%= f.text_field :name %>

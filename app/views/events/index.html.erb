@@ -1,42 +1,23 @@
 <% provide(:title, 'Daily Schedule') %>
-<% provide(:header_current, 'Scheduling') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Daily') %>
 
-<h1>Daily Schedule</h1>
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
 
-<div class="row">
-	<div class="span9">	
-		<%= daily_calendar(@date, @locations) do |location| %>
-			<% if @events.has_key?(location) %>
-	
-				<% @events[location].each do |event| %>
-					<% if event.type == "Rehearsal" %>
-						<%= render 'rehearsal', :rehearsal => event %>
-					<% elsif event.type == "CompanyClass" %>
-						<%= render 'company_class', :cclass => event %>
-					<% elsif event.type == "CostumeFitting" %>
-						<%= render 'costume_fitting', :fitting => event %>
-					<% end %>
-				<% end %>
-				
+<%= daily_calendar(@date, @locations) do |location| %>
+	<% if @events.has_key?(location) %>
+
+		<% @events[location].each do |event| %>
+			<% if event.type == "Rehearsal" %>
+				<%= render 'rehearsal', :rehearsal => event %>
+			<% elsif event.type == "CompanyClass" %>
+				<%= render 'company_class', :cclass => event %>
+			<% elsif event.type == "CostumeFitting" %>
+				<%= render 'costume_fitting', :fitting => event %>
 			<% end %>
 		<% end %>
-	</div>
-	
-	<div class="span3">
-		<div class="section">
-			<div id="datepicker"></div>
-		</div>
 		
-		<div class="section">
-			<% if allow? "company_classes", "new" %>
-				<%= new_button "New Company Class", new_company_class_path(date: @date) %>
-			<% end %>
-			<% if allow? "rehearsals", "new" %>
-				<%= new_button "New Rehearsal", new_rehearsal_path(date: @date) %>
-			<% end %>
-			<% if allow? "costume_fittings", "new" %>
-				<%= new_button "New Costume Fitting", new_costume_fitting_path(date: @date) %>
-			<% end %>
-		</div>
-	</div>
-</div>
+	<% end %>
+<% end %>

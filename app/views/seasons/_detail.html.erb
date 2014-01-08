@@ -1,6 +1,11 @@
-<h1><%= @season.name %></h1>
-
-<div class="show-ui row">
-		<div class="label-ui span2">From</div>
-		<div class="text-ui span6"><%= @season.start_dt %> to <%= @season.end_dt %></div>
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-md-3">Start Date</div>
+		<div class="dtl-text col-md-9"><%= @season.start_dt %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3">End Date</div>
+		<div class="dtl-text col-md-9"><%= @season.end_dt %></div>
+	</div>
 </div>
