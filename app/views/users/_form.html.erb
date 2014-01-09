@@ -6,5 +6,5 @@
 	<%= f.static_control :username do @user.username end %>
 <% end %>
 
-<%= f.password_field :password, field_size: 'col-md-4' %>
+<%= f.password_field :password, field_size: 'col-md-4', required: true %>
 <%= f.password_field :password_confirmation, field_size: 'col-md-4' %>

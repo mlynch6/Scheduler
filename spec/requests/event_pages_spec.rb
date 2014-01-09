@@ -76,7 +76,9 @@ describe "Event Pages:" do
 	    end
 		end
 		
-		it "shows Rehearsal details in popup window"
+		it "shows Rehearsal details in popup window" do
+			pending "How to test modal dialog?"
+		end
 		
 		it "lists Company Class records" do
 			log_in
@@ -130,7 +132,9 @@ describe "Event Pages:" do
 	    end
 		end
 		
-		it "shows Company Class details in popup window"
+		it "shows Company Class details in popup window" do
+			pending "How to test modal dialog?"
+		end
 		
 		it "lists Costume Fitting records" do
 			log_in
@@ -151,7 +155,9 @@ describe "Event Pages:" do
 	    end
 		end
 		
-		it "shows Costume Fitting details in popup window"
+		it "shows Costume Fitting details in popup window" do
+			pending "How to test modal dialog?"
+		end
 		
 		it "has links for Super Admin" do
 			log_in_admin
@@ -186,5 +192,58 @@ describe "Event Pages:" do
 			should have_link('New Costume Fitting')
 		end
 		
+		describe "sidenav calendar" do
+			let(:username) { "pmartin#{DateTime.now.seconds_since_midnight}" }
+    	before do
+    		visit root_path
+				click_link "Pricing & Signup"
+				click_link "Sign Up"
+    		
+    		fill_in "Company", with: "Event Sidenav Calendar #{Time.now}"
+    		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
+    		fill_in "Phone #", with: "414-543-1000"
+		  	
+		  	fill_in "Address", with: Faker::Address.street_address
+				fill_in "Address 2", with: Faker::Address.street_address
+				fill_in "City", with: Faker::Address.city
+				select "New York", from: "State"
+				fill_in "Zip Code", with: Faker::Address.zip.first(5)
+    		
+    		fill_in "First Name", with: "Peter"
+    		fill_in "Last Name", with: "Martin"
+    		select  "Artistic Director", from: "Role"
+    		fill_in "Email", with: "peter.martin@nycb.org"
+    		
+    		fill_in "Username", with: username
+    		fill_in "Password", with: "password"
+    		fill_in "Confirm Password", with: "password"
+    		
+    		fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
+		  	select (Date.today.year+1).to_s, from: "card_year"
+		  	fill_in "Security Code", with: "213"
+		  	
+		  	click_button "Create Account"
+		  	should have_selector('div.alert-success')
+		  	
+		  	visit login_path
+		  	fill_in "username", with: username
+	  		fill_in "password", with: "password"
+	  		click_button "Sign In"
+	  		page.should have_content "Sign Out"
+    	end
+    	
+    	after do
+    		destroy_stripe_account(User.unscoped.find_by_username(username).account)
+    	end
+    	
+			it "navigates to correct day", js: true do
+				visit events_path+"/2014/1/1"
+				should have_selector('h2', text: "January 1, 2014")
+				
+				click_link '3'
+				should have_selector('h1', text: 'Daily Schedule')
+				should have_selector('h2', text: "January 3, 2014")
+			end
+		end
 	end
 end

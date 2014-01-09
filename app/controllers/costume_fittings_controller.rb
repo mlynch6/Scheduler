@@ -12,7 +12,7 @@ class CostumeFittingsController < ApplicationController
 		if @fitting.save
 			flash[:success] = "Successfully created the costume fitting."
 			show_warnings
-			redirect_to events_path(:date => @fitting.start_date)
+			redirect_to events_path+"/"+@fitting.start_date.strftime('%Y/%m/%d')
 		else
 			form_setup
 			render 'new'
@@ -33,7 +33,7 @@ class CostumeFittingsController < ApplicationController
 		if @fitting.update_attributes(params[:costume_fitting])
 			flash[:success] = "Successfully updated the costume fitting."
 			show_warnings
-			redirect_to events_path(:date => @fitting.start_date)
+			redirect_to events_path+"/"+@fitting.start_date.strftime('%Y/%m/%d')
 		else
 			form_setup
 			render 'edit'

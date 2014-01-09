@@ -37,6 +37,7 @@ end
 
 group :test do
   gem 'capybara',		'~> 1.1.2'
+  gem 'selenium-webdriver', '~> 2.39.0'
   gem 'rb-fsevent', '0.9.1', :require => false
   gem 'growl', '1.0.3'
   gem 'guard-spork', '0.3.2'

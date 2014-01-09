@@ -16,7 +16,7 @@
 	</div>
 	
 	<div class="form-group">
-		<%= f.generate_label :card_number, text: "Credit Card Number", class: 'required' %>
+		<%= f.generate_label :card_number, for: "card_number", text: "Credit Card Number", class: 'required' %>
 		<div class="col-md-5">
 			<%= text_field_tag :card_number, nil, name: nil, class: 'form-control' %>
 		</div>
@@ -33,7 +33,7 @@
 	</div>
 	
 	<div class="form-group">
-		<%= f.generate_label :card_code, text: "Security Code", class: 'required' %>
+		<%= f.generate_label :card_code, for: "card_code", text: "Security Code", class: 'required' %>
 		<div class="col-md-2">
 			<%= text_field_tag :card_code, nil, name: nil, class: "form-control" %>
 		</div>

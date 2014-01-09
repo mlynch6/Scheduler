@@ -10,6 +10,23 @@ en:
         cancelled_at: "Canceled On"
         current_subscription_plan: "Current Subscription"
         current_subscription_plan_id: "Subscription"
+      account/phones:
+        phone_num: "Phone #"
+      account/addresses:
+        addr_type: "Address Type"
+        addr: "Address"
+        addr2: "Address 2"
+        city: "City"
+        state: "State"
+        zipcode: "Zip Code"
+      account/employees:
+        first_name: "Director's First Name"
+        last_name: "Director's Last Name"
+        email: "Director's Email"
+      account/employees/user:
+        username: "Username"
+        password_digest: "Password"
+        password_confirmation: "Password Confirmation"
       address:
         addr_type: "Address Type"
         addr: "Address"

@@ -23,10 +23,11 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 		
 			label = options.delete(:label)
 			label_class = 'sr-only' if options.delete(:hide_label)
+			label_required = options.delete(:required)
 			field_size = options.delete(:field_size)
 			help = options.delete(:help)
 				
-			form_group(name, label: { text: label, class: label_class }, field_size: field_size, help: help) do
+			form_group(name, label: { text: label, class: label_class, required: label_required }, field_size: field_size, help: help) do
 				options[:class] = "form-control #{options[:class]}".rstrip
 				args << options.except(:prepend, :append)
 				
@@ -125,6 +126,7 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 		
 		if options
 			required = object.class.validators_on(name).any? { |v| v.kind_of? ActiveModel::Validations::PresenceValidator }
+			required = required || options[:required] if options.has_key? :required
 			required_class = required ? "required" : ""
 			options[:class] = "#{options[:class]} #{label_width} control-label #{required_class}".lstrip
 			label(name, options[:text], options.except(:text))

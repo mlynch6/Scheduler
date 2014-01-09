@@ -12,7 +12,7 @@ class RehearsalsController < ApplicationController
 		if @rehearsal.save
 			flash[:success] = "Successfully created the rehearsal."
 			show_warnings(@rehearsal.start_at)
-			redirect_to events_path(:date => @rehearsal.start_date)
+			redirect_to events_path+"/"+@rehearsal.start_date.strftime('%Y/%m/%d')
 		else
 			form_setup
 			render 'new'
@@ -33,7 +33,7 @@ class RehearsalsController < ApplicationController
 		if @rehearsal.update_attributes(params[:rehearsal])
 			flash[:success] = "Successfully updated the rehearsal."
 			show_warnings(@rehearsal.start_date)
-			redirect_to events_path(:date => @rehearsal.start_date)
+			redirect_to events_path+"/"+@rehearsal.start_date.strftime('%Y/%m/%d')
 		else
 			form_setup
 			render 'edit'
