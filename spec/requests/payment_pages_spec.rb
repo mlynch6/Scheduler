@@ -4,13 +4,33 @@ describe "Payment Pages:" do
   subject { page }
 	
 	context "#edit" do
+		# Tests with no JS
+		it "has correct title" do
+			log_in
+	  	click_link 'Setup'
+	  	click_link 'My Subscription'
+	  	click_link 'Change Payment Method'
+	  	
+	  	should have_selector('title', text: 'Change Payment Method')
+			should have_selector('h1', text: 'Change Payment Method')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit payments_edit_path
+			
+			should have_selector('li.active', text: 'Setup')
+			should have_selector('li.active', text: 'My Subscription')
+		end
+	end
+	
+	context "#edit" do
 		#log_in function not working with js: true option
-		let(:company_name) { "New York City Ballet #{Time.now}" }
   	let(:username) { "pmartin#{DateTime.now.seconds_since_midnight}" }
 		
   	before do
   		visit signup_path(plan: 1)
-  		fill_in "Company", with: company_name
+  		fill_in "Company", with: "Payment#edit #{Time.now}"
   		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
   		fill_in "Phone #", with: "414-543-1000"
 	  	
@@ -37,8 +57,8 @@ describe "Payment Pages:" do
 	  	should have_selector('div.alert-success')
 	  	
 	  	visit login_path
-	  	fill_in "Username", with: username
-  		fill_in "Password", with: "password"
+	  	fill_in "username", with: username
+  		fill_in "password", with: "password"
   		click_button "Sign In"
   		page.should have_content "Sign Out"
   		
@@ -49,20 +69,6 @@ describe "Payment Pages:" do
   	after do
   		destroy_stripe_account(User.unscoped.find_by_username(username).account)
   	end
-		
-		it "has correct title", js: true do
-	  	should have_selector('title', text: 'Change Payment Method')
-			should have_selector('h1', text: 'Change Payment Method')
-		end
-		
-		it "has correct Navigation" do
-			should have_selector('li.active', text: 'Setup')
-			should have_selector('li.active', text: 'My Subscription')
-		end
-		
-		it "has links", js: true do
-	  	should have_link('My Subscription')
-		end
 		
 		it "can update the credit card", js: true do
     	fill_in "Credit Card Number", with: "5105105105105100" #valid testing Mastercard

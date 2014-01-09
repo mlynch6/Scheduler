@@ -17,9 +17,9 @@ getScrollOffset = () ->
 
 jQuery ->
 	$('#datepicker').datepicker
-		dateFormat: "yy-mm-dd",
-		defaultDate: paramValue("date"),
+		dateFormat: "yy/m/d",
+		defaultDate: $('#date').val(),
 		onSelect: (selectedDate, instance) ->
-			window.location = "?date="+selectedDate
+			window.location = "/events/"+selectedDate
 	#set calendar to show 9AM at top of page
 	$('.cal-scrollable').scrollTop(getScrollOffset())

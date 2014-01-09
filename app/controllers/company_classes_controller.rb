@@ -12,7 +12,7 @@ class CompanyClassesController < ApplicationController
 		if @cclass.save
 			flash[:success] = "Successfully created the company class."
 			show_warnings
-			redirect_to events_path(:date => @cclass.start_date)
+			redirect_to events_path+"/"+@cclass.start_date.strftime('%Y/%m/%d')
 		else
 			form_setup
 			render 'new'
@@ -33,7 +33,7 @@ class CompanyClassesController < ApplicationController
 		if @cclass.update_attributes(params[:company_class])
 			flash[:success] = "Successfully updated the company class."
 			show_warnings
-			redirect_to events_path(:date => @cclass.start_date)
+			redirect_to events_path+"/"+@cclass.start_date.strftime('%Y/%m/%d')
 		else
 			form_setup
 			render 'edit'

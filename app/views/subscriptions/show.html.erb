@@ -21,7 +21,7 @@
   <div class="panel-heading">
     <h3 class="panel-title">Payment History</h3>
   </div>
-	<% if @invoices.length > 0 %>
+	<% if @invoices && @invoices.length > 0 %>
 		<%= render 'subscriptions/payment_history_table' %>
 	<% else %>
 		<div class="panel-body">

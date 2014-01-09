@@ -5,8 +5,8 @@ module DailyCalendarHelper
 	
 	def calculate_offset(start_at, duration)
 		time_in_min = start_at.hour * 60 + start_at.min
-		t = (time_in_min * 4/3) - 3
-		h = (duration * 4/3) - 4
+		t = (time_in_min * 4/3) - 12
+		h = (duration * 4/3) - 2
 		return 'style="top: '+t.ceil().to_s+'px; height: '+h.ceil().to_s+'px;"'
 	end
 	

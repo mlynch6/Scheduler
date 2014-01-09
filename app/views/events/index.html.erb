@@ -6,6 +6,8 @@
 	<h1><%= yield(:title) %></h1>
 </div>
 
+<input id="date" type="hidden" name="date" value="<%= @date.strftime('%Y/%m/%d') %>">
+
 <%= daily_calendar(@date, @locations) do |location| %>
 	<% if @events.has_key?(location) %>
 

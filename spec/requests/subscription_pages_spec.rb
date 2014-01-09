@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Subscription Pages:", focus: true do
+describe "Subscription Pages:" do
   subject { page }
 	
 	context "#show" do
