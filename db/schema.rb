@@ -66,16 +66,6 @@ ActiveRecord::Schema.define(:version => 20131207144548) do
   add_index "appearances", ["scene_id", "character_id"], :name => "index_appearances_on_scene_id_and_character_id", :unique => true
   add_index "appearances", ["scene_id"], :name => "index_appearances_on_scene_id"
 
-  create_table "castings", :force => true do |t|
-    t.integer  "cast_id",      :null => false
-    t.integer  "character_id", :null => false
-    t.integer  "employee_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
-
-  add_index "castings", ["cast_id", "character_id"], :name => "index_castings_on_cast_id_and_character_id", :unique => true
-
   create_table "casts", :force => true do |t|
     t.integer  "season_piece_id",               :null => false
     t.string   "name",            :limit => 20, :null => false
@@ -161,14 +151,17 @@ ActiveRecord::Schema.define(:version => 20131207144548) do
   add_index "phones", ["phoneable_id", "phoneable_type"], :name => "index_phones_on_phoneable_id_and_phoneable_type"
 
   create_table "pieces", :force => true do |t|
-    t.integer  "account_id",                                 :null => false
-    t.string   "name",       :limit => 50,                   :null => false
-    t.boolean  "active",                   :default => true, :null => false
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.integer  "account_id",                  :null => false
+    t.string   "name",          :limit => 50, :null => false
+    t.string   "choreographer", :limit => 50
+    t.string   "music",         :limit => 50
+    t.string   "composer",      :limit => 50
+    t.integer  "avg_length"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
-  add_index "pieces", ["account_id", "name"], :name => "index_pieces_on_account_id_and_name", :unique => true
+  add_index "pieces", ["account_id", "name", "choreographer"], :name => "index_pieces_on_account_id_and_name_and_choreographer", :unique => true
   add_index "pieces", ["account_id"], :name => "index_pieces_on_account_id"
 
   create_table "scenes", :force => true do |t|

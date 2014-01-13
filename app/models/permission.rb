@@ -7,6 +7,7 @@ class Permission
 		if user
 			allow :static_pages, [:dashboard]
 			allow [:locations, :pieces, :scenes, :characters, :employees, :events], [:index]
+			allow [:pieces], [:show]
 			
 			if user.role == "Administrator"
 				#index
@@ -28,7 +29,7 @@ class Permission
 				allow [:subscriptions, :addresses, :phones, :seasons, :scenes, :characters, :casts], [:destroy]
 				
 				#activate & inactive & inactivate
-				allow [:employees, :locations, :pieces], [:inactive, :activate, :inactivate]
+				allow [:employees, :locations], [:inactive, :activate, :inactivate]
 				
 				#sort
 				allow [:scenes, :characters], [:sort]

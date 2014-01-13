@@ -21,26 +21,6 @@ describe "Rehearsal Pages:" do
 			should have_selector('li.active', text: 'New Rehearsal')
 		end
 		
-		it "has only active Locations in dropdown" do
-			log_in
-			FactoryGirl.create(:location, account: current_account, name: 'Location A')
-			FactoryGirl.create(:location_inactive, account: current_account, name: 'Location B')
-			visit new_rehearsal_path
-  		
-			should have_selector('option', text: 'Location A')
-			should_not have_selector('option', text: 'Location B')
-		end
-		
-		it "has only active Pieces in dropdown" do
-			log_in
-			FactoryGirl.create(:piece, account: current_account, name: 'Piece A')
-			FactoryGirl.create(:piece_inactive, account: current_account, name: 'Piece B')
-			visit new_rehearsal_path
-  		
-			should have_selector('option', text: 'Piece A')
-			should_not have_selector('option', text: 'Piece B')
-		end
-		
 		it "has only active Employees in dropdown" do
 			log_in
 			FactoryGirl.create(:employee, account: current_account, last_name: 'Parker', first_name: 'Peter')

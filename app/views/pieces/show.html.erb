@@ -1,0 +1,24 @@
+<% provide(:title, "#{@piece.name} | Overview") %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Pieces') %>
+
+<div class="page-header">
+	<h1><%= @piece.name %></h1>
+</div>
+
+<div class="mash-show-tab">
+	<%= render 'pieces/tabs' %>
+	
+	<div class="mash-tab-body">
+		<%= render 'pieces/detail' %>
+	</div>
+	
+	<div class="mash-tab-actions">
+		<% if allow? "pieces", "edit" %>
+			<%= edit_button "Edit", edit_piece_path(@piece), class: 'btn-xs' %>
+		<% end %>
+		<% if allow? "pieces", "delete" %>
+			<%= delete_button "Delete", @piece, class: 'btn-xs' %>
+		<% end %>
+	</div>
+</div>

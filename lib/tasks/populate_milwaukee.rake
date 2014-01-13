@@ -19,7 +19,6 @@ namespace :db do
 		Character.unscoped.delete_all
 		Appearance.unscoped.delete_all
 		Cast.unscoped.delete_all
-		Casting.unscoped.delete_all
 		
 		a = Account.create(
 			name: 'Milwaukee Ballet [Dev]',

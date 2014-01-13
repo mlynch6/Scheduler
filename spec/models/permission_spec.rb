@@ -59,9 +59,6 @@ shared_examples "a member of the Artistic Staff" do
 		it { should allow(:pieces, :create) }
 		it { should allow(:pieces, :edit) }
 		it { should allow(:pieces, :update) }
-		it { should allow(:pieces, :inactive) }
-		it { should allow(:pieces, :activate) }
-		it { should allow(:pieces, :inactivate) }
 	end
 	
 	context "scenes" do
@@ -276,9 +273,7 @@ describe Permission do
 		it { should_not allow(:pieces, :edit) }
 		it { should_not allow(:pieces, :update) }
 		it { should_not allow(:pieces, :destroy) }
-		it { should_not allow(:pieces, :inactive) }
-		it { should_not allow(:pieces, :activate) }
-		it { should_not allow(:pieces, :inactivate) }
+		it { should_not allow(:pieces, :show) }
 		
 		it { should_not allow(:scenes, :index) }
 		it { should_not allow(:scenes, :new) }
@@ -342,9 +337,7 @@ describe Permission do
 		it { should_not allow(:pieces, :edit) }
 		it { should_not allow(:pieces, :update) }
 		it { should_not allow(:pieces, :destroy) }
-		it { should_not allow(:pieces, :inactive) }
-		it { should_not allow(:pieces, :activate) }
-		it { should_not allow(:pieces, :inactivate) }
+		it { should allow(:pieces, :show) }
 		
 		it { should allow(:scenes, :index) }
 		it { should_not allow(:scenes, :new) }

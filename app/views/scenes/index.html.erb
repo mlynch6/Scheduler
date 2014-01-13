@@ -6,9 +6,6 @@
 	<h1><%= @piece.name %></h1>
 </div>
 <div class="well well-sm mash-well-link">
-	<%= render 'pieces/tabs' %>
-	&nbsp;&nbsp;&nbsp;
-	
 	<% if allow? "scenes", "new" %>
 		<%= new_link "Add Scene", new_piece_scene_path(@piece) %>
 	<% end %>
@@ -16,42 +13,48 @@
 	<%= pdf_link "Download", piece_scenes_path(@piece, format: "pdf") %></li>
 </div>
 
-<% if @scenes.length > 0 %>
-	<table class="table table-striped">
-		<thead>
-	  	<tr>
-	  		<th>Scene</th>
-	  		<th>Characters</th>
-	  		<th>Track</th>
-	  		<th style="width:70px;">&nbsp;</th>
-	  	</tr>
-	  </thead>
-	  <tbody id="scenes" data-update-url="<%= sort_scenes_url %>">
-	  	<% @scenes.each do |scene| %>
-				<%= content_tag_for :tr, scene do %>
-					<td>
-						<% if allow? "scenes", "sort" %>
-							<%= content_tag :span, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' %>
-						<% end %>
-						<%= scene.name %>
-					</td>
-					<td><%= scene.characters.map { |char| char.name }.join(", ") %></td>
-					<td><%= scene.track %></td>
-					<td>
-						<% if allow? "scenes", "edit" %>
-							<%= edit_button nil, edit_scene_path(scene), :class => 'btn-xs', :id => "edit_#{scene.id}" %>
-						<% end %>
-						<% if allow? "scenes", "destroy" %>
-							<%= delete_button nil, scene, :class => 'btn-xs', :id => "delete_#{scene.id}" %>
-						<% end %>
-					</td>
-				<% end %>
-			<% end %>
-		</tbody>
-	</table>
+<div class="mash-show-tab">
+	<%= render 'pieces/tabs' %>
 	
-<% else %>
-	<p>There are currently no scenes for this piece.
-	</p>
-	<p>To begin, click the <em class="text-info">Add Scene</em> link above.</p>
-<% end %>
+	<div class="mash-tab-body">
+		<% if @scenes.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+			  	<tr>
+			  		<th>Scene</th>
+			  		<th>Characters</th>
+			  		<th>Track</th>
+			  		<th style="width:70px;">&nbsp;</th>
+			  	</tr>
+			  </thead>
+			  <tbody id="scenes" data-update-url="<%= sort_scenes_url %>">
+			  	<% @scenes.each do |scene| %>
+						<%= content_tag_for :tr, scene do %>
+							<td>
+								<% if allow? "scenes", "sort" %>
+									<%= content_tag :span, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' %>
+								<% end %>
+								<%= scene.name %>
+							</td>
+							<td><%= scene.characters.map { |char| char.name }.join(", ") %></td>
+							<td><%= scene.track %></td>
+							<td>
+								<% if allow? "scenes", "edit" %>
+									<%= edit_button nil, edit_scene_path(scene), :class => 'btn-xs', :id => "edit_#{scene.id}" %>
+								<% end %>
+								<% if allow? "scenes", "destroy" %>
+									<%= delete_button nil, scene, :class => 'btn-xs', :id => "delete_#{scene.id}" %>
+								<% end %>
+							</td>
+						<% end %>
+					<% end %>
+				</tbody>
+			</table>
+			
+		<% else %>
+			<p>There are currently no scenes for this piece.
+			</p>
+			<p>To begin, click the <em class="text-info">Add Scene</em> link above.</p>
+		<% end %>
+	</div>
+</div>

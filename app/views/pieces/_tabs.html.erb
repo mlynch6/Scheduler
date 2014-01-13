@@ -1,6 +1,17 @@
-<% if allow? "scenes", "index" %>
-	<%= icon_link 'Scenes', 'film', piece_scenes_path(@piece) %>
-<% end %>
-<% if allow? "characters", "index" %>
-	<%= icon_link 'Characters', 'user', piece_characters_path(@piece) %>
-<% end %>
+<ul class="nav nav-tabs">
+	<% if allow? "pieces", "show" %>
+		<li<%= " class=""active""" if params[:controller]=='pieces' && params[:action]=='show' %>>
+			<%= icon_link 'Overview', 'asterisk', piece_path(@piece) %>
+		</li>
+	<% end %>
+	<% if allow? "scenes", "index" %>
+		<li<%= " class=""active""" if params[:controller]=='scenes' && params[:action]=='index' %>>
+			<%= icon_link 'Scenes', 'film', piece_scenes_path(@piece) %>
+		</li>
+	<% end %>
+	<% if allow? "pieces", "show" %>
+		<li<%= " class=""active""" if params[:controller]=='characters' && params[:action]=='index' %>>
+			<%= icon_link 'Characters', 'user', piece_characters_path(@piece) %>
+		</li>
+	<% end %>
+</ul>

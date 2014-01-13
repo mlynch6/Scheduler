@@ -13,13 +13,13 @@ Scheduler::Application.routes.draw do
   resources :users, 						:except => [:show]
   
   resources :employees do
-  	resources :addresses, 			:except => [:index, :show]
-  	resources :phones, 					:except => [:index, :show]
   	get 'inactive', on: :collection
   	member do
   		get 'activate'
   		get 'inactivate'
   	end
+  	resources :addresses, 			:except => [:index, :show]
+  	resources :phones, 					:except => [:index, :show]
   end
   
   resources :locations do
@@ -33,11 +33,6 @@ Scheduler::Application.routes.draw do
   resources :seasons
   resources :pieces do
   	resources :scenes, :characters, only: [:index, :new, :create]
-  	get 'inactive', on: :collection
-  	member do
-  		get 'activate'
-  		get 'inactivate'
-  	end
   end
   resources :scenes, :characters, only: [:edit, :update, :destroy] do
   	collection { post :sort }
@@ -54,10 +49,8 @@ Scheduler::Application.routes.draw do
   resources :costume_fittings,	:only => [:new, :create, :edit, :update]
 	
 	match 'dashboard' => 'static_pages#dashboard'
-	
-	match 'dashboard' => 'static_pages#dashboard'
-	match 'features' => 'static_pages#features'   
-	match 'pricing' => 'static_pages#pricing' 
+	match 'features' => 'static_pages#features'
+	match 'pricing' => 'static_pages#pricing'
 	match 'contact' => 'static_pages#contact'
 	
 	match 'subscriptions/current' => 'subscriptions#show'

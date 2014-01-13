@@ -1,12 +1,8 @@
 class PiecesController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update, :destroy, :activate, :inactivate]
+	before_filter :get_resource, :only => [:edit, :update, :show, :destroy]
 	
 	def index
-		@pieces = Piece.active.paginate(page: params[:page], per_page: params[:per_page])
-	end
-	
-	def inactive
-		@pieces = Piece.inactive.paginate(page: params[:page], per_page: params[:per_page])
+		@pieces = Piece.paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
 	def new
@@ -37,19 +33,12 @@ class PiecesController < ApplicationController
 		end
 	end
 	
+	def show
+	end
+	
 	def destroy
 		@piece.destroy
 		redirect_to pieces_path, :notice => "Successfully deleted the piece."
-	end
-	
-	def activate
-		@piece.activate
-		redirect_to inactive_pieces_path, :notice => "Successfully activated the piece."
-	end
-	
-	def inactivate
-		@piece.inactivate
-		redirect_to pieces_path, :notice => "Successfully inactivated the piece."
 	end
 
 private

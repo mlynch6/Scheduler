@@ -51,6 +51,6 @@ private
 	
 	#setup for form - dropdowns, etc
 	def form_setup(season)
-		@pieces = Piece.active.map { |piece| [piece.name, piece.id] }
+		@pieces = Piece.all.map { |piece| [piece.name, piece.id] }
 	end
 end
