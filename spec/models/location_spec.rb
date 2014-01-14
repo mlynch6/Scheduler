@@ -131,6 +131,35 @@ describe Location do
 			location.inactivate
 	  	location.reload.active?.should be_false
 	  end
+	  
+	  describe "search" do
+	  	before do
+	  		4.times { FactoryGirl.create(:location, account: account) }
+				4.times { FactoryGirl.create(:location_inactive, account: account) }
+			end
+			
+	  	it "returns all records by default" do
+	  		query = {}
+				Location.search(query).should == Location.all
+		  end
+		  
+		  describe "on status" do
+			  it "=active returns active records" do
+			  	query = { status: "active" }
+					Location.search(query).should == Location.active
+			  end
+			  
+			  it "=inactive returns inactive records" do
+			  	query = { status: "inactive" }
+					Location.search(query).should == Location.inactive
+			  end
+			  
+			  it "that is invalid returns all records" do
+			  	query = { status: "invalid" }
+					Location.search(query).should == Location.all
+			  end
+			end
+	  end
 	end
 
 	describe "(Scopes)" do

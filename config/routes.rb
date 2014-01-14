@@ -22,8 +22,7 @@ Scheduler::Application.routes.draw do
   	resources :phones, 					:except => [:index, :show]
   end
   
-  resources :locations do
-  	get 'inactive', on: :collection
+  resources :locations, :except => [:show] do
   	member do
   		get 'activate'
   		get 'inactivate'

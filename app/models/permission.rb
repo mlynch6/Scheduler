@@ -28,8 +28,11 @@ class Permission
 				#destroy
 				allow [:subscriptions, :addresses, :phones, :seasons, :scenes, :characters, :casts], [:destroy]
 				
-				#activate & inactive & inactivate
-				allow [:employees, :locations], [:inactive, :activate, :inactivate]
+				#activate & inactivate
+				allow [:employees, :locations], [:activate, :inactivate]
+				
+				#inactive
+				allow [:employees], [:inactive]
 				
 				#sort
 				allow [:scenes, :characters], [:sort]

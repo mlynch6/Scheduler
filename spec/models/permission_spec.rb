@@ -153,7 +153,6 @@ shared_examples "an administrator" do
 		it { should allow(:locations, :create) }
 		it { should allow(:locations, :edit) }
 		it { should allow(:locations, :update) }
-		it { should allow(:locations, :inactive) }
 		it { should allow(:locations, :activate) }
 		it { should allow(:locations, :inactivate) }
 	end
@@ -226,7 +225,6 @@ shared_examples "a NON-administrator" do
 		it { should_not allow(:locations, :edit) }
 		it { should_not allow(:locations, :update) }
 		it { should_not allow(:locations, :destroy) }
-		it { should_not allow(:locations, :inactive) }
 		it { should_not allow(:locations, :activate) }
 		it { should_not allow(:locations, :inactivate) }
 	end

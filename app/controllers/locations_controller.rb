@@ -2,11 +2,8 @@ class LocationsController < ApplicationController
 	before_filter :get_resource, :only => [:edit, :update, :destroy, :activate, :inactivate]
 
   def index
-  	@locations = Location.active.paginate(page: params[:page], per_page: params[:per_page])
-	end
-	
-	def inactive
-  	@locations = Location.inactive.paginate(page: params[:page], per_page: params[:per_page])
+  	query = params.except(:action, :controller)
+  	@locations = Location.search(query).paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
 	def new
@@ -44,12 +41,12 @@ class LocationsController < ApplicationController
 	
 	def activate
 		@location.activate
-		redirect_to inactive_locations_path, :notice => "Successfully activated the location."
+		redirect_to locations_path(status: "active"), :notice => "Successfully activated the location."
 	end
 	
 	def inactivate
 		@location.inactivate
-		redirect_to locations_path, :notice => "Successfully inactivated the location."
+		redirect_to locations_path(status: "inactive"), :notice => "Successfully inactivated the location."
 	end
 
 private
