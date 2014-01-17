@@ -1,0 +1,22 @@
+<div class="panel panel-primary mash-sidebar hidden-print" role="complementary">
+	<div class="panel-heading">
+		<h3 class="panel-title"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-search')%> Filter</h3>
+	</div>
+	
+	<ul class="list-group">
+		<% if allow? "accounts", "show" %>
+			<li class="list-group-item text-center">
+				<div class="btn-group btn-group-sm">
+					<% active_class = (params[:status] == "active") ? ' active' : "" %>
+					<%= link_to "Active", locations_path(status: 'active'), class: "btn btn-default#{active_class}" %>
+					
+					<% active_class = (params[:status] == "inactive") ? ' active' : "" %>
+					<%= link_to "Inactive", locations_path(status: 'inactive'), class: "btn btn-default#{active_class}" %>
+					
+					<% active_class = (!params.include?(:status) || (params[:status] != "active" && params[:status] != "inactive")) ? ' active' : "" %>
+					<%= link_to "All", locations_path, class: "btn btn-default#{active_class}" %>
+				</div>
+			</li>
+		<% end %>
+	</ul>
+</div>

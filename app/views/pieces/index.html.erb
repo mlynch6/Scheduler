@@ -15,23 +15,30 @@
 	<table class="table table-striped">
 		<thead>
 	  	<tr>
-	  		<th>Name</th>
-	  		<th style="width:140px;">&nbsp;</th>
+	  		<th>Piece/Choreographer</th>
+	  		<th>Music</th>
+	  		<th>Average Length</th>
+	  		<th class="mash-col-3-btn">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
 	  	<% @pieces.each do |piece| %>
 				<tr>
-					<td><%= piece.name %></td>
 					<td>
-						<% if allow? "scenes", "index" %>
-							<%= view_button nil, piece_scenes_path(piece), :class => 'btn-xs', :id => "view_#{piece.id}" %>
+						<%= piece.name %>
+						<%= "<br />".html_safe+content_tag(:span,"By: #{piece.choreographer}", class: 'text-muted') if piece.choreographer.present? %>
+					</td>
+					<td>
+						<%= piece.music if piece.music %>
+						<%= "<br />".html_safe+content_tag(:span,"By: #{piece.composer}", class: 'text-muted') if piece.composer.present? %>
+					</td>
+					<td><%= "#{piece.avg_length} min" if piece.avg_length.present? %></td>
+					<td class="mash-col-3-btn">
+						<% if allow? "pieces", "show" %>
+							<%= view_button nil, piece_path(piece), :class => 'btn-xs', :id => "view_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "edit" %>
 							<%= edit_button nil, edit_piece_path(piece), :class => 'btn-xs', :id => "edit_#{piece.id}" %>
-						<% end %>
-						<% if allow? "pieces", "inactivate" %>
-							<%= inactivate_button nil, inactivate_piece_path(piece), :class => 'btn-xs', :id => "inactivate_#{piece.id}" %>
 						<% end %>
 						<% if allow? "pieces", "destroy" %>
 							<%= delete_button nil, piece, :class => 'btn-xs', :id => "delete_#{piece.id}" %>

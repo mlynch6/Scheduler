@@ -8,6 +8,17 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+
+# == Schema Information
+#
+# Table name: subscription_plans
+#
+#  id         :integer          not null, primary key
+#  name       :string(50)       not null
+#  amount     :decimal(7, 2)    not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 include ActionView::Helpers::NumberHelper
 
 class SubscriptionPlan < ActiveRecord::Base

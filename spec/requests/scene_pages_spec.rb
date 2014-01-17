@@ -129,6 +129,7 @@ describe "Scene Pages:" do
   		click_link 'Setup'
 	  	click_link "Pieces"
 	  	click_link "View"
+	  	click_link "Scenes"
 	  	click_link "Add Scene"
 	
 			should have_selector('title', text: "#{piece.name} | Add Scene")
@@ -211,6 +212,7 @@ describe "Scene Pages:" do
 	  	click_link 'Setup'
 	  	click_link "Pieces"
 	  	click_link "View"
+	  	click_link "Scenes"
 	  	click_link "Edit"
 	  	
 	  	should have_selector('title', text: "#{piece.name} | Edit Scene")

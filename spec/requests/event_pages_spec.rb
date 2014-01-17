@@ -60,9 +60,7 @@ describe "Event Pages:" do
 					account: current_account,
 					location: loc,
 					piece: piece,
-					start_date: Time.zone.today,
-					start_time: "10AM",
-					end_time: "11AM")
+					start_date: Time.zone.today)
 			visit events_path
 	
 			Event.for_daily_calendar(Time.zone.today).each do |rehearsal|

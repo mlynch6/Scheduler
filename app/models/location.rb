@@ -30,4 +30,17 @@ class Location < ActiveRecord::Base
 	def inactivate
 		self.update_attribute(:active, false)
 	end
+	
+	def self.search(query)
+		#Default show all
+		locations = Location.order('name ASC')
+		
+		if query.include?(:status) && query[:status] == "active"
+			locations = locations.active
+		elsif query.include?(:status) && query[:status] == "inactive"
+			locations = locations.inactive
+		end
+		
+		locations
+	end
 end

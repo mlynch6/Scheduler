@@ -22,7 +22,7 @@ FactoryGirl.define do
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"9AM"
-		end_time					"10AM"
+		duration					60
 	end
 	
 	factory :company_class do
@@ -31,7 +31,7 @@ FactoryGirl.define do
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"9AM"
-		end_time					"10AM"
+		duration					60
 	end
 	
 	factory :rehearsal do
@@ -40,7 +40,7 @@ FactoryGirl.define do
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"9AM"
-		end_time					"10AM"
+		duration					60
 		piece
 	end
 	
@@ -50,6 +50,6 @@ FactoryGirl.define do
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"8:30AM"
-		end_time					"9 AM"
+		duration					30
 	end
 end

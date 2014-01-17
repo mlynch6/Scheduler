@@ -1,6 +1,7 @@
 <% provide(:title, 'Locations') %>
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Locations') %>
+<% provide(:sidebar_extra, 'locations/sidebar') %>
 
 <div class="page-header">
 	<h1><%= yield(:title) %></h1>
@@ -16,6 +17,7 @@
 		<thead>
 	  	<tr>
 	  		<th>Name</th>
+	  		<th>Status</th>
 	  		<th style="width:105px;">&nbsp;</th>
 	  	</tr>
 	  </thead>
@@ -23,11 +25,15 @@
 	  	<% @locations.each do |location| %>
 				<tr>
 					<td><%= location.name %></td>
+					<td><%= active_inactive(location.active) %></td>
 					<td>
 						<% if allow? "locations", "edit" %>
 							<%= edit_button nil, edit_location_path(location), :class => 'btn-xs', :id => "edit_#{location.id}" %>
 						<% end %>
-						<% if allow? "locations", "inactivate" %>
+						<% if !location.active && allow?("locations", "activate") %>
+							<%= activate_button nil, activate_location_path(location), :class => 'btn-xs', :id => "activate_#{location.id}" %>
+						<% end %>
+						<% if location.active && allow?("locations", "inactivate") %>
 							<%= inactivate_button nil, inactivate_location_path(location), :class => 'btn-xs', :id => "inactivate_#{location.id}" %>
 						<% end %>
 						<% if allow? "locations", "destroy" %>
@@ -39,7 +45,7 @@
 		</tbody>
 	</table>
 	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
-	
+
 <% else %>
 	<p>Some businesses have multiple locations that operate as a single entity - with a single 
 		list of staff and students.  If you have more than one location, each physical address 

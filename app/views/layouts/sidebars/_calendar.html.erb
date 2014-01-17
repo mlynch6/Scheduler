@@ -10,6 +10,12 @@
 			</li>
 		<% end %>
 		
+		<% if allow? "events", "index" %>
+			<li class="list-group-item">
+				<div id="datepicker"></div>
+			</li>
+		<% end %>
+		
 		<% if allow? "company_classes", "new" %>
 			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "New Company Class" %>">
 				<%= new_link "New Company Class", new_company_class_path(date: @date) %>
@@ -29,5 +35,3 @@
 		<% end %>
 	</ul>
 </div>
-
-<div id="datepicker"></div>

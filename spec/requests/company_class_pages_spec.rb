@@ -75,7 +75,7 @@ describe "CompanyClass Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
 		  	fill_in 'From', with: "10AM"
-		  	fill_in 'To', with: "11AM"
+		  	fill_in 'Duration', with: 60
 		  	click_button 'Create'
 		
 				should have_selector('div.alert-success')
@@ -83,8 +83,7 @@ describe "CompanyClass Pages:" do
 				
 				should have_content("Test Company Class")
 				should have_content(location.name)
-				should have_content("10:00 AM")
-				should have_content("11:00 AM")
+				should have_content("10:00 AM to 11:00 AM")
 			end
 			
 			it "creates new Company Class with Invitees" do
@@ -97,7 +96,7 @@ describe "CompanyClass Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'To', with: "10:30AM"
+		  	fill_in 'Duration', with: 90
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
 		
@@ -106,8 +105,7 @@ describe "CompanyClass Pages:" do
 				
 				should have_content("Test Company Class")
 				should have_content(location.name)
-				should have_content("9:00 AM")
-				should have_content("10:30 AM")
+				should have_content("9:00 AM to 10:30 AM")
 			end
 		end
 		
@@ -124,7 +122,7 @@ describe "CompanyClass Pages:" do
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "12 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: cc1, employee: e1)
 				FactoryGirl.create(:invitation, event: cc1, employee: e2)
 				FactoryGirl.create(:invitation, event: cc1, employee: e3)
@@ -133,7 +131,7 @@ describe "CompanyClass Pages:" do
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
-								end_time: "1 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: cc2, employee: e1)
 				
 				visit new_company_class_path
@@ -141,7 +139,7 @@ describe "CompanyClass Pages:" do
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
 		  	fill_in 'From', with: "11AM"
-		  	fill_in 'To', with: "1PM"
+		  	fill_in 'Duration', with: 120
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
 		
@@ -228,7 +226,7 @@ describe "CompanyClass Pages:" do
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "12 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: cc1, employee: e1)
 				FactoryGirl.create(:invitation, event: cc1, employee: e2)
 				FactoryGirl.create(:invitation, event: cc1, employee: e3)
@@ -237,14 +235,14 @@ describe "CompanyClass Pages:" do
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
-								end_time: "1 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: cc2, employee: e1)
 				
 				cc3 = FactoryGirl.create(:company_class, account: current_account,
 								location: loc2,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "1 PM")
+								duration: 120)
 				
 				visit edit_company_class_path(cc3)
 		  	select e1.full_name, from: "Invitees"

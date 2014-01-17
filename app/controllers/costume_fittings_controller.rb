@@ -25,7 +25,7 @@ class CostumeFittingsController < ApplicationController
 	def edit
 		@fitting.start_date = @fitting.start_date
 		@fitting.start_time = @fitting.start_time
-		@fitting.end_time = @fitting.end_time
+		@fitting.duration = @fitting.duration
 		form_setup
 	end
 	

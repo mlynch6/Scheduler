@@ -75,7 +75,7 @@ describe "CostumeFitting Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
 		  	fill_in 'From', with: "10AM"
-		  	fill_in 'To', with: "11AM"
+		  	fill_in 'Duration', with: 60
 		  	click_button 'Create'
 		
 				should have_selector('div.alert-success')
@@ -97,7 +97,7 @@ describe "CostumeFitting Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'To', with: "9:30AM"
+		  	fill_in 'Duration', with: 30
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
 		
@@ -105,9 +105,7 @@ describe "CostumeFitting Pages:" do
 				should have_selector('title', text: 'Daily Schedule')
 				
 				should have_content("Test Fitting")
-				should have_content(location.name)
-				should have_content("9:00 AM")
-				should have_content("9:30 AM")
+				should have_content("9:00 AM to 9:30 AM")
 			end
 		end
 		
@@ -124,7 +122,7 @@ describe "CostumeFitting Pages:" do
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "12 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: f1, employee: e1)
 				FactoryGirl.create(:invitation, event: f1, employee: e2)
 				FactoryGirl.create(:invitation, event: f1, employee: e3)
@@ -133,7 +131,7 @@ describe "CostumeFitting Pages:" do
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
-								end_time: "12:30 PM")
+								duration: 30)
 				FactoryGirl.create(:invitation, event: f2, employee: e1)
 				
 				visit new_company_class_path
@@ -141,7 +139,7 @@ describe "CostumeFitting Pages:" do
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
 		  	fill_in 'From', with: "11:30 AM"
-		  	fill_in 'To', with: "12:30 PM"
+		  	fill_in 'Duration', with: 60
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
 		
@@ -228,7 +226,7 @@ describe "CostumeFitting Pages:" do
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "12 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: f1, employee: e1)
 				FactoryGirl.create(:invitation, event: f1, employee: e2)
 				FactoryGirl.create(:invitation, event: f1, employee: e3)
@@ -237,14 +235,14 @@ describe "CostumeFitting Pages:" do
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
-								end_time: "1 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: f2, employee: e1)
 				
 				f3 = FactoryGirl.create(:costume_fitting, account: current_account,
 								location: loc2,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "1 PM")
+								duration: 120)
 				
 				visit edit_costume_fitting_path(f3)
 		  	select e1.full_name, from: "Invitees"

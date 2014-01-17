@@ -59,9 +59,6 @@ shared_examples "a member of the Artistic Staff" do
 		it { should allow(:pieces, :create) }
 		it { should allow(:pieces, :edit) }
 		it { should allow(:pieces, :update) }
-		it { should allow(:pieces, :inactive) }
-		it { should allow(:pieces, :activate) }
-		it { should allow(:pieces, :inactivate) }
 	end
 	
 	context "scenes" do
@@ -156,7 +153,6 @@ shared_examples "an administrator" do
 		it { should allow(:locations, :create) }
 		it { should allow(:locations, :edit) }
 		it { should allow(:locations, :update) }
-		it { should allow(:locations, :inactive) }
 		it { should allow(:locations, :activate) }
 		it { should allow(:locations, :inactivate) }
 	end
@@ -229,7 +225,6 @@ shared_examples "a NON-administrator" do
 		it { should_not allow(:locations, :edit) }
 		it { should_not allow(:locations, :update) }
 		it { should_not allow(:locations, :destroy) }
-		it { should_not allow(:locations, :inactive) }
 		it { should_not allow(:locations, :activate) }
 		it { should_not allow(:locations, :inactivate) }
 	end
@@ -276,9 +271,7 @@ describe Permission do
 		it { should_not allow(:pieces, :edit) }
 		it { should_not allow(:pieces, :update) }
 		it { should_not allow(:pieces, :destroy) }
-		it { should_not allow(:pieces, :inactive) }
-		it { should_not allow(:pieces, :activate) }
-		it { should_not allow(:pieces, :inactivate) }
+		it { should_not allow(:pieces, :show) }
 		
 		it { should_not allow(:scenes, :index) }
 		it { should_not allow(:scenes, :new) }
@@ -342,9 +335,7 @@ describe Permission do
 		it { should_not allow(:pieces, :edit) }
 		it { should_not allow(:pieces, :update) }
 		it { should_not allow(:pieces, :destroy) }
-		it { should_not allow(:pieces, :inactive) }
-		it { should_not allow(:pieces, :activate) }
-		it { should_not allow(:pieces, :inactivate) }
+		it { should allow(:pieces, :show) }
 		
 		it { should allow(:scenes, :index) }
 		it { should_not allow(:scenes, :new) }

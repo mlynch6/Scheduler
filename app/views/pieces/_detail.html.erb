@@ -1,0 +1,26 @@
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Piece.human_attribute_name(:name) %></div>
+		<div class="dtl-text col-md-9"><%= @piece.name %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Piece.human_attribute_name(:choreographer) %></div>
+		<div class="dtl-text col-md-9"><%= @piece.choreographer %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Piece.human_attribute_name(:music) %></div>
+		<div class="dtl-text col-md-9"><%= @piece.music %></div>
+	</div>
+
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Piece.human_attribute_name(:composer) %></div>
+		<div class="dtl-text col-md-9"><%= @piece.composer %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Piece.human_attribute_name(:avg_length) %></div>
+		<div class="dtl-text col-md-9"><%= "#{@piece.avg_length} min" if @piece.avg_length.present? %></div>
+	</div>
+</div>

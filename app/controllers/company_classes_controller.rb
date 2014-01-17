@@ -25,7 +25,6 @@ class CompanyClassesController < ApplicationController
 	def edit
 		@cclass.start_date = @cclass.start_date
 		@cclass.start_time = @cclass.start_time
-		@cclass.end_time = @cclass.end_time
 		form_setup
 	end
 	

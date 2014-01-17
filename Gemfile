@@ -7,7 +7,7 @@ gem 'jquery-rails'
 gem 'less-rails'
 gem 'therubyracer'
 gem 'prawn'
-gem 'faker', '1.1.2'
+gem 'faker', '1.2.0'
 
 # Subscription payment processing
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'

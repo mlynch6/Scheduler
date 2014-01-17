@@ -2,12 +2,15 @@
 #
 # Table name: pieces
 #
-#  id         :integer          not null, primary key
-#  account_id :integer          not null
-#  name       :string(50)       not null
-#  active     :boolean          default(TRUE), not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :integer          not null, primary key
+#  account_id    :integer          not null
+#  name          :string(50)       not null
+#  choreographer :string(50)
+#  music         :string(50)
+#  composer      :string(50)
+#  avg_length    :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 
 require 'spec_helper'
@@ -16,7 +19,12 @@ describe Piece do
 	let(:account) { FactoryGirl.create(:account) }
 	let(:piece) { FactoryGirl.create(:piece,
 											account: account,
-											name: 'Swan Lake') }
+											name: 'Swan Lake',
+											choreographer: 'Petipa',
+											music: 'Swan Lake - music',
+											composer: 'Tchaikovsky',
+											avg_length: 360) }
+	
 	before do
 		Account.current_id = account.id
 		@piece = FactoryGirl.build(:piece)
@@ -26,12 +34,19 @@ describe Piece do
 
 	context "accessible attributes" do
 		it { should respond_to(:name) }
-		it { should respond_to(:active) }
+		it { should respond_to(:choreographer) }
+		it { should respond_to(:music) }
+		it { should respond_to(:composer) }
+		it { should respond_to(:avg_length) }
   	
   	it { should respond_to(:account) }
+  	it { should respond_to(:scenes) }
+  	it { should respond_to(:characters) }
   	it { should respond_to(:events) }
   	it { should respond_to(:season_pieces) }
   	it { should respond_to(:seasons) }
+  	
+  	it { should respond_to(:name_w_choreographer) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -51,10 +66,6 @@ describe Piece do
   	it "with minimum attributes" do
   		should be_valid
   	end
-  	
-  	it "created as active" do
-  		piece.active.should be_true
-  	end
   end
   
   context "(Invalid)" do
@@ -68,10 +79,40 @@ describe Piece do
   		should_not be_valid
   	end
   	
-  	it "when active is blank" do
-  		@piece.active = ""
+  	it "when choreographer is too long" do
+  		@piece.choreographer = "a"*51
   		should_not be_valid
   	end
+  	
+  	it "when music is too long" do
+  		@piece.music = "a"*51
+  		should_not be_valid
+  	end
+  	
+  	it "when composer is too long" do
+  		@piece.composer = "a"*51
+  		should_not be_valid
+  	end
+  	
+  	context "when avg_length" do
+			it "not an integer" do
+	  		vals = ["abc", 8.6]
+	  		vals.each do |invalid_integer|
+	  			@piece.avg_length = invalid_integer
+	  			should_not be_valid
+	  		end
+	  	end
+	  	
+	  	it "< 0" do
+	  		@piece.avg_length = -1
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "> 1439 (max min in a day)" do
+	  		@piece.avg_length = 1440
+	  		should_not be_valid
+	  	end
+		end
   end
 
 	context "(Associations)" do
@@ -169,37 +210,71 @@ describe Piece do
 	  	piece.reload.name.should == 'Swan Lake'
 	  end
 	  
-	  it "active?" do
-	  	piece.reload.active?.should be_true
+	  it "choreographer" do
+	  	piece.reload.choreographer.should == 'Petipa'
+	  end
+	  
+	  it "music" do
+	  	piece.reload.music.should == 'Swan Lake - music'
+	  end
+	  
+	  it "composer" do
+	  	piece.reload.composer.should == 'Tchaikovsky'
+	  end
+	  
+	  it "avg_length" do
+	  	piece.reload.avg_length.should == 360
 	  end
 	end
 	
 	context "(Uniqueness)" do
-		describe "name" do
+		describe "name/choreographer" do
 			let(:piece_diff_account) { FactoryGirl.create(:piece) }
 			
-			it "is unique within Account" do
+			it "duplicate name (no choreographer) causes error within Account" do
+	  		piece.choreographer = nil
+				piece.save
 	  		@piece = piece.dup
 	  		should_not be_valid
 	  	end
 	  	
-	  	it "can be duplicated across Accounts" do
+	  	it "duplicate name (no choreographer) allowed on different Account" do
 	  		@piece.name = piece_diff_account.name
+	  		should be_valid
+	  	end
+	  	
+	  	it "duplicate name w/ choreographer causes error within Account" do
+	  		@piece = piece.dup
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "duplicate name w/ choreographer allowed on different Account" do
+	  		piece_diff_account.choreographer = 'Martins'
+				piece_diff_account.save
+	  		@piece.name = piece_diff_account.name
+	  		@piece.choreographer = piece_diff_account.choreographer
+	  		should be_valid
+	  	end
+	  	
+	  	it "duplicate name w/ 1 choreographer & 1 blank choreographer allowed within Account" do
+	  		@piece.name = piece.name
 	  		should be_valid
 	  	end
 	  end
   end
-  
-	context "(Methods)" do		
-		it "activate" do
-			piece.activate
-	  	piece.reload.active?.should be_true
-	  end
-		
-		it "inactivate" do
-			piece.inactivate
-	  	piece.reload.active?.should be_false
-	  end
+
+	describe "(Methods)" do
+		describe "name_w_choreographer" do
+			it "returns name only when no choreographer" do
+				piece.choreographer = ""
+				piece.save
+		  	piece.reload.name_w_choreographer.should == 'Swan Lake'
+		  end
+		  
+		  it "returns name & choreographer when choreographer present" do
+		  	piece.reload.name_w_choreographer.should == 'Swan Lake (Petipa)'
+		  end
+  	end
 	end
 
 	describe "(Scopes)" do
@@ -208,25 +283,11 @@ describe Piece do
 		end
 		let!(:second_piece) { FactoryGirl.create(:piece, account: account, name: "Nutcracker") }
 		let!(:first_piece) { FactoryGirl.create(:piece, account: account, name: "Giselle") }
-		let!(:piece_inactive) { FactoryGirl.create(:piece_inactive, account: account, name: "Rodeo") }
 		let!(:piece_wrong_acnt) { FactoryGirl.create(:piece) }
-		let!(:piece_wrong_acnt_inactive) { FactoryGirl.create(:piece_inactive) }
 		
 		describe "default_scope" do
 			it "returns the records in alphabetical order" do
-				Piece.all.should == [first_piece, second_piece, piece_inactive]
-			end
-		end
-		
-		describe "active" do
-			it "returns active records" do
-				Piece.active.should == [first_piece, second_piece]
-			end
-		end
-		
-		describe "inactive" do
-			it "returns inactive records" do
-				Piece.inactive.should == [piece_inactive]
+				Piece.all.should == [first_piece, second_piece]
 			end
 		end
 	end

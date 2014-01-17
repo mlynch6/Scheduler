@@ -24,13 +24,7 @@
 		
 		<% if allow? "locations", "index" %>
 			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Locations" %>">
-				<%= link_to "Locations", locations_path %>
-			</li>
-		<% end %>
-		
-		<% if allow? "locations", "inactive" %>
-			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Inactive Locations" %>">
-				<%= link_to "Inactive Locations", inactive_locations_path %>
+				<%= link_to "Locations", locations_path(status: "active") %>
 			</li>
 		<% end %>
 				
@@ -43,11 +37,6 @@
 		<% if allow? "pieces", "index" %>
 			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Pieces" %>">
 				<%= link_to "Pieces", pieces_path %>
-			</li>
-		<% end %>
-		<% if allow? "pieces", "inactive" %>
-			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Inactive Pieces" %>">
-				<%= link_to "Inactive Pieces", inactive_pieces_path %>
 			</li>
 		<% end %>
 	</ul>

@@ -25,7 +25,6 @@ class RehearsalsController < ApplicationController
 	def edit
 		@rehearsal.start_date = @rehearsal.start_date
 		@rehearsal.start_time = @rehearsal.start_time
-		@rehearsal.end_time = @rehearsal.end_time
 		form_setup
 	end
 	
@@ -48,7 +47,7 @@ private
 	#setup for form - dropdowns, etc
 	def form_setup
 		@locations = Location.active.map { |location| [location.name, location.id] }
-		@pieces = Piece.active.map { |piece| [piece.name, piece.id] }
+		@pieces = Piece.all.map { |piece| [piece.name_w_choreographer, piece.id] }
 		@employees = Employee.active.map { |employee| [employee.full_name, employee.id] }
 	end
 	
