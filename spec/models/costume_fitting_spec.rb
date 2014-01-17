@@ -25,12 +25,12 @@ describe CostumeFitting do
 											title: 'My Costume Fitting',
 											start_date: Date.new(2012,1,1),
 											start_time: "9AM",
-											end_time: "10AM") }
+											duration: 60) }
 	before do
 		Account.current_id = account.id
-		profile = account.agma_profile
-  	profile.costume_increment_min = 10
-  	profile.save
+		contract = account.agma_profile
+  	contract.costume_increment_min = 10
+  	contract.save
 		@fitting = FactoryGirl.build(:costume_fitting)
 	end
 	
@@ -47,17 +47,17 @@ describe CostumeFitting do
   		fitting.reload.title.should == "Costume Fitting"
   	end
   	
-  	it "when duration is a multiple of AgmaProfile costume_increment_min" do
+  	it "when duration is a multiple of costume_increment_min" do
   		@fitting.start_time = "4PM"
-  		@fitting.end_time = "4:10 PM"
+  		@fitting.duration = 10
   		should be_valid
   	end
   end
   
   context "(Invalid)" do  	
-  	it "when duration is NOT multiple of AgmaProfile costume_increment_min" do
+  	it "when duration is NOT multiple of costume_increment_min" do
   		@fitting.start_time = "4PM"
-  		@fitting.end_time = "4:15 PM"
+  		@fitting.duration = 15
   		should_not be_valid
   	end
   end

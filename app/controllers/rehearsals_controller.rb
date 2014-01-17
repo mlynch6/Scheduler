@@ -25,7 +25,6 @@ class RehearsalsController < ApplicationController
 	def edit
 		@rehearsal.start_date = @rehearsal.start_date
 		@rehearsal.start_time = @rehearsal.start_time
-		@rehearsal.end_time = @rehearsal.end_time
 		form_setup
 	end
 	

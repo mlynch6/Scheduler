@@ -48,14 +48,12 @@ en:
         end_at: "End At"
         start_date: "Date"
         start_time: "Start Time"
-        end_time: "End Time"
         employee_ids: "Invitees"
       costume_fitting:
         start_at: "Start At"
         end_at: "End At"
         start_date: "Date"
         start_time: "Start Time"
-        end_time: "End Time"
         employee_ids: "Invitees"
       employee:
         first_name: "First Name"

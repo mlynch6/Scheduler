@@ -15,9 +15,9 @@
 #
 
 class Event < ActiveRecord::Base
-	attr_accessible :title, :start_date, :start_time, :end_time, :location_id
+	attr_accessible :title, :location_id, :start_date, :start_time, :duration
 	attr_accessible :employee_ids
-	attr_writer :start_date, :start_time, :end_time
+	attr_writer :start_date, :start_time, :duration
 
 	belongs_to :account
 	belongs_to :location
@@ -25,7 +25,7 @@ class Event < ActiveRecord::Base
 	has_many :employees, through: :invitations
 
 	before_validation :save_start_at, :if => "@start_date.present? && @start_time.present?"
-	before_validation :save_end_at, :if => "@start_date.present? && @end_time.present?"
+	before_validation :save_end_at, :if => "start_at.present? && @duration.present?"
 	
 	validates :title,	presence: true, length: { maximum: 30 }
 	validates :type,	presence: true, length: { maximum: 20 }
@@ -35,8 +35,7 @@ class Event < ActiveRecord::Base
 	validates :start_date,	presence: true
 	validates_time :start_time
 	validates :start_time,	presence: true
-	validates_time :end_time, :after => :start_time, :after_message => "must be after the Start Time"
-	validates :end_time,	presence: true
+	validates :duration,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than => 1440 }
 
 	default_scope lambda { order('start_at ASC').where(:account_id => Account.current_id) }
 	scope :for_daily_calendar, lambda { |date| joins(:location).where(start_at: date.beginning_of_day..date.end_of_day).select("events.*, locations.name as location_name").order("locations.name") }
@@ -52,11 +51,13 @@ class Event < ActiveRecord::Base
 	end
 	
 	def end_time
-		@end_time || end_at.try(:to_s, :hr12)
+		end_at.try(:to_s, :hr12)
 	end
 	
-	def duration_min
-		((end_at - start_at)/60).to_i
+	def duration
+		tmp = @duration || ( ((end_at - start_at)/60).to_i if start_at.present? && end_at.present?)
+		tmp = tmp.to_i if tmp.kind_of? String
+		tmp
 	end
 	
 	def overlapping
@@ -106,13 +107,26 @@ protected
 	end
 	
 	def save_end_at
-		etm = (@end_time.kind_of? String) ? @end_time : @end_time.to_s(:db)
-		self.end_at = Time.zone.parse(@start_date.to_s(:db) +" "+ etm)
+		dur = (@duration.kind_of? String) ? @duration.to_i : @duration
+		self.end_at = self.start_at + dur.minutes
 	rescue ArgumentError
 		errors.add :end_at, "cannot be parsed"
 	end
 	
-	def profile
-		@profile ||= AgmaProfile.find_by_account_id(Account.current_id)
+	def contract
+		@contract ||= AgmaProfile.find_by_account_id(Account.current_id)
+	end
+	
+	#Used by Company Class & Rehearsal
+	def check_contracted_start
+		if contract.present? && Time.zone.parse(contract.rehearsal_start_time) > Time.zone.parse(start_time.to_s(:hr12))
+			errors.add(:start_time, "must be on or after the contracted start time of #{contract.rehearsal_start_time}")
+		end
+	end
+	
+	def check_contracted_end
+		if contract.present? && Time.zone.parse(contract.rehearsal_end_time) < (Time.zone.parse(start_time.to_s(:hr12)) + duration.minutes)
+			errors.add(:duration, "must end on or before the contracted end time of #{contract.rehearsal_end_time}")
+		end
 	end
 end

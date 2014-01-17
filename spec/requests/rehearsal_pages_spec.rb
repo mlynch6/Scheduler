@@ -67,7 +67,7 @@ describe "Rehearsal Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2012"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'To', with: "11:30AM"
+		  	fill_in 'Duration', with: 150
 		  	select piece.name, from: "Piece"
 				click_button 'Create'
 		
@@ -93,7 +93,7 @@ describe "Rehearsal Pages:" do
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2012"
 		  	fill_in 'From', with: "9AM"
-		  	fill_in 'To', with: "11:30AM"
+		  	fill_in 'Duration', with: 150
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -125,7 +125,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "12 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: r1, employee: e1)
 				FactoryGirl.create(:invitation, event: r1, employee: e2)
 				FactoryGirl.create(:invitation, event: r1, employee: e3)
@@ -135,7 +135,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
-								end_time: "1 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: r2, employee: e1)
 				
 				visit new_rehearsal_path
@@ -143,7 +143,7 @@ describe "Rehearsal Pages:" do
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
 		  	fill_in 'From', with: "11AM"
-		  	fill_in 'To', with: "1PM"
+		  	fill_in 'Duration', with: 120
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -166,7 +166,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: Time.zone.today,
 								start_time: "9 AM",
-								end_time: "2 PM")
+								duration: 300)
 				FactoryGirl.create(:invitation, event: r_5hr, employee: e1)
 				
 				visit new_rehearsal_path
@@ -174,7 +174,7 @@ describe "Rehearsal Pages:" do
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
 		  	fill_in 'From', with: "2 PM"
-		  	fill_in 'To', with: "3:30 PM"
+		  	fill_in 'Duration', with: 90
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -198,7 +198,7 @@ describe "Rehearsal Pages:" do
 									piece: piece,
 									start_date: date + i.days,
 									start_time: "9 AM",
-									end_time: "3 PM")
+									duration: 360)
 					FactoryGirl.create(:invitation, event: r_6hr, employee: e1)
 				end
 				
@@ -207,7 +207,7 @@ describe "Rehearsal Pages:" do
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: date + 5.days
 		  	fill_in 'From', with: "3 PM"
-		  	fill_in 'To', with: "3:30 PM"
+		  	fill_in 'Duration', with: 30
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -304,7 +304,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "12 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: r1, employee: e1)
 				FactoryGirl.create(:invitation, event: r1, employee: e2)
 				FactoryGirl.create(:invitation, event: r1, employee: e3)
@@ -314,7 +314,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
-								end_time: "1 PM")
+								duration: 60)
 				FactoryGirl.create(:invitation, event: r2, employee: e1)
 				
 				r3 = FactoryGirl.create(:rehearsal, account: current_account,
@@ -322,7 +322,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
-								end_time: "1 PM")
+								duration: 120)
 				
 				visit edit_rehearsal_path(r3)
 		  	select e1.full_name, from: "Invitees"
@@ -346,7 +346,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: Time.zone.today,
 								start_time: "9 AM",
-								end_time: "2 PM")
+								duration: 300)
 				FactoryGirl.create(:invitation, event: r_5hr, employee: e1)
 				
 				r = FactoryGirl.create(:rehearsal, account: current_account,
@@ -354,7 +354,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: Time.zone.today,
 								start_time: "2 PM",
-								end_time: "3:30 PM")
+								duration: 90)
 				
 				visit edit_rehearsal_path(r)
 		  	select e1.full_name, from: "Invitees"
@@ -379,7 +379,7 @@ describe "Rehearsal Pages:" do
 									piece: piece,
 									start_date: date + i.days,
 									start_time: "9 AM",
-									end_time: "3 PM")
+									duration: 360)
 					FactoryGirl.create(:invitation, event: r_6hr, employee: e1)
 				end
 				
@@ -388,7 +388,7 @@ describe "Rehearsal Pages:" do
 								piece: piece,
 								start_date: date + 5.days,
 								start_time: "3 PM",
-								end_time: "3:30 PM")
+								duration: 30)
 				
 				visit edit_rehearsal_path(r)
 		  	select e1.full_name, from: "Invitees"

@@ -24,13 +24,8 @@ protected
 	end
 	
 	def check_duration_increments
-		if profile.present?
-			contract_increment_min = profile.costume_increment_min
-			duration_min = (end_at - start_at) / 60
-			
-			if duration_min.remainder(contract_increment_min) != 0
-				errors.add(:duration, "must be in increments of #{contract_increment_min} minutes")
-			end
+		if contract.present? &&  duration.remainder(contract.costume_increment_min) != 0
+			errors.add(:duration, "must be in increments of #{contract.costume_increment_min} minutes")
 		end
 	end
 end

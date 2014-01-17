@@ -25,7 +25,7 @@ describe Event do
 											title: 'Test Event',
 											start_date: Date.new(2012,1,1),
 											start_time: "9AM",
-											end_time: "10AM") }
+											duration: 60) }
 	before do
 		Account.current_id = account.id
 		@event = FactoryGirl.build(:event)
@@ -38,9 +38,10 @@ describe Event do
   	it { should respond_to(:type) }
   	it { should respond_to(:start_date) }
   	it { should respond_to(:start_time) }
-  	it { should respond_to(:end_time) }
   	it { should respond_to(:start_at) }
   	it { should respond_to(:end_at) }
+  	it { should respond_to(:end_time) }
+  	it { should respond_to(:duration) }
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:location) }
@@ -113,7 +114,7 @@ describe Event do
   		should_not be_valid
   	end
   	
-  	it "when start_date in is invalid" do
+  	it "when start_date is invalid" do
   		dts = ["abc", "2/31/2012"]
   		dts.each do |invalid_date|
   			@event.start_date = invalid_date
@@ -126,44 +127,52 @@ describe Event do
   		should_not be_valid
   	end
   	
-  	it "when end_time is invalid" do
-  		@event.end_time = "abc"
-  		should_not be_valid
-  	end
-  	
-		it "when end_time same as start_time" do
-			@event.start_time = 2.hours.ago.to_s(:hr12)
-			@event.end_time = @event.start_at
-	  	should_not be_valid
-	  end
-	  
-		it "when end_at is before start_at" do
-			@event.start_time = 1.hour.ago.to_s(:hr12)
-			@event.end_time = 2.hours.ago.to_s(:hr12)
-	  	should_not be_valid
-	  end
+  	context "when duration" do
+			it "is blank" do
+				@event.duration = " "
+				should_not be_valid
+			end
+			
+			it "not an integer" do
+	  		vals = ["abc", 8.6]
+	  		vals.each do |invalid_integer|
+	  			@event.duration = invalid_integer
+	  			should_not be_valid
+	  		end
+	  	end
+	  	
+	  	it "< 1" do
+	  		@event.duration = 0
+	  		should_not be_valid
+	  	end
+	  	
+	  	it "> 1439 (max min in a day)" do
+	  		@event.duration = 1440
+	  		should_not be_valid
+	  	end
+		end
 	end
 	
 	context "(Verify Location available)" do
 		let!(:existing_event) { FactoryGirl.create(:event, account: account, location: location, 
 																start_date: Time.zone.today,
   															start_time: "2PM",
-  															end_time: "4PM") }
+  															duration: 120) }
   	let!(:e_loc) { FactoryGirl.create(:event, account: account,
   															start_date: Time.zone.today,
   															start_time: "2PM",
-  															end_time: "4PM") }
+  															duration: 120) }
 		let!(:e) { FactoryGirl.create(:event, account: account, location: location,
 																start_date: Time.zone.today,
   															start_time: "11AM",
-  															end_time: "12PM") }
+  															duration: 60) }
   	
   	describe "when creating a new event" do
 			it "directly before existing event" do
 	  		@event.location = location
 	  		@event.start_date = Time.zone.today
 				@event.start_time = "1PM"
-				@event.end_time = "2PM"
+				@event.duration = 60
 	  		should be_valid
 	  	end
 	  	
@@ -171,7 +180,7 @@ describe Event do
 	  		@event.location = location
 	  		@event.start_date = Time.zone.today
 				@event.start_time = "4PM"
-				@event.end_time = "5PM"
+				@event.duration = 60
 	  		should be_valid
 	  	end
 	  	
@@ -179,7 +188,7 @@ describe Event do
 	  		@event.location = location
 	  		@event.start_date = existing_event.start_date
 				@event.start_time = "1PM"
-				@event.end_time = "3PM"
+				@event.duration = 120
 		  	should_not be_valid
 		  end
 		  
@@ -187,7 +196,7 @@ describe Event do
 		  	@event.location = location
 		  	@event.start_date = existing_event.start_date
 				@event.start_time = "3PM"
-				@event.end_time = "5PM"
+				@event.duration = 120
 		  	should_not be_valid
 		  end
 		  
@@ -195,7 +204,7 @@ describe Event do
 		  	@event.location = location
 		  	@event.start_date = existing_event.start_date
 				@event.start_time = "1PM"
-				@event.end_time = "5PM"
+				@event.duration = 240
 		  	should_not be_valid
 		  end
 		  
@@ -203,7 +212,7 @@ describe Event do
 		  	@event.location = location
 		  	@event.start_date = existing_event.start_date
 				@event.start_time = "3PM"
-				@event.end_time = "3:30PM"
+				@event.duration = 30
 		  	should_not be_valid
 		  end
 		  
@@ -211,7 +220,7 @@ describe Event do
 		  	@event.location = location
 		  	@event.start_date = existing_event.start_date
 				@event.start_time = "2PM"
-				@event.end_time = "4PM"
+				@event.duration = 120
 		  	should_not be_valid
 		  end
 	  end
@@ -224,43 +233,43 @@ describe Event do
 		  
 		  it "times to overlap existing event at beginning is invalid" do
 	  		e.start_time = "1PM"
-				e.end_time = "3PM"
+				e.duration = 120
 		  	e.should_not be_valid
 		  end
 		  
 		  it "times to overlap existing event at end is invalid" do
 		  	e.start_time = "3PM"
-				e.end_time = "5PM"
+				e.duration = 120
 		  	e.should_not be_valid
 		  end
 		  
 		  it "times to overlap entire existing event is invalid" do
 		  	e.start_time = "1PM"
-				e.end_time = "5PM"
+				e.duration = 240
 		  	e.should_not be_valid
 		  end
 		  
 		  it "times to overlap existing event as a subset is invalid" do
 		  	e.start_time = "3PM"
-				e.end_time = "3:30PM"
+				e.duration = 30
 		  	e.should_not be_valid
 		  end
 		  
 		  it "times to overlap of exactly is invalid" do
 				e.start_time = existing_event.start_time
-				e.end_time = existing_event.end_time
+				e.duration = existing_event.duration
 		  	e.should_not be_valid
 		  end
 		  
 			it "times directly before existing event is valid" do
 		  	e.start_time = "1PM"
-				e.end_time = "2PM"
+				e.duration = 60
 		  	e.should be_valid
 		  end
 		  
 		  it "times directly after existing event is valid" do
 		  	e.start_time = "4PM"
-				e.end_time = "5PM"
+				e.duration = 60
 		  	e.should be_valid
 		  end
 		end
@@ -323,8 +332,12 @@ describe Event do
 			event.reload.start_time.should == "9AM"
 	  end
 	  
+	  it "duration" do
+			event.reload.duration.should == 60
+	  end
+	  
 	  it "end_time" do
-			event.reload.end_time.should == "10AM"
+			event.reload.end_time.should == "10:00 AM"
 	  end
 	  
 	  it "start_at" do
@@ -338,22 +351,14 @@ describe Event do
 	  end
   end
   
-  context "(Methods)" do
-		it "duration_min" do
-			event.start_date = Time.zone.today
-			event.start_time = "9:30 AM"
-			event.end_time = "10:15 AM"
-			event.save
-	  	event.reload.duration_min.should == 45
-	  end
-	  
+  context "(Methods)" do	  
 	  context "overlapping" do
 	  	let!(:e) { FactoryGirl.create(:event,
 											account: account,
 											location: location,
 											start_date: Date.new(2012,1,2),
 											start_time: "1PM",
-											end_time: "2PM") }
+											duration: 60) }
 											
 	  	let!(:location2) { FactoryGirl.create(:location, account: account) }
 	  	let!(:location3) { FactoryGirl.create(:location, account: account) }
@@ -362,37 +367,37 @@ describe Event do
 											location: location2,
 											start_date: Date.new(2012,1,2),
 											start_time: "12:15 PM",
-											end_time: "1:15 PM") }
-			let!(:overlap_end) { FactoryGirl.create(:event,
-											account: account,
-											location: location2,
-											start_date: Date.new(2012,1,2),
-											start_time: "1:45 PM",
-											end_time: "2:45 PM") }
-			let!(:overlap_entire) { FactoryGirl.create(:event,
-											account: account,
-											location: location3,
-											start_date: Date.new(2012,1,2),
-											start_time: "12:00 PM",
-											end_time: "2:35 PM") }
+											duration: 60) }
 			let!(:overlap_subset) { FactoryGirl.create(:event,
 											account: account,
 											location: location2,
 											start_date: Date.new(2012,1,2),
 											start_time: "1:15 PM",
-											end_time: "1:45 PM") }
+											duration: 30) }
+			let!(:overlap_end) { FactoryGirl.create(:event,
+											account: account,
+											location: location2,
+											start_date: Date.new(2012,1,2),
+											start_time: "1:45 PM",
+											duration: 60) }
+			let!(:overlap_entire) { FactoryGirl.create(:event,
+											account: account,
+											location: location3,
+											start_date: Date.new(2012,1,2),
+											start_time: "12:00 PM",
+											duration: 155) }
 			let!(:before_event) { FactoryGirl.create(:event,
 											account: account,
 											location: location,
 											start_date: Date.new(2012,1,2),
 											start_time: "12:30 PM",
-											end_time: "1:00 PM") }
+											duration: 30) }
 			let!(:after_event) { FactoryGirl.create(:event,
 											account: account,
 											location: location,
 											start_date: Date.new(2012,1,2),
 											start_time: "2:00 PM",
-											end_time: "3:30 PM") }
+											duration: 90) }
 			let!(:day_before) { FactoryGirl.create(:event,
 											account: account,
 											location: location,
@@ -404,12 +409,12 @@ describe Event do
 			
 			it "shows events that have an overlap" do
 				e.overlapping.should include(overlap_start)
+				e.overlapping.should include(overlap_subset)
 				e.overlapping.should include(overlap_end)
 				e.overlapping.should include(overlap_entire)
-				e.overlapping.should include(overlap_subset)
 				
 				e.overlapping.should_not include(e)
-				#e.overlapping.should_not include(before_event)
+				e.overlapping.should_not include(before_event)
 				e.overlapping.should_not include(after_event)
 				e.overlapping.should_not include(day_before)
 				e.overlapping.should_not include(day_after)
@@ -424,7 +429,8 @@ describe Event do
 			let!(:event1) { FactoryGirl.create(:event, account: account, 
 													location: location,
 													start_date: Time.zone.today,
-													start_time: "8AM", end_time: "8:30AM") }
+													start_time: "8AM",
+													duration: 30) }
 			let!(:i1) { FactoryGirl.create(:invitation, event: event1, employee: e1) }
 			let!(:i2) { FactoryGirl.create(:invitation, event: event1, employee: e2) }
 			let!(:i3) { FactoryGirl.create(:invitation, event: event1, employee: e3) }
@@ -432,13 +438,14 @@ describe Event do
 			let!(:event2) { FactoryGirl.create(:event, account: account, 
 													location: location,
 													start_date: Time.zone.today,
-													start_time: "9AM", end_time: "9:30AM") }
+													start_time: "9AM",
+													duration: 30) }
 			let!(:i4) { FactoryGirl.create(:invitation, event: event2, employee: e1) }
 			
 			it "gives warning message for double booked employees" do
 				event.start_date = Time.zone.today
 				event.start_time = "8AM"
-				event.end_time = "9:30 AM"
+				event.duration = 90
 				event.employee_ids = [e1.id]
 				event.save
 				event.double_booked_employees_warning.should == "The following people are double booked during this time: #{e1.full_name}"
@@ -452,13 +459,16 @@ describe Event do
 		end
 		let!(:event3) { FactoryGirl.create(:event, account: account, 
 												start_date: Time.zone.today + 1.day,
-												start_time: "8AM", end_time: "8:30AM") }
+												start_time: "8AM",
+												duration: 30) }
 		let!(:event2) { FactoryGirl.create(:event, account: account, 
 												start_date: Time.zone.today,
-												start_time: "9AM", end_time: "9:30AM") }
+												start_time: "9AM",
+												duration: 30) }
 		let!(:event1) { FactoryGirl.create(:event, account: account, 
 												start_date: Time.zone.today,
-												start_time: "8AM", end_time: "8:30AM") }
+												start_time: "8AM",
+												duration: 30) }
 		let!(:location_wrong_acnt) { FactoryGirl.create(:event) }
 		
 		describe "default_scope" do	
@@ -471,22 +481,28 @@ describe Event do
 			# For December 3, 2012
 			let!(:prev_day_bad) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,2),
-														start_time: "9AM", end_time: "10am") }
+														start_time: "9AM",
+														duration: 60) }
 			let!(:current_day_good) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,3),
-														start_time: "12AM", end_time: "1pm") }
+														start_time: "12AM",
+														duration: 60) }
 			let!(:current_day_wrong_acnt) { FactoryGirl.create(:event, 
 														start_date: Date.new(2012,12,3),
-														start_time: "9AM", end_time: "10am") }
+														start_time: "9AM",
+														duration: 60) }
 			let!(:current_day_good2) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,3),
-														start_time: "3PM", end_time: "4pm") }
+														start_time: "3PM",
+														duration: 60) }
 			let!(:current_day_good3) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,3),
-														start_time: "11AM", end_time: "12pm") }
+														start_time: "11AM",
+														duration: 60) }
 			let!(:wrong_day_bad) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,6),
-														start_time: "9AM", end_time: "10am") }
+														start_time: "9AM",
+														duration: 60) }
 			
 			it "returns the records for the day" do
 				Event.for_daily_calendar(Date.parse("2012-12-3")).should == [current_day_good, current_day_good3, current_day_good2]
@@ -497,34 +513,44 @@ describe Event do
 			# For Week containing January 1, 2013
 			let!(:prev_week_sun) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,30),
-														start_time: "9AM", end_time: "10am") }
+														start_time: "9AM",
+														duration: 60) }
 			let!(:current_week_mon) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,31),
-														start_time: "12AM", end_time: "1am") }
+														start_time: "12AM",
+														duration: 60) }
 			let!(:current_week_wrong_acnt) { FactoryGirl.create(:event, 
 														start_date: Date.new(2012,1,3),
-														start_time: "9AM", end_time: "10am") }
+														start_time: "9AM",
+														duration: 60) }
 			let!(:current_week_tue) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,1),
-														start_time: "12AM", end_time: "1am") }
+														start_time: "12AM",
+														duration: 60) }
 			let!(:current_week_wed) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,2),
-														start_time: "12AM", end_time: "1am") }
+														start_time: "12AM",
+														duration: 60) }
 			let!(:current_week_thu) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,3),
-														start_time: "11PM", end_time: "11:30pm") }
+														start_time: "11PM",
+														duration: 30) }
 			let!(:current_week_fri) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,4),
-														start_time: "11PM", end_time: "11:30pm") }
+														start_time: "11PM",
+														duration: 30) }
 			let!(:current_week_sat) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,5),
-														start_time: "11PM", end_time: "11:30pm") }
+														start_time: "11PM",
+														duration: 30) }
 			let!(:current_week_sun) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,4),
-														start_time: "11PM", end_time: "11:30pm") }
+														start_time: "11PM",
+														duration: 30) }
 			let!(:wrong_week_bad) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,7),
-														start_time: "11AM", end_time: "12pm") }
+														start_time: "11AM",
+														duration: 60) }
 			
 			it "returns the records for the week starting on Monday" do
 				events = Event.for_week(Date.new(2013,1,1))

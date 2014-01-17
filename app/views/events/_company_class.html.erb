@@ -1,4 +1,4 @@
-<div class="cal-event cal-green" <%= calculate_offset(cclass.start_at, cclass.duration_min).html_safe %> data-toggle="modal" data-target="#modal_<%= cclass.id %>">
+<div class="cal-event cal-green" <%= calculate_offset(cclass.start_at, cclass.duration).html_safe %> data-toggle="modal" data-target="#modal_<%= cclass.id %>">
 	<div class="title"><%= cclass.title %></div>
 	<div class="time"><%= "#{cclass.start_time} to #{cclass.end_time}" %></div>
 </div>

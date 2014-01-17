@@ -338,7 +338,8 @@ describe Employee do
 			let!(:cc) { FactoryGirl.create(:company_class, account: account, 
 													location: location,
 													start_date: Time.zone.today,
-													start_time: "9AM", end_time: "9:30AM") }
+													start_time: "9AM",
+													duration: 30) }
 			let!(:cci1) { FactoryGirl.create(:invitation, event: cc, employee: e1) }
 			let!(:cci2) { FactoryGirl.create(:invitation, event: cc, employee: e2) }
 			let!(:cci3) { FactoryGirl.create(:invitation, event: cc, employee: e3) }
@@ -348,7 +349,8 @@ describe Employee do
 													location: location,
 													piece: piece,
 													start_date: Time.zone.today,
-													start_time: "10AM", end_time: "4PM") }
+													start_time: "10AM",
+													duration: 360) }
 			let!(:i1) { FactoryGirl.create(:invitation, event: r1, employee: e1) }
 			let!(:i2) { FactoryGirl.create(:invitation, event: r1, employee: e2) }
 			let!(:i3) { FactoryGirl.create(:invitation, event: r1, employee: e3) }
@@ -358,7 +360,8 @@ describe Employee do
 													location: location,
 													piece: piece,
 													start_date: Time.zone.today,
-													start_time: "4PM", end_time: "4:30PM") }
+													start_time: "4PM",
+													duration: 30) }
 			let!(:i5) { FactoryGirl.create(:invitation, event: r2, employee: e1) }
 			let!(:i3) { FactoryGirl.create(:invitation, event: r2, employee: e3) }
 			let!(:i6) { FactoryGirl.create(:invitation, event: r2, employee: e4) }
@@ -381,7 +384,8 @@ describe Employee do
 													location: location,
 													piece: piece,
 													start_date: date,
-													start_time: "10AM", end_time: "4PM") }
+													start_time: "10AM",
+													duration: 360) }
 			let!(:i1) { FactoryGirl.create(:invitation, event: mon_6hr, employee: e1) }
 			let!(:i2) { FactoryGirl.create(:invitation, event: mon_6hr, employee: e2) }
 			let!(:i3) { FactoryGirl.create(:invitation, event: mon_6hr, employee: e3) }
@@ -391,7 +395,8 @@ describe Employee do
 													location: location,
 													piece: piece,
 													start_date: date + 1.day,
-													start_time: "10AM", end_time: "4PM") }
+													start_time: "10AM",
+													duration: 360) }
 			let!(:i5) { FactoryGirl.create(:invitation, event: tue_6hr, employee: e1) }
 			let!(:i6) { FactoryGirl.create(:invitation, event: tue_6hr, employee: e2) }
 			let!(:i7) { FactoryGirl.create(:invitation, event: tue_6hr, employee: e3) }
@@ -401,7 +406,8 @@ describe Employee do
 													location: location,
 													piece: piece,
 													start_date: date + 2.days,
-													start_time: "10AM", end_time: "4PM") }
+													start_time: "10AM",
+													duration: 360) }
 			let!(:i9) { FactoryGirl.create(:invitation, event: wed_6hr, employee: e1) }
 			let!(:i10) { FactoryGirl.create(:invitation, event: wed_6hr, employee: e2) }
 			let!(:i11) { FactoryGirl.create(:invitation, event: wed_6hr, employee: e3) }
@@ -411,7 +417,8 @@ describe Employee do
 													location: location,
 													piece: piece,
 													start_date: date + 3.days,
-													start_time: "10AM", end_time: "4PM") }
+													start_time: "10AM",
+													duration: 360) }
 			let!(:i13) { FactoryGirl.create(:invitation, event: thu_6hr, employee: e1) }
 			let!(:i14) { FactoryGirl.create(:invitation, event: thu_6hr, employee: e2) }
 			let!(:i15) { FactoryGirl.create(:invitation, event: thu_6hr, employee: e3) }
@@ -421,7 +428,8 @@ describe Employee do
 													location: location,
 													piece: piece,
 													start_date: date + 4.days,
-													start_time: "10AM", end_time: "4PM") }
+													start_time: "10AM",
+													duration: 360) }
 			let!(:i17) { FactoryGirl.create(:invitation, event: fri_6hr, employee: e1) }
 			let!(:i18) { FactoryGirl.create(:invitation, event: fri_6hr, employee: e2) }
 			let!(:i19) { FactoryGirl.create(:invitation, event: fri_6hr, employee: e3) }
@@ -431,7 +439,8 @@ describe Employee do
 													location: location,
 													piece: piece,
 													start_date: date,
-													start_time: "4PM", end_time: "4:30PM") }
+													start_time: "4PM",
+													duration: 30) }
 			let!(:i21) { FactoryGirl.create(:invitation, event: r2, employee: e1) }
 			let!(:i22) { FactoryGirl.create(:invitation, event: r2, employee: e3) }
 			let!(:i23) { FactoryGirl.create(:invitation, event: r2, employee: e4) }
