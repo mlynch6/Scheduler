@@ -33,7 +33,6 @@ describe Location do
   	
   	it { should respond_to(:activate) }
   	it { should respond_to(:inactivate) }
-  	it { should respond_to(:search) }
   	
   	it "should not allow access to account_id" do
       expect do
