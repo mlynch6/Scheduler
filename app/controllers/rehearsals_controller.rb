@@ -47,7 +47,7 @@ private
 	#setup for form - dropdowns, etc
 	def form_setup
 		@locations = Location.active.map { |location| [location.name, location.id] }
-		@pieces = Piece.all.map { |piece| [piece.name, piece.id] }
+		@pieces = Piece.all.map { |piece| [piece.name_w_choreographer, piece.id] }
 		@employees = Employee.active.map { |employee| [employee.full_name, employee.id] }
 	end
 	

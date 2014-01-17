@@ -31,4 +31,8 @@ class Piece < ActiveRecord::Base
 	validates :avg_length, allow_blank: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than => 1440 }
 
 	default_scope lambda { order('name ASC').where(:account_id => Account.current_id) }
+	
+	def name_w_choreographer
+		choreographer.present? ? "#{name} (#{choreographer})" : name
+	end
 end

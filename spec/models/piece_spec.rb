@@ -46,6 +46,8 @@ describe Piece do
   	it { should respond_to(:season_pieces) }
   	it { should respond_to(:seasons) }
   	
+  	it { should respond_to(:name_w_choreographer) }
+  	
   	it "should not allow access to account_id" do
       expect do
         Piece.new(account_id: account.id)
@@ -260,6 +262,20 @@ describe Piece do
 	  	end
 	  end
   end
+
+	describe "(Methods)" do
+		describe "name_w_choreographer" do
+			it "returns name only when no choreographer" do
+				piece.choreographer = ""
+				piece.save
+		  	piece.reload.name_w_choreographer.should == 'Swan Lake'
+		  end
+		  
+		  it "returns name & choreographer when choreographer present" do
+		  	piece.reload.name_w_choreographer.should == 'Swan Lake (Petipa)'
+		  end
+  	end
+	end
 
 	describe "(Scopes)" do
 		before do
