@@ -2,25 +2,29 @@
 #
 # Table name: events
 #
-#  id          :integer          not null, primary key
-#  account_id  :integer          not null
-#  title       :string(30)       not null
-#  type        :string(20)       not null
-#  location_id :integer          not null
-#  start_at    :datetime         not null
-#  end_at      :datetime         not null
-#  piece_id    :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id              :integer          not null, primary key
+#  account_id      :integer          not null
+#  title           :string(30)       not null
+#  type            :string(20)       default("Event"), not null
+#  location_id     :integer          not null
+#  start_at        :datetime         not null
+#  end_at          :datetime         not null
+#  piece_id        :integer
+#  event_series_id :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 class Event < ActiveRecord::Base
-	attr_accessible :title, :location_id, :start_date, :start_time, :duration
+	attr_accessible :title, :location_id, :start_date, :start_time, :duration, :piece_id
 	attr_accessible :employee_ids
 	attr_writer :start_date, :start_time, :duration
+	#event series fields
+	attr_accessor :period, :end_repeat_on
 
 	belongs_to :account
 	belongs_to :location
+	belongs_to :event_series
 	has_many :invitations, dependent: :destroy
 	has_many :employees, through: :invitations
 
@@ -28,7 +32,7 @@ class Event < ActiveRecord::Base
 	before_validation :save_end_at, :if => "start_at.present? && @duration.present?"
 	
 	validates :title,	presence: true, length: { maximum: 30 }
-	validates :type,	presence: true, length: { maximum: 20 }
+	validates :type,	length: { maximum: 20 }
 	validates :location_id,	presence: true
 	validate :location_available?, :if => "start_at.present? && end_at.present?"
 	validates_date :start_date
@@ -66,7 +70,7 @@ class Event < ActiveRecord::Base
 									:etime => end_at,
 									:sod => start_at.beginning_of_day,
 									:eod => end_at.end_of_day })
-		events.where("id <> :id", { :id => id }) if !new_record?
+		events.where("id <> :id", { :id => id }) unless new_record?
 	end
 	
 	def double_booked_employees_warning
@@ -75,6 +79,17 @@ class Event < ActiveRecord::Base
 			employee_list = double_booked_employees.map { |emp| emp.full_name }.join(", ")
 			return "The following people are double booked during this time: "+employee_list
 		end
+	end
+	
+	def self.new_with_subclass(type, params = nil)
+		klass = (type || 'Event')
+		if defined? klass.constantize
+			klass.constantize.new(params)
+		else
+			Event.new(params)
+		end
+	rescue #invalid type
+		Event.new(params)
 	end
 	
 protected

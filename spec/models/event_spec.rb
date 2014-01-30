@@ -2,16 +2,17 @@
 #
 # Table name: events
 #
-#  id          :integer          not null, primary key
-#  account_id  :integer          not null
-#  title       :string(30)       not null
-#  type        :string(20)       not null
-#  location_id :integer          not null
-#  start_at    :datetime         not null
-#  end_at      :datetime         not null
-#  piece_id    :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id              :integer          not null, primary key
+#  account_id      :integer          not null
+#  title           :string(30)       not null
+#  type            :string(20)       default("Event"), not null
+#  location_id     :integer          not null
+#  start_at        :datetime         not null
+#  end_at          :datetime         not null
+#  piece_id        :integer
+#  event_series_id :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 require 'spec_helper'
@@ -42,9 +43,13 @@ describe Event do
   	it { should respond_to(:end_at) }
   	it { should respond_to(:end_time) }
   	it { should respond_to(:duration) }
+  	it { should respond_to(:piece_id) }
+  	it { should respond_to(:period) }
+  	it { should respond_to(:end_repeat_on) }
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:location) }
+  	it { should respond_to(:event_series) }
   	it { should respond_to(:invitations) }
   	it { should respond_to(:employees) }
   	
@@ -80,6 +85,12 @@ describe Event do
         Event.new(end_at: Time.zone.now)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
+    
+    it "should not allow access to event_series_id" do
+      expect do
+        Event.new(event_series_id: 1)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
   end
 	
   context "(Valid)" do
@@ -96,11 +107,6 @@ describe Event do
   	
 		it "when title is too long" do
   		@event.title = "a"*31
-  		should_not be_valid
-  	end
-  	
-		it "when type is blank" do
-  		@event.type = " "
   		should_not be_valid
   	end
   	
@@ -284,6 +290,12 @@ describe Event do
 			event.reload.location.should == location
 		end
 		
+		it "has one series" do
+			series = FactoryGirl.create(:event_series)
+			event1 = series.events.first
+			event1.event_series.should == series
+		end
+		
 		describe "invitations" do
 			let(:employee1) { FactoryGirl.create(:employee, account: account) }
 			let(:employee2) { FactoryGirl.create(:employee, account: account) }
@@ -449,6 +461,61 @@ describe Event do
 				event.employee_ids = [e1.id]
 				event.save
 				event.double_booked_employees_warning.should == "The following people are double booked during this time: #{e1.full_name}"
+			end
+		end
+		
+		context "new_with_subclass" do
+			it "creates a new Company Class" do
+				e = Event.new_with_subclass('CompanyClass')
+				e.class.should == CompanyClass
+			end
+			
+			it "creates a new Costume Fitting" do
+				e = Event.new_with_subclass('CostumeFitting')
+				e.class.should == CostumeFitting
+				e.type.should == 'CostumeFitting'
+			end
+			
+			it "creates a new Rehearsal" do
+				e = Event.new_with_subclass('Rehearsal')
+				e.class.should == Rehearsal
+				e.type.should == 'Rehearsal'
+			end
+			
+			it "creates a new Event" do
+				e = Event.new_with_subclass('Event')
+				e.class.should == Event
+				e.type.should == 'Event'
+			end
+			
+			it "creates a new Event when no type specified" do
+				e = Event.new_with_subclass(nil)
+				e.class.should == Event
+				e.type.should == 'Event'
+			end
+			
+			it "creates a new Event when invalid type is specified" do
+				e = Event.new_with_subclass('Invalid')
+				e.class.should == Event
+				e.type.should == 'Event'
+			end
+			
+			it "with params creates Event" do
+				params = { location_id: location.id,
+									title: 'Test Event',
+									start_date: Date.new(2012,1,1),
+									start_time: "9AM",
+									duration: 60 }
+				e = Event.new_with_subclass('Event', params)
+				e.class.should == Event
+				
+				e.location.should == location
+				e.title.should == params[:title]
+				e.start_date.should == params[:start_date]
+				e.start_time.should == params[:start_time]
+				e.duration.should == params[:duration]
+				
+				e.valid?.should be_true
 			end
 		end
   end
