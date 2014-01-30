@@ -42,8 +42,8 @@ private
 	end
 	
 	def show_stripe_errors
-		if ! @account.errors.messages[:payment].nil?
-			@account.errors.messages[:payment].each do |msg|
+		if ! @account.errors.messages[:base].nil?
+			@account.errors.messages[:base].each do |msg|
 				flash[:error] = msg
 			end
 		end

@@ -453,7 +453,7 @@ describe Account do
 	  		next_invoice_date = account.next_invoice_date
 	  		
 	  		next_invoice_date.should be_nil
-	      account.errors.messages[:payment].count.should == 1
+	      account.errors.messages[:base].count.should == 1
 	  	end
 	  end
 	  
@@ -478,7 +478,7 @@ describe Account do
 	  	it "handles a Stripe error" do
 	  		#Cannot cancel subscription when already canceled
 	  		account.cancel_subscription
-	      account.errors.messages[:payment].count.should == 1
+	      account.errors.messages[:base].count.should == 1
 	  	end
 	  end
 	  
@@ -496,7 +496,7 @@ describe Account do
     	end
 	  	
 	  	it "changes credit card info on Stripe account" do
-	  		account.errors.messages[:payment].should be_nil
+	  		account.errors.messages[:base].should be_nil
 	  		stripe_customer = Stripe::Customer.retrieve(account.stripe_customer_token)
 	  		stripe_customer.cards.count.should == 1
 	  		stripe_customer.cards.first.last4.should == '5100'
@@ -506,7 +506,7 @@ describe Account do
 	  		#Cannot use credit card token more than once
 				account.edit_subscription_payment
 				
-	  		account.errors.messages[:payment].count.should == 1
+	  		account.errors.messages[:base].count.should == 1
 	  		
 	  		stripe_customer = Stripe::Customer.retrieve(account.stripe_customer_token)
 	  		stripe_customer.cards.first.last4.should_not == '5108'
@@ -533,7 +533,7 @@ describe Account do
 	  		account.current_subscription_plan_id = 2 #valid stripe subscription
 				account.edit_subscription_plan
 				
-	  		account.errors.messages[:payment].should be_nil
+	  		account.errors.messages[:base].should be_nil
 	  		stripe_customer = Stripe::Customer.retrieve(account.stripe_customer_token)
 	  		stripe_customer.subscription.plan.id.should == "2"
 	  	end
@@ -542,7 +542,7 @@ describe Account do
 	  		account.current_subscription_plan_id = 80 #invalid stripe subscription
 				account.edit_subscription_plan
 				
-	  		account.errors.messages[:payment].count.should == 1
+	  		account.errors.messages[:base].count.should == 1
 	  		stripe_customer = Stripe::Customer.retrieve(account.stripe_customer_token)
 	  		stripe_customer.subscription.plan.id.should == "1"
 	  	end
