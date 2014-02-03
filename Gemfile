@@ -32,12 +32,13 @@ end
 group :development do
   gem 'annotate', '~> 2.5.0'
   gem 'populator', '1.0.0'
-  gem 'bullet'
+  #gem 'bullet'													# Performance
 end
 
 group :test do
   gem 'capybara',		'~> 1.1.2'
   gem 'selenium-webdriver', '~> 2.39.0'
+  gem 'database_cleaner', '~> 1.2.0'
   gem 'rb-fsevent', '0.9.1', :require => false
   gem 'growl', '1.0.3'
   gem 'guard-spork', '0.3.2'

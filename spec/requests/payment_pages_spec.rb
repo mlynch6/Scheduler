@@ -4,7 +4,6 @@ describe "Payment Pages:" do
   subject { page }
 	
 	context "#edit" do
-		# Tests with no JS
 		it "has correct title" do
 			log_in
 	  	click_link 'Setup'
@@ -25,49 +24,16 @@ describe "Payment Pages:" do
 	end
 	
 	context "#edit" do
-		#log_in function not working with js: true option
-  	let(:username) { "pmartin#{DateTime.now.seconds_since_midnight}" }
-		
-  	before do
-  		visit signup_path(plan: 1)
-  		fill_in "Company", with: "Payment#edit #{Time.now}"
-  		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
-  		fill_in "Phone #", with: "414-543-1000"
-	  	
-	  	fill_in "Address", with: Faker::Address.street_address
-			fill_in "Address 2", with: Faker::Address.street_address
-			fill_in "City", with: Faker::Address.city
-			select "New York", from: "State"
-			fill_in "Zip Code", with: Faker::Address.zip.first(5)
-  		
-  		fill_in "First Name", with: "Peter"
-  		fill_in "Last Name", with: "Martin"
-  		select  "Artistic Director", from: "Role"
-  		fill_in "Email", with: "peter.martin@nycb.org"
-  		
-  		fill_in "Username", with: username
-  		fill_in "Password", with: "password"
-  		fill_in "Confirm Password", with: "password"
-  		
-  		fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
-	  	select (Date.today.year+1).to_s, from: "card_year"
-	  	fill_in "Security Code", with: "213"
-	  	
-	  	click_button "Create Account"
-	  	should have_selector('div.alert-success')
-	  	
-	  	visit login_path
-	  	fill_in "username", with: username
-  		fill_in "password", with: "password"
-  		click_button "Sign In"
-  		page.should have_content "Sign Out"
+		before do
+  		log_in
+  		create_stripe_account(current_account)
   		
   		visit subscriptions_current_path
   		click_link "Change Payment Method"
   	end
   	
   	after do
-  		destroy_stripe_account(User.unscoped.find_by_username(username).account)
+  		destroy_stripe_account(current_account)
   	end
 		
 		it "can update the credit card", js: true do
