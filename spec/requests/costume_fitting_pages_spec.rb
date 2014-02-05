@@ -21,6 +21,13 @@ describe "CostumeFitting Pages:" do
 			should have_selector('li.active', text: 'New Costume Fitting')
 		end
 		
+		it "only shows applicable fields", js: true do
+			log_in
+			visit new_costume_fitting_path
+	
+			should_not have_selector('label', text: 'Piece')
+		end
+		
 		it "has only active Locations in dropdown" do
 			log_in
 			FactoryGirl.create(:location, account: current_account, name: 'Location A')
@@ -45,7 +52,7 @@ describe "CostumeFitting Pages:" do
 			log_in
 			visit new_costume_fitting_path(date: Time.zone.today.to_s)
 			
-			find_field('costume_fitting_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
+			find_field('event_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
 		end
 		
 		context "with error" do
@@ -74,7 +81,7 @@ describe "CostumeFitting Pages:" do
 		  	fill_in "Title", with: "Test Fitting"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
-		  	fill_in 'From', with: "10AM"
+		  	fill_in 'Start Time', with: "10AM"
 		  	fill_in 'Duration', with: 60
 		  	click_button 'Create'
 		
@@ -83,8 +90,7 @@ describe "CostumeFitting Pages:" do
 				
 				should have_content("Test Fitting")
 				should have_content(location.name)
-				should have_content("10:00 AM")
-				should have_content("11:00 AM")
+				should have_content("10:00 AM to 11:00 AM")
 			end
 			
 			it "creates new Costume Fitting with Invitees" do
@@ -96,7 +102,7 @@ describe "CostumeFitting Pages:" do
 		  	fill_in "Title", with: "Test Fitting"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
-		  	fill_in 'From', with: "9AM"
+		  	fill_in 'Start Time', with: "9AM"
 		  	fill_in 'Duration', with: 30
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -138,7 +144,7 @@ describe "CostumeFitting Pages:" do
 				fill_in "Title", with: "Costume Fitting"
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
-		  	fill_in 'From', with: "11:30 AM"
+		  	fill_in 'Start Time', with: "11:30 AM"
 		  	fill_in 'Duration', with: 60
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -178,6 +184,18 @@ describe "CostumeFitting Pages:" do
 	
 			should have_selector('li.active', text: 'Calendar')
 			should have_selector('li.active', text: 'Daily Schedule')
+		end
+		
+		it "only shows applicable fields", js: true do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			fitting = FactoryGirl.create(:costume_fitting,
+					account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+	  	visit edit_costume_fitting_path(fitting)
+	
+			should_not have_selector('label', text: 'Piece')
 		end
 		
 	  it "record with error" do

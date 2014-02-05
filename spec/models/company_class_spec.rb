@@ -2,16 +2,17 @@
 #
 # Table name: events
 #
-#  id          :integer          not null, primary key
-#  account_id  :integer          not null
-#  title       :string(30)       not null
-#  type        :string(20)       not null
-#  location_id :integer          not null
-#  start_at    :datetime         not null
-#  end_at      :datetime         not null
-#  piece_id    :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id              :integer          not null, primary key
+#  account_id      :integer          not null
+#  title           :string(30)       not null
+#  type            :string(20)       default("Event"), not null
+#  location_id     :integer          not null
+#  start_at        :datetime         not null
+#  end_at          :datetime         not null
+#  piece_id        :integer
+#  event_series_id :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 require 'spec_helper'
@@ -42,6 +43,7 @@ describe CompanyClass do
   context "(Valid)" do
   	it "with minimum attributes" do
   		should be_valid
+  		cclass.warnings.count.should == 0
   	end
   	
   	it "without a title - title will be defaulted to 'Company Class'" do
@@ -92,6 +94,10 @@ describe CompanyClass do
   context "correct value is returned for" do  
 	  it "type" do
 	  	cclass.reload.type.should == 'CompanyClass'
+	  end
+	  
+	  it "break?" do
+			cclass.break?.should be_true
 	  end
 	end
 	

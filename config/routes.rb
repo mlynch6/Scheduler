@@ -41,11 +41,11 @@ Scheduler::Application.routes.draw do
   end
   resources :casts,							:only => [:destroy]
   
-  resources :events,						:only => :index
+  resources :events,						:only => [:index, :new, :create, :edit, :update]
+  resources :company_classes,		:only => [:new, :create, :edit, :update], 	:controller => :events, :event_type => 'CompanyClass'
+  resources :costume_fittings,	:only => [:new, :create, :edit, :update], 	:controller => :events, :event_type => 'CostumeFitting'
+  resources :rehearsals,				:only => [:new, :create, :edit, :update], 	:controller => :events, :event_type => 'Rehearsal'
   get 'events/:year/:month/:day', to: 'events#index'
-  resources :rehearsals,				:only => [:new, :create, :edit, :update]
-  resources :company_classes,		:only => [:new, :create, :edit, :update]
-  resources :costume_fittings,	:only => [:new, :create, :edit, :update]
 	
 	match 'dashboard' => 'static_pages#dashboard'
 	match 'features' => 'static_pages#features'

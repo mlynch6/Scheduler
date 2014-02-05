@@ -21,6 +21,13 @@ describe "CompanyClass Pages:" do
 			should have_selector('li.active', text: 'New Company Class')
 		end
 		
+		it "only shows applicable fields", js: true do
+			log_in
+	  	visit new_company_class_path
+	
+			should_not have_selector('label', text: 'Piece')
+		end
+		
 		it "has only active Locations in dropdown" do
 			log_in
 			FactoryGirl.create(:location, account: current_account, name: 'Location A')
@@ -45,7 +52,7 @@ describe "CompanyClass Pages:" do
 			log_in
 			visit new_company_class_path(date: Time.zone.today.to_s)
 			
-			find_field('company_class_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
+			find_field('event_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
 		end
 		
 		context "with error" do
@@ -74,7 +81,7 @@ describe "CompanyClass Pages:" do
 		  	fill_in "Title", with: "Test Company Class"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
-		  	fill_in 'From', with: "10AM"
+		  	fill_in 'Start Time', with: "10AM"
 		  	fill_in 'Duration', with: 60
 		  	click_button 'Create'
 		
@@ -95,7 +102,7 @@ describe "CompanyClass Pages:" do
 		  	fill_in "Title", with: "Test Company Class"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
-		  	fill_in 'From', with: "9AM"
+		  	fill_in 'Start Time', with: "9AM"
 		  	fill_in 'Duration', with: 90
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -138,7 +145,7 @@ describe "CompanyClass Pages:" do
 				fill_in "Title", with: "Test Rehearsal"
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
-		  	fill_in 'From', with: "11AM"
+		  	fill_in 'Start Time', with: "11AM"
 		  	fill_in 'Duration', with: 120
 		  	select e1.full_name, from: "Invitees"
 				click_button 'Create'
@@ -170,8 +177,7 @@ describe "CompanyClass Pages:" do
 		it "has correct Navigation" do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
-			cclass = FactoryGirl.create(:company_class,
-					account: current_account,
+			cclass = FactoryGirl.create(:company_class, account: current_account,
 					location: location,
 					start_date: Time.zone.today)
 			visit edit_company_class_path(cclass)
@@ -180,11 +186,21 @@ describe "CompanyClass Pages:" do
 			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
+		it "only shows applicable fields", js: true do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			cclass = FactoryGirl.create(:company_class, account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+	  	visit edit_company_class_path(cclass)
+	
+			should_not have_selector('label', text: 'Piece')
+		end
+		
 	  it "record with error" do
 	  	log_in
 			location = FactoryGirl.create(:location, account: current_account)
-			cclass = FactoryGirl.create(:company_class,
-					account: current_account,
+			cclass = FactoryGirl.create(:company_class, account: current_account,
 					location: location,
 					start_date: Time.zone.today)
 	  	visit edit_company_class_path(cclass)
@@ -198,8 +214,7 @@ describe "CompanyClass Pages:" do
 		it "record with valid info saves company class" do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
-			cclass = FactoryGirl.create(:company_class,
-					account: current_account,
+			cclass = FactoryGirl.create(:company_class, account: current_account,
 					location: location,
 					start_date: Time.zone.today)
 			visit edit_company_class_path(cclass)

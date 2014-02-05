@@ -59,6 +59,12 @@ en:
         first_name: "First Name"
         last_name: "Last Name"
         active: "Status"
+      event:
+        start_at: "Start At"
+        end_at: "End At"
+        start_date: "Date"
+        start_time: "Start Time"
+        employee_ids: "Invitees"
       location:
         active: "Status"
       phone:
@@ -71,7 +77,6 @@ en:
         end_at: "End At"
         start_date: "Date"
         start_time: "Start Time"
-        end_time: "End Time"
         employee_ids: "Invitees"
       season:
         start_dt: "Start Date"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207144548) do
+ActiveRecord::Schema.define(:version => 20140117201845) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -100,19 +100,29 @@ ActiveRecord::Schema.define(:version => 20131207144548) do
 
   add_index "employees", ["account_id"], :name => "index_employees_on_account_id"
 
+  create_table "event_series", :force => true do |t|
+    t.string   "period",     :limit => 20, :null => false
+    t.date     "start_at",                 :null => false
+    t.date     "end_at",                   :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
   create_table "events", :force => true do |t|
-    t.integer  "account_id",                :null => false
-    t.string   "title",       :limit => 30, :null => false
-    t.string   "type",        :limit => 20, :null => false
-    t.integer  "location_id",               :null => false
-    t.datetime "start_at",                  :null => false
-    t.datetime "end_at",                    :null => false
+    t.integer  "account_id",                                         :null => false
+    t.string   "title",           :limit => 30,                      :null => false
+    t.string   "type",            :limit => 20, :default => "Event", :null => false
+    t.integer  "location_id",                                        :null => false
+    t.datetime "start_at",                                           :null => false
+    t.datetime "end_at",                                             :null => false
     t.integer  "piece_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
+    t.integer  "event_series_id"
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
   end
 
   add_index "events", ["account_id"], :name => "index_events_on_account_id"
+  add_index "events", ["event_series_id"], :name => "index_events_on_event_series_id"
   add_index "events", ["location_id"], :name => "index_events_on_location_id"
   add_index "events", ["piece_id"], :name => "index_events_on_piece_id"
 

@@ -1,12 +1,13 @@
-<% provide(:title, 'Edit Rehearsal') %>
+<% type = @event.type.underscore.humanize.titleize %>
+<% provide(:title, "Edit #{type}") %>
 <% provide(:header_current, 'Calendar') %>
-<% provide(:sidebar_current, 'Daily') %>
+<% provide(:sidebar_current, "Daily") %>
 
 <div class="page-header">
 	<h1><%= yield(:title) %></h1>
 </div>
 
-<%= form_for @rehearsal, builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for @event, as: :event, builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
 	<%= f.error_messages %>
 	<%= render 'form', :f => f %>
 	

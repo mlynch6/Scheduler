@@ -1,16 +1,18 @@
+# == Schema Information
 #
 # Table name: events
 #
-#  id          :integer          not null, primary key
-#  account_id  :integer          not null
-#  title       :string(30)       not null
-#  type        :string(20)       not null
-#  location_id :integer          not null
-#  start_at    :datetime         not null
-#  end_at      :datetime         not null
-#  piece_id    :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id              :integer          not null, primary key
+#  account_id      :integer          not null
+#  title           :string(30)       not null
+#  type            :string(20)       default("Event"), not null
+#  location_id     :integer          not null
+#  start_at        :datetime         not null
+#  end_at          :datetime         not null
+#  piece_id        :integer
+#  event_series_id :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 class CompanyClass < Event
@@ -20,6 +22,10 @@ class CompanyClass < Event
 	validate :check_contracted_end, :if => "start_time.present? && duration.present?"
 	validate :check_duration_increments, :if => "start_at.present? && end_at.present?"
 
+	def break?
+		true
+	end
+	
 	def break_duration
 		contract.class_break_min if contract.present?
 	end

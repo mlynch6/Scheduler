@@ -22,6 +22,7 @@ thead { background: $panel-default-border; }
 .pagination { margin: 0px; padding-left: 20px;}
 
 label:after { content: " :"; }
+.checkbox label:after, label.checkbox-inline:after { content: none }
 .required:before { color: red; font-size: 1.2em; content: "* "; }
 
 /*** SIGN IN ***/

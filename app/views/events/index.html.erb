@@ -12,13 +12,7 @@
 	<% if @events.has_key?(location) %>
 
 		<% @events[location].each do |event| %>
-			<% if event.type == "Rehearsal" %>
-				<%= render 'rehearsal', :rehearsal => event %>
-			<% elsif event.type == "CompanyClass" %>
-				<%= render 'company_class', :cclass => event %>
-			<% elsif event.type == "CostumeFitting" %>
-				<%= render 'costume_fitting', :fitting => event %>
-			<% end %>
+			<%= render 'event', :event => event %>
 		<% end %>
 		
 	<% end %>
