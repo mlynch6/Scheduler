@@ -34,32 +34,6 @@ table.calendar {
 			border-bottom: 1px solid $calendarBorder;
 		}
 	}
-	
-	.cal-blue {
-		background: #dfeffc;
-		border: 2px solid #c5dbec;
-	}
-	.cal-yellow {
-		background: #fff9e5;
-		border: 2px solid #fcefa1;
-	}
-	.cal-green {
-		background: #f1fbe5;
-		border: 2px solid #BADFA2;
-	}
-	.cal-red {
-		background: #E5A6B1;
-		border: 2px solid #BE7A84;
-	}
-	.cal-brown {
-		background: #cbc7bd;
-		border: 2px solid #654b24;
-	}
-	.cal-grey {
-		background: #c9c9c9;
-		border: 2px solid #aaaaaa;
-	}
-	
 }
   
 #calendar-weekly, #calendar-daily {
@@ -121,5 +95,32 @@ table.calendar {
 			width: 30%;
 			text-align: right;
 		}
+	}
+	
+	.cal-blue {
+		background-color: #D9EDF7;
+		border-color: #BCE8F1;
+		.title { color: #31708F; }
+	}
+	.cal-yellow {
+		background-color: #FCF8E3;
+    border-color: #FAEBCC;
+    .title { color: #8A6D3B; }
+	}
+	.cal-green {
+		background-color: #DFF0D8;
+    border-color: #D6E9C6;
+    .title { color: #3C763D; }
+	}
+	.cal-red {
+		background-color: #F2DEDE;
+    border-color: #EBCCD1;
+    .title { color: #A94442; }
+	}
+	.cal-brown {
+		background-color: #cbc7bd;
+    border-color: #654b24;
+    .title { color: #654b24; }
+		background: #cbc7bd;
 	}
 }

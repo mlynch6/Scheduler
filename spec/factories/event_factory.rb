@@ -17,7 +17,6 @@
 
 FactoryGirl.define do
 	factory :event do
-		type							"Event"
 		account
 		sequence(:title)	{ |n| "Event #{n}" }
 		location

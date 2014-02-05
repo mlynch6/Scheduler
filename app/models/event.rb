@@ -16,11 +16,10 @@
 #
 
 class Event < ActiveRecord::Base
-	attr_accessible :title, :location_id, :start_date, :start_time, :duration, :piece_id
+	attr_accessible :event_type, :title, :location_id, :start_date, :start_time, :duration, :piece_id
 	attr_accessible :employee_ids
+	attr_accessor :event_type
 	attr_writer :start_date, :start_time, :duration
-	#event series fields
-	attr_accessor :period, :end_repeat_on
 
 	belongs_to :account
 	belongs_to :location
@@ -43,7 +42,8 @@ class Event < ActiveRecord::Base
 
 	default_scope lambda { order('start_at ASC').where(:account_id => Account.current_id) }
 	scope :for_daily_calendar, lambda { |date| joins(:location).where(start_at: date.beginning_of_day..date.end_of_day).select("events.*, locations.name as location_name").order("locations.name") }
-	scope :for_week, lambda { |date| where(start_at: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day) } #Week starts on Monday
+	# Week starts on Monday
+	scope :for_week, lambda { |date| where(start_at: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day) }
 	scope :for_monthly_calendar, lambda { |date| where(start_at: date.beginning_of_month.beginning_of_week(:sunday)..date.end_of_month.end_of_week(:sunday)) }
 		
 	def start_date
@@ -64,23 +64,11 @@ class Event < ActiveRecord::Base
 		tmp
 	end
 	
-	def overlapping
-		events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod)", {
-									:stime => start_at,
-									:etime => end_at,
-									:sod => start_at.beginning_of_day,
-									:eod => end_at.end_of_day })
-		events.where("id <> :id", { :id => id }) unless new_record?
+	def break?
+		false
 	end
 	
-	def double_booked_employees_warning
-		double_booked_employees = Employee.joins(:invitations).where(id: self.employees, invitations: {event_id: self.overlapping}).uniq_by(&:id)
-		if double_booked_employees.any?
-			employee_list = double_booked_employees.map { |emp| emp.full_name }.join(", ")
-			return "The following people are double booked during this time: "+employee_list
-		end
-	end
-	
+	# Used for STI - get correct Model based upon type
 	def self.new_with_subclass(type, params = nil)
 		klass = (type || 'Event')
 		if defined? klass.constantize
@@ -90,6 +78,16 @@ class Event < ActiveRecord::Base
 		end
 	rescue #invalid type
 		Event.new(params)
+	end
+	
+	# Warnings
+	def warnings
+		w = Hash.new
+		
+		emp_double_booked_msg = warn_when_employee_double_booked 
+		w[:emp_double_booked] = emp_double_booked_msg if emp_double_booked_msg.present?
+		
+		return w
 	end
 	
 protected
@@ -115,8 +113,9 @@ protected
 	end
 	
 	def save_start_at
+		sdt = (@start_date.kind_of? String) ? Date.strptime(@start_date, '%m/%d/%Y') : @start_date
 		stm = (@start_time.kind_of? String) ? @start_time : @start_time.to_s(:db)
-		self.start_at = Time.zone.parse(@start_date.to_s(:db) +" "+ stm)
+		self.start_at = Time.zone.parse(sdt.to_s(:db) +" "+ stm)
 	rescue ArgumentError
 		errors.add :start_at, "cannot be parsed"
 	end
@@ -132,16 +131,37 @@ protected
 		@contract ||= AgmaProfile.find_by_account_id(Account.current_id)
 	end
 	
-	#Used by Company Class & Rehearsal
+	def warn_when_employee_double_booked
+		double_booked_employees = Employee.joins(:invitations).where(id: self.employees, invitations: {event_id: self.overlapping}).uniq_by(&:id)
+		if double_booked_employees.any?
+			employee_list = double_booked_employees.map { |emp| emp.full_name }.join(", ")
+			return "The following people are double booked during this time: "+employee_list
+		end
+	end
+	
+	# Used by Company Class & Rehearsal
 	def check_contracted_start
-		if contract.present? && Time.zone.parse(contract.rehearsal_start_time) > Time.zone.parse(start_time.to_s(:hr12))
+		stm = (@start_time.kind_of? String) ? @start_time : @start_time.to_s(:hr12)
+		if contract.present? && Time.zone.parse(contract.rehearsal_start_time) > Time.zone.parse(stm)
 			errors.add(:start_time, "must be on or after the contracted start time of #{contract.rehearsal_start_time}")
 		end
 	end
 	
 	def check_contracted_end
-		if contract.present? && Time.zone.parse(contract.rehearsal_end_time) < (Time.zone.parse(start_time.to_s(:hr12)) + duration.minutes)
+		stm = (@start_time.kind_of? String) ? @start_time : @start_time.to_s(:hr12)
+		if contract.present? && Time.zone.parse(contract.rehearsal_end_time) < (Time.zone.parse(stm) + duration.minutes)
 			errors.add(:duration, "must end on or before the contracted end time of #{contract.rehearsal_end_time}")
+		end
+	end
+	
+	def overlapping
+		if start_at.present? && end_at.present?
+			events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod)", {
+									:stime => start_at,
+									:etime => end_at,
+									:sod => start_at.beginning_of_day,
+									:eod => end_at.end_of_day })
+			events.where("id <> :id", { :id => id }) unless new_record?
 		end
 	end
 end

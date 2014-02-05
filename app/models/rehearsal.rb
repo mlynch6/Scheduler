@@ -24,6 +24,10 @@ class Rehearsal < Event
 	validate :check_company_class_break, :if => "start_date.present? && start_time.present?"
 	validates :piece_id,	presence: true
 
+	def break?
+		true
+	end
+	
 	def break_duration
 		contract.rehearsal_break_min_per_hr if contract.present?
 	end
@@ -33,6 +37,19 @@ class Rehearsal < Event
 			break_start = end_at - break_duration*60
 			return "#{break_start.to_s(:hr12)} to #{end_at.to_s(:hr12)}"
 		end
+	end
+	
+	# Warnings
+	def warnings
+		w = super
+		
+		emp_max_hr_per_day_msg = warn_when_emp_over_hrs_per_day
+		w[:emp_max_hr_per_day] = emp_max_hr_per_day_msg if emp_max_hr_per_day_msg.present?
+		
+		emp_max_hr_per_week_msg = warn_when_emp_over_hrs_per_week
+		w[:emp_max_hr_per_week] = emp_max_hr_per_week_msg if emp_max_hr_per_week_msg.present?
+		
+		return w
 	end
 	
 protected
@@ -53,6 +70,51 @@ protected
 			
 			if break_start <= start_at && start_at < break_end
 				errors.add(:start_time, "cannot be during the #{contract.class_break_min} min break following the Company Class")
+			end
+		end
+	end
+	
+	def warn_when_emp_over_hrs_per_day
+		if contract.present?
+			dancers = employees.where(:role => 'AGMA Dancer')
+			dancers_above_max = []
+			
+			dancers.each do |dancer|
+				#Find rehearsals for specified date
+				rehearsals = dancer.events.for_daily_calendar(start_at.to_date).where(:events => { :type => 'Rehearsal'})
+				total_min = 0
+				rehearsals.each do |rehearsal|
+					total_min += rehearsal.duration
+				end
+				
+				dancers_above_max << dancer if total_min > (contract.rehearsal_max_hrs_per_day*60)
+			end
+			
+			if dancers_above_max.any?
+				overtime_list = dancers_above_max.map { |emp| emp.full_name }.join(", ")
+				return "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_day} hrs/day: "+overtime_list
+			end
+		end
+	end
+	
+	def warn_when_emp_over_hrs_per_week
+		if contract.present?
+			dancers = employees.where(:role => 'AGMA Dancer')
+			dancers_above_max = []
+			
+			dancers.each do |dancer|
+				#Find rehearsals for specified date
+				rehearsals = dancer.events.for_week(start_at.to_date).where(:events => { :type => 'Rehearsal'})
+				total_min = 0
+				rehearsals.each do |rehearsal|
+					total_min += rehearsal.duration
+				end
+				dancers_above_max << dancer if total_min > (contract.rehearsal_max_hrs_per_week*60)
+			end
+			
+			if dancers_above_max.any?
+				overtime_list = dancers_above_max.map { |emp| emp.full_name }.join(", ")
+				return "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_week} hrs/week: "+overtime_list
 			end
 		end
 	end

@@ -87,11 +87,32 @@ shared_examples "a member of the Artistic Staff" do
 		it { should allow(:casts, :destroy) }
 	end
 	
+	context "events" do
+		it { should allow(:events, :new) }
+		it { should allow(:events, :create) }
+		it { should allow(:events, :edit) }
+		it { should allow(:events, :update) }
+	end
+	
 	context "rehearsals" do
 		it { should allow(:rehearsals, :new) }
 		it { should allow(:rehearsals, :create) }
 		it { should allow(:rehearsals, :edit) }
 		it { should allow(:rehearsals, :update) }
+	end
+	
+	context "company_classes" do
+		it { should allow(:company_classes, :new) }
+		it { should allow(:company_classes, :create) }
+		it { should allow(:company_classes, :edit) }
+		it { should allow(:company_classes, :update) }
+	end
+	
+	context "costume_fittings" do
+		it { should allow(:costume_fittings, :new) }
+		it { should allow(:costume_fittings, :create) }
+		it { should allow(:costume_fittings, :edit) }
+		it { should allow(:costume_fittings, :update) }
 	end
 end
 
@@ -382,16 +403,6 @@ describe Permission do
 		it { should_not allow(:employees, :destroy) }
 		it { should_not allow(:locations, :destroy) }
 		it { should_not allow(:pieces, :destroy) }
-		
-		it { should allow(:company_classes, :new) }
-		it { should allow(:company_classes, :create) }
-		it { should allow(:company_classes, :edit) }
-		it { should allow(:company_classes, :update) }
-		
-		it { should allow(:costume_fittings, :new) }
-		it { should allow(:costume_fittings, :create) }
-		it { should allow(:costume_fittings, :edit) }
-		it { should allow(:costume_fittings, :update) }
 		
 		context "for subscription_plans" do
 			it { should_not allow(:subscription_plans, :index) }

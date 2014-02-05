@@ -33,5 +33,11 @@
 				<%= new_link "New Costume Fitting", new_costume_fitting_path(date: @date) %>
 			</li>
 		<% end %>
+		
+		<% if allow? "events", "new" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "New Event" %>">
+				<%= new_link "New Event", new_event_path(date: @date) %>
+			</li>
+		<% end %>
 	</ul>
 </div>

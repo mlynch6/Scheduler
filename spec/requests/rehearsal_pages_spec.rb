@@ -35,7 +35,7 @@ describe "Rehearsal Pages:" do
 			log_in
 			visit new_rehearsal_path(date: Time.zone.today.to_s)
 			
-			find_field('rehearsal_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
+			find_field('event_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
 		end
 		
 		context "with error" do
@@ -66,7 +66,7 @@ describe "Rehearsal Pages:" do
 		  	fill_in "Title", with: "Test Rehearsal"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2012"
-		  	fill_in 'From', with: "9AM"
+		  	fill_in 'Start Time', with: "9AM"
 		  	fill_in 'Duration', with: 150
 		  	select piece.name, from: "Piece"
 				click_button 'Create'
@@ -74,11 +74,9 @@ describe "Rehearsal Pages:" do
 				should have_selector('div.alert-success')
 				should have_selector('title', text: 'Daily Schedule')
 				
-				should have_selector('div.rehearsal')
 				should have_content("Test Rehearsal")
 				should have_content(location.name)
-				should have_content("9:00 AM")
-				should have_content("11:30 AM")
+				should have_content("9:00 AM to 11:30 AM")
 				should have_content(piece.name)
 			end
 			
@@ -92,7 +90,7 @@ describe "Rehearsal Pages:" do
 		  	fill_in "Title", with: "Test Rehearsal"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2012"
-		  	fill_in 'From', with: "9AM"
+		  	fill_in 'Start Time', with: "9AM"
 		  	fill_in 'Duration', with: 150
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
@@ -101,11 +99,9 @@ describe "Rehearsal Pages:" do
 				should have_selector('div.alert-success')
 				should have_selector('title', text: 'Daily Schedule')
 				
-				should have_selector('div.rehearsal')
 				should have_content("Test Rehearsal")
 				should have_content(location.name)
-				should have_content("9:00 AM")
-				should have_content("11:30 AM")
+				should have_content("9:00 AM to 11:30 AM")
 				should have_content(piece.name)
 			end
 		end
@@ -142,7 +138,7 @@ describe "Rehearsal Pages:" do
 				fill_in "Title", with: "Test Rehearsal"
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
-		  	fill_in 'From', with: "11AM"
+		  	fill_in 'Start Time', with: "11AM"
 		  	fill_in 'Duration', with: 120
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
@@ -159,7 +155,7 @@ describe "Rehearsal Pages:" do
 				loc = FactoryGirl.create(:location, account: current_account)
 				loc2 = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
-				e1 = FactoryGirl.create(:employee, account: current_account, role: 'AGMA Dancer')
+				e1 = FactoryGirl.create(:dancer, account: current_account)
 				
 				r_5hr = FactoryGirl.create(:rehearsal, account: current_account,
 								location: loc,
@@ -173,7 +169,7 @@ describe "Rehearsal Pages:" do
 				fill_in "Title", with: "Test Rehearsal"
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
-		  	fill_in 'From', with: "2 PM"
+		  	fill_in 'Start Time', with: "2 PM"
 		  	fill_in 'Duration', with: 90
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"
@@ -189,7 +185,7 @@ describe "Rehearsal Pages:" do
 				loc = FactoryGirl.create(:location, account: current_account)
 				loc2 = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
-				e1 = FactoryGirl.create(:employee, account: current_account, role: 'AGMA Dancer')
+				e1 = FactoryGirl.create(:dancer, account: current_account)
 				
 				date = Date.new(2013,1,7)
 				for i in 0..4 do
@@ -206,7 +202,7 @@ describe "Rehearsal Pages:" do
 				fill_in "Title", with: "Test Rehearsal"
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: date + 5.days
-		  	fill_in 'From', with: "3 PM"
+		  	fill_in 'Start Time', with: "3 PM"
 		  	fill_in 'Duration', with: 30
 		  	select piece.name, from: "Piece"
 		  	select e1.full_name, from: "Invitees"

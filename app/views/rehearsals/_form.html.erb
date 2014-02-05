@@ -1,7 +1,0 @@
-<%= f.text_field :title %>
-<%= f.select :location_id, @locations, { :include_blank => true } %>
-<%= f.date_field :start_date %>
-<%= f.time_field :start_time, :label => 'From' %>
-<%= f.number_field :duration, append: 'min', field_size: 'col-md-3' %>
-<%= f.select :piece_id, @pieces, { :include_blank => true } %>
-<%= f.select :employee_ids, @employees, {}, { :multiple => true } %>

@@ -40,6 +40,7 @@ describe CostumeFitting do
   context "(Valid)" do
   	it "with minimum attributes" do
   		should be_valid
+  		fitting.warnings.count.should == 0
   	end
   	
   	it "without a title - title will be defaulted to 'Costume Fitting'" do
@@ -66,6 +67,10 @@ describe CostumeFitting do
   context "correct value is returned for" do  
 	  it "type" do
 	  	fitting.reload.type.should == 'CostumeFitting'
+	  end
+	  
+	  it "break?" do
+			fitting.break?.should be_false
 	  end
 	end
 end

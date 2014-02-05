@@ -1,8 +1,0 @@
-<%= f.text_field :title, 
-			:placeholder => 'Company Class',
-			:help => content_tag(:span, 'Info', class: "label label-info")+" If you do not enter a title, 'Company Class' will be used" %>
-<%= f.select :location_id, @locations, { :include_blank => true } %>
-<%= f.date_field :start_date %>
-<%= f.time_field :start_time, :label => 'From' %>
-<%= f.number_field :duration, append: 'min', field_size: 'col-md-3' %>
-<%= f.select :employee_ids, @employees, {}, { :multiple => true } %>

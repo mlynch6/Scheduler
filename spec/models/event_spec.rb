@@ -36,6 +36,7 @@ describe Event do
 
 	context "accessible attributes" do
 		it { should respond_to(:title) }
+		it { should respond_to(:event_type) }
   	it { should respond_to(:type) }
   	it { should respond_to(:start_date) }
   	it { should respond_to(:start_time) }
@@ -44,8 +45,8 @@ describe Event do
   	it { should respond_to(:end_time) }
   	it { should respond_to(:duration) }
   	it { should respond_to(:piece_id) }
-  	it { should respond_to(:period) }
-  	it { should respond_to(:end_repeat_on) }
+  	it { should respond_to(:break?) }
+  	it { should respond_to(:warnings) }
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:location) }
@@ -96,6 +97,7 @@ describe Event do
   context "(Valid)" do
   	it "with minimum attributes" do
   		should be_valid
+  		event.warnings.count.should == 0
   	end
   end
 
@@ -361,108 +363,82 @@ describe Event do
 			event.reload.end_at.to_date.to_s(:db).should == "2012-01-01"
 			event.reload.end_at.to_s(:hr12).should == "10:00 AM"
 	  end
+	  
+	  it "break?" do
+			event.break?.should be_false
+	  end
   end
   
-  context "(Methods)" do	  
-	  context "overlapping" do
-	  	let!(:e) { FactoryGirl.create(:event,
-											account: account,
-											location: location,
-											start_date: Date.new(2012,1,2),
-											start_time: "1PM",
-											duration: 60) }
-											
-	  	let!(:location2) { FactoryGirl.create(:location, account: account) }
-	  	let!(:location3) { FactoryGirl.create(:location, account: account) }
-	  	let!(:overlap_start) { FactoryGirl.create(:event,
-											account: account,
-											location: location2,
-											start_date: Date.new(2012,1,2),
-											start_time: "12:15 PM",
-											duration: 60) }
-			let!(:overlap_subset) { FactoryGirl.create(:event,
-											account: account,
-											location: location2,
-											start_date: Date.new(2012,1,2),
-											start_time: "1:15 PM",
-											duration: 30) }
-			let!(:overlap_end) { FactoryGirl.create(:event,
-											account: account,
-											location: location2,
-											start_date: Date.new(2012,1,2),
-											start_time: "1:45 PM",
-											duration: 60) }
-			let!(:overlap_entire) { FactoryGirl.create(:event,
-											account: account,
-											location: location3,
-											start_date: Date.new(2012,1,2),
-											start_time: "12:00 PM",
-											duration: 155) }
-			let!(:before_event) { FactoryGirl.create(:event,
-											account: account,
-											location: location,
-											start_date: Date.new(2012,1,2),
-											start_time: "12:30 PM",
-											duration: 30) }
-			let!(:after_event) { FactoryGirl.create(:event,
-											account: account,
-											location: location,
-											start_date: Date.new(2012,1,2),
-											start_time: "2:00 PM",
-											duration: 90) }
-			let!(:day_before) { FactoryGirl.create(:event,
-											account: account,
-											location: location,
-											start_date: Date.new(2012,1,1)) }
-			let!(:day_after) { FactoryGirl.create(:event,
-											account: account,
-											location: location,
-											start_date: Date.new(2012,1,3)) }
-			
-			it "shows events that have an overlap" do
-				e.overlapping.should include(overlap_start)
-				e.overlapping.should include(overlap_subset)
-				e.overlapping.should include(overlap_end)
-				e.overlapping.should include(overlap_entire)
-				
-				e.overlapping.should_not include(e)
-				e.overlapping.should_not include(before_event)
-				e.overlapping.should_not include(after_event)
-				e.overlapping.should_not include(day_before)
-				e.overlapping.should_not include(day_after)
-			end
-	  end
-	  
-	  context "double_booked_employees_warning" do
-			let(:location2) { FactoryGirl.create(:location, account: account) }
-			let(:e1) { FactoryGirl.create(:employee, account: account) }
-			let(:e2) { FactoryGirl.create(:employee, account: account) }
-			let(:e3) { FactoryGirl.create(:employee, account: account) }
-			let!(:event1) { FactoryGirl.create(:event, account: account, 
-													location: location,
-													start_date: Time.zone.today,
-													start_time: "8AM",
-													duration: 30) }
-			let!(:i1) { FactoryGirl.create(:invitation, event: event1, employee: e1) }
-			let!(:i2) { FactoryGirl.create(:invitation, event: event1, employee: e2) }
-			let!(:i3) { FactoryGirl.create(:invitation, event: event1, employee: e3) }
-			
-			let!(:event2) { FactoryGirl.create(:event, account: account, 
-													location: location,
-													start_date: Time.zone.today,
-													start_time: "9AM",
-													duration: 30) }
-			let!(:i4) { FactoryGirl.create(:invitation, event: event2, employee: e1) }
-			
-			it "gives warning message for double booked employees" do
-				event.start_date = Time.zone.today
-				event.start_time = "8AM"
-				event.duration = 90
-				event.employee_ids = [e1.id]
-				event.save
-				event.double_booked_employees_warning.should == "The following people are double booked during this time: #{e1.full_name}"
-			end
-		end
+  context "(Methods)" do	 
+  	# Moved to private 
+#	  context "overlapping" do
+#	  	let!(:e) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "1PM",
+#											duration: 60) }
+#											
+#	  	let!(:location2) { FactoryGirl.create(:location, account: account) }
+#	  	let!(:location3) { FactoryGirl.create(:location, account: account) }
+#	  	let!(:overlap_start) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location2,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "12:15 PM",
+#											duration: 60) }
+#			let!(:overlap_subset) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location2,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "1:15 PM",
+#											duration: 30) }
+#			let!(:overlap_end) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location2,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "1:45 PM",
+#											duration: 60) }
+#			let!(:overlap_entire) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location3,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "12:00 PM",
+#											duration: 155) }
+#			let!(:before_event) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "12:30 PM",
+#											duration: 30) }
+#			let!(:after_event) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "2:00 PM",
+#											duration: 90) }
+#			let!(:day_before) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,1)) }
+#			let!(:day_after) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,3)) }
+#			
+#			it "shows events that have an overlap" do
+#				e.overlapping.should include(overlap_start)
+#				e.overlapping.should include(overlap_subset)
+#				e.overlapping.should include(overlap_end)
+#				e.overlapping.should include(overlap_entire)
+#				
+#				e.overlapping.should_not include(e)
+#				e.overlapping.should_not include(before_event)
+#				e.overlapping.should_not include(after_event)
+#				e.overlapping.should_not include(day_before)
+#				e.overlapping.should_not include(day_after)
+#			end
+#	  end
 		
 		context "new_with_subclass" do
 			it "creates a new Company Class" do
@@ -660,6 +636,39 @@ describe Event do
 			
 			it "returns the records for the month plus days from previous/future month that would appear on a calendar" do
 				Event.for_monthly_calendar(DateTime.parse("2012-12-7 09:00:00")).should == [prev_month_good, prev_month_good2, current_month_good, current_month_good2, current_month_good3, next_month_good, next_month_good2]
+			end
+		end
+	end
+	
+	context "(Warnings)" do
+		context "when employee is double booked" do
+			let(:location2) { FactoryGirl.create(:location, account: account) }
+			let(:e1) { FactoryGirl.create(:employee, account: account) }
+			let(:e2) { FactoryGirl.create(:employee, account: account) }
+			let(:e3) { FactoryGirl.create(:employee, account: account) }
+			let!(:event1) { FactoryGirl.create(:event, account: account, 
+													location: location2,
+													start_date: Time.zone.today,
+													start_time: "8AM",
+													duration: 30,
+													employee_ids: [e1.id, e2.id, e3.id]) }
+			
+			let!(:event2) { FactoryGirl.create(:event, account: account, 
+													location: location2,
+													start_date: Time.zone.today,
+													start_time: "9AM",
+													duration: 30,
+													employee_ids: [e1.id]) }
+			
+			it "gives warning message" do
+				event.start_date = Time.zone.today
+				event.start_time = "8AM"
+				event.duration = 90
+				event.employee_ids = [e1.id]
+				event.save
+				
+				event.warnings.count.should == 1
+				event.warnings[:emp_double_booked].should == "The following people are double booked during this time: #{e1.full_name}"
 			end
 		end
 	end

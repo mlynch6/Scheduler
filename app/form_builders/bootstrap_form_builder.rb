@@ -2,7 +2,7 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 	# Based on  potenza / bootstrap_form
 	# Bootstrap 3
 	# Available Fields: text_field, select, time_zone_select, telephone_field, phone_field, password_field
-	#		email_field, number_field
+	#		email_field, number_field, checkbox
 	#		date_field, time_field, currency_field, static_control, submit, submit_primary
 
 	FORM_HELPERS = %w{text_field select time_zone_select telephone_field phone_field password_field email_field number_field} 
@@ -53,6 +53,21 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 	  args = set_default_options('currency_field', *args)
 		
 		number_field(name, *args)
+	end
+	
+	def check_box(name, options = {}, checked_value = '1', unchecked_value = '0')
+		options = options.symbolize_keys!
+		
+		html = super(name, options.except(:label, :help, :inline), checked_value, unchecked_value)
+		html << ' ' + (options[:label] || object.class.human_attribute_name(name) || name.to_s.humanize)
+			
+		if options[:inline]
+			label(name, html, class: 'checkbox-inline')
+		else
+			content_tag(:div, class: 'checkbox') do
+				label(name, html)
+			end
+		end
 	end
 
 	def static_control(name, options = {}, &block)

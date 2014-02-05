@@ -33,6 +33,10 @@ FactoryGirl.define do
 			role					"Instructor"
 		end
 		
+		factory :dancer do
+			role					"AGMA Dancer"
+		end
+		
 		factory :employee_w_addresses do
 			after_create { |emp| FactoryGirl.create_list(:address_employee, 3, addressable: emp)}
 		end

@@ -22,6 +22,10 @@ class CompanyClass < Event
 	validate :check_contracted_end, :if => "start_time.present? && duration.present?"
 	validate :check_duration_increments, :if => "start_at.present? && end_at.present?"
 
+	def break?
+		true
+	end
+	
 	def break_duration
 		contract.class_break_min if contract.present?
 	end

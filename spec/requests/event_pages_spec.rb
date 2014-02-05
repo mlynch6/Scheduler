@@ -3,6 +3,275 @@ require 'spec_helper'
 describe "Event Pages:" do
 	subject { page }
   
+  context "#new" do
+  	it "has correct title" do
+			log_in
+	  	click_link 'Calendar'
+	  	visit new_event_path
+	  	
+	  	should have_selector('title', text: 'New Event')
+		  should have_selector('h1', text: 'New Event')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			visit new_event_path
+	
+			should have_selector('li.active', text: 'Calendar')
+			should have_selector('li.active', text: 'New Event')
+		end
+		
+		it "only shows applicable fields", js: true do
+			log_in
+	  	visit new_event_path
+	
+			should_not have_selector('label', text: 'Piece')
+		end
+		
+		it "has only active Locations in dropdown" do
+			log_in
+			FactoryGirl.create(:location, account: current_account, name: 'Location A')
+			FactoryGirl.create(:location_inactive, account: current_account, name: 'Location B')
+			visit new_event_path
+  		
+			should have_selector('option', text: 'Location A')
+			should_not have_selector('option', text: 'Location B')
+		end
+		
+		it "has only active Employees in dropdown" do
+			log_in
+			FactoryGirl.create(:employee, account: current_account, last_name: 'Parker', first_name: 'Peter')
+			FactoryGirl.create(:employee_inactive, account: current_account, last_name: 'Kent', first_name: 'Clark')
+			visit new_event_path
+  		
+			should have_selector('option', text: 'Peter Parker')
+			should_not have_selector('option', text: 'Clark Kent')
+		end
+		
+		it "defaults Start Date when date is sent in URL" do
+			log_in
+			visit new_event_path(date: Time.zone.today.to_s)
+			
+			find_field('event_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
+		end
+		
+		context "with error" do
+			it "shows error message" do
+				log_in
+				visit new_event_path
+		  	click_button 'Create'
+		
+				should have_selector('div.alert-danger')
+			end
+			
+			it "doesn't create Event" do
+				log_in
+				visit new_event_path
+		
+				expect { click_button 'Create' }.not_to change(Event, :count)
+			end
+		end
+	
+		context "with valid info" do
+			it "creates new Event without Invitees" do
+				log_in
+				location = FactoryGirl.create(:location, account: current_account)
+				visit new_event_path
+	  		
+		  	fill_in "Title", with: "Test Event"
+		  	select location.name, from: "Location"
+		  	fill_in 'Date', with: "01/31/2013"
+		  	fill_in 'Start Time', with: "10AM"
+		  	fill_in 'Duration', with: 60
+		  	click_button 'Create'
+		
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Daily Schedule')
+				
+				should have_content("Test Event")
+				should have_content(location.name)
+				should have_content("10:00 AM to 11:00 AM")
+			end
+			
+			it "creates new Event with Invitees" do
+				log_in
+				location = FactoryGirl.create(:location, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account)
+				visit new_event_path
+	  		
+		  	fill_in "Title", with: "Test Event"
+		  	select location.name, from: "Location"
+		  	fill_in 'Date', with: "01/31/2013"
+		  	fill_in 'Start Time', with: "9AM"
+		  	fill_in 'Duration', with: 90
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Create'
+		
+				should have_selector('div.alert-success')
+				should have_selector('title', text: 'Daily Schedule')
+				
+				should have_content("Test Event")
+				should have_content(location.name)
+				should have_content("9:00 AM to 10:30 AM")
+			end
+		end
+		
+		context "shows warning" do			
+			it "when employee is double booked" do
+				log_in
+				loc1 = FactoryGirl.create(:location, account: current_account)
+				loc2 = FactoryGirl.create(:location, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account)
+				e2 = FactoryGirl.create(:employee, account: current_account)
+				e3 = FactoryGirl.create(:employee, account: current_account)
+				
+				event1 = FactoryGirl.create(:event, account: current_account,
+								location: loc1,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								duration: 60)
+				FactoryGirl.create(:invitation, event: event1, employee: e1)
+				FactoryGirl.create(:invitation, event: event1, employee: e2)
+				FactoryGirl.create(:invitation, event: event1, employee: e3)
+				
+				event2 = FactoryGirl.create(:event, account: current_account,
+								location: loc1,
+								start_date: Time.zone.today,
+								start_time: "12 PM",
+								duration: 60)
+				FactoryGirl.create(:invitation, event: event2, employee: e1)
+				
+				visit new_event_path
+				fill_in "Title", with: "Test Event"
+		  	select loc2.name, from: "Location"
+		  	fill_in 'Date', with: Time.zone.today
+		  	fill_in 'Start Time', with: "11AM"
+		  	fill_in 'Duration', with: 120
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Create'
+		
+				should have_selector('div.alert-warning', text: "people are double booked")
+				should have_selector('div.alert-warning', text: e1.full_name)
+				should_not have_selector('div.alert-warning', text: e2.full_name)
+				should_not have_selector('div.alert-warning', text: e3.full_name)
+			end
+		end
+	end
+	
+	context "#edit" do
+		it "has correct title" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			event = FactoryGirl.create(:event, account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+	  	click_link 'Calendar'
+	  	click_link 'Daily Schedule'
+	  	click_link 'Edit'
+	  	
+	  	should have_selector('title', text: 'Edit Event')
+			should have_selector('h1', text: 'Edit Event')
+		end
+		
+		it "has correct Navigation" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			event = FactoryGirl.create(:event, account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+	  	visit edit_event_path(event)
+	
+			should have_selector('li.active', text: 'Calendar')
+			should have_selector('li.active', text: 'Daily Schedule')
+		end
+		
+		it "only shows applicable fields", js: true do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			event = FactoryGirl.create(:event, account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+	  	visit edit_event_path(event)
+	
+			should_not have_selector('label', text: 'Piece')
+		end
+		
+	  it "record with error" do
+	  	log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			event = FactoryGirl.create(:event, account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+	  	visit edit_event_path(event)
+	  	
+	  	fill_in "Title", with: ""
+	  	click_button 'Update'
+	
+			should have_selector('div.alert-danger')
+		end
+	 
+		it "record with valid info saves record" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			event = FactoryGirl.create(:event, account: current_account,
+					location: location,
+					start_date: Time.zone.today)
+			visit edit_event_path(event)
+	  	
+	  	new_title = Faker::Lorem.word
+			fill_in "Title", with: new_title
+			click_button 'Update'
+	
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'Daily Schedule')
+			should have_content(new_title)
+		end
+		
+		context "with warning" do			
+			it "shows warning when employee is double booked" do
+			# Works in browser
+				log_in
+				loc1 = FactoryGirl.create(:location, account: current_account)
+				loc2 = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				e1 = FactoryGirl.create(:employee, account: current_account)
+				e2 = FactoryGirl.create(:employee, account: current_account)
+				e3 = FactoryGirl.create(:employee, account: current_account)
+				
+				r1 = FactoryGirl.create(:event, account: current_account,
+								location: loc1,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								duration: 60)
+				FactoryGirl.create(:invitation, event: r1, employee: e1)
+				FactoryGirl.create(:invitation, event: r1, employee: e2)
+				FactoryGirl.create(:invitation, event: r1, employee: e3)
+				
+				r2 = FactoryGirl.create(:event, account: current_account,
+								location: loc1,
+								start_date: Time.zone.today,
+								start_time: "12 PM",
+								duration: 60)
+				FactoryGirl.create(:invitation, event: r2, employee: e1)
+				
+				r3 = FactoryGirl.create(:event, account: current_account,
+								location: loc2,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								duration: 120)
+				
+				visit edit_event_path(r3)
+		  	select e1.full_name, from: "Invitees"
+				click_button 'Update'
+		
+				should have_selector('div.alert-warning', text: "people are double booked")
+				should have_selector('div.alert-warning', text: e1.full_name)
+				should_not have_selector('div.alert-warning', text: e2.full_name)
+				should_not have_selector('div.alert-warning', text: e3.full_name)
+			end
+		end
+	end
+  
   context "#index" do
   	it "has correct title & headers" do
 			log_in
@@ -190,51 +459,9 @@ describe "Event Pages:" do
 			should have_link('New Costume Fitting')
 		end
 		
-		describe "sidenav calendar" do
-			let(:username) { "pmartin#{DateTime.now.seconds_since_midnight}" }
-    	before do
-    		visit root_path
-				click_link "Pricing & Signup"
-				click_link "Sign Up"
-    		
-    		fill_in "Company", with: "Event Sidenav Calendar #{Time.now}"
-    		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
-    		fill_in "Phone #", with: "414-543-1000"
-		  	
-		  	fill_in "Address", with: Faker::Address.street_address
-				fill_in "Address 2", with: Faker::Address.street_address
-				fill_in "City", with: Faker::Address.city
-				select "New York", from: "State"
-				fill_in "Zip Code", with: Faker::Address.zip.first(5)
-    		
-    		fill_in "First Name", with: "Peter"
-    		fill_in "Last Name", with: "Martin"
-    		select  "Artistic Director", from: "Role"
-    		fill_in "Email", with: "peter.martin@nycb.org"
-    		
-    		fill_in "Username", with: username
-    		fill_in "Password", with: "password"
-    		fill_in "Confirm Password", with: "password"
-    		
-    		fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
-		  	select (Date.today.year+1).to_s, from: "card_year"
-		  	fill_in "Security Code", with: "213"
-		  	
-		  	click_button "Create Account"
-		  	should have_selector('div.alert-success')
-		  	
-		  	visit login_path
-		  	fill_in "username", with: username
-	  		fill_in "password", with: "password"
-	  		click_button "Sign In"
-	  		page.should have_content "Sign Out"
-    	end
-    	
-    	after do
-    		destroy_stripe_account(User.unscoped.find_by_username(username).account)
-    	end
-    	
+		describe "sidenav calendar" do    	
 			it "navigates to correct day", js: true do
+				log_in
 				visit events_path+"/2014/1/1"
 				should have_selector('h2', text: "January 1, 2014")
 				

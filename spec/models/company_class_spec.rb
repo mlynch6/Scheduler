@@ -43,6 +43,7 @@ describe CompanyClass do
   context "(Valid)" do
   	it "with minimum attributes" do
   		should be_valid
+  		cclass.warnings.count.should == 0
   	end
   	
   	it "without a title - title will be defaulted to 'Company Class'" do
@@ -93,6 +94,10 @@ describe CompanyClass do
   context "correct value is returned for" do  
 	  it "type" do
 	  	cclass.reload.type.should == 'CompanyClass'
+	  end
+	  
+	  it "break?" do
+			cclass.break?.should be_true
 	  end
 	end
 	

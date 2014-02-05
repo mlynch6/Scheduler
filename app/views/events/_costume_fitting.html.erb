@@ -1,6 +1,0 @@
-<div class="cal-event cal-yellow" <%= calculate_offset(fitting.start_at, fitting.duration).html_safe %> data-toggle="modal" data-target="#modal_<%= fitting.id %>">
-	<div class="title"><%= fitting.title %></div>
-	<div class="time"><%= "#{fitting.start_time} to #{fitting.end_time}" %></div>
-</div>
-
-<%= render 'costume_fitting_modal', :appt => fitting %>
