@@ -4,8 +4,8 @@
 #
 #  id         :integer          not null, primary key
 #  period     :string(20)       not null
-#  start_at   :date             not null
-#  end_at     :date             not null
+#  start_date :date             not null
+#  end_date   :date             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -17,8 +17,8 @@ describe EventSeries do
   let(:location) { FactoryGirl.create(:location, account: account) }
   let(:series) { FactoryGirl.create(:event_series,
 											period: 'Daily',
-											start_at: Date.new(2012,1,1),
-											end_at: Date.new(2012,1,15),
+											start_date: Date.new(2012,1,1),
+											end_date: Date.new(2012,1,15),
 											title: "Series Event",
 											location_id: location.id,
 											start_time: "9AM",
@@ -33,10 +33,10 @@ describe EventSeries do
 
 	context "accessible attributes" do
 		it { should respond_to(:period) }
-  	it { should respond_to(:start_at) }
-  	it { should respond_to(:end_at) }
+  	it { should respond_to(:start_date) }
+  	it { should respond_to(:end_date) }
   	
-  	it { should respond_to(:type) }
+  	it { should respond_to(:event_type) }
   	it { should respond_to(:title) }
   	it { should respond_to(:location_id) }
   	it { should respond_to(:start_time) }
@@ -79,48 +79,48 @@ describe EventSeries do
   		end
   	end
   	
-  	it "when start_at is blank" do
-			@series.start_at = " "
+  	it "when start_date is blank" do
+			@series.start_date = " "
 			should_not be_valid
 		end
   	
-  	it "when start_at is invalid" do
+  	it "when start_date is invalid" do
   		dts = ["abc", "2/31/2012"]
   		dts.each do |invalid_date|
-  			@series.start_at = invalid_date
+  			@series.start_date = invalid_date
   			should_not be_valid
   		end
   	end
   	
-  	it "when end_at is blank" do
-			@series.end_at = " "
+  	it "when end_date is blank" do
+			@series.end_date = " "
 			should_not be_valid
 		end
   	
-  	it "when end_at is invalid" do
+  	it "when end_date is invalid" do
   		dts = ["abc", "2/31/2012"]
   		dts.each do |invalid_date|
-  			@series.end_at = invalid_date
+  			@series.end_date = invalid_date
   			should_not be_valid
   		end
   	end
   	
-  	it "when end_at is on start_at" do
-  		@series.end_at = @series.start_at
+  	it "when end_date is on start_date" do
+  		@series.end_date = @series.start_date
   		should_not be_valid
   	end
   	
-  	it "when end_at is before start_at" do
-  		@series.end_at = @series.start_at - 1.month
+  	it "when end_date is before start_date" do
+  		@series.end_date = @series.start_date - 1.month
   		should_not be_valid
   	end
   	
   	it "when event fields are invalid" do
 			invalid_series = FactoryGirl.build(:event_series,
 							period: 'Daily',
-							start_at: Date.new(2012,1,1),
-							end_at: Date.new(2012,1,5),
-							type: 'Rehearsal',
+							start_date: Date.new(2012,1,1),
+							end_date: Date.new(2012,1,5),
+							event_type: 'Rehearsal',
 							title: "Invalid Event",
 							location_id: location.id,
 							start_time: "9AM",
@@ -135,15 +135,15 @@ describe EventSeries do
 		describe "with Period=Daily" do
 			let(:daily_series) { FactoryGirl.create(:event_series,
 										period: 'Daily',
-										start_at: Date.new(2012,1,1),
-										end_at: Date.new(2012,1,5),
+										start_date: Date.new(2012,1,1),
+										end_date: Date.new(2012,1,5),
 										title: "Series Event",
 										location_id: location.id,
 										start_time: "9AM",
 										duration: 60) }
 			
 			it "has events created on the correct days" do
-				dts = ["01/01/12", "01/02/12", "01/03/12", "01/04/12", "01/05/12"]
+				dts = ["01/01/2012", "01/02/2012", "01/03/2012", "01/04/2012", "01/05/2012"]
 				
 				daily_series.events.count.should == 5
 				daily_series.events.each do |event|
@@ -165,15 +165,15 @@ describe EventSeries do
 		describe "with Period=Weekly" do
 			let(:weekly_series) { FactoryGirl.create(:event_series,
 										period: 'Weekly',
-										start_at: Date.new(2012,1,1),
-										end_at: Date.new(2012,2,9),
+										start_date: Date.new(2012,1,1),
+										end_date: Date.new(2012,2,9),
 										title: "Series Event",
 										location_id: location.id,
 										start_time: "9AM",
 										duration: 60) }
 			
 			it "has events created on the correct days" do
-				dts = ["01/01/12", "01/08/12", "01/15/12", "01/22/12", "01/29/12", "02/05/12"]
+				dts = ["01/01/2012", "01/08/2012", "01/15/2012", "01/22/2012", "01/29/2012", "02/05/2012"]
 				
 				weekly_series.events.count.should == 6
 				weekly_series.events.each do |event|
@@ -195,15 +195,15 @@ describe EventSeries do
 		describe "with Period=Monthly" do
 			let(:monthly_series) { FactoryGirl.create(:event_series,
 										period: 'Monthly',
-										start_at: Date.new(2012,1,31),
-										end_at: Date.new(2012,5,29),
+										start_date: Date.new(2012,1,31),
+										end_date: Date.new(2012,5,29),
 										title: "Series Event",
 										location_id: location.id,
 										start_time: "9AM",
 										duration: 60) }
 			
 			it "has events created on the correct days" do
-				dts = ["01/31/12", "02/29/12", "03/31/12", "04/30/12"]
+				dts = ["01/31/2012", "02/29/2012", "03/31/2012", "04/30/2012"]
 				
 				monthly_series.events.count.should == 4
 				monthly_series.events.each do |event|
@@ -225,15 +225,15 @@ describe EventSeries do
 		describe "with Period=Yearly" do
 			let(:yearly_series) { FactoryGirl.create(:event_series,
 										period: 'Yearly',
-										start_at: Date.new(2012,1,31),
-										end_at: Date.new(2014,5,29),
+										start_date: Date.new(2012,1,31),
+										end_date: Date.new(2014,5,29),
 										title: "Series Event",
 										location_id: location.id,
 										start_time: "9AM",
 										duration: 60) }
 			
 			it "has events created on the correct days" do
-				dts = ["01/31/12", "01/31/13", "01/31/14"]
+				dts = ["01/31/2012", "01/31/2013", "01/31/2014"]
 				
 				yearly_series.events.count.should == 3
 				yearly_series.events.each do |event|
@@ -274,12 +274,22 @@ describe EventSeries do
 	  	series.reload.period.should == 'Daily'
 	  end
 	  
-	  it "start_at" do
-			series.reload.start_at.should == Date.new(2012,1,1)
+	  it "start_date" do
+			series.reload.start_date.should == Date.new(2012,1,1)
 	  end
 	  
-	  it "end_at" do
-			series.reload.end_at.should == Date.new(2012,1,15)
+	  it "end_date" do
+			series.reload.end_date.should == Date.new(2012,1,15)
 	  end
   end
+  
+  context "(Warnings)" do
+		context "when Location is double booked" do
+			pending
+		end
+		
+		context "when employee is double booked" do
+			pending
+		end
+	end
 end

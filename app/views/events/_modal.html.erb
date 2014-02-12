@@ -31,6 +31,18 @@
 				<div class="dtl-label col-md-3">Duration</div>
 				<div class="dtl-text col-md-9"><%= event.duration %> min</div>
 			</div>
+			
+			<% if event.event_series %>
+				<div class="row">
+					<div class="dtl-label col-md-3">Repeat</div>
+					<div class="dtl-text col-md-9"><%= event.event_series.period %></div>
+				</div>
+				
+				<div class="row">
+					<div class="dtl-label col-md-3">End On</div>
+					<div class="dtl-text col-md-9"><%= event.event_series.end_date  %></div>
+				</div>
+			<% end %>
 
 			<% if event.piece_id.present? %>
 				<div class="row">
@@ -39,6 +51,7 @@
 				</div>
 			<% end %>
 			
+			<br />
 			<div class="row">
 				<div class="dtl-label col-md-3">Invitees</div>
 				<div class="dtl-text col-md-9">

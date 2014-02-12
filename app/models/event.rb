@@ -17,8 +17,8 @@
 
 class Event < ActiveRecord::Base
 	attr_accessible :event_type, :title, :location_id, :start_date, :start_time, :duration, :piece_id
-	attr_accessible :employee_ids
-	attr_accessor :event_type
+	attr_accessible :employee_ids, :period, :end_date
+	attr_accessor :event_type, :period, :end_date
 	attr_writer :start_date, :start_time, :duration
 
 	belongs_to :account
@@ -33,11 +33,8 @@ class Event < ActiveRecord::Base
 	validates :title,	presence: true, length: { maximum: 30 }
 	validates :type,	length: { maximum: 20 }
 	validates :location_id,	presence: true
-	validate :location_available?, :if => "start_at.present? && end_at.present?"
-	validates_date :start_date
-	validates :start_date,	presence: true
-	validates_time :start_time
-	validates :start_time,	presence: true
+	validates :start_date, presence: true, timeliness: { type: :date }
+	validates :start_time, presence: true, timeliness: { type: :time }
 	validates :duration,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than => 1440 }
 
 	default_scope lambda { order('start_at ASC').where(:account_id => Account.current_id) }
@@ -45,9 +42,10 @@ class Event < ActiveRecord::Base
 	# Week starts on Monday
 	scope :for_week, lambda { |date| where(start_at: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day) }
 	scope :for_monthly_calendar, lambda { |date| where(start_at: date.beginning_of_month.beginning_of_week(:sunday)..date.end_of_month.end_of_week(:sunday)) }
+	
 		
 	def start_date
-		@start_date || start_at.try(:strftime, "%D")
+		@start_date || start_at.try(:to_date).try(:to_s, :default)
 	end
 	
 	def start_time
@@ -84,6 +82,9 @@ class Event < ActiveRecord::Base
 	def warnings
 		w = Hash.new
 		
+		loc_double_booked_msg = warn_when_location_double_booked 
+		w[:loc_double_booked] = loc_double_booked_msg if loc_double_booked_msg.present?
+		
 		emp_double_booked_msg = warn_when_employee_double_booked 
 		w[:emp_double_booked] = emp_double_booked_msg if emp_double_booked_msg.present?
 		
@@ -91,27 +92,6 @@ class Event < ActiveRecord::Base
 	end
 	
 protected
-	
-	def location_available?
-		if new_record?
-			events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod) AND location_id = :location_id", {
-									:stime => start_at,
-									:etime => end_at,
-									:sod => start_at.beginning_of_day,
-									:eod => end_at.end_of_day,
-									:location_id => location_id})
-		else
-			events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod) AND location_id = :location_id AND id <> :id", {
-									:stime => start_at,
-									:etime => end_at,
-									:sod => start_at.beginning_of_day,
-									:eod => end_at.end_of_day,
-									:location_id => location_id,
-									:id => id })
-		end
-		errors.add(:location_id, "is booked during this time") if events.count > 0
-	end
-	
 	def save_start_at
 		sdt = (@start_date.kind_of? String) ? Date.strptime(@start_date, '%m/%d/%Y') : @start_date
 		stm = (@start_time.kind_of? String) ? @start_time : @start_time.to_s(:db)
@@ -131,6 +111,12 @@ protected
 		@contract ||= AgmaProfile.find_by_account_id(Account.current_id)
 	end
 	
+	def warn_when_location_double_booked
+		if overlapping_locations.any?
+			return "#{location.name} is double booked during this time."
+		end
+	end
+	
 	def warn_when_employee_double_booked
 		double_booked_employees = Employee.joins(:invitations).where(id: self.employees, invitations: {event_id: self.overlapping}).uniq_by(&:id)
 		if double_booked_employees.any?
@@ -147,6 +133,7 @@ protected
 		end
 	end
 	
+	# Used by Company Class & Rehearsal
 	def check_contracted_end
 		stm = (@start_time.kind_of? String) ? @start_time : @start_time.to_s(:hr12)
 		if contract.present? && Time.zone.parse(contract.rehearsal_end_time) < (Time.zone.parse(stm) + duration.minutes)
@@ -155,13 +142,20 @@ protected
 	end
 	
 	def overlapping
-		if start_at.present? && end_at.present?
-			events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod)", {
-									:stime => start_at,
-									:etime => end_at,
-									:sod => start_at.beginning_of_day,
-									:eod => end_at.end_of_day })
-			events.where("id <> :id", { :id => id }) unless new_record?
-		end
+		events = Event.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod)", {
+								:stime => start_at,
+								:etime => end_at,
+								:sod => start_at.beginning_of_day,
+								:eod => end_at.end_of_day })
+		events.where("id <> :id", { :id => id }) unless new_record?
+	end
+	
+	def overlapping_locations
+		events = Event.where("id <> :id", { :id => id }).where(:location_id => location_id)
+		events.where("(start_at >= :sod AND start_at < :etime) AND (end_at > :stime AND end_at <= :eod)", {
+								:stime => start_at,
+								:etime => end_at,
+								:sod => start_at.beginning_of_day,
+								:eod => end_at.end_of_day })
 	end
 end

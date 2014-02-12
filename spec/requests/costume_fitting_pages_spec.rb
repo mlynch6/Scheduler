@@ -115,7 +115,29 @@ describe "CostumeFitting Pages:" do
 			end
 		end
 		
-		context "shows warning" do			
+		context "shows warning" do
+			it "when location is double booked" do
+				log_in
+				location = FactoryGirl.create(:location, account: current_account)
+				
+				event = FactoryGirl.create(:costume_fitting, account: current_account,
+								location: location,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								duration: 60)
+				
+				visit new_costume_fitting_path
+				fill_in "Title", with: "Test Fitting"
+		  	select location.name, from: "Location"
+		  	fill_in 'Date', with: Time.zone.today
+		  	fill_in 'Start Time', with: "11AM"
+		  	fill_in 'Duration', with: 120
+				click_button 'Create'
+		
+				should have_selector('div.alert-warning', text: "is double booked during this time")
+				should have_selector('div.alert-warning', text: location.name)
+			end
+				
 			it "when employee is double booked" do
 				log_in
 				loc1 = FactoryGirl.create(:location, account: current_account)
@@ -140,7 +162,7 @@ describe "CostumeFitting Pages:" do
 								duration: 30)
 				FactoryGirl.create(:invitation, event: f2, employee: e1)
 				
-				visit new_company_class_path
+				visit new_costume_fitting_path
 				fill_in "Title", with: "Costume Fitting"
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
@@ -240,7 +262,7 @@ describe "CostumeFitting Pages:" do
 				e2 = FactoryGirl.create(:employee, account: current_account)
 				e3 = FactoryGirl.create(:employee, account: current_account)
 				
-				f1 = FactoryGirl.create(:company_class, account: current_account,
+				f1 = FactoryGirl.create(:costume_fitting, account: current_account,
 								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",

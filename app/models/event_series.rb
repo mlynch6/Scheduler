@@ -4,8 +4,8 @@
 #
 #  id         :integer          not null, primary key
 #  period     :string(20)       not null
-#  start_at   :date             not null
-#  end_at     :date             not null
+#  start_date :date             not null
+#  end_date   :date             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -13,24 +13,26 @@
 class EventSeries < ActiveRecord::Base
 	REPEATS = %w[Never Daily Weekly Monthly Yearly]
   
-  attr_accessible :period, :start_at, :end_at
+  attr_accessible :period, :start_date, :end_date
 	#Event fields
-  attr_accessor :type, :title, :location_id, :start_time, :duration, :piece_id
+  attr_accessor :event_type, :title, :location_id, :start_time, :duration, :piece_id, :employee_ids
+  attr_accessible :event_type, :title, :location_id, :start_time, :duration, :piece_id, :employee_ids
 
 	has_many :events, dependent: :destroy
 	
 	after_create :create_events_until_end
 
 	validates :period,	presence: true, length: { maximum: 20 }, inclusion: { in: REPEATS }
-	validates :start_at, presence: true, timeliness: {type: :date}
-	validates :end_at, presence: true, timeliness: {type: :date, after: (lambda { :start_at }) }
-	
+	validates :start_date, presence: true, timeliness: {type: :date}
+	validates :end_date, presence: true, timeliness: {type: :date, 
+																										after: (lambda { :start_date }), 
+																										after_message: 'must be after the Start Date' }
 	validate :events_are_valid, on: :create
 	
 private
 
 	def events_are_valid
-		e = build_event(start_at)
+		e = build_event(start_date)
 		e.valid?
 		e.errors.each do |event_attrib, event_error|
 			errors.add(event_attrib, event_error)
@@ -39,21 +41,22 @@ private
 
 	def create_events_until_end
 		rp = repeat_period(period)
-		st_dt = start_at
+		st_dt = start_date
 		i = 1
 		
-		while st_dt <= end_at
+		while st_dt <= end_date
 			e = build_event(st_dt)
-			e.save
-			e.update_attribute(:event_series_id, id)
+			if e.save
+				e.update_attribute(:event_series_id, id)
+			end
 			
-			st_dt = start_at.advance(rp => +i)
+			st_dt = start_date.advance(rp => +i)
 			i += 1
 		end
 	end
 	
 	def build_event(dt)
-		Event.new_with_subclass(type,
+		Event.new_with_subclass(event_type,
 						title: title,
 						location_id: location_id,
 						start_date: dt, 

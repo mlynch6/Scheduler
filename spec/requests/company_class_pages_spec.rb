@@ -116,7 +116,29 @@ describe "CompanyClass Pages:" do
 			end
 		end
 		
-		context "shows warning" do			
+		context "shows warning" do
+			it "when location is double booked" do
+				log_in
+				location = FactoryGirl.create(:location, account: current_account)
+				
+				event = FactoryGirl.create(:company_class, account: current_account,
+								location: location,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								duration: 60)
+				
+				visit new_company_class_path
+				fill_in "Title", with: "Test Class"
+		  	select location.name, from: "Location"
+		  	fill_in 'Date', with: Time.zone.today
+		  	fill_in 'Start Time', with: "11AM"
+		  	fill_in 'Duration', with: 120
+				click_button 'Create'
+		
+				should have_selector('div.alert-warning', text: "is double booked during this time")
+				should have_selector('div.alert-warning', text: location.name)
+			end
+					
 			it "when employee is double booked" do
 				log_in
 				loc1 = FactoryGirl.create(:location, account: current_account)
@@ -142,7 +164,7 @@ describe "CompanyClass Pages:" do
 				FactoryGirl.create(:invitation, event: cc2, employee: e1)
 				
 				visit new_company_class_path
-				fill_in "Title", with: "Test Rehearsal"
+				fill_in "Title", with: "Test Class"
 		  	select loc2.name, from: "Location"
 		  	fill_in 'Date', with: Time.zone.today
 		  	fill_in 'Start Time', with: "11AM"

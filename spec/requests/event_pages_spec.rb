@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Event Pages:" do
+describe "Event (non-Repeating) Pages:" do
 	subject { page }
   
   context "#new" do
@@ -21,13 +21,21 @@ describe "Event Pages:" do
 			should have_selector('li.active', text: 'New Event')
 		end
 		
-		it "only shows applicable fields", js: true do
+		it "only shows applicable fields for Overview tab", js: true do
 			log_in
 	  	visit new_event_path
 	
 			should_not have_selector('label', text: 'Piece')
 		end
 		
+		it "is not repeating by default", js: true do
+			log_in
+	  	visit new_event_path
+	  	click_link 'Repeat'
+	  	
+	  	should have_content('Never')
+		end
+				
 		it "has only active Locations in dropdown" do
 			log_in
 			FactoryGirl.create(:location, account: current_account, name: 'Location A')
@@ -71,7 +79,7 @@ describe "Event Pages:" do
 				expect { click_button 'Create' }.not_to change(Event, :count)
 			end
 		end
-	
+
 		context "with valid info" do
 			it "creates new Event without Invitees" do
 				log_in
@@ -92,7 +100,7 @@ describe "Event Pages:" do
 				should have_content(location.name)
 				should have_content("10:00 AM to 11:00 AM")
 			end
-			
+		
 			it "creates new Event with Invitees" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
@@ -115,8 +123,30 @@ describe "Event Pages:" do
 				should have_content("9:00 AM to 10:30 AM")
 			end
 		end
-		
+	
 		context "shows warning" do			
+			it "when location is double booked" do
+				log_in
+				location = FactoryGirl.create(:location, account: current_account)
+				
+				event = FactoryGirl.create(:event, account: current_account,
+								location: location,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								duration: 60)
+				
+				visit new_event_path
+				fill_in "Title", with: "Test Event"
+		  	select location.name, from: "Location"
+		  	fill_in 'Date', with: Time.zone.today
+		  	fill_in 'Start Time', with: "11AM"
+		  	fill_in 'Duration', with: 120
+				click_button 'Create'
+		
+				should have_selector('div.alert-warning', text: "is double booked during this time")
+				should have_selector('div.alert-warning', text: location.name)
+			end
+			
 			it "when employee is double booked" do
 				log_in
 				loc1 = FactoryGirl.create(:location, account: current_account)
@@ -228,8 +258,31 @@ describe "Event Pages:" do
 		end
 		
 		context "with warning" do			
+			it "when location is double booked" do
+				log_in
+				location = FactoryGirl.create(:location, account: current_account)
+				
+				event = FactoryGirl.create(:event, account: current_account,
+								location: location,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								duration: 60)
+								
+				e2 = FactoryGirl.create(:event, account: current_account,
+								location: location,
+								start_date: Time.zone.today,
+								start_time: "1 PM",
+								duration: 60)
+				
+				visit edit_event_path(e2)
+		  	fill_in 'Start Time', with: "11:30 AM"
+				click_button 'Update'
+		
+				should have_selector('div.alert-warning', text: "is double booked during this time")
+				should have_selector('div.alert-warning', text: location.name)
+			end
+			
 			it "shows warning when employee is double booked" do
-			# Works in browser
 				log_in
 				loc1 = FactoryGirl.create(:location, account: current_account)
 				loc2 = FactoryGirl.create(:location, account: current_account)

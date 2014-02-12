@@ -9,18 +9,33 @@ class EventsController < ApplicationController
 	
 	def new
   	form_setup
-  	@event = Event.new
-  	@event.event_type = params[:event_type] || 'Event'
+  	type = params[:event_type] || 'Event'
+  	@event = Event.new_with_subclass(type)
+  	@event.event_type = type
   	@event.start_date = params[:date]
   end
   
   def create
   	@event = Event.new_with_subclass(params[:event][:event_type], params[:event])
   	
-		if @event.save
-			flash[:success] = "Successfully created the #{readable_type}."
-			show_warnings
-			redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d')
+		if @event.valid?
+			if params[:event][:period] == "Never"
+				save_success = @event.save
+			else
+				@series = EventSeries.new(params[:event])
+				save_success = @series.save
+				add_series_errors_to_event
+			end
+			
+			if save_success
+				flash[:success] = "Successfully created the #{readable_type}."
+				show_warnings
+				redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d')
+			else
+				form_setup
+				@event.start_time ||= params[:event][:start_time]
+				render 'new'
+			end
 		else
 			form_setup
 			render 'new'
@@ -33,7 +48,14 @@ class EventsController < ApplicationController
 	end
 
 	def update
-		if @event.update_attributes(params[:event])
+#		case params[:event][:commit]
+#			when "Only This Event"
+#			when "All Future Events"
+#			else
+				save_success = @event.update_attributes(params[:event])
+#		end
+#		
+		if save_success
 			flash[:success] = "Successfully updated the #{readable_type}."
 			show_warnings
 			redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d')
@@ -58,6 +80,12 @@ private
 	def show_warnings
 		@event.warnings.each do |key, msg|
 			flash[:warning] = msg
+		end
+	end
+	
+	def add_series_errors_to_event
+		@series.errors.each do |attrib, msg|
+			@event.errors.add(attrib, msg)
 		end
 	end
 	

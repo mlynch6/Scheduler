@@ -15,11 +15,16 @@ getScrollOffset = () ->
 	hour_9AM_in_min = 9*60
 	hour_9AM_in_min * 4/3
 
-hideFields = () ->
+hideEventFields = () ->
 	switch $('#event_event_type').val()
 		when "Event" then $('#piece-field').hide()
 		when "CompanyClass" then $('#piece-field').hide()
 		when "CostumeFitting" then $('#piece-field').hide()
+
+hideRepeatingFields = () ->
+	switch $('#event_period').val()
+		when "Never" then $('#repeat-fields').hide()
+		else $('#repeat-fields').show()
 
 jQuery ->
 	$('#datepicker').datepicker
@@ -37,4 +42,8 @@ jQuery ->
 		dateFormat: 'mm/dd/yy'
 	$('#event_piece_id').chosen()
 	$('#event_employee_ids').chosen()
-	hideFields()
+	hideEventFields()
+	hideRepeatingFields()
+	
+	$('#event_period').change ->
+		hideRepeatingFields()

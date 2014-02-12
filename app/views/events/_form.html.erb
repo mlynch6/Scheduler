@@ -1,10 +1,30 @@
-<%= f.hidden_field :event_type %>
-<%= f.text_field :title %>
-<%= f.select :location_id, @locations, { :include_blank => true } %>
-<%= f.date_field :start_date, :label => 'Date', :value => @event.start_date %>
-<%= f.time_field :start_time, :value => @event.start_time %>
-<%= f.number_field :duration, append: 'min', field_size: 'col-md-3' %>
-<div id="piece-field">
-	<%= f.select :piece_id, @pieces, { :include_blank => true } %>
+<div class="mash-show-tab">
+	<ul class="nav nav-tabs" id="eventTab">
+		<li class="active"><%= icon_link "Overview", "asterisk", "#overview", data: { toggle: "tab" } %></li>
+		<li><%= icon_link "Repeat", "repeat", "#repeat", data: { toggle: "tab" } %></li>
+	</ul>
+	
+	<div class="tab-content mash-tab-body">
+	
+		<div id="overview" class="tab-pane active">
+			<%= f.hidden_field :event_type %>
+			<%= f.text_field :title %>
+			<%= f.select :location_id, @locations, { :include_blank => true } %>
+			<%= f.date_field :start_date, :label => 'Date', :value => @event.start_date %>
+			<%= f.time_field :start_time, :value => @event.start_time %>
+			<%= f.number_field :duration, append: 'min', field_size: 'col-md-3' %>
+			<div id="piece-field">
+				<%= f.select :piece_id, @pieces, { :include_blank => true } %>
+			</div>
+			<%= f.select :employee_ids, @employees, {}, { :multiple => true } %>
+		</div>
+
+		<div id="repeat" class="tab-pane">
+			<%= f.select :period, EventSeries::REPEATS, {}, field_size: 'col-md-3' %>
+			<div id="repeat-fields">
+				<%= f.date_field :end_date, label: 'End On' %>
+			</div>
+		</div>
+
+	</div> <!-- tab-content -->
 </div>
-<%= f.select :employee_ids, @employees, {}, { :multiple => true } %>

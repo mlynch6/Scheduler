@@ -55,6 +55,9 @@ describe Event do
   	it { should respond_to(:employees) }
   	
   	it { should respond_to(:employee_ids) }
+  	#For Event Series
+  	it { should respond_to(:period) }
+  	it { should respond_to(:end_date) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -158,128 +161,6 @@ describe Event do
 	  		@event.duration = 1440
 	  		should_not be_valid
 	  	end
-		end
-	end
-	
-	context "(Verify Location available)" do
-		let!(:existing_event) { FactoryGirl.create(:event, account: account, location: location, 
-																start_date: Time.zone.today,
-  															start_time: "2PM",
-  															duration: 120) }
-  	let!(:e_loc) { FactoryGirl.create(:event, account: account,
-  															start_date: Time.zone.today,
-  															start_time: "2PM",
-  															duration: 120) }
-		let!(:e) { FactoryGirl.create(:event, account: account, location: location,
-																start_date: Time.zone.today,
-  															start_time: "11AM",
-  															duration: 60) }
-  	
-  	describe "when creating a new event" do
-			it "directly before existing event" do
-	  		@event.location = location
-	  		@event.start_date = Time.zone.today
-				@event.start_time = "1PM"
-				@event.duration = 60
-	  		should be_valid
-	  	end
-	  	
-	  	it "directly after existing event" do
-	  		@event.location = location
-	  		@event.start_date = Time.zone.today
-				@event.start_time = "4PM"
-				@event.duration = 60
-	  		should be_valid
-	  	end
-	  	
-	  	it "with overlap at beginning" do
-	  		@event.location = location
-	  		@event.start_date = existing_event.start_date
-				@event.start_time = "1PM"
-				@event.duration = 120
-		  	should_not be_valid
-		  end
-		  
-		  it "with overlap at end" do
-		  	@event.location = location
-		  	@event.start_date = existing_event.start_date
-				@event.start_time = "3PM"
-				@event.duration = 120
-		  	should_not be_valid
-		  end
-		  
-		  it "with overlap entire event" do
-		  	@event.location = location
-		  	@event.start_date = existing_event.start_date
-				@event.start_time = "1PM"
-				@event.duration = 240
-		  	should_not be_valid
-		  end
-		  
-		  it "with overlap within existing event" do
-		  	@event.location = location
-		  	@event.start_date = existing_event.start_date
-				@event.start_time = "3PM"
-				@event.duration = 30
-		  	should_not be_valid
-		  end
-		  
-		  it "with overlap of exact times" do
-		  	@event.location = location
-		  	@event.start_date = existing_event.start_date
-				@event.start_time = "2PM"
-				@event.duration = 120
-		  	should_not be_valid
-		  end
-	  end
-	
-		describe "when updating an existing event" do
-	  	it "location to booked room is invalid" do
-	  		e_loc.location = location
-		  	e_loc.should_not be_valid
-		  end
-		  
-		  it "times to overlap existing event at beginning is invalid" do
-	  		e.start_time = "1PM"
-				e.duration = 120
-		  	e.should_not be_valid
-		  end
-		  
-		  it "times to overlap existing event at end is invalid" do
-		  	e.start_time = "3PM"
-				e.duration = 120
-		  	e.should_not be_valid
-		  end
-		  
-		  it "times to overlap entire existing event is invalid" do
-		  	e.start_time = "1PM"
-				e.duration = 240
-		  	e.should_not be_valid
-		  end
-		  
-		  it "times to overlap existing event as a subset is invalid" do
-		  	e.start_time = "3PM"
-				e.duration = 30
-		  	e.should_not be_valid
-		  end
-		  
-		  it "times to overlap of exactly is invalid" do
-				e.start_time = existing_event.start_time
-				e.duration = existing_event.duration
-		  	e.should_not be_valid
-		  end
-		  
-			it "times directly before existing event is valid" do
-		  	e.start_time = "1PM"
-				e.duration = 60
-		  	e.should be_valid
-		  end
-		  
-		  it "times directly after existing event is valid" do
-		  	e.start_time = "4PM"
-				e.duration = 60
-		  	e.should be_valid
-		  end
 		end
 	end
 	
@@ -641,6 +522,65 @@ describe Event do
 	end
 	
 	context "(Warnings)" do
+		context "when Location is double booked" do
+			let(:warning_msg) { "#{event.location.name} is double booked during this time." }
+			let!(:existing_event) { FactoryGirl.create(:event, account: account, 
+																location: location, 
+																start_date: Time.zone.today,
+  															start_time: "2PM",
+  															duration: 120) }
+	  	
+	  	it "with overlap at beginning" do
+	  		event.start_date = existing_event.start_date
+				event.start_time = "1PM"
+				event.duration = 120
+				event.save
+		  	
+		  	event.warnings.count.should == 1
+				event.warnings[:loc_double_booked].should == warning_msg
+		  end
+		  
+		  it "with overlap at end" do
+		  	event.start_date = existing_event.start_date
+				event.start_time = "3PM"
+				event.duration = 120
+		  	event.save
+		  	
+		  	event.warnings.count.should == 1
+				event.warnings[:loc_double_booked].should == warning_msg
+		  end
+		  
+		  it "with overlap entire event" do
+		  	event.start_date = existing_event.start_date
+				event.start_time = "1PM"
+				event.duration = 240
+		  	event.save
+		  	
+		  	event.warnings.count.should == 1
+				event.warnings[:loc_double_booked].should == warning_msg
+		  end
+		  
+		  it "with overlap within existing event" do
+		  	event.start_date = existing_event.start_date
+				event.start_time = "3PM"
+				event.duration = 30
+		  	event.save
+		  	
+		  	event.warnings.count.should == 1
+				event.warnings[:loc_double_booked].should == warning_msg
+		  end
+		  
+		  it "with overlap of exact times" do
+		  	event.start_date = existing_event.start_date
+				event.start_time = "2PM"
+				event.duration = 120
+		  	event.save
+		  	
+		  	event.warnings.count.should == 1
+				event.warnings[:loc_double_booked].should == warning_msg
+		  end
+		end
+		
 		context "when employee is double booked" do
 			let(:location2) { FactoryGirl.create(:location, account: account) }
 			let(:e1) { FactoryGirl.create(:employee, account: account) }

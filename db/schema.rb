@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(:version => 20140117201845) do
 
   create_table "event_series", :force => true do |t|
     t.string   "period",     :limit => 20, :null => false
-    t.date     "start_at",                 :null => false
-    t.date     "end_at",                   :null => false
+    t.date     "start_date",               :null => false
+    t.date     "end_date",                 :null => false
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
   end

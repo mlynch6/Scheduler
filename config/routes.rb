@@ -31,9 +31,9 @@ Scheduler::Application.routes.draw do
   
   resources :seasons
   resources :pieces do
-  	resources :scenes, :characters, only: [:index, :new, :create]
+  	resources :scenes, :characters, :only => [:index, :new, :create]
   end
-  resources :scenes, :characters, only: [:edit, :update, :destroy] do
+  resources :scenes, :characters, 	:only => [:edit, :update, :destroy] do
   	collection { post :sort }
   end
   resources :season_pieces, only: [] do
@@ -60,7 +60,8 @@ Scheduler::Application.routes.draw do
 	match 'payments/edit' => 'payments#edit'
 	match 'payments/update' => 'payments#update'
 	
+	
 	namespace :admin do
-		resources :subscription_plans,:except => [:show]
+		resources :subscription_plans,	:except => [:show]
 	end
 end
