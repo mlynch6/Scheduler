@@ -19,12 +19,12 @@
 		&nbsp;
 		
 		<% if event == event.event_series.events.first %>
-			<%= delete_button 'Delete All', event_path(:id => event.id, :mode => "all"), class: 'mash-no-confirm' %>
+			<%= delete_button 'All', event_path(:id => event.id, :mode => "all"), class: 'mash-no-confirm' %>
 		<% else %>
-			<%= delete_button 'Delete All Future Events', event_path(:id => event.id, :mode => "future"), class: 'mash-no-confirm' %>
+			<%= delete_button 'All Future Events', event_path(:id => event.id, :mode => "future"), class: 'mash-no-confirm' %>
 		<% end %>
 		
-		<%= delete_button 'Delete Only This Event', event, class: 'mash-no-confirm' %>
+		<%= delete_button 'Only This Event', event, class: 'mash-no-confirm' %>
 	</div>
 	
 </div> <!-- modal-content -->

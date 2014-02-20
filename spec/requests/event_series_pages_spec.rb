@@ -135,25 +135,19 @@ describe "Event Series Pages:" do
 		end
 	end
 	
-	context "#edit" do
-		before do
+	context "#edit" do		
+		it "has correct title" do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
-			visit new_event_path
-				
-	  	fill_in "Title", with: "Repeating Event"
-	  	select location.name, from: "Location"
-	  	fill_in 'Date', with: "01/01/2013"
-	  	fill_in 'Start Time', with: "10AM"
-	  	fill_in 'Duration', with: 60
-	  	
-	  	click_link 'Repeat'
-  		select 'Daily', from: 'Period'
-			fill_in 'End On', with: "01/05/2013"
-	  	click_button 'Create'
-		end
-		
-		it "has correct title" do
+			Account.current_id = current_account.id
+			series = FactoryGirl.create(:event_series, 
+								title: 'My Repeating',
+								location_id: location.id,
+								start_date: Date.new(2013,1,1),
+								start_time: "11 AM",
+								duration: 60,
+								period: 'Daily',
+								end_date: Date.new(2013,1,5))
 	  	click_link 'Edit'
 	  	
 	  	should have_selector('title', text: 'Edit Event')
@@ -161,35 +155,44 @@ describe "Event Series Pages:" do
 		end
 		
 		it "has correct Navigation" do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			Account.current_id = current_account.id
+			series = FactoryGirl.create(:event_series, 
+								title: 'My Repeating',
+								location_id: location.id,
+								start_date: Date.new(2013,1,1),
+								start_time: "11 AM",
+								duration: 60,
+								period: 'Daily',
+								end_date: Date.new(2013,1,5))
 	  	click_link 'Edit'
 	
 			should have_selector('li.active', text: 'Calendar')
 			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
-#		it "only shows applicable fields", js: true do
-#			event = Event.last
-#			find("#event_#{event.id}").click
-#			wait_until { find(".modal-dialog").visible? }
-#			click_link 'Edit'
-#			
-#			should_not have_selector('label', text: 'Piece')
-#		end
-#		
-#	  it "record with error" do
-#	  	log_in
-#			location = FactoryGirl.create(:location, account: current_account)
-#			event = FactoryGirl.create(:event, account: current_account,
-#					location: location,
-#					start_date: Time.zone.today)
-#	  	visit edit_event_path(event)
-#	  	
-#	  	fill_in "Title", with: ""
-#	  	click_button 'Update'
-#	
-#			should have_selector('div.alert-danger')
-#		end
-#	 
+	  it "record with error" do
+	  	log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			Account.current_id = current_account.id
+			series = FactoryGirl.create(:event_series, 
+								title: 'My Repeating',
+								location_id: location.id,
+								start_date: Date.new(2013,1,1),
+								start_time: "11 AM",
+								duration: 60,
+								period: 'Daily',
+								end_date: Date.new(2013,1,5))
+			event = series.events.first		#01/01/2013
+	  	visit edit_event_path(event)
+	  	
+	  	fill_in "Title", with: ""
+	  	click_button 'Update'
+	
+			should have_selector('div.alert-danger')
+		end
+	 
 #		it "record with valid info saves record" do
 #			log_in
 #			location = FactoryGirl.create(:location, account: current_account)
@@ -276,7 +279,7 @@ describe "Event Series Pages:" do
 	end
 	
 	context "#destroy", js: true do
-		describe "when 'Delete Only This Event' is selected" do
+		describe "when 'Only This Event' is selected" do
 			it "deletes the event" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
@@ -300,10 +303,10 @@ describe "Event Series Pages:" do
 				click_button 'Delete'
 				wait_until { find(".modal-dialog").visible? }
 				
-				should have_link('Delete All Future Events')
-				should have_link('Delete Only This Event')
+				should have_link('All Future Events')
+				should have_link('Only This Event')
 				
-				click_link('Delete Only This Event')
+				click_link('Only This Event')
 				
 				should have_selector('div.alert-success')
 				should have_selector('h2', text: 'January 2, 2014')
@@ -333,10 +336,10 @@ describe "Event Series Pages:" do
 				click_button 'Delete'
 				wait_until { find(".modal-dialog").visible? }
 				
-				should have_link('Delete All Future Events')
-				should have_link('Delete Only This Event')
+				should have_link('All Future Events')
+				should have_link('Only This Event')
 				
-				click_link('Delete Only This Event')
+				click_link('Only This Event')
 				should have_selector('div.alert-success')
 				
 				click_link '1'
@@ -379,10 +382,10 @@ describe "Event Series Pages:" do
 				click_button 'Delete'
 				wait_until { find(".modal-dialog").visible? }
 				
-				should have_link('Delete All Future Events')
-				should have_link('Delete Only This Event')
+				should have_link('All Future Events')
+				should have_link('Only This Event')
 				
-				click_link('Delete Only This Event')
+				click_link('Only This Event')
 				should have_selector('div.alert-success')
 				
 		  	click_link '1'
@@ -395,7 +398,7 @@ describe "Event Series Pages:" do
 			end
 		end
 		
-		describe "when 'Delete All' is selected" do
+		describe "when 'All' is selected" do
 			it "deletes the all events in the series" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
@@ -419,7 +422,7 @@ describe "Event Series Pages:" do
 				click_button 'Delete'
 				wait_until { find(".modal-dialog").visible? }
 				
-				click_link('Delete All')
+				click_link('All')
 				should have_selector('div.alert-success')
 				
 				click_link '1'
@@ -444,7 +447,7 @@ describe "Event Series Pages:" do
 			end
 		end
 		
-		describe "when 'Delete All Future Events' is selected" do
+		describe "when 'All Future Events' is selected" do
 			it "deletes the current event & repeating events in future" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
@@ -468,7 +471,7 @@ describe "Event Series Pages:" do
 				click_button 'Delete'
 				wait_until { find(".modal-dialog").visible? }
 				
-				click_link('Delete All Future Events')
+				click_link('All Future Events')
 				should have_selector('div.alert-success')
 				
 				click_link '1'
@@ -516,7 +519,7 @@ describe "Event Series Pages:" do
 				click_button 'Delete'
 				wait_until { find(".modal-dialog").visible? }
 				
-				click_link('Delete All Future Events')
+				click_link('All Future Events')
 				should have_selector('div.alert-success')
 				
 				click_link '1'
