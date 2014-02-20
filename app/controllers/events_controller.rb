@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update]
+	before_filter :get_resource, :only => [:edit, :update, :destroy]
 	
   def index
   	@date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i) rescue Time.zone.today
@@ -63,6 +63,18 @@ class EventsController < ApplicationController
 			form_setup
 			render 'edit'
 		end
+	end
+	
+	def destroy
+		if @event.event_series
+			params[:mode] ||= 'single'
+			@event.event_series.destroy_event(params[:mode], @event)
+		else
+			@event.destroy
+		end
+		
+		flash[:success] = "Successfully deleted the #{readable_type}."
+		redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d')
 	end
 
 private

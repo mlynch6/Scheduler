@@ -250,77 +250,7 @@ describe Event do
 	  end
   end
   
-  context "(Methods)" do	 
-  	# Moved to private 
-#	  context "overlapping" do
-#	  	let!(:e) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "1PM",
-#											duration: 60) }
-#											
-#	  	let!(:location2) { FactoryGirl.create(:location, account: account) }
-#	  	let!(:location3) { FactoryGirl.create(:location, account: account) }
-#	  	let!(:overlap_start) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location2,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "12:15 PM",
-#											duration: 60) }
-#			let!(:overlap_subset) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location2,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "1:15 PM",
-#											duration: 30) }
-#			let!(:overlap_end) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location2,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "1:45 PM",
-#											duration: 60) }
-#			let!(:overlap_entire) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location3,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "12:00 PM",
-#											duration: 155) }
-#			let!(:before_event) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "12:30 PM",
-#											duration: 30) }
-#			let!(:after_event) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "2:00 PM",
-#											duration: 90) }
-#			let!(:day_before) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,1)) }
-#			let!(:day_after) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,3)) }
-#			
-#			it "shows events that have an overlap" do
-#				e.overlapping.should include(overlap_start)
-#				e.overlapping.should include(overlap_subset)
-#				e.overlapping.should include(overlap_end)
-#				e.overlapping.should include(overlap_entire)
-#				
-#				e.overlapping.should_not include(e)
-#				e.overlapping.should_not include(before_event)
-#				e.overlapping.should_not include(after_event)
-#				e.overlapping.should_not include(day_before)
-#				e.overlapping.should_not include(day_after)
-#			end
-#	  end
-		
+  context "(Methods)" do	 		
 		context "new_with_subclass" do
 			it "creates a new Company Class" do
 				e = Event.new_with_subclass('CompanyClass')
@@ -611,5 +541,76 @@ describe Event do
 				event.warnings[:emp_double_booked].should == "The following people are double booked during this time: #{e1.full_name}"
 			end
 		end
+	end
+	
+	context "(Private)" do
+#	  context "overlapping" do
+#	  	let!(:e) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "1PM",
+#											duration: 60) }
+#											
+#	  	let!(:location2) { FactoryGirl.create(:location, account: account) }
+#	  	let!(:location3) { FactoryGirl.create(:location, account: account) }
+#	  	let!(:overlap_start) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location2,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "12:15 PM",
+#											duration: 60) }
+#			let!(:overlap_subset) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location2,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "1:15 PM",
+#											duration: 30) }
+#			let!(:overlap_end) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location2,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "1:45 PM",
+#											duration: 60) }
+#			let!(:overlap_entire) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location3,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "12:00 PM",
+#											duration: 155) }
+#			let!(:before_event) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "12:30 PM",
+#											duration: 30) }
+#			let!(:after_event) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,2),
+#											start_time: "2:00 PM",
+#											duration: 90) }
+#			let!(:day_before) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,1)) }
+#			let!(:day_after) { FactoryGirl.create(:event,
+#											account: account,
+#											location: location,
+#											start_date: Date.new(2012,1,3)) }
+#			
+#			it "shows events that have an overlap" do
+#				e.overlapping.should include(overlap_start)
+#				e.overlapping.should include(overlap_subset)
+#				e.overlapping.should include(overlap_end)
+#				e.overlapping.should include(overlap_entire)
+#				
+#				e.overlapping.should_not include(e)
+#				e.overlapping.should_not include(before_event)
+#				e.overlapping.should_not include(after_event)
+#				e.overlapping.should_not include(day_before)
+#				e.overlapping.should_not include(day_after)
+#			end
+#	  end
 	end
 end

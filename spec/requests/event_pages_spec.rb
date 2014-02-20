@@ -224,6 +224,10 @@ describe "Event (non-Repeating) Pages:" do
 	  	visit edit_event_path(event)
 	
 			should_not have_selector('label', text: 'Piece')
+			
+			should have_selector('a', text: 'Delete')
+			should_not have_selector('a', text: 'Delete Only This Event')
+			should_not have_selector('a', text: 'Delete All Future Events')
 		end
 		
 	  it "record with error" do
@@ -374,6 +378,38 @@ describe "Event (non-Repeating) Pages:" do
 	    end
 		end
 		
+		it "shows Event details in popup window", js: true do
+			pending "seems to wok in GUI, but Time is off in test by 1 hr"
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			emp = FactoryGirl.create(:employee, account: current_account)
+			event = FactoryGirl.create(:event,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today,
+					start_time: '10:15 AM',
+					duration: 60)
+			FactoryGirl.create(:invitation, event: event, employee: emp)
+			visit events_path
+			find("#event_#{event.id}").click
+			wait_until { find(".modal-dialog").visible? }
+			
+			should have_selector('small', text: 'Event')
+			should have_selector('div.dtl-label', text: 'Location')
+			should have_selector('div.dtl-label', text: 'Date')
+			should have_selector('div.dtl-label', text: 'Time')
+			should have_selector('div.dtl-label', text: 'Duration')
+			should_not have_selector('div.dtl-label', text: 'Piece')
+			should have_selector('div.dtl-label', text: 'Invitees')
+			
+			should have_content(event.title)
+			should have_content(event.location.name)
+			should have_content(event.start_date)
+			should have_content('10:15 AM to 11:15 AM')
+			should have_content(event.duration)
+			should have_content(emp.full_name)
+		end
+		
 		it "lists Rehearsal records" do
 			log_in
 			loc = FactoryGirl.create(:location, account: current_account)
@@ -396,8 +432,40 @@ describe "Event (non-Repeating) Pages:" do
 	    end
 		end
 		
-		it "shows Rehearsal details in popup window" do
-			pending "How to test modal dialog?"
+		it "shows Rehearsal details in popup window", js: true do
+			pending "seems to wok in GUI, but Time is off in test by 1 hr"
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			emp = FactoryGirl.create(:employee, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			event = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today,
+					start_time: '10:15am',
+					duration: 60,
+					piece: piece)
+			FactoryGirl.create(:invitation, event: event, employee: emp)
+			visit events_path
+			find("#event_#{event.id}").click
+			wait_until { find(".modal-dialog").visible? }
+			
+			should have_selector('small', text: 'Rehearsal')
+			should have_selector('div.dtl-label', text: 'Location')
+			should have_selector('div.dtl-label', text: 'Date')
+			should have_selector('div.dtl-label', text: 'Time')
+			should have_selector('div.dtl-label', text: 'Duration')
+			should have_selector('div.dtl-label', text: 'Piece')
+			should have_selector('div.dtl-label', text: 'Invitees')
+			
+			should have_content(event.title)
+			should have_content(event.location.name)
+			should have_content(event.start_date)
+			should have_content(event.start_at.to_s(:hr12))
+			should have_content(event.end_at.to_s(:hr12))
+			should have_content(event.duration)
+			should have_content(event.piece.name)
+			should have_content(emp.full_name)
 		end
 		
 		it "lists Company Class records" do
@@ -452,8 +520,37 @@ describe "Event (non-Repeating) Pages:" do
 	    end
 		end
 		
-		it "shows Company Class details in popup window" do
-			pending "How to test modal dialog?"
+		it "shows Company Class details in popup window", js: true do
+			pending "seems to wok in GUI, but Time is off in test by 1 hr"
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			emp = FactoryGirl.create(:employee, account: current_account)
+			event = FactoryGirl.create(:company_class,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today,
+					start_time: '10:15am',
+					duration: 60)
+			FactoryGirl.create(:invitation, event: event, employee: emp)
+			visit events_path
+			find("#event_#{event.id}").click
+			wait_until { find(".modal-dialog").visible? }
+			
+			should have_selector('small', text: 'Company Class')
+			should have_selector('div.dtl-label', text: 'Location')
+			should have_selector('div.dtl-label', text: 'Date')
+			should have_selector('div.dtl-label', text: 'Time')
+			should have_selector('div.dtl-label', text: 'Duration')
+			should_not have_selector('div.dtl-label', text: 'Piece')
+			should have_selector('div.dtl-label', text: 'Invitees')
+			
+			should have_content(event.title)
+			should have_content(event.location.name)
+			should have_content(event.start_date)
+			should have_content(event.start_at.to_s(:hr12))
+			should have_content(event.end_at.to_s(:hr12))
+			should have_content(event.duration)
+			should have_content(emp.full_name)
 		end
 		
 		it "lists Costume Fitting records" do
@@ -475,8 +572,37 @@ describe "Event (non-Repeating) Pages:" do
 	    end
 		end
 		
-		it "shows Costume Fitting details in popup window" do
-			pending "How to test modal dialog?"
+		it "shows Costume Fitting details in popup window", js: true do
+			pending "seems to wok in GUI, but Time is off in test by 1 hr"
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			emp = FactoryGirl.create(:employee, account: current_account)
+			event = FactoryGirl.create(:costume_fitting,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today,
+					start_time: '10:15am',
+					duration: 60)
+			FactoryGirl.create(:invitation, event: event, employee: emp)
+			visit events_path
+			find("#event_#{event.id}").click
+			wait_until { find(".modal-dialog").visible? }
+			
+			should have_selector('small', text: 'Costume Fitting')
+			should have_selector('div.dtl-label', text: 'Location')
+			should have_selector('div.dtl-label', text: 'Date')
+			should have_selector('div.dtl-label', text: 'Time')
+			should have_selector('div.dtl-label', text: 'Duration')
+			should_not have_selector('div.dtl-label', text: 'Piece')
+			should have_selector('div.dtl-label', text: 'Invitees')
+			
+			should have_content(event.title)
+			should have_content(event.location.name)
+			should have_content(event.start_date)
+			should have_content(event.start_at.to_s(:hr12))
+			should have_content(event.end_at.to_s(:hr12))
+			should have_content(event.duration)
+			should have_content(emp.full_name)
 		end
 		
 		it "has links for Super Admin" do
@@ -522,6 +648,29 @@ describe "Event (non-Repeating) Pages:" do
 				should have_selector('h1', text: 'Daily Schedule')
 				should have_selector('h2', text: "January 3, 2014")
 			end
+		end
+	end
+	
+	context "#destroy" do
+		it "deletes the record" do
+	  	log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			event = FactoryGirl.create(:event, account: current_account,
+								location: location,
+								start_date: Time.zone.today,
+								start_time: "11 AM",
+								duration: 60)
+			visit events_path
+			
+			should have_content(event.title)
+			click_link "Edit"
+			
+			should have_link('Delete')
+			click_link 'Delete'
+			
+			should have_selector('div.alert-success')
+			should have_selector('title', text: 'Daily Schedule')
+			should_not have_content(event.title)
 		end
 	end
 end

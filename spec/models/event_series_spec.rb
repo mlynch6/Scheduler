@@ -44,6 +44,8 @@ describe EventSeries do
   	it { should respond_to(:piece_id) }
   	
   	it { should respond_to(:events) }
+  	
+  	it { should respond_to(:destroy_event) }
   end
   
   context "(Valid)" do
@@ -281,6 +283,103 @@ describe EventSeries do
 	  it "end_date" do
 			series.reload.end_date.should == Date.new(2012,1,15)
 	  end
+  end
+  
+  context "(Methods)" do
+  	context "destroy_event" do
+  		let(:daily_series) { FactoryGirl.create(:event_series,
+										period: 'Daily',
+										start_date: Date.new(2012,1,1),
+										end_date: Date.new(2012,1,5),
+										title: "Series Event",
+										location_id: location.id,
+										start_time: "9AM",
+										duration: 60) }
+			
+  		describe "with mode = single" do
+	  		it "deletes the event" do
+	  			event = daily_series.events.offset(1).first		#01/02/2012
+	  			daily_series.destroy_event(:single, event)
+	  			
+	  			Event.find_by_id(event.id).should be_nil
+	  		end
+	  		
+	  		it "does not delete the other repeating events" do
+	  			event = daily_series.events.offset(1).first		#01/02/2012
+	  			daily_series.destroy_event(:single, event)
+	  			
+	  			dts = ["01/01/2012", "01/03/2012", "01/04/2012", "01/05/2012"]
+				
+					daily_series.events.count.should == 4
+					daily_series.events.each do |e|
+						dts.should include e.start_date
+					end
+	  		end
+	  		
+	  		it "updates the series start_date when the first event in series is deleted" do
+	  			event = daily_series.events.first		#01/01/2012
+	  			daily_series.destroy_event(:single, event)
+	  			
+	  			Event.find_by_id(event.id).should be_nil
+	  			daily_series.start_date.should == Date.new(2012,1,2)
+	  			daily_series.end_date.should == Date.new(2012,1,5)
+	  		end
+	  		
+	  		it "updates the series end_date when the last event in series is deleted" do
+			  	event = daily_series.events.last		#01/05/2012
+	  			daily_series.destroy_event(:single, event)
+	  			
+	  			Event.find_by_id(event.id).should be_nil
+	  			daily_series.start_date.should == Date.new(2012,1,1)
+	  			daily_series.end_date.should == Date.new(2012,1,4)
+				end
+			end
+			
+			describe "with mode = all" do
+				let(:event) { daily_series.events.offset(1).first }	#01/02/2012
+				let(:events) { daily_series.events }
+				
+				before do
+					daily_series.destroy_event(:all, event)
+		  	end
+	  			
+				it "deletes the series" do
+					EventSeries.find_by_id(daily_series.id).should be_nil
+				end
+				
+				it "deletes the all events in the series" do
+					events.each do |e|
+						Event.find_by_id(e.id).should be_nil
+					end
+				end
+			end
+			
+			describe "with mode = future" do
+				let(:event) { daily_series.events.offset(2).first }	#01/03/2012
+				
+				before do
+					daily_series.destroy_event(:future, event)
+				end
+				
+				it "deletes the event" do
+					Event.find_by_id(event.id).should be_nil
+				end
+				
+				it "deletes the repeating events in future" do
+					dts = ["01/01/2012", "01/02/2012"]
+				
+					daily_series.events.count.should == 2
+					daily_series.events.each do |e|
+						dts.should include e.start_date
+					end
+				end
+				
+				it "updates the series end_date" do
+	  			daily_series.start_date.should == Date.new(2012,1,1)
+	  			daily_series.end_date.should == Date.new(2012,1,2)
+				end
+			end
+  	end
   end
   
   context "(Warnings)" do

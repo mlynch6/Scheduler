@@ -32,7 +32,7 @@ class Permission
 				
 				#destroy
 				allow [:subscriptions, :addresses, :phones, :seasons, :scenes, :characters, 
-						:casts],
+						:casts, :events, :rehearsals, :company_classes, :costume_fittings],
 						[:destroy]
 				
 				#activate & inactivate

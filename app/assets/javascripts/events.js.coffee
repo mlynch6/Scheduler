@@ -44,6 +44,7 @@ jQuery ->
 	$('#event_employee_ids').chosen()
 	hideEventFields()
 	hideRepeatingFields()
+	$('.mash-no-confirm').removeAttr('data-confirm')
 	
 	$('#event_period').change ->
 		hideRepeatingFields()

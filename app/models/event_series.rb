@@ -29,6 +29,25 @@ class EventSeries < ActiveRecord::Base
 																										after_message: 'must be after the Start Date' }
 	validate :events_are_valid, on: :create
 	
+	def destroy_event(mode = :single, event)
+		EventSeries.transaction do
+			case mode.to_sym
+				when :all
+					self.destroy
+				when :future
+					events.where("start_at >= :start", { :start => event.start_at} ).destroy_all
+					update_attribute(:end_date, events.last.start_date)
+				else #:single
+					first_event = events.first
+					last_event = events.last
+					
+					event.destroy
+					update_attribute(:start_date, events.first.start_date) if event == first_event
+					update_attribute(:end_date, events.last.start_date) if event == last_event
+			end
+		end
+	end
+	
 private
 
 	def events_are_valid

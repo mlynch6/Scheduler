@@ -21,7 +21,7 @@ FactoryGirl.define do
 		sequence(:title)	{ |n| "Event #{n}" }
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
-		start_time				"9AM"
+		start_time				"9:15AM"
 		duration					60
 	end
 	
@@ -30,7 +30,7 @@ FactoryGirl.define do
 		sequence(:title)	{ |n| "Company Class #{n}" }
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
-		start_time				"9AM"
+		start_time				"9:15AM"
 		duration					60
 	end
 	
@@ -39,7 +39,7 @@ FactoryGirl.define do
 		sequence(:title)	{ |n| "Rehearsal #{n}" }
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
-		start_time				"9AM"
+		start_time				"9:15AM"
 		duration					60
 		piece
 	end
@@ -49,7 +49,7 @@ FactoryGirl.define do
 		sequence(:title)	{ |n| "Costume Fitting #{n}" }
 		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
-		start_time				"8:30AM"
+		start_time				"8:45AM"
 		duration					30
 	end
 end

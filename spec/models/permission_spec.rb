@@ -92,6 +92,7 @@ shared_examples "a member of the Artistic Staff" do
 		it { should allow(:events, :create) }
 		it { should allow(:events, :edit) }
 		it { should allow(:events, :update) }
+		it { should allow(:events, :destroy) }
 	end
 	
 	context "rehearsals" do
@@ -99,6 +100,7 @@ shared_examples "a member of the Artistic Staff" do
 		it { should allow(:rehearsals, :create) }
 		it { should allow(:rehearsals, :edit) }
 		it { should allow(:rehearsals, :update) }
+		it { should allow(:rehearsals, :destroy) }
 	end
 	
 	context "company_classes" do
@@ -106,6 +108,7 @@ shared_examples "a member of the Artistic Staff" do
 		it { should allow(:company_classes, :create) }
 		it { should allow(:company_classes, :edit) }
 		it { should allow(:company_classes, :update) }
+		it { should allow(:company_classes, :destroy) }
 	end
 	
 	context "costume_fittings" do
@@ -113,6 +116,7 @@ shared_examples "a member of the Artistic Staff" do
 		it { should allow(:costume_fittings, :create) }
 		it { should allow(:costume_fittings, :edit) }
 		it { should allow(:costume_fittings, :update) }
+		it { should allow(:costume_fittings, :destroy) }
 	end
 end
 
@@ -315,21 +319,25 @@ describe Permission do
 		it { should_not allow(:casts, :destroy) }
 		
 		it { should_not allow(:events, :index) }
+		it { should_not allow(:events, :destroy) }
 		
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }
 		it { should_not allow(:rehearsals, :edit) }
 		it { should_not allow(:rehearsals, :update) }
+		it { should_not allow(:rehearsals, :destroy) }
 		
 		it { should_not allow(:company_classes, :new) }
 		it { should_not allow(:company_classes, :create) }
 		it { should_not allow(:company_classes, :edit) }
 		it { should_not allow(:company_classes, :update) }
+		it { should_not allow(:company_classes, :destroy) }
 		
 		it { should_not allow(:costume_fittings, :new) }
 		it { should_not allow(:costume_fittings, :create) }
 		it { should_not allow(:costume_fittings, :edit) }
 		it { should_not allow(:costume_fittings, :update) }
+		it { should_not allow(:costume_fittings, :destroy) }
 	end
 	
 	context "as Employee" do
@@ -424,20 +432,6 @@ describe Permission do
 			it { should allow(:employees, :destroy) }
 			it { should allow(:locations, :destroy) }
 			it { should allow(:pieces, :destroy) }
-		end
-		
-		context "for company_classes" do
-			it { should allow(:company_classes, :new) }
-			it { should allow(:company_classes, :create) }
-			it { should allow(:company_classes, :edit) }
-			it { should allow(:company_classes, :update) }
-		end
-		
-		context "for costume_fittings" do
-			it { should allow(:costume_fittings, :new) }
-			it { should allow(:costume_fittings, :create) }
-			it { should allow(:costume_fittings, :edit) }
-			it { should allow(:costume_fittings, :update) }
 		end
 		
 		context "for subscription_plans" do

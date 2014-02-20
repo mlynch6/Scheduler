@@ -13,5 +13,14 @@
 	
 	<%= f.submit_group do %>
 		<%= f.submit_primary 'Update' %>
+		
+		<% if allow? @event.type.underscore.pluralize, "destroy" %>
+			<% if @event.event_series %>
+				<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"><%= content_tag(:span, nil, class: "glyphicon glyphicon-trash") %> Delete</button>
+				<%= render 'delete_series_modal', :event => @event %>
+			<% else %>
+				<%= delete_button 'Delete', @event %>
+			<% end %>
+		<% end %>
 	<% end %>
 <% end %>
