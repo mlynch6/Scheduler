@@ -7,14 +7,15 @@ class Permission
 		if user
 			allow :static_pages, [:dashboard]
 			allow [:locations, :pieces, :scenes, :characters, :employees, :events], [:index]
-			allow [:pieces], [:show]
+			allow [:pieces, :events], [:show]
 			
 			if user.role == "Administrator"
 				#index
 				allow [:users, :seasons, :casts], [:index]
 				
 				#show
-				allow [:accounts, :subscriptions, :agma_profiles, :employees, :seasons], [:show]
+				allow [:accounts, :subscriptions, :agma_profiles, :employees, :seasons], 
+						[:show]
 				
 				#new only
 				allow [:casts], [:new]

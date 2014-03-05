@@ -25,5 +25,7 @@ FactoryGirl.define do
 		rehearsal_max_hrs_per_day			6
 	 	rehearsal_increment_min 			30
 	 	class_break_min								15
+	 	rehearsal_break_min_per_hr		5
+	 	costume_increment_min					15
 	end
 end

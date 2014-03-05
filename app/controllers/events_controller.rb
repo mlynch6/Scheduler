@@ -1,10 +1,20 @@
 class EventsController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	before_filter :get_resource, :only => [:edit, :update, :destroy, :show]
 	
   def index
-  	@date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i) rescue Time.zone.today
-  	@locations = Location.active.map { |location| location.name }
-  	@events = Event.for_daily_calendar(@date).group_by(&:location_name)
+  	params[:year] ||= Time.zone.today.year
+  	params[:month] ||= Time.zone.today.month
+  	params[:day] ||= Time.zone.today.day
+  	@events = Event.between(Time.at(params[:start].to_i).to_s(:db), Time.at(params[:end].to_i).to_s(:db))
+		
+		render layout: "public_application"
+	end
+	
+	def show
+		respond_to do |format|
+			format.html { redirect_to events_path }
+			format.js { render :layout => false }
+		end
 	end
 	
 	def new
@@ -80,6 +90,10 @@ class EventsController < ApplicationController
 private
 	def get_resource
 		@event = Event.find(params[:id])
+		if @event.event_series
+			@event.period = @event.event_series.period
+			@event.end_date = @event.event_series.end_date
+		end
 	end
 
 	#setup for form - dropdowns, etc

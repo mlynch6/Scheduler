@@ -28,7 +28,7 @@ describe "Event (non-Repeating) Pages:" do
 			should_not have_selector('label', text: 'Piece')
 		end
 		
-		it "is not repeating by default", js: true do
+		it "is not repeating by default" do
 			log_in
 	  	visit new_event_path
 	  	click_link 'Repeat'
@@ -80,7 +80,7 @@ describe "Event (non-Repeating) Pages:" do
 			end
 		end
 
-		context "with valid info" do
+		context "with valid info", js: true do
 			it "creates new Event without Invitees" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
@@ -89,16 +89,16 @@ describe "Event (non-Repeating) Pages:" do
 		  	fill_in "Title", with: "Test Event"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
-		  	fill_in 'Start Time', with: "10AM"
+		  	fill_in 'Start Time', with: "10:15AM"
 		  	fill_in 'Duration', with: 60
 		  	click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Daily Schedule')
+				should have_selector('h1', text: 'Calendar')
 				
 				should have_content("Test Event")
 				should have_content(location.name)
-				should have_content("10:00 AM to 11:00 AM")
+				should have_content("10:15 AM - 11:15 AM")
 			end
 		
 			it "creates new Event with Invitees" do
@@ -110,17 +110,22 @@ describe "Event (non-Repeating) Pages:" do
 		  	fill_in "Title", with: "Test Event"
 		  	select location.name, from: "Location"
 		  	fill_in 'Date', with: "01/31/2013"
-		  	fill_in 'Start Time', with: "9AM"
+		  	fill_in 'Start Time', with: "9:15 AM"
 		  	fill_in 'Duration', with: 90
-		  	select e1.full_name, from: "Invitees"
+		  	select_from_chosen e1.full_name, from: 'Invitees'
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Daily Schedule')
+				should have_selector('h1', text: 'Calendar')
 				
 				should have_content("Test Event")
 				should have_content(location.name)
-				should have_content("9:00 AM to 10:30 AM")
+				should have_content("9:15 AM - 10:45 AM")
+				
+				open_modal(".mash-event")
+				click_link "Edit"
+				
+				should have_content(e1.full_name)
 			end
 		end
 	
@@ -189,18 +194,19 @@ describe "Event (non-Repeating) Pages:" do
 	end
 	
 	context "#edit" do
-		it "has correct title" do
+		it "has correct title", js: true do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event, account: current_account,
 					location: location,
 					start_date: Time.zone.today)
 	  	click_link 'Calendar'
-	  	click_link 'Daily Schedule'
-	  	click_link 'Edit'
 	  	
-	  	should have_selector('title', text: 'Edit Event')
-			should have_selector('h1', text: 'Edit Event')
+	  	should have_content(event.title)
+			open_modal(".mash-event")
+			click_link "Edit"
+	  	
+	  	should have_selector('h1', text: 'Edit Event')
 		end
 		
 		it "has correct Navigation" do
@@ -212,7 +218,6 @@ describe "Event (non-Repeating) Pages:" do
 	  	visit edit_event_path(event)
 	
 			should have_selector('li.active', text: 'Calendar')
-			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
 		it "only shows applicable fields", js: true do
@@ -226,8 +231,6 @@ describe "Event (non-Repeating) Pages:" do
 			should_not have_selector('label', text: 'Piece')
 			
 			should have_selector('a', text: 'Delete')
-			should_not have_selector('a', text: 'Delete Only This Event')
-			should_not have_selector('a', text: 'Delete All Future Events')
 		end
 		
 	  it "record with error" do
@@ -244,7 +247,7 @@ describe "Event (non-Repeating) Pages:" do
 			should have_selector('div.alert-danger')
 		end
 	 
-		it "record with valid info saves record" do
+		it "record with valid info saves record", js: true do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event, account: current_account,
@@ -257,7 +260,7 @@ describe "Event (non-Repeating) Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Daily Schedule')
+			should have_selector('h1', text: 'Calendar')
 			should have_content(new_title)
 		end
 		
@@ -329,15 +332,14 @@ describe "Event (non-Repeating) Pages:" do
 		end
 	end
   
-  context "#index" do
+  context "#index", js: true do
   	it "has correct title & headers" do
 			log_in
 			click_link "Calendar"
-	  	click_link "Daily Schedule"
 	  	
-	  	should have_selector('title', text: 'Daily Schedule')
+	  	should have_selector('h1', text: 'Calendar')
 		 	
-		  should have_selector('h2', text: Time.zone.today.strftime('%A, %B %-d, %Y'))
+		  should have_selector('h2', text: Time.zone.today.strftime('%B %-d, %Y'))
 		  should have_content(Time.zone.today.strftime('%A'))
 		end
 		
@@ -346,7 +348,6 @@ describe "Event (non-Repeating) Pages:" do
 			visit events_path
 	
 			should have_selector('li.active', text: 'Calendar')
-			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
 		it "without records" do
@@ -378,36 +379,42 @@ describe "Event (non-Repeating) Pages:" do
 	    end
 		end
 		
-		it "shows Event details in popup window", js: true do
-			pending "seems to wok in GUI, but Time is off in test by 1 hr"
+		it "lists Company Class records" do
 			log_in
 			loc = FactoryGirl.create(:location, account: current_account)
-			emp = FactoryGirl.create(:employee, account: current_account)
-			event = FactoryGirl.create(:event,
+			FactoryGirl.create(:company_class,
 					account: current_account,
 					location: loc,
-					start_date: Time.zone.today,
-					start_time: '10:15 AM',
-					duration: 60)
-			FactoryGirl.create(:invitation, event: event, employee: emp)
+					start_date: Time.zone.today)
 			visit events_path
-			find("#event_#{event.id}").click
-			wait_until { find(".modal-dialog").visible? }
-			
-			should have_selector('small', text: 'Event')
-			should have_selector('div.dtl-label', text: 'Location')
-			should have_selector('div.dtl-label', text: 'Date')
-			should have_selector('div.dtl-label', text: 'Time')
-			should have_selector('div.dtl-label', text: 'Duration')
-			should_not have_selector('div.dtl-label', text: 'Piece')
-			should have_selector('div.dtl-label', text: 'Invitees')
-			
-			should have_content(event.title)
-			should have_content(event.location.name)
-			should have_content(event.start_date)
-			should have_content('10:15 AM to 11:15 AM')
-			should have_content(event.duration)
-			should have_content(emp.full_name)
+	
+			Event.for_daily_calendar(Time.zone.today).each do |company_class|
+				should have_selector('div', text: company_class.title)
+				should have_selector('div', text: company_class.location.name)
+				should have_content(company_class.start_at.to_s(:hr12))
+				should have_content(company_class.end_at.to_s(:hr12))
+				
+				should have_link('Edit', href: edit_company_class_path)
+	    end
+		end
+		
+		it "lists Costume Fitting records" do
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			FactoryGirl.create(:costume_fitting,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today)
+			visit events_path
+	
+			Event.for_daily_calendar(Time.zone.today).each do |costume_fitting|
+				should have_selector('div', text: costume_fitting.title)
+				should have_selector('div', text: costume_fitting.location.name)
+				should have_content(costume_fitting.start_at.to_s(:hr12))
+				should have_content(costume_fitting.end_at.to_s(:hr12))
+				
+				should have_link('Edit', href: edit_costume_fitting_path)
+	    end
 		end
 		
 		it "lists Rehearsal records" do
@@ -430,179 +437,6 @@ describe "Event (non-Repeating) Pages:" do
 				
 				should have_link('Edit', href: edit_rehearsal_path)
 	    end
-		end
-		
-		it "shows Rehearsal details in popup window", js: true do
-			pending "seems to wok in GUI, but Time is off in test by 1 hr"
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			emp = FactoryGirl.create(:employee, account: current_account)
-			piece = FactoryGirl.create(:piece, account: current_account)
-			event = FactoryGirl.create(:rehearsal,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today,
-					start_time: '10:15am',
-					duration: 60,
-					piece: piece)
-			FactoryGirl.create(:invitation, event: event, employee: emp)
-			visit events_path
-			find("#event_#{event.id}").click
-			wait_until { find(".modal-dialog").visible? }
-			
-			should have_selector('small', text: 'Rehearsal')
-			should have_selector('div.dtl-label', text: 'Location')
-			should have_selector('div.dtl-label', text: 'Date')
-			should have_selector('div.dtl-label', text: 'Time')
-			should have_selector('div.dtl-label', text: 'Duration')
-			should have_selector('div.dtl-label', text: 'Piece')
-			should have_selector('div.dtl-label', text: 'Invitees')
-			
-			should have_content(event.title)
-			should have_content(event.location.name)
-			should have_content(event.start_date)
-			should have_content(event.start_at.to_s(:hr12))
-			should have_content(event.end_at.to_s(:hr12))
-			should have_content(event.duration)
-			should have_content(event.piece.name)
-			should have_content(emp.full_name)
-		end
-		
-		it "lists Company Class records" do
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			FactoryGirl.create(:company_class,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today)
-			visit events_path
-	
-			Event.for_daily_calendar(Time.zone.today).each do |company_class|
-				should have_selector('div', text: company_class.title)
-				should have_selector('div', text: company_class.location.name)
-				should have_content(company_class.start_at.to_s(:hr12))
-				should have_content(company_class.end_at.to_s(:hr12))
-				
-				should have_link('Edit', href: edit_company_class_path)
-	    end
-		end
-		
-		it "shows Company Class break" do
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			profile = current_account.agma_profile
-			FactoryGirl.create(:company_class,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today)
-			visit events_path
-	
-			Event.for_daily_calendar(Time.zone.today).each do |company_class|
-				should have_content("#{profile.class_break_min} min Break")
-	    end
-		end
-		
-		it "does not show Company Class break if contract break is 0" do
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			profile = AgmaProfile.find_by_account_id(current_account.id)
-			profile.class_break_min = 0
-			profile.save
-			
-			FactoryGirl.create(:company_class,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today)
-			visit events_path
-	
-			Event.for_daily_calendar(Time.zone.today).each do |company_class|
-				should_not have_content("#{profile.class_break_min} min Break")
-	    end
-		end
-		
-		it "shows Company Class details in popup window", js: true do
-			pending "seems to wok in GUI, but Time is off in test by 1 hr"
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			emp = FactoryGirl.create(:employee, account: current_account)
-			event = FactoryGirl.create(:company_class,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today,
-					start_time: '10:15am',
-					duration: 60)
-			FactoryGirl.create(:invitation, event: event, employee: emp)
-			visit events_path
-			find("#event_#{event.id}").click
-			wait_until { find(".modal-dialog").visible? }
-			
-			should have_selector('small', text: 'Company Class')
-			should have_selector('div.dtl-label', text: 'Location')
-			should have_selector('div.dtl-label', text: 'Date')
-			should have_selector('div.dtl-label', text: 'Time')
-			should have_selector('div.dtl-label', text: 'Duration')
-			should_not have_selector('div.dtl-label', text: 'Piece')
-			should have_selector('div.dtl-label', text: 'Invitees')
-			
-			should have_content(event.title)
-			should have_content(event.location.name)
-			should have_content(event.start_date)
-			should have_content(event.start_at.to_s(:hr12))
-			should have_content(event.end_at.to_s(:hr12))
-			should have_content(event.duration)
-			should have_content(emp.full_name)
-		end
-		
-		it "lists Costume Fitting records" do
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			FactoryGirl.create(:costume_fitting,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today)
-			visit events_path
-	
-			Event.for_daily_calendar(Time.zone.today).each do |costume_fitting|
-				should have_selector('div', text: costume_fitting.title)
-				should have_selector('div', text: costume_fitting.location.name)
-				should have_content(costume_fitting.start_at.to_s(:hr12))
-				should have_content(costume_fitting.end_at.to_s(:hr12))
-				
-				should have_link('Edit', href: edit_costume_fitting_path)
-	    end
-		end
-		
-		it "shows Costume Fitting details in popup window", js: true do
-			pending "seems to wok in GUI, but Time is off in test by 1 hr"
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			emp = FactoryGirl.create(:employee, account: current_account)
-			event = FactoryGirl.create(:costume_fitting,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today,
-					start_time: '10:15am',
-					duration: 60)
-			FactoryGirl.create(:invitation, event: event, employee: emp)
-			visit events_path
-			find("#event_#{event.id}").click
-			wait_until { find(".modal-dialog").visible? }
-			
-			should have_selector('small', text: 'Costume Fitting')
-			should have_selector('div.dtl-label', text: 'Location')
-			should have_selector('div.dtl-label', text: 'Date')
-			should have_selector('div.dtl-label', text: 'Time')
-			should have_selector('div.dtl-label', text: 'Duration')
-			should_not have_selector('div.dtl-label', text: 'Piece')
-			should have_selector('div.dtl-label', text: 'Invitees')
-			
-			should have_content(event.title)
-			should have_content(event.location.name)
-			should have_content(event.start_date)
-			should have_content(event.start_at.to_s(:hr12))
-			should have_content(event.end_at.to_s(:hr12))
-			should have_content(event.duration)
-			should have_content(emp.full_name)
 		end
 		
 		it "has links for Super Admin" do
@@ -638,20 +472,246 @@ describe "Event (non-Repeating) Pages:" do
 			should have_link('New Costume Fitting')
 		end
 		
-		describe "sidenav calendar" do    	
-			it "navigates to correct day", js: true do
+		describe "with date in URL" do    	
+			it "navigates to correct day" do
 				log_in
 				visit events_path+"/2014/1/1"
-				should have_selector('h2', text: "January 1, 2014")
 				
-				click_link '3'
-				should have_selector('h1', text: 'Daily Schedule')
-				should have_selector('h2', text: "January 3, 2014")
+				should have_selector('h2', text: "January 1, 2014")
 			end
 		end
 	end
 	
-	context "#destroy" do
+	context "#show", js: true do
+		it "redirects back to #index if try to use show URL" do
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			event = FactoryGirl.create(:event,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today)
+			visit events_path(event)
+			
+			should have_selector('h1', text: 'Calendar')
+		end
+		
+		it "displays Event details in popup window" do
+			pending "seems to wok in GUI, but Time is off in test by 1 hr"
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			emp = FactoryGirl.create(:employee, account: current_account)
+			event = FactoryGirl.create(:event,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today,
+					start_time: '10:15 AM',
+					duration: 60)
+			FactoryGirl.create(:invitation, event: event, employee: emp)
+			visit events_path
+			open_modal(".mash-event")
+			
+			should have_selector('small', text: 'Event')
+			should have_selector('div.dtl-label', text: 'Location')
+			should have_selector('div.dtl-label', text: 'Date')
+			should have_selector('div.dtl-label', text: 'Time')
+			should have_selector('div.dtl-label', text: 'Duration')
+			should_not have_selector('div.dtl-label', text: 'Piece')
+			should have_selector('div.dtl-label', text: 'Invitees')
+			
+			should have_content(event.title)
+			should have_content(event.location.name)
+			should have_content(event.start_date)
+			should have_content('10:15 AM to 11:15 AM')
+			should have_content(event.duration)
+			should have_content(emp.full_name)
+		end
+		
+		describe "displays Company Class" do
+			it "details in popup window" do
+				pending "seems to wok in GUI, but Time is off in test by 1 hr"
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				emp = FactoryGirl.create(:employee, account: current_account)
+				event = FactoryGirl.create(:company_class,
+						account: current_account,
+						location: loc,
+						start_date: Time.zone.today,
+						start_time: '10:15am',
+						duration: 60)
+				FactoryGirl.create(:invitation, event: event, employee: emp)
+				visit events_path
+				open_modal(".mash-event")
+				
+				should have_selector('small', text: 'Company Class')
+				should have_selector('div.dtl-label', text: 'Location')
+				should have_selector('div.dtl-label', text: 'Date')
+				should have_selector('div.dtl-label', text: 'Time')
+				should have_selector('div.dtl-label', text: 'Duration')
+				should_not have_selector('div.dtl-label', text: 'Piece')
+				should have_selector('div.dtl-label', text: 'Invitees')
+				
+				should have_content(event.title)
+				should have_content(event.location.name)
+				should have_content(event.start_date)
+				should have_content('10:15 AM to 11:15 AM')
+				should have_content(event.duration)
+				should have_content(emp.full_name)
+			end
+			
+			it "break in popup window" do
+				pending "seems to wok in GUI, but Time is off in test by 1 hr"
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				profile = AgmaProfile.find_by_account_id(current_account.id)
+				profile.class_break_min = 15
+				profile.save
+				
+				emp = FactoryGirl.create(:employee, account: current_account)
+				event = FactoryGirl.create(:company_class,
+						account: current_account,
+						location: loc,
+						start_date: Time.zone.today,
+						start_time: '10:15am',
+						duration: 60)
+				FactoryGirl.create(:invitation, event: event, employee: emp)
+				visit events_path
+				open_modal(".mash-event")
+				
+				should have_selector('div.alert-info', text: 'Break')
+				should have_content('11:15 AM to 11:30 AM for 15 min')
+			end
+			
+			it "without break if contract break is 0" do
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				profile = AgmaProfile.find_by_account_id(current_account.id)
+				profile.class_break_min = 0
+				profile.save
+				
+				FactoryGirl.create(:company_class,
+						account: current_account,
+						location: loc,
+						start_date: Time.zone.today)
+				visit events_path
+				open_modal(".mash-event")
+				
+				should_not have_selector('div.alert-info', text: 'Break')
+			end
+		end
+		
+		it "displays Costume Fitting details in popup window" do
+			pending "seems to wok in GUI, but Time is off in test by 1 hr"
+			log_in
+			loc = FactoryGirl.create(:location, account: current_account)
+			emp = FactoryGirl.create(:employee, account: current_account)
+			event = FactoryGirl.create(:costume_fitting,
+					account: current_account,
+					location: loc,
+					start_date: Time.zone.today,
+					start_time: '10:15am',
+					duration: 60)
+			FactoryGirl.create(:invitation, event: event, employee: emp)
+			visit events_path
+			open_modal(".mash-event")
+			
+			should have_selector('small', text: 'Costume Fitting')
+			should have_selector('div.dtl-label', text: 'Location')
+			should have_selector('div.dtl-label', text: 'Date')
+			should have_selector('div.dtl-label', text: 'Time')
+			should have_selector('div.dtl-label', text: 'Duration')
+			should_not have_selector('div.dtl-label', text: 'Piece')
+			should have_selector('div.dtl-label', text: 'Invitees')
+			
+			should have_content(event.title)
+			should have_content(event.location.name)
+			should have_content(event.start_date)
+			should have_content('10:15 AM to 11:15 AM')
+			should have_content(event.duration)
+			should have_content(emp.full_name)
+		end
+		
+		describe "displays Rehearsal" do
+			it "details in popup window" do
+				pending "seems to wok in GUI, but Time is off in test by 1 hr"
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				emp = FactoryGirl.create(:employee, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				event = FactoryGirl.create(:rehearsal,
+						account: current_account,
+						location: loc,
+						start_date: Time.zone.today,
+						start_time: '10:15am',
+						duration: 60,
+						piece: piece)
+				FactoryGirl.create(:invitation, event: event, employee: emp)
+				visit events_path
+				open_modal(".mash-event")
+				
+				should have_selector('small', text: 'Rehearsal')
+				should have_selector('div.dtl-label', text: 'Location')
+				should have_selector('div.dtl-label', text: 'Date')
+				should have_selector('div.dtl-label', text: 'Time')
+				should have_selector('div.dtl-label', text: 'Duration')
+				should have_selector('div.dtl-label', text: 'Piece')
+				should have_selector('div.dtl-label', text: 'Invitees')
+				
+				should have_content(event.title)
+				should have_content(event.location.name)
+				should have_content(event.start_date)
+				should have_content('10:15 AM to 11:15 AM')
+				should have_content(event.duration)
+				should have_content(event.piece.name)
+				should have_content(emp.full_name)
+			end
+			
+			it "break in popup window" do
+				pending "seems to wok in GUI, but Time is off in test by 1 hr"
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				profile = AgmaProfile.find_by_account_id(current_account.id)
+				profile.rehearsal_break_min_per_hr = 5
+				profile.save
+				
+				emp = FactoryGirl.create(:employee, account: current_account)
+				event = FactoryGirl.create(:rehearsal,
+						account: current_account,
+						location: loc,
+						start_date: Time.zone.today,
+						start_time: '10:15am',
+						duration: 60,
+						piece: piece)
+				FactoryGirl.create(:invitation, event: event, employee: emp)
+				visit events_path
+				open_modal(".mash-event")
+				
+				should have_selector('div.alert-info', text: 'Break')
+				should have_content('11:10 AM to 11:15 AM for 5 min')
+			end
+			
+			it "without break if contract break is 0" do
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				profile = AgmaProfile.find_by_account_id(current_account.id)
+				profile.rehearsal_break_min_per_hr = 0
+				profile.save
+				
+				FactoryGirl.create(:rehearsal,
+						account: current_account,
+						location: loc,
+						start_date: Time.zone.today,
+						piece: piece)
+				visit events_path
+				open_modal(".mash-event")
+				
+				should_not have_selector('div.alert-info', text: 'Break')
+			end
+		end
+	end
+	
+	context "#destroy", js: true do
 		it "deletes the record" do
 	  	log_in
 			location = FactoryGirl.create(:location, account: current_account)
@@ -663,13 +723,15 @@ describe "Event (non-Repeating) Pages:" do
 			visit events_path
 			
 			should have_content(event.title)
+			open_modal(".mash-event")
 			click_link "Edit"
 			
 			should have_link('Delete')
 			click_link 'Delete'
+			page.driver.browser.switch_to.alert.accept
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Daily Schedule')
+			should have_selector('h1', text: 'Calendar')
 			should_not have_content(event.title)
 		end
 	end

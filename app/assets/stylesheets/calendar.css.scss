@@ -1,126 +1,44 @@
-div.ui-datepicker { font-size: .9em; }
-
-$calendarBorder: #d3d3d3;
-$calendarHeaderBackground: #e6e6e6;
-$calendarHourHeight: 79px;
-$calendarHourWidth: 60px;
-$calendarTimeHeight: 19px;
-
-$edarkgrey: #9B9B9B;
-
-table.calendar {
-	border-collapse: collapse;
-	border-spacing: 0;
-	table-layout: fixed;
-	vertical-align: top;
-	width: 100%;
-	
-	thead {
-		text-align: center;
-		font-weight: bold;
-		font-size: 1.1em;
-		background: $calendarHeaderBackground;
+/*** jQUERY DATEPICKER ***/
+.section {
+	margin-bottom: 8px;
+	.ui-datepicker {
+		width: 99%;
+		padding: 0;
 	}
-	
-	.dayofweek-header {
-		font-size: 1.2em; font-weight: bold;
-		text-align: center; vertical-align: middle;
-		background: $calendarHeaderBackground;
-		color: $edarkgrey;
-		border-top: 1px solid $calendarBorder;
-		border-left: 1px solid $calendarBorder;
-		border-right: 1px solid $calendarBorder;
-		&:last-child {
-			border-bottom: 1px solid $calendarBorder;
-		}
-	}
-}
-  
-#calendar-weekly, #calendar-daily {
-	position: relative;
-}
-.cal-scrollable {
-	height: 721px;
-	overflow-x: hidden !important;
-	overflow-y: auto !important;
+	.ui-widget { font-size: 0.9em; }
+	.ui-datepicker table { font-size: 0.9em; }
 }
 
-.cal-weekly, .cal-daily {
-	/** FOR BACKGROUND GRID ***/
-	.hour-column {
-		width: $calendarHourWidth;
-	}
-	.grid-container { position: relative; height: 1px; }
-	.hours-wrapper, .grid-wrapper {
-		position: absolute;
-		width: 100%;
-	}
-	.hours-wrapper {
-		background: $calendarHeaderBackground;
-		font-size: .9em;
-		text-align: center;
-	}
-	.hour-slot {
-		height: $calendarHourHeight;
-		border-bottom: 1px solid $calendarBorder;
-	}
-	.time-slot {
-		height: $calendarTimeHeight;
-		border-bottom: 1px dotted $calendarBorder;
-	}
-	.hour-end {
-		border: none;
-	}
-	
-	/*** FOR DATA IN GRID ***/
-	.day-container {
-		position: relative;
-		height: 1920px;
-		border-right: 1px solid $calendarBorder;
-	}
-	
-	.cal-event {
-		position: absolute;
-		width: 95%;
-		font-size: .9em;
-		background: #c9c9c9;
-		border: 2px solid #aaaaaa;
-		padding-left: 2px;
-		border-radius: 5px;
-		overflow-x: hidden !important;
-		overflow-y: hidden !important;
-		
-		.cal-main { width: 70%; }
-		.cal-side {
-			width: 30%;
-			text-align: right;
-		}
-	}
-	
-	.cal-blue {
-		background-color: #D9EDF7;
-		border-color: #BCE8F1;
-		.title { color: #31708F; }
-	}
-	.cal-yellow {
-		background-color: #FCF8E3;
-    border-color: #FAEBCC;
-    .title { color: #8A6D3B; }
-	}
-	.cal-green {
-		background-color: #DFF0D8;
-    border-color: #D6E9C6;
-    .title { color: #3C763D; }
-	}
-	.cal-red {
-		background-color: #F2DEDE;
-    border-color: #EBCCD1;
-    .title { color: #A94442; }
-	}
-	.cal-brown {
-		background-color: #cbc7bd;
-    border-color: #654b24;
-    .title { color: #654b24; }
-		background: #cbc7bd;
-	}
+/*** FullCalendar ***/
+.fc-grid .fc-event-time {
+	font-size: 10px;
+	font-weight: normal;
+}
+.fc-event-title { font-weight: bold; }
+.fc-event-location { padding: 0 1px; }
+
+.cal-blue {
+	background-color: #D9EDF7;
+	border-color: #BCE8F1;
+	color: #31708F;
+}
+.cal-yellow {
+	background-color: #FCF8E3;
+	border-color: #FAEBCC;
+	color: #8A6D3B;
+}
+.cal-green {
+	background-color: #DFF0D8;
+	border-color: #D6E9C6;
+	color: #3C763D;
+}
+.cal-red {
+	background-color: #F2DEDE;
+	border-color: #EBCCD1;
+	color: #A94442;
+}
+.cal-brown {
+	background-color: #cbc7bd;
+	border-color: #654b24;
+	color: #654b24;
 }

@@ -21,16 +21,6 @@ describe "Rehearsal Pages:" do
 			should have_selector('li.active', text: 'New Rehearsal')
 		end
 		
-		it "has only active Employees in dropdown" do
-			log_in
-			FactoryGirl.create(:employee, account: current_account, last_name: 'Parker', first_name: 'Peter')
-			FactoryGirl.create(:employee_inactive, account: current_account, last_name: 'Kent', first_name: 'Clark')
-			visit new_rehearsal_path
-  		
-			should have_selector('option', text: 'Peter Parker')
-			should_not have_selector('option', text: 'Clark Kent')
-		end
-		
 		it "defaults Start Date when date is sent in URL" do
 			log_in
 			visit new_rehearsal_path(date: Time.zone.today.to_s)
@@ -56,7 +46,7 @@ describe "Rehearsal Pages:" do
 			end
 		end
 	
-		context "with valid info" do
+		context "with valid info", js: true do
 			it "creates new Rehearsal without Invitees" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
@@ -68,16 +58,15 @@ describe "Rehearsal Pages:" do
 		  	fill_in 'Date', with: "01/31/2012"
 		  	fill_in 'Start Time', with: "9AM"
 		  	fill_in 'Duration', with: 150
-		  	select piece.name, from: "Piece"
+		  	select_from_chosen piece.name, from: 'Piece'
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Daily Schedule')
+				should have_selector('h1', text: 'Calendar')
 				
 				should have_content("Test Rehearsal")
 				should have_content(location.name)
-				should have_content("9:00 AM to 11:30 AM")
-				should have_content(piece.name)
+				should have_content("9:00 AM - 11:30 AM")
 			end
 			
 			it "creates new Rehearsal with Invitees" do
@@ -92,17 +81,21 @@ describe "Rehearsal Pages:" do
 		  	fill_in 'Date', with: "01/31/2012"
 		  	fill_in 'Start Time', with: "9AM"
 		  	fill_in 'Duration', with: 150
-		  	select piece.name, from: "Piece"
-		  	select e1.full_name, from: "Invitees"
+		  	select_from_chosen piece.name, from: 'Piece'
+		  	select_from_chosen e1.full_name, from: 'Invitees'
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Daily Schedule')
+				should have_selector('h1', text: 'Calendar')
 				
 				should have_content("Test Rehearsal")
 				should have_content(location.name)
-				should have_content("9:00 AM to 11:30 AM")
-				should have_content(piece.name)
+				should have_content("9:00 AM - 11:30 AM")
+				
+				open_modal(".mash-event")
+				click_link "Edit"
+				
+				should have_content(e1.full_name)
 			end
 		end
 			
@@ -241,7 +234,7 @@ describe "Rehearsal Pages:" do
 	end
 	
 	context "#edit" do
-		it "has correct title" do
+		it "has correct title", js: true do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			piece = FactoryGirl.create(:piece, account: current_account)
@@ -251,11 +244,12 @@ describe "Rehearsal Pages:" do
 					piece: piece,
 					start_date: Time.zone.today)
 	  	click_link 'Calendar'
-	  	click_link 'Daily Schedule'
-	  	click_link 'Edit'
 	  	
-	  	should have_selector('title', text: 'Edit Rehearsal')
-			should have_selector('h1', text: 'Edit Rehearsal')
+	  	should have_content(rehearsal.title)
+			open_modal(".mash-event")
+			click_link "Edit"
+	  	
+	  	should have_selector('h1', text: 'Edit Rehearsal')
 		end
 		
 		it "has correct Navigation" do
@@ -270,7 +264,6 @@ describe "Rehearsal Pages:" do
 	  	visit edit_rehearsal_path(rehearsal)
 	
 			should have_selector('li.active', text: 'Calendar')
-			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
 	  it "record with error" do
@@ -290,7 +283,7 @@ describe "Rehearsal Pages:" do
 			should have_selector('div.alert-danger')
 		end
 	 
-		it "record with valid info saves rehearsal" do
+		it "record with valid info saves rehearsal", js: true do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			piece = FactoryGirl.create(:piece, account: current_account)
@@ -306,7 +299,7 @@ describe "Rehearsal Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Daily Schedule')
+			should have_selector('h1', text: 'Calendar')
 			should have_content(new_title)
 		end
 		

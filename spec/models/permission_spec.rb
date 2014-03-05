@@ -39,6 +39,7 @@ shared_examples "an employee" do
 	
 	context "events" do
 		it { should allow(:events, :index) }
+		it { should allow(:events, :show) }
 	end
 end
 

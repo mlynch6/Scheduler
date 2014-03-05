@@ -8,6 +8,7 @@ gem 'less-rails'
 gem 'therubyracer'
 gem 'prawn'
 gem 'faker', '1.2.0'
+gem 'fullcalendar-rails', '~>1.6.4'
 
 # Subscription payment processing
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
@@ -57,7 +58,7 @@ gem 'activerecord-postgresql-adapter'
 gem 'bcrypt-ruby', '~> 3.0.1'
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
+gem 'jbuilder'
 
 # Use unicorn as the app server
 gem 'unicorn', '~> 4.7.0'

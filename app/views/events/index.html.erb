@@ -1,19 +1,31 @@
-<% provide(:title, 'Daily Schedule') %>
+<% provide(:title, 'Calendar') %>
 <% provide(:header_current, 'Calendar') %>
-<% provide(:sidebar_current, 'Daily') %>
+<% provide(:sidebar_current, 'Calendar') %>
 
 <div class="page-header">
 	<h1><%= yield(:title) %></h1>
 </div>
 
-<input id="date" type="hidden" name="date" value="<%= @date.strftime('%Y/%m/%d') %>">
-
-<%= daily_calendar(@date, @locations) do |location| %>
-	<% if @events.has_key?(location) %>
-
-		<% @events[location].each do |event| %>
-			<%= render 'event', :event => event %>
+<div class="well well-sm mash-well-link">
+	<% if allow? "company_classes", "new" %>
+			<%= new_link "New Company Class", new_company_class_path(date: @date) %>
+	<% end %>
+		
+		<% if allow? "rehearsals", "new" %>
+			<%= new_link "New Rehearsal", new_rehearsal_path(date: @date) %>
 		<% end %>
 		
-	<% end %>
-<% end %>
+		<% if allow? "costume_fittings", "new" %>
+				<%= new_link "New Costume Fitting", new_costume_fitting_path(date: @date) %>
+		<% end %>
+		
+		<% if allow? "events", "new" %>
+				<%= new_link "New Event", new_event_path(date: @date) %>
+		<% end %>
+</div>
+
+<div class="row">
+	<%= content_tag "div", nil, id: "calendar", data: { year: params[:year], month: params[:month], day: params[:day] } %>
+</div>
+
+<div id="eventDialog"></div>

@@ -73,6 +73,7 @@ Spork.prefork do
 	  
 	  config.include AuthMacros
 	  config.include Utilities
+	  config.include ChosenSelect
 	end
 
 end

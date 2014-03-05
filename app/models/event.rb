@@ -42,6 +42,8 @@ class Event < ActiveRecord::Base
 	# Week starts on Monday
 	scope :for_week, lambda { |date| where(start_at: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day) }
 	scope :for_monthly_calendar, lambda { |date| where(start_at: date.beginning_of_month.beginning_of_week(:sunday)..date.end_of_month.end_of_week(:sunday)) }
+		
+	scope :between, lambda { |stime, etime| where(start_at: stime..etime) }
 	
 		
 	def start_date

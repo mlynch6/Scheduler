@@ -6,13 +6,7 @@
 	<ul class="list-group">
 		<% if allow? "events", "index" %>
 			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Daily" %>">
-				<%= link_to "Daily Schedule", events_path %>
-			</li>
-		<% end %>
-		
-		<% if allow? "events", "index" %>
-			<li class="list-group-item">
-				<div id="datepicker"></div>
+				<%= link_to "Calendar", events_path %>
 			</li>
 		<% end %>
 		

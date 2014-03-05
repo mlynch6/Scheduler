@@ -1,6 +1,0 @@
-<div class="cal-event cal-blue rehearsal" <%= calculate_offset(rehearsal.start_at, rehearsal.duration).html_safe %> data-toggle="modal" data-target="#modal_<%= rehearsal.id %>">
-	<div class="title"><%= rehearsal.title %></div>
-	<div class="time"><%= "#{rehearsal.start_time} to #{rehearsal.end_time}" %></div>
-</div>
-
-<%= render 'rehearsal_modal', :appt => rehearsal %>

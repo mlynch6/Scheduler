@@ -41,7 +41,7 @@ Scheduler::Application.routes.draw do
   end
   resources :casts,							:only => [:destroy]
   
-  resources :events,						:except => [:show]
+  resources :events
   resources :company_classes,		:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
   resources :costume_fittings,	:except => [:index, :show], 	:controller => :events, :event_type => 'CostumeFitting'
   resources :rehearsals,				:except => [:index, :show], 	:controller => :events, :event_type => 'Rehearsal'

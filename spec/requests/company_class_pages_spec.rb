@@ -28,26 +28,6 @@ describe "CompanyClass Pages:" do
 			should_not have_selector('label', text: 'Piece')
 		end
 		
-		it "has only active Locations in dropdown" do
-			log_in
-			FactoryGirl.create(:location, account: current_account, name: 'Location A')
-			FactoryGirl.create(:location_inactive, account: current_account, name: 'Location B')
-			visit new_company_class_path
-  		
-			should have_selector('option', text: 'Location A')
-			should_not have_selector('option', text: 'Location B')
-		end
-		
-		it "has only active Employees in dropdown" do
-			log_in
-			FactoryGirl.create(:employee, account: current_account, last_name: 'Parker', first_name: 'Peter')
-			FactoryGirl.create(:employee_inactive, account: current_account, last_name: 'Kent', first_name: 'Clark')
-			visit new_company_class_path
-  		
-			should have_selector('option', text: 'Peter Parker')
-			should_not have_selector('option', text: 'Clark Kent')
-		end
-		
 		it "defaults Start Date when date is sent in URL" do
 			log_in
 			visit new_company_class_path(date: Time.zone.today.to_s)
@@ -72,7 +52,7 @@ describe "CompanyClass Pages:" do
 			end
 		end
 	
-		context "with valid info" do
+		context "with valid info", js: true do
 			it "creates new Company Class without Invitees" do
 				log_in
 				location = FactoryGirl.create(:location, account: current_account)
@@ -86,11 +66,11 @@ describe "CompanyClass Pages:" do
 		  	click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Daily Schedule')
+				should have_selector('h1', text: 'Calendar')
 				
 				should have_content("Test Company Class")
 				should have_content(location.name)
-				should have_content("10:00 AM to 11:00 AM")
+				should have_content("10:00 AM - 11:00 AM")
 			end
 			
 			it "creates new Company Class with Invitees" do
@@ -104,15 +84,20 @@ describe "CompanyClass Pages:" do
 		  	fill_in 'Date', with: "01/31/2013"
 		  	fill_in 'Start Time', with: "9AM"
 		  	fill_in 'Duration', with: 90
-		  	select e1.full_name, from: "Invitees"
+		  	select_from_chosen e1.full_name, from: 'Invitees'
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Daily Schedule')
+				should have_selector('h1', text: 'Calendar')
 				
 				should have_content("Test Company Class")
 				should have_content(location.name)
-				should have_content("9:00 AM to 10:30 AM")
+				should have_content("9:00 AM - 10:30 AM")
+				
+				open_modal(".mash-event")
+				click_link "Edit"
+				
+				should have_content(e1.full_name)
 			end
 		end
 		
@@ -181,7 +166,7 @@ describe "CompanyClass Pages:" do
 	end
 	
 	context "#edit" do
-		it "has correct title" do
+		it "has correct title", js: true do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			cclass = FactoryGirl.create(:company_class,
@@ -189,11 +174,12 @@ describe "CompanyClass Pages:" do
 					location: location,
 					start_date: Time.zone.today)
 			click_link 'Calendar'
-	  	click_link 'Daily Schedule'
-	  	click_link 'Edit'
+			
+	  	should have_content(cclass.title)
+			open_modal(".mash-event")
+			click_link "Edit"
 	  	
-	  	should have_selector('title', text: 'Edit Company Class')
-			should have_selector('h1', text: 'Edit Company Class')
+	  	should have_selector('h1', text: 'Edit Company Class')
 		end
 		
 		it "has correct Navigation" do
@@ -205,7 +191,6 @@ describe "CompanyClass Pages:" do
 			visit edit_company_class_path(cclass)
 	
 			should have_selector('li.active', text: 'Calendar')
-			should have_selector('li.active', text: 'Daily Schedule')
 		end
 		
 		it "only shows applicable fields", js: true do
@@ -233,7 +218,7 @@ describe "CompanyClass Pages:" do
 			should have_selector('div.alert-danger')
 		end
 	 
-		it "record with valid info saves company class" do
+		it "record with valid info saves company class", js: true do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			cclass = FactoryGirl.create(:company_class, account: current_account,
@@ -246,7 +231,7 @@ describe "CompanyClass Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Daily Schedule')
+			should have_selector('h1', text: 'Calendar')
 			should have_content(new_title)
 		end
 		
