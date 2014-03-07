@@ -9,7 +9,7 @@ describe "CostumeFitting Pages:" do
 	  	click_link 'Calendar'
 	  	click_link 'New Costume Fitting'
 	  	
-	  	should have_selector('title', text: 'New Costume Fitting')
+	  	has_title?('New Costume Fitting').should be_true
 		  should have_selector('h1', text: 'New Costume Fitting')
 		end
 		
@@ -21,18 +21,17 @@ describe "CostumeFitting Pages:" do
 			should have_selector('li.active', text: 'New Costume Fitting')
 		end
 		
-		it "only shows applicable fields", js: true do
+		it "only shows applicable fields in Overview tab", js: true do
 			log_in
 			visit new_costume_fitting_path
 	
-			should_not have_selector('label', text: 'Piece')
-		end
-		
-		it "defaults Start Date when date is sent in URL" do
-			log_in
-			visit new_costume_fitting_path(date: Time.zone.today.to_s)
-			
-			find_field('event_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
+			has_field?('Title').should be_true
+			has_select?('Location').should be_true
+			has_field?('Date').should be_true
+			has_field?('Start Time').should be_true
+			has_field?('Duration').should be_true
+			should_not have_content('Piece')	#Using Chosen
+			should have_content('Invitees')	#Using Chosen
 		end
 		
 		context "with error" do
@@ -66,7 +65,7 @@ describe "CostumeFitting Pages:" do
 		  	click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('h1', text: 'Calendar')
+				has_title?('Calendar').should be_true
 				
 				should have_content("Test Fitting")
 				should have_content(location.name)
@@ -88,7 +87,7 @@ describe "CostumeFitting Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('h1', text: 'Calendar')
+				has_title?('Calendar').should be_true
 				
 				should have_content("Test Fitting")
 				should have_content("9:00 AM - 9:30 AM")
@@ -178,6 +177,7 @@ describe "CostumeFitting Pages:" do
 			open_modal(".mash-event")
 			click_link "Edit"
 	  	
+	  	has_title?('Edit Costume Fitting').should be_true
 	  	should have_selector('h1', text: 'Edit Costume Fitting')
 		end
 		
@@ -193,7 +193,7 @@ describe "CostumeFitting Pages:" do
 			should have_selector('li.active', text: 'Calendar')
 		end
 		
-		it "only shows applicable fields", js: true do
+		it "only shows applicable fields in Overview tab", js: true do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			fitting = FactoryGirl.create(:costume_fitting,
@@ -202,7 +202,13 @@ describe "CostumeFitting Pages:" do
 					start_date: Time.zone.today)
 	  	visit edit_costume_fitting_path(fitting)
 	
-			should_not have_selector('label', text: 'Piece')
+			has_field?('Title').should be_true
+			has_select?('Location').should be_true
+			has_field?('Date').should be_true
+			has_field?('Start Time').should be_true
+			has_field?('Duration').should be_true
+			should_not have_content('Piece')	#Using Chosen
+			should have_content('Invitees')	#Using Chosen
 		end
 		
 	  it "record with error" do
@@ -234,7 +240,7 @@ describe "CostumeFitting Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('h1', text: 'Calendar')
+			has_title?('Calendar').should be_true
 			should have_content(new_title)
 		end
 		

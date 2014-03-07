@@ -9,7 +9,7 @@ describe "Event Series Pages:" do
 	  	click_link 'Calendar'
 	  	visit new_event_path
 	  	
-	  	should have_selector('title', text: 'New Event')
+	  	has_title?('New Event').should be_true
 		  should have_selector('h1', text: 'New Event')
 		end
 		
@@ -92,6 +92,7 @@ describe "Event Series Pages:" do
 	  	
 			it "creates Series with multiple Events" do
 				should have_selector('div.alert-success')
+				has_title?('Calendar').should be_true
 				
 				(Date.new(2013,1,1)..Date.new(2013,1,5)).each do |dt|
 					should have_content(dt.strftime('%B %-d, %Y'))
@@ -155,6 +156,7 @@ describe "Event Series Pages:" do
 			open_modal(".mash-event")
 	  	click_link 'Edit'
 	  	
+	  	has_title?('Edit Event').should be_true
 	  	should have_selector('h1', text: 'Edit Event')
 		end
 		
@@ -173,8 +175,8 @@ describe "Event Series Pages:" do
 		  	click_link 'Edit'
 				open_modal('button', text: 'Update')
 				
-				should have_link('All')
-				should have_link('Only This Event')
+				should have_button('All')
+				should have_button('Only This Event')
 			end
 			
 			it "for 2nd+ event in series" do
@@ -183,21 +185,19 @@ describe "Event Series Pages:" do
 		  	click_link 'Edit'
 				open_modal('button', text: 'Update')
 				
-				should have_link('All Future Events')
-				should have_link('Only This Event')
+				should have_button('All Future Events')
+				should have_button('Only This Event')
 			end
 		end
 		
-		it "has Repeat fields populating correctly" do
-			pending "Working in GUI"
-	  	
+		it "has Repeat fields populating correctly" do	  	
 	  	visit events_path+'/2014/1/1'
 			open_modal(".mash-event")
 	  	click_link 'Edit'
 	  	click_link 'Repeat'
 	
-			should have_content('Daily')
-			should have_content('01/05/2014')
+			has_select?('Period', selected: 'Daily').should be_true
+			has_field?('End On', with: '01/05/2014').should be_true
 		end
 		
 		describe "when 'Only This Event' is selected" do

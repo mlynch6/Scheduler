@@ -9,7 +9,7 @@ describe "Subscription Plan Pages:" do
 			click_link "Administration"
 	  	click_link "Subscription Plans"
 	  	
-	  	should have_selector('title', text: 'Subscription Plans')
+	  	has_title?('Subscription Plans').should be_true
 		  should have_selector('h1', text: 'Subscription Plans')
 		end
 		
@@ -68,7 +68,7 @@ describe "Subscription Plan Pages:" do
 	  	click_link 'Subscription Plans'
 	  	click_link 'Add Subscription Plan'
 	
-			should have_selector('title', text: 'Add Subscription Plan')
+			has_title?('Add Subscription Plan').should be_true
 			should have_selector('h1', text: 'Add Subscription Plan')
 		end
 		
@@ -78,6 +78,14 @@ describe "Subscription Plan Pages:" do
 	  	
 			should have_selector('li.active', text: 'Administration')
 			should have_selector('li.active', text: 'Subscription Plans')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	visit new_admin_subscription_plan_path
+	  	
+			has_field?('Name').should be_true
+	    has_field?('Amount').should be_true
 		end
 		
 		context "with error" do
@@ -109,7 +117,7 @@ describe "Subscription Plan Pages:" do
 				click_button 'Create'
 
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Subscription Plans')
+				has_title?('Subscription Plans').should be_true
 				should have_content(new_name)
 				should have_content(new_amount)
 			end
@@ -122,9 +130,9 @@ describe "Subscription Plan Pages:" do
 			plan = FactoryGirl.create(:subscription_plan)
 			click_link 'Administration'
 	  	click_link "Subscription Plans"
-	  	click_link "Edit"
+	  	click_link "edit_#{plan.id}"
 	  	
-	  	should have_selector('title', text: 'Edit Subscription Plan')
+	  	has_title?('Edit Subscription Plan').should be_true
 			should have_selector('h1', text: 'Edit Subscription Plan')
 		end
 		
@@ -135,6 +143,15 @@ describe "Subscription Plan Pages:" do
 	  	
 			should have_selector('li.active', text: 'Administration')
 			should have_selector('li.active', text: 'Subscription Plans')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	plan = FactoryGirl.create(:subscription_plan)
+	  	visit edit_admin_subscription_plan_path(plan)
+	  	
+			has_field?('Name').should be_true
+	    has_field?('Amount').should be_true
 		end
 		
 	  it "with error shows error message" do
@@ -168,7 +185,7 @@ describe "Subscription Plan Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Subscription Plans')
+			has_title?('Subscription Plans').should be_true
 			should have_content(new_name)
 			should have_content(new_amount)
 		end
@@ -182,7 +199,7 @@ describe "Subscription Plan Pages:" do
 			click_link "delete_#{plan.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Subscription Plans')
+			has_title?('Subscription Plans').should be_true
 			
 			should_not have_content(plan.name)
 		end

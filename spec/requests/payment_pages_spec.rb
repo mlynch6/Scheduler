@@ -10,7 +10,7 @@ describe "Payment Pages:" do
 	  	click_link 'My Subscription'
 	  	click_link 'Change Payment Method'
 	  	
-	  	should have_selector('title', text: 'Change Payment Method')
+	  	has_title?('Change Payment Method').should be_true
 			should have_selector('h1', text: 'Change Payment Method')
 		end
 		
@@ -20,6 +20,16 @@ describe "Payment Pages:" do
 			
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'My Subscription')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+			visit payments_edit_path
+			
+			has_field?('Credit Card Number').should be_true
+	    has_select?('card_month').should be_true
+	    has_select?('card_year').should be_true
+	    has_field?('Security Code').should be_true
 		end
 	end
 	
@@ -43,7 +53,7 @@ describe "Payment Pages:" do
 		  click_button "Update"
 		  
 		  should have_selector('div.alert-success')
-		  should have_selector('h1', text: 'My Subscription')
+		  has_title?('My Subscription').should be_true
 		end
 		
 		describe "invalid Payment" do

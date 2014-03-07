@@ -13,7 +13,7 @@ describe "Character Pages:" do
 	  	click_link "View"
 	  	click_link "Characters"
 	  	
-	  	should have_selector('title', text: "#{piece.name} | Characters")
+	  	has_title?("#{piece.name} | Characters").should be_true
 		  should have_selector('h1', text: "#{piece.name}")
 		end
 		
@@ -94,7 +94,7 @@ describe "Character Pages:" do
 	  	click_link "Characters"
 	  	click_link "Add Character"
 	
-			should have_selector('title', text: "#{piece.name} | Add Character")
+			has_title?("#{piece.name} | Add Character").should be_true
 		  should have_selector('h1', text: "Add Character for #{piece.name}")
 		end
 		
@@ -105,6 +105,14 @@ describe "Character Pages:" do
 	
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'Pieces')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+			piece = FactoryGirl.create(:piece, account: current_account)
+			visit new_piece_character_path(piece)
+				
+	  	has_field?('Character').should be_true
 		end
 		
 		context "with error" do
@@ -137,7 +145,7 @@ describe "Character Pages:" do
 				click_button 'Create'
 
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Characters')
+				has_title?("Characters").should be_true
 				should have_content(new_name)
 			end
 		end
@@ -154,7 +162,7 @@ describe "Character Pages:" do
 	  	click_link "Characters"
 	  	click_link "Edit"
 	  	
-	  	should have_selector('title', text: "#{piece.name} | Edit Character")
+	  	has_title?("#{piece.name} | Edit Character").should be_true
 		  should have_selector('h1', text: "Edit Character for #{piece.name}")
 		end
 		
@@ -168,6 +176,15 @@ describe "Character Pages:" do
 			should have_selector('li.active', text: 'Pieces')
 		end
 		
+		it "has correct fields on form" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+			character = FactoryGirl.create(:character, account: current_account, piece: piece)
+	  	visit edit_character_path(character)
+			
+	    has_field?('Character').should be_true
+		end
+		
 	  it "with error shows error message" do
 	  	log_in
 	  	piece = FactoryGirl.create(:piece, account: current_account)
@@ -177,23 +194,6 @@ describe "Character Pages:" do
 	  	click_button 'Update'
 	
 			should have_selector('div.alert-danger')
-		end
-	
-		it "with bad record in URL shows 'Record Not Found' error" do
-			pending
-			log_in
-			visit edit_character_path(0)
-	
-			should have_content('Record Not Found')
-		end
-		
-		it "record with wrong account shows 'Record Not Found' error" do
-			pending
-			log_in
-			character_wrong_account = FactoryGirl.create(:character)
-			visit edit_character_path(character_wrong_account)
-	
-			should have_content('Record Not Found')
 		end
 	 
 		it "with valid info" do
@@ -207,7 +207,7 @@ describe "Character Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: "#{piece.name} | Characters")
+			has_title?("#{piece.name} | Characters").should be_true
 			should have_content(new_name)
 		end
 	end
@@ -221,7 +221,7 @@ describe "Character Pages:" do
 			click_link "delete_#{character.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: "#{piece.name} | Characters")
+			has_title?("#{piece.name} | Characters").should be_true
 			
 			should_not have_content(character.name)
 		end

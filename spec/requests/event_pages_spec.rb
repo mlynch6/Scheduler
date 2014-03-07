@@ -7,10 +7,10 @@ describe "Event (non-Repeating) Pages:" do
   	it "has correct title" do
 			log_in
 	  	click_link 'Calendar'
-	  	visit new_event_path
+	  	click_link 'New Event'
 	  	
-	  	should have_selector('title', text: 'New Event')
-		  should have_selector('h1', text: 'New Event')
+	  	has_title?('New Event').should be_true
+		  has_selector?('h1', text: 'New Event')
 		end
 		
 		it "has correct Navigation" do
@@ -21,11 +21,17 @@ describe "Event (non-Repeating) Pages:" do
 			should have_selector('li.active', text: 'New Event')
 		end
 		
-		it "only shows applicable fields for Overview tab", js: true do
+		it "only shows applicable fields in Overview tab", js: true do
 			log_in
 	  	visit new_event_path
 	
-			should_not have_selector('label', text: 'Piece')
+			has_field?('Title').should be_true
+			has_select?('Location').should be_true
+			has_field?('Date').should be_true
+			has_field?('Start Time').should be_true
+			has_field?('Duration').should be_true
+			should_not have_content('Piece')	#Using Chosen
+			should have_content('Invitees')	#Using Chosen
 		end
 		
 		it "is not repeating by default" do
@@ -33,7 +39,7 @@ describe "Event (non-Repeating) Pages:" do
 	  	visit new_event_path
 	  	click_link 'Repeat'
 	  	
-	  	should have_content('Never')
+	  	has_select? 'Period', selected: 'Never'
 		end
 				
 		it "has only active Locations in dropdown" do
@@ -42,7 +48,7 @@ describe "Event (non-Repeating) Pages:" do
 			FactoryGirl.create(:location_inactive, account: current_account, name: 'Location B')
 			visit new_event_path
   		
-			should have_selector('option', text: 'Location A')
+			has_select? 'Location', with_options: ['Location A']
 			should_not have_selector('option', text: 'Location B')
 		end
 		
@@ -52,15 +58,8 @@ describe "Event (non-Repeating) Pages:" do
 			FactoryGirl.create(:employee_inactive, account: current_account, last_name: 'Kent', first_name: 'Clark')
 			visit new_event_path
   		
-			should have_selector('option', text: 'Peter Parker')
+			has_select? 'Invitees', with_options: ['Peter Parker']
 			should_not have_selector('option', text: 'Clark Kent')
-		end
-		
-		it "defaults Start Date when date is sent in URL" do
-			log_in
-			visit new_event_path(date: Time.zone.today.to_s)
-			
-			find_field('event_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
 		end
 		
 		context "with error" do
@@ -94,7 +93,7 @@ describe "Event (non-Repeating) Pages:" do
 		  	click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('h1', text: 'Calendar')
+				has_title?('Calendar').should be_true
 				
 				should have_content("Test Event")
 				should have_content(location.name)
@@ -116,7 +115,7 @@ describe "Event (non-Repeating) Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('h1', text: 'Calendar')
+				has_title?('Calendar').should be_true
 				
 				should have_content("Test Event")
 				should have_content(location.name)
@@ -206,6 +205,7 @@ describe "Event (non-Repeating) Pages:" do
 			open_modal(".mash-event")
 			click_link "Edit"
 	  	
+	  	has_title?('Edit Event').should be_true
 	  	should have_selector('h1', text: 'Edit Event')
 		end
 		
@@ -220,7 +220,7 @@ describe "Event (non-Repeating) Pages:" do
 			should have_selector('li.active', text: 'Calendar')
 		end
 		
-		it "only shows applicable fields", js: true do
+		it "only shows applicable fields in Overview tab", js: true do
 			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event, account: current_account,
@@ -228,9 +228,15 @@ describe "Event (non-Repeating) Pages:" do
 					start_date: Time.zone.today)
 	  	visit edit_event_path(event)
 	
-			should_not have_selector('label', text: 'Piece')
+			has_field?('Title').should be_true
+			has_select?('Location').should be_true
+			has_field?('Date').should be_true
+			has_field?('Start Time').should be_true
+			has_field?('Duration').should be_true
+			should_not have_content('Piece')	#Using Chosen
+			should have_content('Invitees')	#Using Chosen
 			
-			should have_selector('a', text: 'Delete')
+			has_link?('Delete').should be_true
 		end
 		
 	  it "record with error" do
@@ -260,7 +266,7 @@ describe "Event (non-Repeating) Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('h1', text: 'Calendar')
+			has_title?('Calendar').should be_true
 			should have_content(new_title)
 		end
 		
@@ -337,8 +343,8 @@ describe "Event (non-Repeating) Pages:" do
 			log_in
 			click_link "Calendar"
 	  	
+	  	has_title?('Calendar').should be_true
 	  	should have_selector('h1', text: 'Calendar')
-		 	
 		  should have_selector('h2', text: Time.zone.today.strftime('%B %-d, %Y'))
 		  should have_content(Time.zone.today.strftime('%A'))
 		end
@@ -472,7 +478,7 @@ describe "Event (non-Repeating) Pages:" do
 			should have_link('New Costume Fitting')
 		end
 		
-		describe "with date in URL" do    	
+		describe "with date in URL" do
 			it "navigates to correct day" do
 				log_in
 				visit events_path+"/2014/1/1"
@@ -492,6 +498,7 @@ describe "Event (non-Repeating) Pages:" do
 					start_date: Time.zone.today)
 			visit events_path(event)
 			
+			has_title?('Calendar').should be_true
 			should have_selector('h1', text: 'Calendar')
 		end
 		
@@ -731,7 +738,7 @@ describe "Event (non-Repeating) Pages:" do
 			page.driver.browser.switch_to.alert.accept
 			
 			should have_selector('div.alert-success')
-			should have_selector('h1', text: 'Calendar')
+			has_title?('Calendar').should be_true
 			should_not have_content(event.title)
 		end
 	end

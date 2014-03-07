@@ -11,7 +11,7 @@ describe "Address Pages:" do
 				click_link "Company Information"
 		  	click_link 'Add Address'
 		
-				should have_selector('title', text: 'Add Address')
+				has_title?('Add Address').should be_true
 				should have_selector('h1', text: 'Add Address')
 			end
 			
@@ -21,6 +21,18 @@ describe "Address Pages:" do
 		
 				should have_selector('li.active', text: 'Setup')
 				should have_selector('li.active', text: 'Company Information')
+			end
+			
+			it "has correct fields on form" do
+				log_in
+				visit new_account_address_path(current_account)
+				
+		  	has_select?('Address Type').should be_true
+		    has_field?('Address').should be_true
+		    has_field?('Address 2').should be_true
+		    has_field?('City').should be_true
+		    has_select?('State').should be_true
+		    has_field?('Zip Code').should be_true
 			end
 			
 			context "with error" do
@@ -59,7 +71,7 @@ describe "Address Pages:" do
 					click_button 'Create'
 			
 					should have_selector('div.alert-success')
-					should have_selector('title', text: 'Company Information')
+					has_title?('Company Information').should be_true
 					
 					should have_content("Work Address")
 					should have_content(new_addr)
@@ -79,7 +91,7 @@ describe "Address Pages:" do
 		  	click_link "View"
 		  	click_link 'Add Address'
 		
-				should have_selector('title', text: 'Add Address')
+				has_title?('Add Address').should be_true
 				should have_selector('h1', text: 'Add Address')
 			end
 			
@@ -90,6 +102,19 @@ describe "Address Pages:" do
 		
 				should have_selector('li.active', text: 'People')
 				should have_selector('li.active', text: 'Employees')
+			end
+			
+			it "has correct fields on form" do
+				log_in
+				employee = FactoryGirl.create(:employee, account: current_account)
+				visit new_employee_address_path(employee)
+					
+		  	has_select?('Address Type').should be_true
+		    has_field?('Address').should be_true
+		    has_field?('Address 2').should be_true
+		    has_field?('City').should be_true
+		    has_select?('State').should be_true
+		    has_field?('Zip Code').should be_true
 			end
 			
 			context "with error" do
@@ -131,7 +156,7 @@ describe "Address Pages:" do
 					click_button 'Create'
 			
 					should have_selector('div.alert-success')
-					should have_selector('title', text: 'Employee')
+					has_title?('Employee').should be_true
 					
 					should have_content("Work Address")
 					should have_content(new_addr)
@@ -154,7 +179,7 @@ describe "Address Pages:" do
 				click_link "Company Information"
 		  	click_link "edit_address_#{address.id}"
 		  	
-		  	should have_selector('title', text: 'Update Address')
+		  	has_title?('Update Address').should be_true
 				should have_selector('h1', text: 'Update Address')
 			end
 			
@@ -165,6 +190,19 @@ describe "Address Pages:" do
 		
 				should have_selector('li.active', text: 'Setup')
 				should have_selector('li.active', text: 'Company Information')
+			end
+			
+			it "has correct fields on form" do
+				log_in
+				address = FactoryGirl.create(:address, addressable: current_account)
+				visit edit_account_address_path(current_account, address)
+					
+		  	has_select?('Address Type').should be_true
+		    has_field?('Address').should be_true
+		    has_field?('Address 2').should be_true
+		    has_field?('City').should be_true
+		    has_select?('State').should be_true
+		    has_field?('Zip Code').should be_true
 			end
 			
 			it "with error shows error message" do
@@ -197,7 +235,7 @@ describe "Address Pages:" do
 				click_button 'Update'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Company Information')
+				has_title?('Company Information').should be_true
 				
 				should have_content("Work Address")
 				should have_content(new_addr)
@@ -219,7 +257,7 @@ describe "Address Pages:" do
 				click_link "show_#{employee.id}"
 		  	click_link "edit_address_#{address.id}"
 		  	
-		  	should have_selector('title', text: 'Update Address')
+		  	has_title?('Update Address').should be_true
 				should have_selector('h1', text: 'Update Address')
 			end
 			
@@ -231,6 +269,20 @@ describe "Address Pages:" do
 		
 				should have_selector('li.active', text: 'People')
 				should have_selector('li.active', text: 'Employees')
+			end
+			
+			it "has correct fields on form" do
+				log_in
+				employee = FactoryGirl.create(:employee, account: current_account)
+				address = FactoryGirl.create(:address_employee, addressable: employee)
+				visit edit_employee_address_path(employee, address)
+					
+		  	has_select?('Address Type').should be_true
+		    has_field?('Address').should be_true
+		    has_field?('Address 2').should be_true
+		    has_field?('City').should be_true
+		    has_select?('State').should be_true
+		    has_field?('Zip Code').should be_true
 			end
 			
 			it "with error shows error message" do
@@ -265,7 +317,7 @@ describe "Address Pages:" do
 				click_button 'Update'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Employee')
+				has_title?('Employee').should be_true
 				
 				should have_content("Work Address")
 				should have_content(new_addr)
@@ -286,7 +338,7 @@ describe "Address Pages:" do
 				click_link "delete_address_#{address.id}"
 				
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Company Information')
+				has_title?('Company Information').should be_true
 				
 				should_not have_content("#{address.addr_type} Address")
 				should_not have_content(address.addr)
@@ -306,7 +358,7 @@ describe "Address Pages:" do
 				click_link "delete_address_#{address.id}"
 				
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Employee')
+				has_title?('Employee').should be_true
 				
 				should_not have_content("#{address.addr_type} Address")
 				should_not have_content(address.addr)

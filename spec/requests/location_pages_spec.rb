@@ -9,7 +9,7 @@ describe "Location Pages:" do
   		click_link "Setup"
 	  	click_link "Locations"
 	  	
-	  	should have_selector('title', text: 'Locations')
+	  	has_title?('Locations').should be_true
 		  should have_selector('h1', text: 'Locations')
 		end
 		
@@ -154,7 +154,7 @@ describe "Location Pages:" do
 			click_link "inactivate_#{location.id}"
 				
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Locations')
+			has_title?('Locations').should be_true
 				
 			click_link 'Active'
 			should_not have_content(location.name)
@@ -173,7 +173,7 @@ describe "Location Pages:" do
 			click_link "activate_#{location.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Locations')
+			has_title?('Locations').should be_true
 			
 			click_link 'Inactive'
 			should_not have_content(location.name)
@@ -190,7 +190,7 @@ describe "Location Pages:" do
 	  	click_link "Locations"
 	  	click_link "Add Location"
 	
-			should have_selector('title', text: 'Add Location')
+			has_title?('Add Location').should be_true
 			should have_selector('h1', text: 'Add Location')
 		end
 		
@@ -200,6 +200,13 @@ describe "Location Pages:" do
 	
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'Locations')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	visit new_location_path
+	    
+	    has_field?('Name').should be_true
 		end
 		
 		context "with error" do
@@ -229,7 +236,7 @@ describe "Location Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Locations')
+				has_title?('Locations').should be_true
 				should have_content(new_name)
 			end
 		end
@@ -243,7 +250,7 @@ describe "Location Pages:" do
 			click_link "Locations"
 	  	click_link "Edit"
 	  	
-	  	should have_selector('title', text: 'Edit Location')
+	  	has_title?('Edit Location').should be_true
 			should have_selector('h1', text: 'Edit Location')
 		end
 		
@@ -256,6 +263,14 @@ describe "Location Pages:" do
 			should have_selector('li.active', text: 'Locations')
 		end
 		
+		it "has correct fields on form" do
+			log_in
+	  	location = FactoryGirl.create(:location, account: current_account)
+	  	visit edit_location_path(location)
+	    
+	    has_field?('Name').should be_true
+		end
+		
 	  it "record with error" do
 	  	log_in
 	  	location = FactoryGirl.create(:location, account: current_account)
@@ -264,23 +279,6 @@ describe "Location Pages:" do
 	  	click_button 'Update'
 	
 			should have_selector('div.alert-danger')
-		end
-	
-		it "with bad record in URL shows 'Record Not Found' error" do
-			pending
-			log_in
-			visit edit_location_path(0)
-	
-			should have_content('Record Not Found')
-		end
-		
-		it "record with wrong account shows 'Record Not Found' error" do
-			pending
-			log_in
-			location_wrong_account = FactoryGirl.create(:location)
-			visit edit_location_path(location_wrong_account)
-	
-			should have_content('Record Not Found')
 		end
 	 
 		it "record with valid info saves location" do
@@ -293,7 +291,7 @@ describe "Location Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Locations')
+			has_title?('Locations').should be_true
 			should have_content(new_name)
 		end
 	end
@@ -306,7 +304,7 @@ describe "Location Pages:" do
 			click_link "delete_#{location.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Locations')
+			has_title?('Locations').should be_true
 			
 			click_link 'All'
 			should_not have_content(location.name)

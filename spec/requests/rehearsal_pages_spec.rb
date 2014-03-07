@@ -9,7 +9,7 @@ describe "Rehearsal Pages:" do
 	  	click_link 'Calendar'
 	  	click_link 'New Rehearsal'
 	  	
-	  	should have_selector('title', text: 'New Rehearsal')
+	  	has_title?('New Rehearsal').should be_true
 		  should have_selector('h1', text: 'New Rehearsal')
 		end
 		
@@ -21,11 +21,18 @@ describe "Rehearsal Pages:" do
 			should have_selector('li.active', text: 'New Rehearsal')
 		end
 		
-		it "defaults Start Date when date is sent in URL" do
+		it "only shows applicable fields in Overview tab", js: true do
 			log_in
-			visit new_rehearsal_path(date: Time.zone.today.to_s)
-			
-			find_field('event_start_date').value.should == Time.zone.today.strftime("%m/%d/%Y")
+	  	log_in
+				visit new_rehearsal_path
+	
+			has_field?('Title').should be_true
+			has_select?('Location').should be_true
+			has_field?('Date').should be_true
+			has_field?('Start Time').should be_true
+			has_field?('Duration').should be_true
+			should have_content('Piece')	#Using Chosen
+			should have_content('Invitees')	#Using Chosen
 		end
 		
 		context "with error" do
@@ -62,7 +69,7 @@ describe "Rehearsal Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('h1', text: 'Calendar')
+				has_title?('Calendar').should be_true
 				
 				should have_content("Test Rehearsal")
 				should have_content(location.name)
@@ -86,7 +93,7 @@ describe "Rehearsal Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('h1', text: 'Calendar')
+				has_title?('Calendar').should be_true
 				
 				should have_content("Test Rehearsal")
 				should have_content(location.name)
@@ -249,6 +256,7 @@ describe "Rehearsal Pages:" do
 			open_modal(".mash-event")
 			click_link "Edit"
 	  	
+	  	has_title?('Edit Rehearsal').should be_true
 	  	should have_selector('h1', text: 'Edit Rehearsal')
 		end
 		
@@ -264,6 +272,26 @@ describe "Rehearsal Pages:" do
 	  	visit edit_rehearsal_path(rehearsal)
 	
 			should have_selector('li.active', text: 'Calendar')
+		end
+		
+		it "only shows applicable fields in Overview tab", js: true do
+			log_in
+			location = FactoryGirl.create(:location, account: current_account)
+			piece = FactoryGirl.create(:piece, account: current_account)
+			rehearsal = FactoryGirl.create(:rehearsal,
+					account: current_account,
+					location: location,
+					piece: piece,
+					start_date: Time.zone.today)
+	  	visit edit_rehearsal_path(rehearsal)
+	
+			has_field?('Title').should be_true
+			has_select?('Location').should be_true
+			has_field?('Date').should be_true
+			has_field?('Start Time').should be_true
+			has_field?('Duration').should be_true
+			should have_content('Piece')	#Using Chosen
+			should have_content('Invitees')	#Using Chosen
 		end
 		
 	  it "record with error" do
@@ -299,7 +327,7 @@ describe "Rehearsal Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('h1', text: 'Calendar')
+			has_title?('Calendar').should be_true
 			should have_content(new_title)
 		end
 		

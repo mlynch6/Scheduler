@@ -37,7 +37,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara',		'~> 1.1.2'
+  gem 'capybara',		'~> 2.2.1'
   gem 'selenium-webdriver', '~> 2.39.0'
   gem 'database_cleaner', '~> 1.2.0'
   gem 'rb-fsevent', '0.9.1', :require => false

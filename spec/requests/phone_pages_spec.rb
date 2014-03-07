@@ -11,7 +11,7 @@ describe "Phone Pages:" do
 				click_link "Company Information"
 		  	click_link 'Add Phone Number'
 		
-				should have_selector('title', text: 'Add Phone Number')
+				has_title?('Add Phone Number').should be_true
 				should have_selector('h1', text: 'Add Phone Number')
 			end
 			
@@ -21,6 +21,14 @@ describe "Phone Pages:" do
 		
 				should have_selector('li.active', text: 'Setup')
 				should have_selector('li.active', text: 'Company Information')
+			end
+			
+			it "has correct fields on form" do
+				log_in
+				visit new_account_phone_path(current_account)
+				
+				has_select?('Phone Type').should be_true
+		    has_field?('Phone #').should be_true
 			end
 			
 			context "with error" do
@@ -52,7 +60,7 @@ describe "Phone Pages:" do
 					click_button 'Create'
 			
 					should have_selector('div.alert-success')
-					should have_selector('title', text: 'Company Information')
+					has_title?('Company Information').should be_true
 					
 					should have_content("Cell:")
 					should have_content(new_phone)
@@ -68,7 +76,7 @@ describe "Phone Pages:" do
 		  	click_link "View"
 		  	click_link 'Add Phone Number'
 		
-				should have_selector('title', text: 'Add Phone Number')
+				has_title?('Add Phone Number').should be_true
 				should have_selector('h1', text: 'Add Phone Number')
 			end
 			
@@ -79,6 +87,15 @@ describe "Phone Pages:" do
 		
 				should have_selector('li.active', text: 'People')
 				should have_selector('li.active', text: 'Employees')
+			end
+			
+			it "has correct fields on form" do
+				log_in
+				employee = FactoryGirl.create(:employee, account: current_account)
+				visit new_employee_phone_path(employee)
+				
+				has_select?('Phone Type').should be_true
+		    has_field?('Phone #').should be_true
 			end
 			
 			context "with error" do
@@ -113,7 +130,7 @@ describe "Phone Pages:" do
 					click_button 'Create'
 			
 					should have_selector('div.alert-success')
-					should have_selector('title', text: 'Employee')
+					has_title?('Employee').should be_true
 					
 					should have_content("Cell:")
 					should have_content(new_phone)
@@ -132,7 +149,7 @@ describe "Phone Pages:" do
 				click_link "Company Information"
 		  	click_link "edit_phone_#{phone.id}"
 		  	
-		  	should have_selector('title', text: 'Edit Phone Number')
+		  	has_title?('Edit Phone Number').should be_true
 				should have_selector('h1', text: 'Edit Phone Number')
 			end
 			
@@ -143,6 +160,15 @@ describe "Phone Pages:" do
 		
 				should have_selector('li.active', text: 'Setup')
 				should have_selector('li.active', text: 'Company Information')
+			end
+			
+			it "has correct fields on form" do
+				log_in
+				phone = FactoryGirl.create(:phone, phoneable: current_account)
+				visit edit_account_phone_path(current_account, phone)
+				
+				has_select?('Phone Type').should be_true
+		    has_field?('Phone #').should be_true
 			end
 			
 			it "with error shows error message" do
@@ -168,7 +194,7 @@ describe "Phone Pages:" do
 				click_button 'Update'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Company Information')
+				has_title?('Company Information').should be_true
 				
 				should have_content("Work:")
 				should have_content(new_phone)
@@ -186,7 +212,7 @@ describe "Phone Pages:" do
 				click_link "show_#{employee.id}"
 		  	click_link "edit_phone_#{phone.id}"
 		  	
-		  	should have_selector('title', text: 'Edit Phone Number')
+		  	has_title?('Edit Phone Number').should be_true
 				should have_selector('h1', text: 'Edit Phone Number')
 			end
 			
@@ -198,6 +224,16 @@ describe "Phone Pages:" do
 		
 				should have_selector('li.active', text: 'People')
 				should have_selector('li.active', text: 'Employees')
+			end
+			
+			it "has correct fields on form" do
+				log_in
+				employee = FactoryGirl.create(:employee, account: current_account)
+				phone = FactoryGirl.create(:phone, phoneable: employee)
+				visit edit_employee_phone_path(employee, phone)
+				
+				has_select?('Phone Type').should be_true
+		    has_field?('Phone #').should be_true
 			end
 			
 			it "with error shows error message" do
@@ -225,7 +261,7 @@ describe "Phone Pages:" do
 				click_button 'Update'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Employee')
+				has_title?('Employee').should be_true
 				
 				should have_content("Work:")
 				should have_content(new_phone)
@@ -242,7 +278,7 @@ describe "Phone Pages:" do
 				click_link "delete_phone_#{phone.id}"
 				
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Company Information')
+				has_title?('Company Information').should be_true
 				
 				should_not have_content("#{phone.phone_type}:")
 				should_not have_content(phone.phone_num)
@@ -258,7 +294,7 @@ describe "Phone Pages:" do
 				click_link "delete_phone_#{phone.id}"
 				
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Employee')
+				has_title?('Employee').should be_true
 				
 				should_not have_content("#{phone.phone_type}:")
 				should_not have_content(phone.phone_num)

@@ -7,6 +7,6 @@ module Utilities
 	
 	def open_modal(*args)
 		find(*args).click
-		wait_until { find(".modal-dialog").visible? }
+		should have_css(".modal-dialog")
 	end
 end

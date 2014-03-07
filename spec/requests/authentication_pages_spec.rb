@@ -8,7 +8,7 @@ describe "Authentication" do
 	  	visit login_path
 	  	click_button "Sign In"
 	  	
-		  should have_selector('title', text: 'Sign In')
+		  has_title?('Sign In').should be_true
 		  should have_selector('h1', text: 'Sign In')
 			should have_selector('div.alert-danger')
 		end
@@ -16,7 +16,7 @@ describe "Authentication" do
 		it "valid Sign In logs user in" do
 			log_in
 			
-			should have_selector('title', text: 'Dashboard')
+			has_title?('Dashboard').should be_true
 			should have_link('Sign Out', href: logout_path)
 		end
 	end
