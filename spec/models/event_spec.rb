@@ -174,7 +174,7 @@ describe Event do
 		end
 		
 		it "has one series" do
-			series = FactoryGirl.create(:event_series)
+			series = FactoryGirl.create(:event_series, account: account)
 			event1 = series.events.first
 			event1.event_series.should == series
 		end
@@ -419,34 +419,6 @@ describe Event do
 				events.should_not include(prev_week_sun)
 				events.should_not include(current_week_wrong_acnt)
 				events.should_not include(wrong_week_bad)
-			end
-		end
-		
-		describe "for_monthly_calendar" do
-			# Dates for December 2012
-			let!(:prev_month_bad) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2012,11,4)) }
-			let!(:prev_month_good) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2012,11,25)) }
-			let!(:prev_month_good2) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2012,11,26)) }
-			let!(:current_month_good) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2012,12,1)) }
-			let!(:current_month_wrong_acnt) { FactoryGirl.create(:event,
-														start_date: Date.new(2012,12,1)) }
-			let!(:current_month_good2) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2012,12,15)) }
-			let!(:current_month_good3) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2012,12,31)) }
-			let!(:next_month_good) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2013,1,1)) }
-			let!(:next_month_good2) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2013,1,5)) }
-			let!(:next_month_bad) { FactoryGirl.create(:event, account: account,
-														start_date: Date.new(2013,1,6)) }
-			
-			it "returns the records for the month plus days from previous/future month that would appear on a calendar" do
-				Event.for_monthly_calendar(DateTime.parse("2012-12-7 09:00:00")).should == [prev_month_good, prev_month_good2, current_month_good, current_month_good2, current_month_good3, next_month_good, next_month_good2]
 			end
 		end
 	end

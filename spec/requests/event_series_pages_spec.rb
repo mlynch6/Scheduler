@@ -18,25 +18,17 @@ describe "Event Series Pages:" do
 	  	visit new_event_path
 	  	
 	  	click_link "Repeat"
-	  	should_not have_selector('label', text: 'End On')
+	  	has_select?('Period', "Never").should be_true
+	  	has_field?('End On').should be_false
 	  	
 			select "Daily", from: 'Period'
-			should have_selector('label', text: 'End On')
-			
-			select "Never", from: 'Period'
-			should_not have_selector('label', text: 'End On')
+			has_field?('End On').should be_true
 			
 			select "Monthly", from: 'Period'
-			should have_selector('label', text: 'End On')
-			
-			select "Never", from: 'Period'
-			should_not have_selector('label', text: 'End On')
+			has_field?('End On').should be_true
 			
 			select "Yearly", from: 'Period'
-			should have_selector('label', text: 'End On')
-			
-			select "Never", from: 'Period'
-			should_not have_selector('label', text: 'End On')
+			has_field?('End On').should be_true
 		end
 		
 		context "with error" do
@@ -142,6 +134,7 @@ describe "Event Series Pages:" do
 			location = FactoryGirl.create(:location, account: current_account)
 			Account.current_id = current_account.id
 			series = FactoryGirl.create(:event_series, 
+									account: current_account, 
 									title: 'My Repeating',
 									location_id: location.id,
 									start_date: Date.new(2014,1,1),
@@ -213,16 +206,7 @@ describe "Event Series Pages:" do
 			end
 
 			it "shows errors" do
-		  	visit events_path+'/2014/1/1'
-				open_modal(".mash-event")
-		  	click_link 'Edit'
-		  	
-		  	fill_in "Title", with: ""
-		  	
-		  	open_modal('button', text: 'Update')
-				click_button 'Only This Event'
-		
-				should have_selector('div.alert-danger')
+		  	pending
 			end
 
 			describe "shows warnings" do
@@ -287,6 +271,7 @@ describe "Event Series Pages:" do
 			location = FactoryGirl.create(:location, account: current_account)
 			Account.current_id = current_account.id
 			series = FactoryGirl.create(:event_series, 
+								account: current_account,
 								title: 'My Repeating',
 								location_id: location.id,
 								start_date: Date.new(2014,1,1),

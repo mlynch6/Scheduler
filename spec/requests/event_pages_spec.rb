@@ -437,8 +437,8 @@ describe "Event (non-Repeating) Pages:" do
 			Event.for_daily_calendar(Time.zone.today).each do |rehearsal|
 				should have_selector('div', text: rehearsal.title)
 				should have_selector('div', text: rehearsal.location.name)
-				should have_content(event.start_at.to_s(:hr12))
-				should have_content(event.end_at.to_s(:hr12))
+				should have_content(rehearsal.start_at.to_s(:hr12))
+				should have_content(rehearsal.end_at.to_s(:hr12))
 				should have_selector('div', text: rehearsal.piece.name)
 				
 				should have_link('Edit', href: edit_rehearsal_path)
