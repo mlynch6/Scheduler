@@ -422,6 +422,15 @@ describe EventSeries do
 		  			event.event_series_id.should be_nil
 		  		end
 		  	end
+		  	
+		  	it "reports event errors" do
+	  			event = daily_series.events.offset(1).first		#01/02/2012
+	  			attrs[:title] = ""
+	  			daily_series.update_event(:single, event, attrs)
+	  			
+	  			event.should_not be_valid
+	  			daily_series.errors.count.should == 1
+	  		end
 	  	end
 			
 			describe "with mode = all" do
@@ -551,6 +560,15 @@ describe EventSeries do
 						end
 					end
 				end
+				
+				it "reports event errors" do
+					attrs = { title: '' }
+					event = daily_series.events.offset(1).first		#01/02/2012
+			  	daily_series.update_event(:all, event, attrs)
+			  	daily_series.reload
+		  			
+		  		daily_series.errors.count.should == 1
+		  	end
 			end
 			
 			describe "with mode = future" do
@@ -811,6 +829,13 @@ describe EventSeries do
 						end
 					end
 				end
+				
+				it "reports event errors" do
+					attrs = { title: '' }
+			  	weekly_series.update_event(:future, event, attrs)
+		  			
+		  		weekly_series.errors.count.should == 1
+		  	end
 			end
   	end
   	

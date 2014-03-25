@@ -195,18 +195,68 @@ describe "Event Series Pages:" do
 		
 		describe "when 'Only This Event' is selected" do
 			it "updates the event" do
-				pending
+				visit events_path+'/2014/1/3'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: "Repeating UPDATED"
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'Only This Event'
+				
+				should have_selector('div.alert-success')
+				should have_content('January 3, 2014')
+				should have_content('Repeating UPDATED')
 			end
 			
 			it "does not update the other repeating events" do
-				pending
+				visit events_path+'/2014/1/3'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: "Repeating UPDATED"
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'Only This Event'
+				
+				should have_selector('div.alert-success')
+				
+				visit events_path+'/2014/1/1'
+				should have_content('My Repeating')
+				should_not have_content('Repeating UPDATED')
+				
+				open_modal(".mash-event")
+				should have_content('Daily')
 			end
 			
 			it "removes the event from the series" do
+				visit events_path+'/2014/1/3'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: "Repeating UPDATED"
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'Only This Event'
+				
+				should have_selector('div.alert-success')
+				should have_content('Repeating UPDATED')
+				
+				open_modal(".mash-event")
+				should_not have_selector('dtl-label', text: 'Repeat')
 			end
 
 			it "shows errors" do
-		  	pending
+		  	visit events_path+'/2014/1/3'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: ""
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'Only This Event'
+				
+				should have_selector('div.alert-danger')
 			end
 
 			describe "shows warnings" do
@@ -222,11 +272,43 @@ describe "Event Series Pages:" do
 		
 		describe "when 'All' is selected" do
 			it "updates the all the events in the series" do
-				pending
+				visit events_path+'/2014/1/1'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: "Repeating UPDATED"
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'All'
+				
+				should have_selector('div.alert-success')
+				should have_content('January 1, 2014')
+				should have_content('Repeating UPDATED')
+				
+				visit events_path+'/2014/1/2'
+				should have_content('Repeating UPDATED')
+				
+				visit events_path+'/2014/1/3'
+				should have_content('Repeating UPDATED')
+				
+				visit events_path+'/2014/1/4'
+				should have_content('Repeating UPDATED')
+				
+				visit events_path+'/2014/1/5'
+				should have_content('Repeating UPDATED')
 			end
 
 			it "shows errors" do
-		  	pending
+		  	visit events_path+'/2014/1/1'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: ""
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'All'
+				
+				should have_selector('div.alert-danger')
 			end
 
 			describe "shows warnings" do
@@ -242,15 +324,57 @@ describe "Event Series Pages:" do
 		
 		describe "when 'All Future Events' is selected" do
 			it "updates the current event & repeating events in future" do
-				pending
+				visit events_path+'/2014/1/3'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: "Repeating UPDATED"
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'All Future Events'
+				
+				should have_selector('div.alert-success')
+				should have_content('January 3, 2014')
+				should have_content('Repeating UPDATED')
+				
+				visit events_path+'/2014/1/4'
+				should have_content('Repeating UPDATED')
+				
+				visit events_path+'/2014/1/5'
+				should have_content('Repeating UPDATED')
 			end
 			
 			it "does not update the past events" do
-				pending
+				visit events_path+'/2014/1/3'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: "Repeating UPDATED"
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'All Future Events'
+				
+				sleep 5
+				should have_selector('div.alert-success')
+				
+				visit events_path+'/2014/1/1'
+				should have_content('My Repeating')
+				
+				visit events_path+'/2014/1/2'
+				should have_content('My Repeating')
 			end
 
 			it "shows errors" do
-		  	pending
+		  	visit events_path+'/2014/1/3'
+				open_modal(".mash-event")
+		  	click_link 'Edit'
+		  	
+		  	fill_in "Title", with: ""
+		  	
+				open_modal('button', text: 'Update')
+				click_button 'All Future Events'
+				
+				should have_selector('div.alert-danger')
 			end
 
 			describe "shows warnings" do

@@ -34,7 +34,7 @@ class EventsController < ApplicationController
 			else
 				@series = EventSeries.new(params[:event])
 				save_success = @series.save
-				add_series_errors_to_event
+				add_series_errors_to_event(@series)
 			end
 			
 			if save_success
@@ -43,7 +43,6 @@ class EventsController < ApplicationController
 				redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d')
 			else
 				form_setup
-				@event.start_time ||= params[:event][:start_time]
 				render 'new'
 			end
 		else
@@ -58,13 +57,15 @@ class EventsController < ApplicationController
 	end
 
 	def update
-#		case params[:event][:commit]
-#			when "Only This Event"
-#			when "All Future Events"
-#			else
-				save_success = @event.update_attributes(params[:event])
-#		end
-#		
+		@series = @event.event_series
+		if @series
+			mode = get_update_mode(params[:commit])
+			save_success = @series.update_event(mode, @event, params[:event])
+			add_series_errors_to_event(@series)
+		else
+			save_success = @event.update_attributes(params[:event])
+		end
+		
 		if save_success
 			flash[:success] = "Successfully updated the #{readable_type}."
 			show_warnings
@@ -109,8 +110,8 @@ private
 		end
 	end
 	
-	def add_series_errors_to_event
-		@series.errors.each do |attrib, msg|
+	def add_series_errors_to_event((series))
+		series.errors.each do |attrib, msg|
 			@event.errors.add(attrib, msg)
 		end
 	end
@@ -118,5 +119,16 @@ private
 	def readable_type
 		type = @event.type || params[:event][:event_type]
 		type.underscore.humanize.titleize
+	end
+	
+	def get_update_mode(commit_text)
+		case commit_text
+			when "All"
+				return :all
+			when "All Future Events"
+				:future
+			else 	#Only This Event
+				:single
+		end
 	end
 end
