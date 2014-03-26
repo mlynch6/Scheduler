@@ -37,35 +37,35 @@ describe Event do
 	context "accessible attributes" do
 		it { should respond_to(:title) }
 		it { should respond_to(:event_type) }
-  	it { should respond_to(:type) }
-  	it { should respond_to(:start_date) }
-  	it { should respond_to(:start_time) }
-  	it { should respond_to(:start_at) }
-  	it { should respond_to(:end_at) }
-  	it { should respond_to(:end_time) }
-  	it { should respond_to(:duration) }
-  	it { should respond_to(:piece_id) }
-  	it { should respond_to(:break?) }
-  	it { should respond_to(:warnings) }
-  	
-  	it { should respond_to(:account) }
-  	it { should respond_to(:location) }
-  	it { should respond_to(:event_series) }
-  	it { should respond_to(:invitations) }
-  	it { should respond_to(:employees) }
-  	
-  	it { should respond_to(:employee_ids) }
-  	#For Event Series
-  	it { should respond_to(:period) }
-  	it { should respond_to(:end_date) }
-  	
-  	it "should not allow access to account_id" do
-      expect do
-        Event.new(account_id: account.id)
-      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end
+	  	it { should respond_to(:type) }
+	  	it { should respond_to(:start_date) }
+	  	it { should respond_to(:start_time) }
+	  	it { should respond_to(:start_at) }
+	  	it { should respond_to(:end_at) }
+	  	it { should respond_to(:end_time) }
+	  	it { should respond_to(:duration) }
+	  	it { should respond_to(:piece_id) }
+	  	it { should respond_to(:break?) }
+	  	it { should respond_to(:warnings) }
+	  	
+	  	it { should respond_to(:account) }
+	  	it { should respond_to(:location) }
+	  	it { should respond_to(:event_series) }
+	  	it { should respond_to(:invitations) }
+	  	it { should respond_to(:employees) }
+	  	
+	  	it { should respond_to(:employee_ids) }
+	  	#For Event Series
+	  	it { should respond_to(:period) }
+	  	it { should respond_to(:end_date) }
+	  	
+		it "should not allow access to account_id" do
+			expect do
+				Event.new(account_id: account.id)
+			end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+		end
     
-    describe "account_id cannot be changed" do
+		describe "account_id cannot be changed" do
 			let(:new_account) { FactoryGirl.create(:account) }
 			before { event.update_attribute(:account_id, new_account.id) }
 			
@@ -98,11 +98,11 @@ describe Event do
   end
 	
   context "(Valid)" do
-  	it "with minimum attributes" do
-  		should be_valid
-  		event.warnings.count.should == 0
-  	end
-  end
+		it "with minimum attributes" do
+			should be_valid
+			event.warnings.count.should == 0
+		end
+	end
 
 	context "(Invalid)" do
 		it "when title is blank" do
@@ -111,56 +111,56 @@ describe Event do
 		end
   	
 		it "when title is too long" do
-  		@event.title = "a"*31
-  		should_not be_valid
-  	end
+	  		@event.title = "a"*31
+	  		should_not be_valid
+		end
   	
 		it "when type is too long" do
-  		@event.type = "a"*21
-  		should_not be_valid
-  	end
+	  		@event.type = "a"*21
+	  		should_not be_valid
+	  	end
   	
 		it "when location is blank" do
-  		@event.location_id = " "
-  		should_not be_valid
-  	end
+	  		@event.location_id = " "
+	  		should_not be_valid
+	  	end
   	
-  	it "when start_date is invalid" do
-  		dts = ["abc", "2/31/2012"]
-  		dts.each do |invalid_date|
-  			@event.start_date = invalid_date
-  			should_not be_valid
+	  	it "when start_date is invalid" do
+	  		dts = ["abc", "2/31/2012"]
+	  		dts.each do |invalid_date|
+	  			@event.start_date = invalid_date
+	  			should_not be_valid
+	  		end
   		end
-  	end
   	
-  	it "when start_time is invalid" do
-  		@event.start_time = "abc"
-  		should_not be_valid
-  	end
+	  	it "when start_time is invalid" do
+	  		@event.start_time = "abc"
+	  		should_not be_valid
+	  	end
   	
-  	context "when duration" do
+  		context "when duration" do
 			it "is blank" do
 				@event.duration = " "
 				should_not be_valid
 			end
 			
 			it "not an integer" do
-	  		vals = ["abc", 8.6]
-	  		vals.each do |invalid_integer|
-	  			@event.duration = invalid_integer
-	  			should_not be_valid
-	  		end
-	  	end
+		  		vals = ["abc", 8.6]
+		  		vals.each do |invalid_integer|
+		  			@event.duration = invalid_integer
+		  			should_not be_valid
+		  		end
+		  	end
 	  	
-	  	it "< 1" do
-	  		@event.duration = 0
-	  		should_not be_valid
-	  	end
-	  	
-	  	it "> 1439 (max min in a day)" do
-	  		@event.duration = 1440
-	  		should_not be_valid
-	  	end
+		  	it "< 1" do
+		  		@event.duration = 0
+		  		should_not be_valid
+		  	end
+		  	
+		  	it "> 1439 (max min in a day)" do
+		  		@event.duration = 1440
+		  		should_not be_valid
+		  	end
 		end
 	end
 	
@@ -212,15 +212,15 @@ describe Event do
   
 	context "correct value is returned for" do
 		it "title" do
-	  	event.reload.title.should == 'Test Event'
+			event.reload.title.should == 'Test Event'
 	  end
 	  
 	  it "type" do
-	  	event.reload.type.should == 'Event'
+			event.reload.type.should == 'Event'
 	  end
 	  
 	  it "start_date" do
-			event.reload.start_date.should == Date.new(2012,1,1)
+			event.reload.start_date.should == '01/01/2012'
 	  end
 	  
 	  it "start_time" do
@@ -249,7 +249,7 @@ describe Event do
 			event.break?.should be_false
 	  end
   end
-  
+	
   context "(Methods)" do	 		
 		context "new_with_subclass" do
 			it "creates a new Company Class" do
@@ -297,10 +297,10 @@ describe Event do
 				e.class.should == Event
 				
 				e.location.should == location
-				e.title.should == params[:title]
-				e.start_date.should == params[:start_date]
-				e.start_time.should == params[:start_time]
-				e.duration.should == params[:duration]
+				e.title.should == 'Test Event'
+				e.start_date.should == '01/01/2012'
+				e.start_time.should == '9AM'
+				e.duration.should == 60
 				
 				e.valid?.should be_true
 			end
@@ -432,53 +432,53 @@ describe Event do
   															start_time: "2PM",
   															duration: 120) }
 	  	
-	  	it "with overlap at beginning" do
-	  		event.start_date = existing_event.start_date
+			it "with overlap at beginning" do
+				event.start_date = existing_event.start_date
 				event.start_time = "1PM"
 				event.duration = 120
 				event.save
 		  	
-		  	event.warnings.count.should == 1
+				event.warnings.count.should == 1
 				event.warnings[:loc_double_booked].should == warning_msg
 		  end
 		  
 		  it "with overlap at end" do
-		  	event.start_date = existing_event.start_date
+		  		event.start_date = existing_event.start_date
 				event.start_time = "3PM"
 				event.duration = 120
-		  	event.save
+		  		event.save
 		  	
-		  	event.warnings.count.should == 1
+		  		event.warnings.count.should == 1
 				event.warnings[:loc_double_booked].should == warning_msg
 		  end
 		  
 		  it "with overlap entire event" do
-		  	event.start_date = existing_event.start_date
+				event.start_date = existing_event.start_date
 				event.start_time = "1PM"
 				event.duration = 240
-		  	event.save
+				event.save
 		  	
-		  	event.warnings.count.should == 1
+				event.warnings.count.should == 1
 				event.warnings[:loc_double_booked].should == warning_msg
 		  end
 		  
 		  it "with overlap within existing event" do
-		  	event.start_date = existing_event.start_date
+				event.start_date = existing_event.start_date
 				event.start_time = "3PM"
 				event.duration = 30
-		  	event.save
+		  		event.save
 		  	
-		  	event.warnings.count.should == 1
+		  		event.warnings.count.should == 1
 				event.warnings[:loc_double_booked].should == warning_msg
 		  end
 		  
 		  it "with overlap of exact times" do
-		  	event.start_date = existing_event.start_date
+				event.start_date = existing_event.start_date
 				event.start_time = "2PM"
 				event.duration = 120
-		  	event.save
+				event.save
 		  	
-		  	event.warnings.count.should == 1
+				event.warnings.count.should == 1
 				event.warnings[:loc_double_booked].should == warning_msg
 		  end
 		end

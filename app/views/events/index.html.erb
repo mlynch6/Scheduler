@@ -6,26 +6,9 @@
 	<h1><%= yield(:title) %></h1>
 </div>
 
-<div class="well well-sm mash-well-link">
-	<% if allow? "company_classes", "new" %>
-			<%= new_link "New Company Class", new_company_class_path(date: @date) %>
-	<% end %>
-		
-		<% if allow? "rehearsals", "new" %>
-			<%= new_link "New Rehearsal", new_rehearsal_path(date: @date) %>
-		<% end %>
-		
-		<% if allow? "costume_fittings", "new" %>
-				<%= new_link "New Costume Fitting", new_costume_fitting_path(date: @date) %>
-		<% end %>
-		
-		<% if allow? "events", "new" %>
-				<%= new_link "New Event", new_event_path(date: @date) %>
-		<% end %>
-</div>
-
 <div class="row">
 	<%= content_tag "div", nil, id: "calendar", data: { year: params[:year], month: params[:month], day: params[:day] } %>
 </div>
 
 <div id="eventDialog"></div>
+<%= render 'new_modal' %>

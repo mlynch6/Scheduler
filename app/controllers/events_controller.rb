@@ -1,12 +1,12 @@
 class EventsController < ApplicationController
 	before_filter :get_resource, :only => [:edit, :update, :destroy, :show]
-	
-  def index
-  	params[:year] ||= Time.zone.today.year
-  	params[:month] ||= Time.zone.today.month
-  	params[:day] ||= Time.zone.today.day
-  	@events = Event.between(Time.at(params[:start].to_i).to_s(:db), Time.at(params[:end].to_i).to_s(:db))
-		
+
+	def index
+		params[:year] ||= Time.zone.today.year
+		params[:month] ||= Time.zone.today.month
+		params[:day] ||= Time.zone.today.day
+		@events = Event.between(Time.at(params[:start].to_i).to_s(:db), Time.at(params[:end].to_i).to_s(:db))
+
 		render layout: "public_application"
 	end
 	
@@ -18,15 +18,19 @@ class EventsController < ApplicationController
 	end
 	
 	def new
-  	form_setup
-  	type = params[:event_type] || 'Event'
-  	@event = Event.new_with_subclass(type)
-  	@event.event_type = type
-  	@event.start_date = params[:date]
-  end
-  
+		form_setup
+
+		attrib = Hash.new
+		attrib[:event_type] = params[:event_type] || 'Event'
+		attrib[:start_date] = Date.strptime(params[:dt], '%m-%d-%Y') if params[:dt] && params[:dt].present?
+		attrib[:start_time] = Time.strptime(params[:tm], '%H%M').to_s(:hr12) if params[:tm] && params[:tm].present?
+		attrib[:period] = 'Never'
+  	
+		@event = Event.new_with_subclass(attrib[:event_type], attrib)
+	end
+
   def create
-  	@event = Event.new_with_subclass(params[:event][:event_type], params[:event])
+		@event = Event.new_with_subclass(params[:event][:event_type], params[:event])
   	
 		if @event.valid?
 			if params[:event][:period] == "Never"
@@ -57,7 +61,6 @@ class EventsController < ApplicationController
 	end
 
 	def update
-		@series = @event.event_series
 		if @series
 			mode = get_update_mode(params[:commit])
 			save_success = @series.update_event(mode, @event, params[:event])
@@ -77,7 +80,7 @@ class EventsController < ApplicationController
 	end
 	
 	def destroy
-		if @event.event_series
+		if @series
 			params[:mode] ||= 'single'
 			@event.event_series.destroy_event(params[:mode], @event)
 		else
@@ -91,9 +94,10 @@ class EventsController < ApplicationController
 private
 	def get_resource
 		@event = Event.find(params[:id])
-		if @event.event_series
-			@event.period = @event.event_series.period
-			@event.end_date = @event.event_series.end_date
+		@series = @event.event_series
+		if @series
+			@event.period = @series.period
+			@event.end_date = @series.end_date
 		end
 	end
 

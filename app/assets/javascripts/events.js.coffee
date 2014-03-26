@@ -38,7 +38,7 @@ jQuery ->
 		firstHour:		8
 		slotMinutes: 	15
 		height: 			650
-		timeFormat: 	'h:mm TT{ - h:mm TT} '
+		timeFormat: 	'h:mm TT{ - h:mm TT}'
 		ignoreTimezone: false
 		year:					$('#calendar').data('year')
 		month:				$('#calendar').data('month')-1
@@ -61,10 +61,25 @@ jQuery ->
 			week: 			'Week'
 			day: 				'Day'
 		events: "/events"
-		eventAfterRender: (event, element) ->
-			if event.location
+		eventAfterRender: (event, element, view) ->
+			if (view.name != 'month' && event.location)
 				element.find('.fc-event-title').after("<div class=\"fc-event-location\">"+event.location+"</div>")
 		eventClick: (calEvent, jsEvent) ->
 			$("#eventDialog").load("/events/"+calEvent.id+".js",
 				(response, status, xhr) ->
 					$("#eventModal").modal('show') )
+		dayClick: (calDate, allDay, jsEvent, view) ->
+			date = (calDate.getMonth()+1)+"-"+calDate.getDate()+"-"+calDate.getFullYear()
+			
+			hr = calDate.getHours().toString()
+			if hr.length < 2 then hr = '0'+hr
+			min = calDate.getMinutes().toString()
+			if min == '0' then min = '00'
+			time24 = hr+min
+			
+			$('#dt').val(date)
+			if view.name == "month"
+				$('#tm').val('')
+			else
+				$('#tm').val(time24)
+			$('#newModal').modal('show')

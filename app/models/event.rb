@@ -46,11 +46,13 @@ class Event < ActiveRecord::Base
 	
 		
 	def start_date
-		@start_date || start_at.try(:to_date).try(:to_s, :default)
+		sd = @start_date || start_at.try(:to_date).try(:to_s, :default)
+		(sd.kind_of? Date) ? sd.to_s(:default) : sd
 	end
 	
 	def start_time
-		@start_time || start_at.try(:to_s, :hr12)
+		st = @start_time || start_at.try(:to_s, :hr12)
+		(st.kind_of? Time) ? st.to_s(:hr12) : st
 	end
 	
 	def end_time

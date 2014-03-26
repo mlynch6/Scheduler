@@ -4,50 +4,94 @@ describe "Rehearsal Pages:" do
 	subject { page }
   
   context "#new" do
-  	it "has correct title" do
+		it "has correct title", js: true do
 			log_in
-	  	click_link 'Calendar'
-	  	click_link 'New Rehearsal'
+			click_link 'Calendar'
+			open_modal(".fc-slot61 td")	#3:15
+			
+			choose 'Rehearsal'
+			click_button 'Next'
 	  	
-	  	has_title?('New Rehearsal').should be_true
-		  should have_selector('h1', text: 'New Rehearsal')
+			should have_title 'New Rehearsal'
+		  should have_selector 'h1', text: 'New Rehearsal'
 		end
 		
 		it "has correct Navigation" do
 			log_in
 			visit new_rehearsal_path
 	
-			should have_selector('li.active', text: 'Calendar')
-			should have_selector('li.active', text: 'New Rehearsal')
+			should have_selector 'li.active', text: 'Calendar'
+			should have_selector 'li.active', text: 'New Rehearsal'
+		end
+		
+		context "defaults correct date & time", js: true do
+			it "from Daily Calendar" do
+				log_in
+				visit events_path+"/2014/1/1"
+				open_modal(".fc-slot61 td")	#3:15
+			
+				choose 'Rehearsal'
+				click_button 'Next'
+			 	
+				should have_title 'New Rehearsal'
+				should have_field 'Date', with: '01/01/2014'
+				should have_field 'Time', with: '3:15 PM'
+			end
+			
+			it "from Weekly Calendar" do
+				log_in
+				visit events_path+"/2014/1/1"
+				find('.fc-button-agendaWeek').click	# Week button
+				open_modal(".fc-slot61 td")	#3:15
+			
+				choose 'Rehearsal'
+				click_button 'Next'
+			 	
+				should have_title 'New Rehearsal'
+				should have_field 'Date', with: '01/01/2014'
+				should have_field 'Time', with: '3:15 PM'
+			end
+			
+			it "from Monthly Calendar" do
+				log_in
+				visit events_path+"/2014/1/1"
+				find('.fc-button-month').click	# Month button
+				open_modal(".fc-first td.fc-first")	#12/29/2013
+			
+				choose 'Rehearsal'
+				click_button 'Next'
+			 	
+				should have_title 'New Rehearsal'
+				should have_field 'Date', with: '12/29/2013'
+				should have_field 'Time', with: ''
+			end
 		end
 		
 		it "only shows applicable fields in Overview tab", js: true do
 			log_in
-	  	log_in
-				visit new_rehearsal_path
+			visit new_rehearsal_path
 	
-			has_field?('Title').should be_true
-			has_select?('Location').should be_true
-			has_field?('Date').should be_true
-			has_field?('Start Time').should be_true
-			has_field?('Duration').should be_true
-			should have_content('Piece')	#Using Chosen
-			should have_content('Invitees')	#Using Chosen
+			should have_field 'Title'
+			should have_select 'Location'
+			should have_field 'Date'
+			should have_field 'Start Time'
+			should have_field 'Duration'
+			should have_content 'Piece'	#Using Chosen
+			should have_content 'Invitees'	#Using Chosen
 		end
 		
 		context "with error" do
 			it "shows error message" do
 				log_in
 				visit new_rehearsal_path
-		  	click_button 'Create'
+				click_button 'Create'
 		
-				should have_selector('div.alert-danger')
+				should have_selector 'div.alert-danger'
 			end
 			
 			it "doesn't create Rehearsal" do
 				log_in
-				visit events_path
-	  		click_link 'New Rehearsal'
+				visit new_rehearsal_path
 		
 				expect { click_button 'Create' }.not_to change(Rehearsal, :count)
 			end
@@ -60,20 +104,20 @@ describe "Rehearsal Pages:" do
 				piece = FactoryGirl.create(:piece, account: current_account)
 				visit new_rehearsal_path
 	  		
-		  	fill_in "Title", with: "Test Rehearsal"
-		  	select location.name, from: "Location"
-		  	fill_in 'Date', with: "01/31/2012"
-		  	fill_in 'Start Time', with: "9AM"
-		  	fill_in 'Duration', with: 150
-		  	select_from_chosen piece.name, from: 'Piece'
+				fill_in "Title", with: "Test Rehearsal"
+				select location.name, from: "Location"
+				fill_in 'Date', with: "01/31/2012"
+				fill_in 'Start Time', with: "9AM"
+				fill_in 'Duration', with: 150
+				select_from_chosen piece.name, from: 'Piece'
 				click_button 'Create'
 		
-				should have_selector('div.alert-success')
-				has_title?('Calendar').should be_true
+				should have_selector 'div.alert-success'
+				should have_title 'Calendar'
 				
-				should have_content("Test Rehearsal")
-				should have_content(location.name)
-				should have_content("9:00 AM - 11:30 AM")
+				should have_content "Test Rehearsal"
+				should have_content location.name
+				should have_content "9:00 AM - 11:30 AM"
 			end
 			
 			it "creates new Rehearsal with Invitees" do
@@ -83,26 +127,26 @@ describe "Rehearsal Pages:" do
 				e1 = FactoryGirl.create(:employee, account: current_account)
 				visit new_rehearsal_path
 	  		
-		  	fill_in "Title", with: "Test Rehearsal"
-		  	select location.name, from: "Location"
-		  	fill_in 'Date', with: "01/31/2012"
-		  	fill_in 'Start Time', with: "9AM"
-		  	fill_in 'Duration', with: 150
-		  	select_from_chosen piece.name, from: 'Piece'
-		  	select_from_chosen e1.full_name, from: 'Invitees'
+				fill_in "Title", with: "Test Rehearsal"
+				select location.name, from: "Location"
+				fill_in 'Date', with: "01/31/2012"
+				fill_in 'Start Time', with: "9AM"
+				fill_in 'Duration', with: 150
+				select_from_chosen piece.name, from: 'Piece'
+				select_from_chosen e1.full_name, from: 'Invitees'
 				click_button 'Create'
 		
-				should have_selector('div.alert-success')
-				has_title?('Calendar').should be_true
+				should have_selector 'div.alert-success'
+				should have_title 'Calendar'
 				
-				should have_content("Test Rehearsal")
-				should have_content(location.name)
-				should have_content("9:00 AM - 11:30 AM")
+				should have_content "Test Rehearsal"
+				should have_content location.name
+				should have_content "9:00 AM - 11:30 AM"
 				
 				open_modal(".mash-event")
 				click_link "Edit"
 				
-				should have_content(e1.full_name)
+				should have_content e1.full_name
 			end
 		end
 			
@@ -121,15 +165,15 @@ describe "Rehearsal Pages:" do
 				
 				visit new_rehearsal_path
 				fill_in "Title", with: "Test Rehearsal"
-		  	select location.name, from: "Location"
-		  	fill_in 'Date', with: Time.zone.today
-		  	fill_in 'Start Time', with: "11AM"
-		  	fill_in 'Duration', with: 120
-		  	select piece.name, from: "Piece"
+				select location.name, from: "Location"
+				fill_in 'Date', with: Time.zone.today
+				fill_in 'Start Time', with: "11AM"
+				fill_in 'Duration', with: 120
+				select piece.name, from: "Piece"
 				click_button 'Create'
 		
-				should have_selector('div.alert-warning', text: "is double booked during this time")
-				should have_selector('div.alert-warning', text: location.name)
+				should have_selector 'div.alert-warning', text: "is double booked during this time"
+				should have_selector 'div.alert-warning', text: location.name
 			end
 				
 			it "when employee is double booked" do
@@ -161,18 +205,18 @@ describe "Rehearsal Pages:" do
 				
 				visit new_rehearsal_path
 				fill_in "Title", with: "Test Rehearsal"
-		  	select loc2.name, from: "Location"
-		  	fill_in 'Date', with: Time.zone.today
-		  	fill_in 'Start Time', with: "11AM"
-		  	fill_in 'Duration', with: 120
-		  	select piece.name, from: "Piece"
-		  	select e1.full_name, from: "Invitees"
+				select loc2.name, from: "Location"
+				fill_in 'Date', with: Time.zone.today
+				fill_in 'Start Time', with: "11AM"
+				fill_in 'Duration', with: 120
+				select piece.name, from: "Piece"
+				select e1.full_name, from: "Invitees"
 				click_button 'Create'
 		
-				should have_selector('div.alert-warning', text: "people are double booked")
-				should have_selector('div.alert-warning', text: e1.full_name)
-				should_not have_selector('div.alert-warning', text: e2.full_name)
-				should_not have_selector('div.alert-warning', text: e3.full_name)
+				should have_selector 'div.alert-warning', text: "people are double booked"
+				should have_selector 'div.alert-warning', text: e1.full_name
+				should_not have_selector 'div.alert-warning', text: e2.full_name
+				should_not have_selector 'div.alert-warning', text: e3.full_name
 			end
 			
 			it "when AGMA Dancer has exceeded their max rehearsal hours per day" do
@@ -192,17 +236,17 @@ describe "Rehearsal Pages:" do
 				
 				visit new_rehearsal_path
 				fill_in "Title", with: "Test Rehearsal"
-		  	select loc2.name, from: "Location"
-		  	fill_in 'Date', with: Time.zone.today
-		  	fill_in 'Start Time', with: "2 PM"
-		  	fill_in 'Duration', with: 90
-		  	select piece.name, from: "Piece"
-		  	select e1.full_name, from: "Invitees"
+				select loc2.name, from: "Location"
+				fill_in 'Date', with: Time.zone.today
+				fill_in 'Start Time', with: "2 PM"
+				fill_in 'Duration', with: 90
+				select piece.name, from: "Piece"
+				select e1.full_name, from: "Invitees"
 				click_button 'Create'
 				
-				should have_selector('div.alert-warning', text: "over their rehearsal limit")
-				should have_selector('div.alert-warning', text: "hrs/day")
-				should have_selector('div.alert-warning', text: e1.full_name)
+				should have_selector 'div.alert-warning', text: "over their rehearsal limit"
+				should have_selector 'div.alert-warning', text: "hrs/day"
+				should have_selector 'div.alert-warning', text: e1.full_name
 			end
 			
 			it "when AGMA Dancer has exceeded their max rehearsal hours per week" do
@@ -225,17 +269,17 @@ describe "Rehearsal Pages:" do
 				
 				visit new_rehearsal_path
 				fill_in "Title", with: "Test Rehearsal"
-		  	select loc2.name, from: "Location"
-		  	fill_in 'Date', with: date + 5.days
-		  	fill_in 'Start Time', with: "3 PM"
-		  	fill_in 'Duration', with: 30
-		  	select piece.name, from: "Piece"
-		  	select e1.full_name, from: "Invitees"
+				select loc2.name, from: "Location"
+				fill_in 'Date', with: date + 5.days
+				fill_in 'Start Time', with: "3 PM"
+				fill_in 'Duration', with: 30
+				select piece.name, from: "Piece"
+				select e1.full_name, from: "Invitees"
 				click_button 'Create'
 				
-				should have_selector('div.alert-warning', text: "over their rehearsal limit")
-				should have_selector('div.alert-warning', text: "hrs/week")
-				should have_selector('div.alert-warning', text: e1.full_name)
+				should have_selector 'div.alert-warning', text: "over their rehearsal limit"
+				should have_selector 'div.alert-warning', text: "hrs/week"
+				should have_selector 'div.alert-warning', text: e1.full_name
 			end
 		end
 	end
@@ -250,14 +294,14 @@ describe "Rehearsal Pages:" do
 					location: location,
 					piece: piece,
 					start_date: Time.zone.today)
-	  	click_link 'Calendar'
+	  		click_link 'Calendar'
 	  	
-	  	should have_content(rehearsal.title)
+			should have_content(rehearsal.title)
 			open_modal(".mash-event")
 			click_link "Edit"
 	  	
-	  	has_title?('Edit Rehearsal').should be_true
-	  	should have_selector('h1', text: 'Edit Rehearsal')
+	  		should have_title 'Edit Rehearsal'
+	  		should have_selector 'h1', text: 'Edit Rehearsal'
 		end
 		
 		it "has correct Navigation" do
@@ -269,9 +313,9 @@ describe "Rehearsal Pages:" do
 					location: location,
 					piece: piece,
 					start_date: Time.zone.today)
-	  	visit edit_rehearsal_path(rehearsal)
+	  		visit edit_rehearsal_path(rehearsal)
 	
-			should have_selector('li.active', text: 'Calendar')
+			should have_selector 'li.active', text: 'Calendar'
 		end
 		
 		it "only shows applicable fields in Overview tab", js: true do
@@ -283,19 +327,19 @@ describe "Rehearsal Pages:" do
 					location: location,
 					piece: piece,
 					start_date: Time.zone.today)
-	  	visit edit_rehearsal_path(rehearsal)
+			visit edit_rehearsal_path(rehearsal)
 	
-			has_field?('Title').should be_true
-			has_select?('Location').should be_true
-			has_field?('Date').should be_true
-			has_field?('Start Time').should be_true
-			has_field?('Duration').should be_true
-			should have_content('Piece')	#Using Chosen
-			should have_content('Invitees')	#Using Chosen
+			should have_field 'Title'
+			should have_select 'Location'
+			should have_field 'Date'
+			should have_field 'Start Time'
+			should have_field 'Duration'
+			should have_content 'Piece'	#Using Chosen
+			should have_content 'Invitees'	#Using Chosen
 		end
 		
 	  it "record with error" do
-	  	log_in
+	  		log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			piece = FactoryGirl.create(:piece, account: current_account)
 			rehearsal = FactoryGirl.create(:rehearsal,
@@ -303,12 +347,12 @@ describe "Rehearsal Pages:" do
 					location: location,
 					piece: piece,
 					start_date: Time.zone.today)
-	  	visit edit_rehearsal_path(rehearsal)
+	  		visit edit_rehearsal_path(rehearsal)
 	  	
-	  	fill_in "Title", with: ""
-	  	click_button 'Update'
+			fill_in "Title", with: ""
+			click_button 'Update'
 	
-			should have_selector('div.alert-danger')
+			should have_selector 'div.alert-danger'
 		end
 	 
 		it "record with valid info saves rehearsal", js: true do
@@ -322,13 +366,13 @@ describe "Rehearsal Pages:" do
 					start_date: Time.zone.today)
 			visit edit_rehearsal_path(rehearsal)
 	  	
-	  	new_title = Faker::Lorem.word
+			new_title = Faker::Lorem.word
 			fill_in "Title", with: new_title
 			click_button 'Update'
 	
-			should have_selector('div.alert-success')
-			has_title?('Calendar').should be_true
-			should have_content(new_title)
+			should have_selector 'div.alert-success'
+			should have_title 'Calendar'
+			should have_content new_title
 		end
 		
 		context "with warning" do			
@@ -367,13 +411,13 @@ describe "Rehearsal Pages:" do
 								duration: 120)
 				
 				visit edit_rehearsal_path(r3)
-		  	select e1.full_name, from: "Invitees"
+				select e1.full_name, from: "Invitees"
 				click_button 'Update'
 		
-				should have_selector('div.alert-warning', text: "people are double booked")
-				should have_selector('div.alert-warning', text: e1.full_name)
-				should_not have_selector('div.alert-warning', text: e2.full_name)
-				should_not have_selector('div.alert-warning', text: e3.full_name)
+				should have_selector 'div.alert-warning', text: "people are double booked"
+				should have_selector 'div.alert-warning', text: e1.full_name
+				should_not have_selector 'div.alert-warning', text: e2.full_name
+				should_not have_selector 'div.alert-warning', text: e3.full_name
 			end
 			
 			it "when AGMA Dancer has exceeded their max rehearsal hours per day" do
@@ -399,12 +443,12 @@ describe "Rehearsal Pages:" do
 								duration: 90)
 				
 				visit edit_rehearsal_path(r)
-		  	select e1.full_name, from: "Invitees"
+				select e1.full_name, from: "Invitees"
 				click_button 'Update'
 				
-				should have_selector('div.alert-warning', text: "over their rehearsal limit")
-				should have_selector('div.alert-warning', text: "hrs/day")
-				should have_selector('div.alert-warning', text: e1.full_name)
+				should have_selector 'div.alert-warning', text: "over their rehearsal limit"
+				should have_selector 'div.alert-warning', text: "hrs/day"
+				should have_selector 'div.alert-warning', text: e1.full_name
 			end
 			
 			it "when AGMA Dancer has exceeded their max rehearsal hours per week" do
@@ -433,12 +477,12 @@ describe "Rehearsal Pages:" do
 								duration: 30)
 				
 				visit edit_rehearsal_path(r)
-		  	select e1.full_name, from: "Invitees"
+				select e1.full_name, from: "Invitees"
 				click_button 'Update'
 				
-				should have_selector('div.alert-warning', text: "over their rehearsal limit")
-				should have_selector('div.alert-warning', text: "hrs/week")
-				should have_selector('div.alert-warning', text: e1.full_name)
+				should have_selector 'div.alert-warning', text: "over their rehearsal limit"
+				should have_selector 'div.alert-warning', text: "hrs/week"
+				should have_selector 'div.alert-warning', text: e1.full_name
 			end
 		end
 	end

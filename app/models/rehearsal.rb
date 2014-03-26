@@ -62,7 +62,7 @@ protected
 	
 	#Rehearsal cannot start during the break following the company class
 	def check_company_class_break
-		cclass = CompanyClass.for_daily_calendar(start_date).first
+		cclass = CompanyClass.for_daily_calendar(start_at).first
 		
 		if contract.present? && cclass.present?
 			break_start = cclass.end_at
