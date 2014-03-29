@@ -38,11 +38,10 @@ class Event < ActiveRecord::Base
 	validates :duration,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than => 1440 }
 
 	default_scope lambda { order('start_at ASC').where(:account_id => Account.current_id) }
-	scope :for_daily_calendar, lambda { |date| joins(:location).where(start_at: date.beginning_of_day..date.end_of_day).select("events.*, locations.name as location_name").order("locations.name") }
-	# Week starts on Monday
-	scope :for_week, lambda { |date| where(start_at: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day) }
-		
 	scope :between, lambda { |stime, etime| where(start_at: stime..etime) }
+	scope :for_daily_calendar, lambda { |date| between(date.to_time.beginning_of_day, date.to_time.end_of_day).joins(:location) }
+	# Week starts on Monday
+	scope :for_week, lambda { |date| between(date.beginning_of_week.to_time.beginning_of_day, date.end_of_week.to_time.end_of_day) }
 	
 		
 	def start_date
@@ -51,12 +50,12 @@ class Event < ActiveRecord::Base
 	end
 	
 	def start_time
-		st = @start_time || start_at.try(:to_s, :hr12)
+		st = @start_time || start_at.try(:in_time_zone, account.time_zone).try(:to_s, :hr12)
 		(st.kind_of? Time) ? st.to_s(:hr12) : st
 	end
 	
 	def end_time
-		end_at.try(:to_s, :hr12)
+		end_at.try(:in_time_zone, account.time_zone).try(:to_s, :hr12)
 	end
 	
 	def duration
@@ -98,7 +97,7 @@ protected
 	def save_start_at
 		sdt = (@start_date.kind_of? String) ? Date.strptime(@start_date, '%m/%d/%Y') : @start_date
 		stm = (@start_time.kind_of? String) ? @start_time : @start_time.to_s(:db)
-		self.start_at = Time.zone.parse(sdt.to_s(:db) +" "+ stm)
+		self.start_at = Time.parse(sdt.to_s(:db) +" "+ stm).in_time_zone(account.time_zone)
 	rescue ArgumentError
 		errors.add :start_at, "cannot be parsed"
 	end

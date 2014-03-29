@@ -211,42 +211,34 @@ describe Event do
   end
   
 	context "correct value is returned for" do
+		let(:e2) { Event.find(event.id) }
+		
 		it "title" do
-			event.reload.title.should == 'Test Event'
+			e2.title.should == 'Test Event'
 	  end
 	  
 	  it "type" do
-			event.reload.type.should == 'Event'
+			e2.type.should == 'Event'
 	  end
 	  
 	  it "start_date" do
-			event.reload.start_date.should == '01/01/2012'
+			e2.start_date.should == '01/01/2012'
 	  end
 	  
 	  it "start_time" do
-			event.reload.start_time.should == "9AM"
+			e2.start_time.should == "9:00 AM"
 	  end
 	  
 	  it "duration" do
-			event.reload.duration.should == 60
+			e2.duration.should == 60
 	  end
 	  
 	  it "end_time" do
-			event.reload.end_time.should == "10:00 AM"
-	  end
-	  
-	  it "start_at" do
-			event.reload.start_at.to_date.to_s(:db).should == "2012-01-01"
-			event.reload.start_at.to_s(:hr12).should == "9:00 AM"
-	  end
-	  
-	  it "end_at" do
-			event.reload.end_at.to_date.to_s(:db).should == "2012-01-01"
-			event.reload.end_at.to_s(:hr12).should == "10:00 AM"
+			e2.end_time.should == "10:00 AM"
 	  end
 	  
 	  it "break?" do
-			event.break?.should be_false
+			e2.break?.should be_false
 	  end
   end
 	
@@ -347,19 +339,23 @@ describe Event do
 														duration: 60) }
 			let!(:current_day_good2) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,3),
-														start_time: "3PM",
-														duration: 60) }
+														start_time: "11:30PM",
+														duration: 30) }
 			let!(:current_day_good3) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,3),
 														start_time: "11AM",
 														duration: 60) }
 			let!(:wrong_day_bad) { FactoryGirl.create(:event, account: account, 
-														start_date: Date.new(2013,1,6),
+														start_date: Date.new(2012,12,4),
+														start_time: "12AM",
+														duration: 60) }
+			let!(:wrong_day_bad2) { FactoryGirl.create(:event, account: account, 
+														start_date: Date.new(2012,1,6),
 														start_time: "9AM",
 														duration: 60) }
 			
 			it "returns the records for the day" do
-				Event.for_daily_calendar(Date.parse("2012-12-3")).should == [current_day_good, current_day_good3, current_day_good2]
+				Event.for_daily_calendar(Date.new(2012,12,3)).should == [current_day_good, current_day_good3, current_day_good2]
 			end
 		end
 		
@@ -367,7 +363,7 @@ describe Event do
 			# For Week containing January 1, 2013
 			let!(:prev_week_sun) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,30),
-														start_time: "9AM",
+														start_time: "11PM",
 														duration: 60) }
 			let!(:current_week_mon) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2012,12,31),
@@ -398,12 +394,12 @@ describe Event do
 														start_time: "11PM",
 														duration: 30) }
 			let!(:current_week_sun) { FactoryGirl.create(:event, account: account, 
-														start_date: Date.new(2013,1,4),
-														start_time: "11PM",
+														start_date: Date.new(2013,1,6),
+														start_time: "11:30PM",
 														duration: 30) }
 			let!(:wrong_week_bad) { FactoryGirl.create(:event, account: account, 
 														start_date: Date.new(2013,1,7),
-														start_time: "11AM",
+														start_time: "12AM",
 														duration: 60) }
 			
 			it "returns the records for the week starting on Monday" do

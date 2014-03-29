@@ -10,9 +10,9 @@
 }
 
 /*** FullCalendar ***/
-.fc-grid .fc-event-time {
-	font-size: 10px;
-	font-weight: normal;
+.fc-grid {
+	font-size: 13px;
+	.fc-event-time { font-weight: normal; }
 }
 .fc-event-title { font-weight: bold; }
 .fc-event-location { padding: 0 1px; }

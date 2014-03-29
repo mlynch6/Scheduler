@@ -106,7 +106,7 @@ describe "CostumeFitting Pages:" do
 				fill_in "Title", with: "Test Fitting"
 				select location.name, from: "Location"
 				fill_in 'Date', with: "01/31/2013"
-				fill_in 'Start Time', with: "10AM"
+				fill_in 'Start Time', with: "10:15AM"
 				fill_in 'Duration', with: 60
 				click_button 'Create'
 		
@@ -115,7 +115,7 @@ describe "CostumeFitting Pages:" do
 				
 				should have_content "Test Fitting"
 				should have_content location.name
-				should have_content "10:00 AM - 11:00 AM"
+				should have_content "10:15 AM - 11:15 AM"
 			end
 			
 			it "creates new Costume Fitting with Invitees" do
@@ -127,8 +127,8 @@ describe "CostumeFitting Pages:" do
 				fill_in "Title", with: "Test Fitting"
 				select location.name, from: "Location"
 				fill_in 'Date', with: "01/31/2013"
-				fill_in 'Start Time', with: "9AM"
-				fill_in 'Duration', with: 30
+				fill_in 'Start Time', with: "9:15AM"
+				fill_in 'Duration', with: 60
 				select_from_chosen e1.full_name, from: 'Invitees'
 				click_button 'Create'
 		
@@ -136,7 +136,7 @@ describe "CostumeFitting Pages:" do
 				should have_title 'Calendar'
 				
 				should have_content "Test Fitting"
-				should have_content "9:00 AM - 9:30 AM"
+				should have_content "9:15 AM - 10:15 AM"
 				
 				open_modal(".mash-event")
 				click_link "Edit"

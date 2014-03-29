@@ -168,7 +168,7 @@ describe "Event (non-Repeating) Pages:" do
 				select location.name, from: "Location"
 				fill_in 'Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "9:15 AM"
-				fill_in 'Duration', with: 90
+				fill_in 'Duration', with: 60
 				select_from_chosen e1.full_name, from: 'Invitees'
 				click_button 'Create'
 		
@@ -177,7 +177,7 @@ describe "Event (non-Repeating) Pages:" do
 				
 				should have_content 'Test Event'
 				should have_content location.name
-				should have_content '9:15 AM - 10:45 AM'
+				should have_content '9:15 AM - 10:15 AM'
 				
 				open_modal(".mash-event")
 				click_link 'Edit'
@@ -440,86 +440,72 @@ describe "Event (non-Repeating) Pages:" do
 			should_not have_selector 'div.event'
 		end
 	  
-		it "lists records" do
-			log_in
-			loc1 = FactoryGirl.create(:location, account: current_account)
-			loc2 = FactoryGirl.create(:location, account: current_account)		
-			FactoryGirl.create(:event,
-					account: current_account,
-					location: loc1,
-					start_date: Time.zone.today)
-			FactoryGirl.create(:event,
-					account: current_account,
-					location: loc2,
-					start_date: Time.zone.today)
-			visit events_path
-	
-			Event.for_daily_calendar(Time.zone.today).each do |event|
-				should have_selector 'div', text: event.title
-				should have_selector 'div', text: event.location.name
-				should have_content event.start_at.to_s(:hr12)
-				should have_content event.end_at.to_s(:hr12)
-	    end
-		end
+	  context "lists records" do
+			it "with type of Event" do
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				event = FactoryGirl.create(:event,
+						account: current_account,
+						location: loc,
+						title: 'My Event',
+						start_date: Time.zone.today,
+						start_time: '9:15AM')
+				visit events_path
 		
-		it "lists Company Class records" do
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			FactoryGirl.create(:company_class,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today)
-			visit events_path
-	
-			Event.for_daily_calendar(Time.zone.today).each do |company_class|
-				should have_selector 'div', text: company_class.title
-				should have_selector 'div', text: company_class.location.name
-				should have_content company_class.start_at.to_s(:hr12)
-				should have_content company_class.end_at.to_s(:hr12)
-				
-				should have_link 'Edit', href: edit_company_class_path
-	    end
-		end
+				should have_selector 'div', text: '9:15 AM'
+				should have_selector 'div', text: 'My Event'
+				should have_selector 'div', text: loc.name
+			end
+			
+			it "with type of Company Class" do
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				FactoryGirl.create(:company_class,
+						account: current_account,
+						location: loc,
+						title: 'My Company Class',
+						start_date: Time.zone.today,
+						start_time: '9:15AM')
+				visit events_path
 		
-		it "lists Costume Fitting records" do
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			FactoryGirl.create(:costume_fitting,
-					account: current_account,
-					location: loc,
-					start_date: Time.zone.today)
-			visit events_path
-	
-			Event.for_daily_calendar(Time.zone.today).each do |costume_fitting|
-				should have_selector 'div', text: costume_fitting.title
-				should have_selector 'div', text: costume_fitting.location.name
-				should have_content costume_fitting.start_at.to_s(:hr12)
-				should have_content costume_fitting.end_at.to_s(:hr12)
-				
-				should have_link 'Edit', href: edit_costume_fitting_path
-	    end
-		end
+				should have_selector 'div', text: '9:15 AM'
+				should have_selector 'div', text: 'My Company Class'
+				should have_selector 'div', text: loc.name
+			end
+			
+			it "with type of Costume Fitting" do
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				FactoryGirl.create(:costume_fitting,
+						account: current_account,
+						location: loc,
+						title: 'My Costume Fitting',
+						start_date: Time.zone.today,
+						start_time: '9:15AM')
+				visit events_path
 		
-		it "lists Rehearsal records" do
-			log_in
-			loc = FactoryGirl.create(:location, account: current_account)
-			piece = FactoryGirl.create(:piece, account: current_account)	
-			FactoryGirl.create(:rehearsal,
-					account: current_account,
-					location: loc,
-					piece: piece,
-					start_date: Time.zone.today)
-			visit events_path
-	
-			Event.for_daily_calendar(Time.zone.today).each do |rehearsal|
-				should have_selector 'div', text: rehearsal.title
-				should have_selector 'div', text: rehearsal.location.name
-				should have_content rehearsal.start_at.to_s(:hr12)
-				should have_content rehearsal.end_at.to_s(:hr12)
-				should have_selector 'div', text: rehearsal.piece.name
-				
-				should have_link 'Edit', href: edit_rehearsal_path
-	    end
+				should have_selector 'div', text: '9:15 AM'
+				should have_selector 'div', text: 'My Costume Fitting'
+				should have_selector 'div', text: loc.name
+			end
+			
+			it "with type of Rehearsal" do
+				log_in
+				loc = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)	
+				FactoryGirl.create(:rehearsal,
+						account: current_account,
+						location: loc,
+						piece: piece,
+						title: 'My Rehearsal',
+						start_date: Time.zone.today,
+						start_time: '9:15AM')
+				visit events_path
+		
+				should have_selector 'div', text: '9:15 AM'
+				should have_selector 'div', text: 'My Rehearsal'
+				should have_selector 'div', text: loc.name
+			end
 		end
 		
 		describe "with date in URL" do
@@ -547,7 +533,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "displays Event details in popup window" do
-			pending "seems to wok in GUI, but Time is off in test by 1 hr"
 			log_in
 			loc = FactoryGirl.create(:location, account: current_account)
 			emp = FactoryGirl.create(:employee, account: current_account)
@@ -579,7 +564,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 		describe "displays Company Class" do
 			it "details in popup window" do
-				pending "seems to wok in GUI, but Time is off in test by 1 hr"
 				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				emp = FactoryGirl.create(:employee, account: current_account)
@@ -610,7 +594,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "break in popup window" do
-				pending "seems to wok in GUI, but Time is off in test by 1 hr"
 				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				profile = AgmaProfile.find_by_account_id(current_account.id)
@@ -651,7 +634,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "displays Costume Fitting details in popup window" do
-			pending "seems to wok in GUI, but Time is off in test by 1 hr"
 			log_in
 			loc = FactoryGirl.create(:location, account: current_account)
 			emp = FactoryGirl.create(:employee, account: current_account)
@@ -683,7 +665,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 		describe "displays Rehearsal" do
 			it "details in popup window" do
-				pending "seems to wok in GUI, but Time is off in test by 1 hr"
 				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				emp = FactoryGirl.create(:employee, account: current_account)
@@ -717,7 +698,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "break in popup window" do
-				pending "seems to wok in GUI, but Time is off in test by 1 hr"
 				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)

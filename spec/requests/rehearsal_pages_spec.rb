@@ -107,8 +107,8 @@ describe "Rehearsal Pages:" do
 				fill_in "Title", with: "Test Rehearsal"
 				select location.name, from: "Location"
 				fill_in 'Date', with: "01/31/2012"
-				fill_in 'Start Time', with: "9AM"
-				fill_in 'Duration', with: 150
+				fill_in 'Start Time', with: "9:15AM"
+				fill_in 'Duration', with: 60
 				select_from_chosen piece.name, from: 'Piece'
 				click_button 'Create'
 		
@@ -117,7 +117,7 @@ describe "Rehearsal Pages:" do
 				
 				should have_content "Test Rehearsal"
 				should have_content location.name
-				should have_content "9:00 AM - 11:30 AM"
+				should have_content "9:15 AM - 10:15 AM"
 			end
 			
 			it "creates new Rehearsal with Invitees" do
@@ -130,8 +130,8 @@ describe "Rehearsal Pages:" do
 				fill_in "Title", with: "Test Rehearsal"
 				select location.name, from: "Location"
 				fill_in 'Date', with: "01/31/2012"
-				fill_in 'Start Time', with: "9AM"
-				fill_in 'Duration', with: 150
+				fill_in 'Start Time', with: "9:15AM"
+				fill_in 'Duration', with: 60
 				select_from_chosen piece.name, from: 'Piece'
 				select_from_chosen e1.full_name, from: 'Invitees'
 				click_button 'Create'
@@ -141,7 +141,7 @@ describe "Rehearsal Pages:" do
 				
 				should have_content "Test Rehearsal"
 				should have_content location.name
-				should have_content "9:00 AM - 11:30 AM"
+				should have_content "9:15 AM - 10:15 AM"
 				
 				open_modal(".mash-event")
 				click_link "Edit"

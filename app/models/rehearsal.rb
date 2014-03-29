@@ -35,7 +35,7 @@ class Rehearsal < Event
 	def break_time
 		if contract.present?
 			break_start = end_at - break_duration*60
-			return "#{break_start.to_s(:hr12)} to #{end_at.to_s(:hr12)}"
+			return "#{break_start.in_time_zone(account.time_zone).to_s(:hr12)} to #{end_time}"
 		end
 	end
 	

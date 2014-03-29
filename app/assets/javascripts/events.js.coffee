@@ -30,36 +30,38 @@ jQuery ->
 	
 	# INDEX
 	$('#calendar').fullCalendar
-		defaultView:	'agendaDay'
+		defaultView:		'agendaDay'
 		theme: 				true
 		editable:			false
 		allDaySlot:		false
 		allDayDefault: false
-		firstHour:		8
+		firstHour:			8
 		slotMinutes: 	15
-		height: 			650
-		timeFormat: 	'h:mm TT{ - h:mm TT}'
+		height: 				650
+		timeFormat: 
+			month:				'h(:mm) TT'
+			agenda:			'h(:mm) TT{ - h(:mm) TT}'
 		ignoreTimezone: false
 		year:					$('#calendar').data('year')
-		month:				$('#calendar').data('month')-1
+		month:					$('#calendar').data('month')-1
 		date:					$('#calendar').data('day')
 		titleFormat:
-    	month: 			'MMMM yyyy'
-    	week: 			"MMMM d[ yyyy]{ '&#8212;'[ MMMM] d, yyyy}"
-    	day: 				'MMMM d, yyyy'
-    columnFormat:
-    	month:			'ddd'
-    	week:				'ddd d'
-    	day: 				'dddd'
-    header:
-    	left: 			'prev today next'
-    	center: 		'title'
-    	right: 			'agendaDay agendaWeek month'
+			month: 		'MMMM yyyy'
+			week: 			"MMMM d[ yyyy]{ '&#8212;'[ MMMM] d, yyyy}"
+			day: 			'MMMM d, yyyy'
+		columnFormat:
+			month:			'ddd'
+			week:			'ddd d'
+			day: 			'dddd'
+		header:
+			left: 			'prev today next'
+			center: 		'title'
+			right: 		'agendaDay agendaWeek month'
 		buttonText:
-			today: 			'Today'
-			month: 			'Month'
+			today: 		'Today'
+			month: 		'Month'
 			week: 			'Week'
-			day: 				'Day'
+			day: 			'Day'
 		events: "/events"
 		eventAfterRender: (event, element, view) ->
 			if (view.name != 'month' && event.location)

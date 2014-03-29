@@ -33,7 +33,7 @@ class CompanyClass < Event
 	def break_time
 		if contract.present?
 			break_end = end_at + break_duration*60
-			return "#{end_at.to_s(:hr12)} to #{break_end.to_s(:hr12)}"
+			return "#{end_time} to #{break_end.in_time_zone(account.time_zone).to_s(:hr12)}"
 		end
 	end
 	
