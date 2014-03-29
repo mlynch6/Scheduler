@@ -101,12 +101,15 @@ ActiveRecord::Schema.define(:version => 20140117201845) do
   add_index "employees", ["account_id"], :name => "index_employees_on_account_id"
 
   create_table "event_series", :force => true do |t|
+    t.integer  "account_id",               :null => false
     t.string   "period",     :limit => 20, :null => false
-    t.date     "start_at",                 :null => false
-    t.date     "end_at",                   :null => false
+    t.date     "start_date",               :null => false
+    t.date     "end_date",                 :null => false
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
   end
+
+  add_index "event_series", ["account_id"], :name => "index_event_series_on_account_id"
 
   create_table "events", :force => true do |t|
     t.integer  "account_id",                                         :null => false

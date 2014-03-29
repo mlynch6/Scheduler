@@ -9,7 +9,7 @@ describe "Season Pages:" do
   		click_link "Setup"
 	  	click_link "Seasons"
 	  	
-	  	should have_selector('title', text: 'Seasons')
+	  	has_title?('Seasons').should be_true
 		  should have_selector('h1', text: 'Seasons')
 		end
 		
@@ -89,7 +89,7 @@ describe "Season Pages:" do
 	  	click_link "Seasons"
 	  	click_link "Add Season"
 	
-			should have_selector('title', text: 'Add Season')
+			has_title?('Add Season').should be_true
 			should have_selector('h1', text: 'Add Season')
 		end
 		
@@ -99,6 +99,15 @@ describe "Season Pages:" do
 	
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'Seasons')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	visit new_season_path
+	  	
+			has_field?('From').should be_true
+	    has_field?('To').should be_true
+	    should have_content('Pieces')	#Using Chosen
 		end
 		
 		context "with error" do
@@ -130,7 +139,7 @@ describe "Season Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Seasons')
+				has_title?('Seasons').should be_true
 				should have_content(new_name)
 				should have_content('01/01/2011')
 				should have_content('12/31/2011')
@@ -149,7 +158,7 @@ describe "Season Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Seasons')
+				has_title?('Seasons').should be_true
 				should have_content(new_name)
 				should have_content('01/01/2011')
 				should have_content('12/31/2011')
@@ -165,7 +174,7 @@ describe "Season Pages:" do
 			click_link "Seasons"
 	  	click_link "Edit"
 	  	
-	  	should have_selector('title', text: 'Edit Season')
+	  	has_title?('Edit Season').should be_true
 			should have_selector('h1', text: 'Edit Season')
 		end
 		
@@ -176,6 +185,16 @@ describe "Season Pages:" do
 	
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'Seasons')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	season = FactoryGirl.create(:season, account: current_account)
+	  	visit edit_season_path(season)
+	  	
+			has_field?('From').should be_true
+	    has_field?('To').should be_true
+	    should have_content('Pieces')	#Using Chosen
 		end
 		
 	  it "record with error" do
@@ -199,7 +218,7 @@ describe "Season Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Seasons')
+			has_title?('Seasons').should be_true
 			should have_content(new_name)
 		end
 	end
@@ -212,7 +231,7 @@ describe "Season Pages:" do
 			click_link "delete_#{season.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Seasons')
+			has_title?('Seasons').should be_true
 			
 			should_not have_content(season.name)
 		end
@@ -226,7 +245,7 @@ describe "Season Pages:" do
 	  	click_link "Seasons"
 	  	click_link "View"
 	  	
-	  	should have_selector('title', text: season.name)
+	  	has_title?(season.name).should be_true
 		  should have_selector('h1', text: season.name)
 		end
 		

@@ -13,7 +13,7 @@ describe "Scene Pages:" do
 	  	click_link "View"
 	  	click_link "Scenes"
 	  	
-	  	should have_selector('title', text: "#{piece.name} | Scenes")
+	  	has_title?("#{piece.name} | Scenes").should be_true
 		  should have_selector('h1', text: "#{piece.name}")
 		end
 		
@@ -132,7 +132,7 @@ describe "Scene Pages:" do
 	  	click_link "Scenes"
 	  	click_link "Add Scene"
 	
-			should have_selector('title', text: "#{piece.name} | Add Scene")
+			has_title?("#{piece.name} | Add Scene").should be_true
 		  should have_selector('h1', text: "Add Scene for #{piece.name}")
 		end
 		
@@ -143,6 +143,17 @@ describe "Scene Pages:" do
 	
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'Pieces')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+			visit new_piece_scene_path(piece)
+			
+	    has_field?('Scene').should be_true
+	    has_field?('Track').should be_true
+	    
+	    should have_content('Characters')	#Using Chosen
 		end
 		
 		context "with error" do
@@ -177,7 +188,7 @@ describe "Scene Pages:" do
 				click_button 'Create'
 
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Scenes')
+				has_title?("Scenes").should be_true
 				should have_content(new_name)
 				should have_content(new_track)
 			end
@@ -196,7 +207,7 @@ describe "Scene Pages:" do
 				click_button 'Create'
 
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Scenes')
+				has_title?("Scenes").should be_true
 				should have_content(new_name)
 				should have_content(character.name)
 				should have_content(new_track)
@@ -215,7 +226,7 @@ describe "Scene Pages:" do
 	  	click_link "Scenes"
 	  	click_link "Edit"
 	  	
-	  	should have_selector('title', text: "#{piece.name} | Edit Scene")
+	  	has_title?("#{piece.name} | Edit Scene").should be_true
 		  should have_selector('h1', text: "Edit Scene for #{piece.name}")
 		end
 		
@@ -227,6 +238,18 @@ describe "Scene Pages:" do
 	
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'Pieces')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+			scene = FactoryGirl.create(:scene, account: current_account, piece: piece)
+	  	visit edit_scene_path(scene)
+			
+	    has_field?('Scene').should be_true
+	    has_field?('Track').should be_true
+	    
+	    should have_content('Characters')	#Using Chosen
 		end
 		
 	  it "with error shows error message" do
@@ -270,7 +293,7 @@ describe "Scene Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: "#{piece.name} | Scenes")
+			has_title?("#{piece.name} | Scenes").should be_true
 			should have_content(new_name)
 			should have_content(new_track)
 		end
@@ -285,7 +308,7 @@ describe "Scene Pages:" do
 			click_link "delete_#{scene.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: "#{piece.name} | Scenes")
+			has_title?("#{piece.name} | Scenes").should be_true
 			
 			should_not have_content(scene.name)
 		end

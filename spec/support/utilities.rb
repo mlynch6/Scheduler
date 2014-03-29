@@ -4,4 +4,9 @@ module Utilities
   def min_to_formatted_time(mnt)
 		(Time.now.midnight + mnt.minutes).to_s(:hr12)
 	end
+	
+	def open_modal(*args)
+		find(*args).click
+		should have_css(".modal-dialog")
+	end
 end

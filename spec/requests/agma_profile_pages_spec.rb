@@ -12,13 +12,26 @@ describe "Agma Profile Pages:" do
 		end
 		
 		it "has correct title" do
-	  	should have_selector('title', text: 'Edit Contract Settings')
+	  	has_title?('Edit Contract Settings').should be_true
 			should have_selector('h1', text: 'Edit Contract Settings')
 		end
 		
 		it "has correct Navigation" do
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'Contract Settings')
+		end
+		
+		it "has correct fields on form" do
+			has_select?('Rehearsal Start').should be_true
+	    has_select?('Rehearsal End').should be_true
+	    has_field?('Max Hours/Week').should be_true
+	    has_field?('Max Hours/Day').should be_true
+	    has_field?('Rehearsal Increments').should be_true
+	    
+	    has_field?('Class Break').should be_true
+	    has_field?('Rehearsal Break').should be_true
+	    
+	    has_field?('Costume Fitting Increments').should be_true
 		end
 		
 	  it "invalid record shows error" do
@@ -40,7 +53,7 @@ describe "Agma Profile Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Contract Settings')
+			has_title?('Contract Settings').should be_true
 			
 			should have_content('8:30 AM')
 			should have_content('5:30 PM')
@@ -61,7 +74,7 @@ describe "Agma Profile Pages:" do
 		end
 		
 		it "has correct title" do
-	  	should have_selector('title', text: 'Contract Settings')
+	  	has_title?('Contract Settings').should be_true
 			should have_selector('h1', text: 'Contract Settings')
 		end
 		

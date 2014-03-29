@@ -17,7 +17,7 @@ describe "Subscription Pages:" do
 		it "has correct title" do
 			click_link "My Subscription"
 	  	
-	  	should have_selector('title', text: 'My Subscription')
+	  	has_title?('My Subscription').should be_true
 			should have_selector('h1', text: 'My Subscription')
 		end
 		
@@ -74,13 +74,17 @@ describe "Subscription Pages:" do
 		end
 		
 		it "has correct title" do
-			should have_selector('title', text: 'Change Subscription')
+			has_title?('Change Subscription').should be_true
 			should have_selector('h1', text: 'Change Subscription')
 		end
 		
 		it "has correct Navigation" do	
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'My Subscription')
+		end
+		
+		it "has correct fields on form" do
+			has_select?('Subscription').should be_true
 		end
 		
 		it "has links" do
@@ -92,7 +96,7 @@ describe "Subscription Pages:" do
 			click_button "Update"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'My Subscription')
+			has_title?('My Subscription').should be_true
 			should have_content('Dance Company')
 		end
 	end
@@ -110,7 +114,7 @@ describe "Subscription Pages:" do
 		end
 		
 		it "should cancel the subscription" do
-			should have_selector('title', text: 'Company Information')
+			has_title?('Company Information').should be_true
 			should have_selector('div.alert-success')
 			
 			should have_content('Canceled')

@@ -16,4 +16,5 @@
 //= require jquery.ui.datepicker
 //= require jquery.ui.sortable
 //= require bootstrap
+//= require fullcalendar
 //= require_tree .

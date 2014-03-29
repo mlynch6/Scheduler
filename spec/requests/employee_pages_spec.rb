@@ -9,7 +9,7 @@ describe "Employee Pages:" do
 			click_link "People"
 	  	click_link "Employees"
 	  	
-	  	should have_selector('title', text: 'Employees')
+	  	has_title?('Employees').should be_true
 		  should have_selector('h1', text: 'Employees')
 		end
 		
@@ -90,7 +90,7 @@ describe "Employee Pages:" do
 			click_link "inactivate_#{employee.id}"
 				
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Employees')
+			has_title?('Employees').should be_true
 				
 			click_link 'Employees'
 			should_not have_content(employee.name)
@@ -106,7 +106,7 @@ describe "Employee Pages:" do
 			click_link "People"
 	  	click_link "Inactive Employees"
 	  	
-	  	should have_selector('title', text: 'Inactive Employees')
+	  	has_title?('Inactive Employees').should be_true
 		  should have_selector('h1', text: 'Inactive Employees')
 		end
 		
@@ -180,7 +180,7 @@ describe "Employee Pages:" do
 			click_link "activate_#{employee.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Inactive Employees')
+			has_title?('Inactive Employees').should be_true
 			
 			click_link 'Employees'
 			should have_content(employee.name)
@@ -197,7 +197,7 @@ describe "Employee Pages:" do
 	  	click_link "Employees"
 	  	click_link 'Add Employee'
 	
-			should have_selector('title', text: 'Add Employee')
+			has_title?('Add Employee').should be_true
 			should have_selector('h1', text: 'Add Employee')
 		end
 		
@@ -207,6 +207,16 @@ describe "Employee Pages:" do
 	
 			should have_selector('li.active', text: 'People')
 			should have_selector('li.active', text: 'Employees')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	visit new_employee_path
+	  	
+			has_field?('First Name').should be_true
+	    has_field?('Last Name').should be_true
+	    has_select?('Role').should be_true
+	    has_field?('Email').should be_true
 		end
 		
 		context "with error" do
@@ -241,7 +251,7 @@ describe "Employee Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Employees')
+				has_title?('Employees').should be_true
 				should have_content("#{new_last_name}, #{new_first_name}")
 				should have_content("Instructor")
 			end
@@ -254,10 +264,10 @@ describe "Employee Pages:" do
 			employee = FactoryGirl.create(:employee, account: current_account)
 			click_link "People"
 			click_link "Employees"
-			click_link "View"
+			click_link "show_#{employee.id}"	#View
 			click_link "Edit"
 	  	
-	  	should have_selector('title', text: 'Edit Employee')
+	  	has_title?('Edit Employee').should be_true
 			should have_selector('h1', text: 'Edit Employee')
 		end
 		
@@ -268,6 +278,17 @@ describe "Employee Pages:" do
 	
 			should have_selector('li.active', text: 'People')
 			should have_selector('li.active', text: 'Employees')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	employee = FactoryGirl.create(:employee, account: current_account)
+			visit edit_employee_path(employee)
+	  	
+			has_field?('First Name').should be_true
+	    has_field?('Last Name').should be_true
+	    has_select?('Role').should be_true
+	    has_field?('Email').should be_true
 		end
 		
 		it "has Username on page"
@@ -298,7 +319,7 @@ describe "Employee Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Employees')
+			has_title?('Employees').should be_true
 			should have_content("#{new_last_name}, #{new_first_name}")
 			should have_content("Instructor")
 		end
@@ -311,7 +332,7 @@ describe "Employee Pages:" do
 	  	visit employees_path
 			click_link "show_#{employee.id}"
 	  	
-	  	should have_selector('title', text: 'Employee')
+	  	has_title?('Employee').should be_true
 		  should have_selector('h1', text: employee.full_name)
 		end
 		
@@ -410,7 +431,7 @@ describe "Employee Pages:" do
 			click_link "delete_#{employee.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Employees')
+			has_title?('Employees').should be_true
 			
 			click_link 'Employees'
 			should_not have_content(employee.name)

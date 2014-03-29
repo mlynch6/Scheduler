@@ -9,7 +9,7 @@ describe "Piece Pages:" do
 			click_link "Setup"
 	  	click_link "Pieces"
 	  	
-	  	should have_selector('title', text: 'Pieces')
+	  	has_title?('Pieces').should be_true
 		  should have_selector('h1', text: 'Pieces')
 		end
 		
@@ -94,7 +94,7 @@ describe "Piece Pages:" do
 	  	click_link 'Pieces'
 	  	click_link 'Add Piece'
 	
-			should have_selector('title', text: 'Add Piece')
+			has_title?('Add Piece').should be_true
 			should have_selector('h1', text: 'Add Piece')
 		end
 		
@@ -104,6 +104,17 @@ describe "Piece Pages:" do
 	
 			should have_selector('li.active', text: 'Setup')
 			should have_selector('li.active', text: 'Pieces')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+			visit new_piece_path
+			
+			has_field?('Name').should be_true
+	    has_field?('Choreographer').should be_true
+	    has_field?('Music').should be_true
+	    has_field?('Composer').should be_true
+	    has_field?('Average Length').should be_true
 		end
 		
 		context "with error" do
@@ -141,7 +152,7 @@ describe "Piece Pages:" do
 				click_button 'Create'
 
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Pieces')
+				has_title?('Pieces').should be_true
 				should have_content(new_name)
 				should have_content(new_choreographer)
 				should have_content(new_music)
@@ -159,7 +170,7 @@ describe "Piece Pages:" do
 	  	click_link "Pieces"
 	  	click_link "Edit"
 	  	
-	  	should have_selector('title', text: 'Edit Piece')
+	  	has_title?('Edit Piece').should be_true
 			should have_selector('h1', text: 'Edit Piece')
 		end
 		
@@ -172,6 +183,18 @@ describe "Piece Pages:" do
 			should have_selector('li.active', text: 'Pieces')
 		end
 		
+		it "has correct fields on form" do
+			log_in
+	  	piece = FactoryGirl.create(:piece, account: current_account)
+	  	visit edit_piece_path(piece)
+			
+			has_field?('Name').should be_true
+	    has_field?('Choreographer').should be_true
+	    has_field?('Music').should be_true
+	    has_field?('Composer').should be_true
+	    has_field?('Average Length').should be_true
+		end
+		
 	  it "with error shows error message" do
 	  	log_in
 	  	piece = FactoryGirl.create(:piece, account: current_account)
@@ -180,25 +203,6 @@ describe "Piece Pages:" do
 	  	click_button 'Update'
 	
 			should have_selector('div.alert-danger')
-		end
-	
-		it "with bad record in URL shows 'Record Not Found' error" do
-			pending
-			log_in
-			visit edit_piece_path(0)
-	
-			should have_selector('title', text: 'Pieces')
-			should have_selector('div.alert-danger', text: 'Record Not Found')
-		end
-		
-		it "record with wrong account shows 'Record Not Found' error" do
-			pending
-			log_in
-			piece_wrong_account = FactoryGirl.create(:piece)
-			visit edit_piece_path(piece_wrong_account)
-	
-			should have_selector('title', text: 'Pieces')
-			should have_selector('div.alert-danger', text: 'Record Not Found')
 		end
 	 
 		it "with valid info" do
@@ -221,7 +225,7 @@ describe "Piece Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Pieces')
+			has_title?('Pieces').should be_true
 			should have_content(new_name)
 			should have_content(new_choreographer)
 			should have_content(new_music)
@@ -238,7 +242,7 @@ describe "Piece Pages:" do
 			click_link "delete_#{piece.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Pieces')
+			has_title?('Pieces').should be_true
 			
 			click_link 'Pieces'
 			should_not have_content(piece.name)
@@ -253,8 +257,7 @@ describe "Piece Pages:" do
 			click_link "Pieces"
 			click_link "View"
 			
-	  	should have_selector('title', text: piece.name)
-	  	should have_selector('title', text: 'Overview')
+	  	has_title?("#{piece.name} | Overview").should be_true
 			should have_selector('h1', text: piece.name)
 		end
 		

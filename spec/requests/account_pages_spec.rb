@@ -11,10 +11,36 @@ describe "Account Pages:" do
 		end
 		
 		it "has correct title" do	  	
-	  	should have_selector('title', text: 'Create Account')
+	  	has_title?('Create Account').should be_true
 	    should have_selector('h1', text: 'Create an Account')
 	    should have_link('Terms of Service')
 	    should have_link('Privacy')
+		end
+		
+		it "has correct fields on form" do	  	
+	  	has_field?('Company').should be_true
+	    has_select?('Time Zone').should be_true
+	    has_field?('Phone #').should be_true
+	    
+	    has_field?('Address').should be_true
+	    has_field?('Address 2').should be_true
+	    has_field?('City').should be_true
+	    has_select?('State').should be_true
+	    has_field?('Zip Code').should be_true
+	    
+	    has_field?('First Name').should be_true
+	    has_field?('Last Name').should be_true
+	    has_select?('Role').should be_true
+	    has_field?('Email').should be_true
+	    
+	    has_field?('Username').should be_true
+	    has_field?('Password').should be_true
+	    has_field?('Confirm Password').should be_true
+	    
+	    has_field?('Credit Card Number').should be_true
+	    has_select?('card_month').should be_true
+	    has_select?('card_year').should be_true
+	    has_field?('Security Code').should be_true
 		end
 		
 	  describe "invalid Signup" do
@@ -164,7 +190,7 @@ describe "Account Pages:" do
 			click_link 'Setup'
 			click_link "Company Information"
 	  	
-	  	should have_selector('title', text: 'Company Information')
+	  	has_title?('Company Information').should be_true
 			should have_selector('h1', text: 'Company Information')
 		end
 		
@@ -239,7 +265,7 @@ describe "Account Pages:" do
 			click_link "Company Information"
 			click_link "Edit"
 	  	
-	  	should have_selector('title', text: 'Edit Company Information')
+	  	has_title?('Edit Company Information').should be_true
 			should have_selector('h1', text: 'Edit Company Information')
 		end
 		
@@ -271,7 +297,7 @@ describe "Account Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Company Information')
+			has_title?('Company Information').should be_true
 			
 			should have_content("Hawaii")
 		end

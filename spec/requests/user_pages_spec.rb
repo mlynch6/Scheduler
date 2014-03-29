@@ -9,7 +9,7 @@ describe "User Pages:" do
   		click_link "People"
 	  	click_link "Users"
 	  	
-	  	should have_selector('title', text: 'Users')
+	  	has_title?('Users').should be_true
 		  should have_selector('h1', text: 'Users')
 		end
 		
@@ -82,7 +82,7 @@ describe "User Pages:" do
 	  	click_link "Users"
 	  	click_link "Add User"
 	
-			should have_selector('title', text: 'Add User')
+			has_title?('Add User').should be_true
 			should have_selector('h1', text: 'Add User')
 		end
 		
@@ -92,6 +92,16 @@ describe "User Pages:" do
 	  	
 			should have_selector('li.active', text: 'People')
 			should have_selector('li.active', text: 'Users')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	visit new_user_path
+	  	
+	  	should have_content('Employee')	#Using Chosen
+			has_field?('Username').should be_true
+	    has_field?('Password').should be_true
+	    has_field?('Confirm Password').should be_true
 		end
 		
 		context "with error" do
@@ -125,7 +135,7 @@ describe "User Pages:" do
 				click_button 'Create'
 		
 				should have_selector('div.alert-success')
-				should have_selector('title', text: 'Users')
+				has_title?('Users').should be_true
 				should have_content(emp.name)
 				should have_content(new_username.downcase)
 			end
@@ -139,7 +149,7 @@ describe "User Pages:" do
 	  	click_link "Users"
 	  	click_link "Edit"
 	
-			should have_selector('title', text: 'Edit User')
+			has_title?('Edit User').should be_true
 			should have_selector('h1', text: 'Edit User')
 			
 			should have_content(current_user.username)
@@ -154,6 +164,16 @@ describe "User Pages:" do
 	  	
 			should have_selector('li.active', text: 'People')
 			should have_selector('li.active', text: 'Users')
+		end
+		
+		it "has correct fields on form" do
+			log_in
+	  	employee = FactoryGirl.create(:employee, account: current_account)
+			user = FactoryGirl.create(:user, account: current_account, employee: employee)
+	  	visit edit_user_path(user)
+	  	
+	  	has_field?('Password').should be_true
+	    has_field?('Confirm Password').should be_true
 		end
 		
 	  it "record with error" do
@@ -179,7 +199,7 @@ describe "User Pages:" do
 			click_button 'Update'
 	
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Users')
+			has_title?('Users').should be_true
 		end
   end
   
@@ -192,7 +212,7 @@ describe "User Pages:" do
 			click_link "delete_#{user.id}"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: 'Users')
+			has_title?('Users').should be_true
 			
 			should_not have_content(user.username)
 		end

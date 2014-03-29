@@ -102,7 +102,7 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 			
     if object.respond_to?(:errors) && object.errors.full_messages.any?
       content_tag(:div, :class => klass) do
-        content_tag(:strong, "Please correct the following errors:") +
+        content_tag(:strong, content_tag(:span, nil, class: 'glyphicon glyphicon-exclamation-sign')+" Please correct the following errors:") +
         content_tag(:ul) do
           object.errors.full_messages.map do |msg|
             content_tag(:li, msg)

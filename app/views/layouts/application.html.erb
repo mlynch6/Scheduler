@@ -21,7 +21,7 @@
 			</div>
 	
 			<div class="col-md-3">
-				<%= render "layouts/sidebars/#{yield(:header_current).downcase}" %>
+				<%= render "layouts/sidebars/#{yield(:header_current).downcase}" if yield(:header_current).present?%>
 				<%= render yield(:sidebar_extra) if yield(:sidebar_extra).present? %>
 			</div>
 		</div>

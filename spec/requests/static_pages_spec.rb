@@ -7,7 +7,7 @@ describe "Static Pages:" do
     visit root_path
     click_link 'Home'
   	
-  	should have_selector('title', text: 'Scheduler')
+  	has_title?('Scheduler').should be_true
 	  should have_selector('h1', text: 'Scheduler')
 	  
 	  should have_link('Sign In', href: login_path)
@@ -17,7 +17,7 @@ describe "Static Pages:" do
   	visit root_path
   	click_link 'Features'
   	
-		should have_selector('title', text: 'Features')
+		has_title?('Features').should be_true
 	  should have_selector('h1', text: 'Features')
   end
   
@@ -25,7 +25,7 @@ describe "Static Pages:" do
   	visit root_path
   	click_link 'Pricing & Signup'
   	
-		should have_selector('title', text: 'Pricing')
+		has_title?('Pricing').should be_true
 	  should have_selector('h1', text: 'Pricing')
   end
   
@@ -33,7 +33,7 @@ describe "Static Pages:" do
   	visit root_path
   	click_link 'Contact Us'
   	
-		should have_selector('title', text: 'Contact Us')
+		has_title?('Contact Us').should be_true
 	  should have_selector('h1', text: 'Contact Us')
   end
   
@@ -42,7 +42,7 @@ describe "Static Pages:" do
 	  	log_in
 	  	visit dashboard_path
 	  	
-			should have_selector('title', text: 'Dashboard')
+			has_title?('Dashboard').should be_true
 		  should have_selector('h1', text: 'Dashboard')
 	  end
   

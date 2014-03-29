@@ -64,6 +64,7 @@ en:
         end_at: "End At"
         start_date: "Date"
         start_time: "Start Time"
+        end_date: "End Date"
         employee_ids: "Invitees"
       location:
         active: "Status"

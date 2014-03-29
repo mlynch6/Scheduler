@@ -35,7 +35,7 @@ class Rehearsal < Event
 	def break_time
 		if contract.present?
 			break_start = end_at - break_duration*60
-			return "#{break_start.to_s(:hr12)} to #{end_at.to_s(:hr12)}"
+			return "#{break_start.in_time_zone(account.time_zone).to_s(:hr12)} to #{end_time}"
 		end
 	end
 	
@@ -62,7 +62,7 @@ protected
 	
 	#Rehearsal cannot start during the break following the company class
 	def check_company_class_break
-		cclass = CompanyClass.for_daily_calendar(start_date).first
+		cclass = CompanyClass.for_daily_calendar(start_at).first
 		
 		if contract.present? && cclass.present?
 			break_start = cclass.end_at

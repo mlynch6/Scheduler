@@ -14,7 +14,7 @@ describe "Cast Pages:" do
 	  	click_link 'Add Cast'
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: season.name)
+			has_title?(season.name).should be_true
 			should have_content('Cast A')
 			
 			click_link 'Add Cast'
@@ -35,7 +35,7 @@ describe "Cast Pages:" do
 			click_link "Delete"
 			
 			should have_selector('div.alert-success')
-			should have_selector('title', text: season.name)
+			has_title?(season.name).should be_true
 			should_not have_content('Cast A')
 		end
 	end

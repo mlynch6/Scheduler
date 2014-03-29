@@ -1,0 +1,62 @@
+<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="newModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 class="modal-title" id="newModalLabel">
+			<%= content_tag(:span, nil, class: "glyphicon glyphicon-plus mash-green") %> Select an Event Type
+		</h3>
+	</div>
+
+	<%= form_tag new_event_path, class:"form-horizontal", method:"get" do |f| %>
+		<div class="modal-body">
+			<div class="form-group">
+				<div class="col-md-offset-2 col-md-10">
+					<% if allow? "company_classes", "new" %>
+						<div class="radio">
+				  		<label>
+				  			<%= radio_button_tag 'event_type', 'CompanyClass' %>
+				    		Company Class
+				  		</label>
+						</div>
+					<% end %>
+					<% if allow? "rehearsals", "new" %>
+						<div class="radio">
+				  		<label>
+				    		<%= radio_button_tag 'event_type', 'Rehearsal' %>
+				    		Rehearsal
+				  		</label>
+						</div>
+					<% end %>
+					<% if allow? "costume_fittings", "new" %>
+						<div class="radio">
+				  		<label>
+				    		<%= radio_button_tag 'event_type', 'CostumeFitting' %>
+				    		Costume Fitting
+				  		</label>
+						</div>
+					<% end %>
+					<% if allow? "events", "new" %>
+						<div class="radio">
+				  		<label>
+				    		<%= radio_button_tag 'event_type', 'Event' %>
+				    		Event
+				  		</label>
+						</div>
+					<% end %>
+		    </div>
+  	</div>
+  	<%= hidden_field_tag 'dt' %>
+		<%= hidden_field_tag 'tm' %>
+  </div><!-- modal-body -->
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		<%= submit_tag 'Next', name: nil, class: "btn btn-success" %>
+	</div>
+<% end %>
+	
+</div> <!-- modal-content -->
+</div> <!-- modal-dialog -->
+</div> <!-- modal -->

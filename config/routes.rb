@@ -31,9 +31,9 @@ Scheduler::Application.routes.draw do
   
   resources :seasons
   resources :pieces do
-  	resources :scenes, :characters, only: [:index, :new, :create]
+  	resources :scenes, :characters, :only => [:index, :new, :create]
   end
-  resources :scenes, :characters, only: [:edit, :update, :destroy] do
+  resources :scenes, :characters, 	:only => [:edit, :update, :destroy] do
   	collection { post :sort }
   end
   resources :season_pieces, only: [] do
@@ -41,10 +41,10 @@ Scheduler::Application.routes.draw do
   end
   resources :casts,							:only => [:destroy]
   
-  resources :events,						:only => [:index, :new, :create, :edit, :update]
-  resources :company_classes,		:only => [:new, :create, :edit, :update], 	:controller => :events, :event_type => 'CompanyClass'
-  resources :costume_fittings,	:only => [:new, :create, :edit, :update], 	:controller => :events, :event_type => 'CostumeFitting'
-  resources :rehearsals,				:only => [:new, :create, :edit, :update], 	:controller => :events, :event_type => 'Rehearsal'
+  resources :events
+  resources :company_classes,		:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
+  resources :costume_fittings,	:except => [:index, :show], 	:controller => :events, :event_type => 'CostumeFitting'
+  resources :rehearsals,				:except => [:index, :show], 	:controller => :events, :event_type => 'Rehearsal'
   get 'events/:year/:month/:day', to: 'events#index'
 	
 	match 'dashboard' => 'static_pages#dashboard'
@@ -60,7 +60,8 @@ Scheduler::Application.routes.draw do
 	match 'payments/edit' => 'payments#edit'
 	match 'payments/update' => 'payments#update'
 	
+	
 	namespace :admin do
-		resources :subscription_plans,:except => [:show]
+		resources :subscription_plans,	:except => [:show]
 	end
 end

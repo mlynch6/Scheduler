@@ -46,6 +46,7 @@ describe Account do
   	it { should respond_to(:pieces) }
   	it { should respond_to(:scenes) }
   	it { should respond_to(:events) }
+  	it { should respond_to(:event_series) }
   	
   	it { should respond_to(:save_with_payment) }
   	it { should respond_to(:list_invoices) }
@@ -356,6 +357,24 @@ describe Account do
 				account.destroy
 				events.each do |event|
 					Event.find_by_id(event.id).should be_nil
+				end
+			end
+		end
+		
+		describe "event_series" do
+			before { Account.current_id = account.id }
+			let!(:second_series) { FactoryGirl.create(:event_series, account: account) }
+			let!(:first_series) { FactoryGirl.create(:event_series, account: account) }
+	
+			it "has multiple event series" do
+				account.event_series.count.should == 2
+			end
+			
+			it "deletes associated event series" do
+				series = account.event_series
+				account.destroy
+				series.each do |s|
+					EventSeries.find_by_id(s.id).should be_nil
 				end
 			end
 		end

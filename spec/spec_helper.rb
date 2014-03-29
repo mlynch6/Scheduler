@@ -71,8 +71,10 @@ Spork.prefork do
 	  #     --seed 1234
 	  config.order = "random"
 	  
+	  config.include Capybara::DSL
 	  config.include AuthMacros
 	  config.include Utilities
+	  config.include ChosenSelect
 	end
 
 end
