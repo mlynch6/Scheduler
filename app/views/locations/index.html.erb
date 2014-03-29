@@ -6,11 +6,6 @@
 <div class="page-header">
 	<h1><%= yield(:title) %></h1>
 </div>
-<div class="well well-sm mash-well-link">
-	<% if allow? "locations", "new" %>
-		<%= new_link "Add Location", new_location_path %>
-	<% end %>
-</div>
 
 <% if @locations.length > 0 %>
 	<table class="table table-striped">
@@ -18,7 +13,7 @@
 	  	<tr>
 	  		<th>Name</th>
 	  		<th>Status</th>
-	  		<th style="width:105px;">&nbsp;</th>
+	  		<th class="mash-col-3-btn">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -26,7 +21,7 @@
 				<tr>
 					<td><%= location.name %></td>
 					<td><%= active_inactive(location.active) %></td>
-					<td>
+					<td class="mash-col-3-btn">
 						<% if allow? "locations", "edit" %>
 							<%= edit_button nil, edit_location_path(location), :class => 'btn-xs', :id => "edit_#{location.id}" %>
 						<% end %>
