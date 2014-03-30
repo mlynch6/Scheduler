@@ -22,9 +22,9 @@
 		</li>
 	<% end %>
 	
-	<% if allow? "subscription_plans", "index" %>
+	<% if allow? "admin_accounts", "index" %>
 		<li<%= class_active if yield(:header_current) == "Administration" %>>
-			<%= icon_link 'Administration', 'cog', admin_subscription_plans_path %>
+			<%= icon_link 'Administration', 'cog', admin_accounts_path %>
 		</li>
 	<% end %>
 </ul>

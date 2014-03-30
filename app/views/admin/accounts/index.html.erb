@@ -1,0 +1,51 @@
+<% provide(:title, 'Accounts') %>
+<% provide(:header_current, 'Administration') %>
+<% provide(:sidebar_current, 'Accounts') %>
+
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+
+<% if @accounts.length > 0 %>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Status</th>
+				<th>Customer Id</th>
+				<th>Subscription</th>
+				<th class="mash-col-2-btn">&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @accounts.each do |account| %>
+				<tr>
+					<td class="mash-col-id"><%= account.id %></td>
+					<td>
+						<%= account.name %><br />
+						<small class="text-muted"><%= account.time_zone %></small>
+					</td>
+					<td>
+						<%= account.status %>
+						<small class="text-muted"><%= account.cancelled_at if account.cancelled_at.present? %></small>
+					</td>
+					<td><%= account.stripe_customer_token %></td>
+					<td><%= account.current_subscription_plan.name %></td>
+					<td class="mash-col-2-btn">
+						<% if allow? "admin_accounts", "edit" %>
+							<%= edit_button nil, edit_admin_account_path(account), :class => 'btn-xs', :id => "edit_#{account.id}" %>
+						<% end %>
+						<% if allow? "admin_accounts", "destroy" %>
+							<%= delete_button nil, admin_account_path(account), :class => 'btn-xs', :id => "delete_#{account.id}" %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+
+<% else %>
+	<p>No accounts found.</p>
+<% end %>

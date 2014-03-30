@@ -262,8 +262,20 @@ shared_examples "a NON-administrator" do
 		it { should_not allow(:subscriptions, :destroy) }
 	end
 	
-	context "subscription_plans" do
+	context "for subscription_plans" do
 		it { should_not allow(:subscription_plans, :index) }
+		it { should_not allow(:subscription_plans, :new) }
+		it { should_not allow(:subscription_plans, :create) }
+		it { should_not allow(:subscription_plans, :edit) }
+		it { should_not allow(:subscription_plans, :update) }
+		it { should_not allow(:subscription_plans, :destroy) }
+	end
+	
+	context "admin/accounts" do
+		it { should_not allow(:admin_accounts, :index) }
+		it { should_not allow(:admin_accounts, :edit) }
+		it { should_not allow(:admin_accounts, :update) }
+		it { should_not allow(:admin_accounts, :destroy) }
 	end
 	
 	context "payments" do
@@ -421,6 +433,13 @@ describe Permission do
 			it { should_not allow(:subscription_plans, :update) }
 			it { should_not allow(:subscription_plans, :destroy) }
 		end
+		
+		context "admin/accounts" do
+			it { should_not allow(:admin_accounts, :index) }
+			it { should_not allow(:admin_accounts, :edit) }
+			it { should_not allow(:admin_accounts, :update) }
+			it { should_not allow(:admin_accounts, :destroy) }
+		end
 	end
 	
 	context "as Super Administrator" do
@@ -442,6 +461,13 @@ describe Permission do
 			it { should allow(:subscription_plans, :edit) }
 			it { should allow(:subscription_plans, :update) }
 			it { should allow(:subscription_plans, :destroy) }
+		end
+		
+		context "admin/accounts" do
+			it { should allow(:admin_accounts, :index) }
+			it { should allow(:admin_accounts, :edit) }
+			it { should allow(:admin_accounts, :update) }
+			it { should allow(:admin_accounts, :destroy) }
 		end
 	end
 end
