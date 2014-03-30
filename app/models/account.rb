@@ -40,6 +40,7 @@ class Account < ActiveRecord::Base
   
 	before_validation :set_defaults, :if => "self.new_record?"
 	after_create :create_profile
+	before_destroy :destroy_stripe_customer
   
 	validates :name, presence: true, length: { maximum: 100 }
 	validates :time_zone,	presence: true, length: { maximum: 100 }, inclusion: { in: ActiveSupport::TimeZone.zones_map(&:name) }
@@ -148,5 +149,14 @@ class Account < ActiveRecord::Base
 	
 	def stripe_customer
 		@stripe_customer ||= Stripe::Customer.retrieve(stripe_customer_token)
+	end
+	
+	def destroy_stripe_customer
+		self.errors.messages[:base] = nil
+		response = stripe_customer.delete
+		return response.deleted
+	rescue Stripe::InvalidRequestError => e
+		#Customer not found in Stripe
+		true
 	end
 end

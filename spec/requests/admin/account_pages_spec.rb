@@ -112,18 +112,45 @@ describe "Admin Account Pages:" do
 		end
 	end
 
-	# context "#destroy" do
-	# 	it "deletes the record" do
-	# 		log_in
-	# 		account = FactoryGirl.create(:account)
-	# 		visit admin_accounts_path
-	# 		click_link "delete_#{account.id}"
-	# 
-	# 		should have_selector 'div.alert-success'
-	# 		should have_title 'Accounts'
-	# 
-	# 		click_link 'All'
-	# 		should_not have_content account.name
-	# 	end
-	# end
+	context "#destroy" do
+		before do
+			log_in
+			@account = FactoryGirl.create(:account)
+		end
+		
+		context "with Stripe customer" do
+			before do
+				create_stripe_account(@account)
+				visit admin_accounts_path
+				click_link "delete_#{@account.id}"
+			end
+			
+			it "deletes the record" do
+				should have_selector 'div.alert-success'
+				should have_title 'Accounts'
+		
+				should_not have_content @account.stripe_customer_token
+				should_not have_selector 'td.mash-col-id', text: @account.id
+			end
+			
+			it "deletes the Stripe customer" do
+				customer = Stripe::Customer.retrieve(@account.stripe_customer_token)
+				customer.deleted.should be_true
+			end
+		end
+		
+		context "without Stripe customer" do
+			before do
+				visit admin_accounts_path
+				click_link "delete_#{@account.id}"
+			end
+			
+			it "deletes the record" do
+				should have_selector 'div.alert-success'
+				should have_title 'Accounts'
+			
+				should_not have_selector 'td.mash-col-id', text: @account.id
+			end
+		end
+	end
 end

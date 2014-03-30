@@ -1,5 +1,5 @@
 class Admin::AccountsController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update] #, :destroy]
+	before_filter :get_resource, :only => [:edit, :update, :destroy]
 
 	def index
 		@accounts = Account.paginate(page: params[:page], per_page: params[:per_page])
@@ -19,10 +19,14 @@ class Admin::AccountsController < ApplicationController
 		end
 	end
 
-	# def destroy
-	# 	@account.destroy
-	# 	redirect_to admin_accounts_path, :notice => "Successfully deleted the account."
-	# end
+	def destroy
+		if @account.destroy
+			redirect_to admin_accounts_path, :notice => "Successfully deleted the account."
+		else
+			flash[:error] = "There was an error deleting the account."
+			redirect_to admin_accounts_path
+		end
+	end
 
 private
 	def get_resource
