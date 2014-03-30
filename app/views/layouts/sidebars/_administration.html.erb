@@ -1,9 +1,15 @@
 <div class="panel panel-primary mash-sidebar hidden-print" role="complementary">
 	<div class="panel-heading">
-		<h3 class="panel-title"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-asterisk')%> Administration</h3>
+		<h3 class="panel-title"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-cog')%> Administration</h3>
 	</div>
 	
 	<ul class="list-group">
+		<% if allow? "admin_accounts", "index" %>
+			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Accounts" %>">
+				<%= link_to "Accounts", admin_accounts_path %>
+			</li>
+		<% end %>
+		
 		<% if allow? "subscription_plans", "index" %>
 			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Subscription Plans" %>">
 				<%= link_to "Subscription Plans", admin_subscription_plans_path %>

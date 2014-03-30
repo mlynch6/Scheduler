@@ -6,7 +6,7 @@ Scheduler::Application.routes.draw do
 	
 	resources :accounts do
 		resources :addresses, 			:except => [:index, :show]
-		resources :phones, 					:except => [:index, :show]
+		resources :phones, 				:except => [:index, :show]
 	end
 	resources :agma_profiles, 		:only => [:show, :edit, :update]
   resources :sessions
@@ -18,11 +18,11 @@ Scheduler::Application.routes.draw do
   		get 'activate'
   		get 'inactivate'
   	end
-  	resources :addresses, 			:except => [:index, :show]
+  	resources :addresses, 				:except => [:index, :show]
   	resources :phones, 					:except => [:index, :show]
   end
   
-  resources :locations, :except => [:show] do
+  resources :locations, 				:except => [:show] do
   	member do
   		get 'activate'
   		get 'inactivate'
@@ -31,18 +31,18 @@ Scheduler::Application.routes.draw do
   
   resources :seasons
   resources :pieces do
-  	resources :scenes, :characters, :only => [:index, :new, :create]
+		resources :scenes, :characters, :only => [:index, :new, :create]
   end
   resources :scenes, :characters, 	:only => [:edit, :update, :destroy] do
-  	collection { post :sort }
+		collection { post :sort }
   end
   resources :season_pieces, only: [] do
-  	resources :casts,						:only => [:new, :index]
+		resources :casts,					:only => [:new, :index]
   end
-  resources :casts,							:only => [:destroy]
+  resources :casts,						:only => [:destroy]
   
   resources :events
-  resources :company_classes,		:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
+  resources :company_classes,	:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
   resources :costume_fittings,	:except => [:index, :show], 	:controller => :events, :event_type => 'CostumeFitting'
   resources :rehearsals,				:except => [:index, :show], 	:controller => :events, :event_type => 'Rehearsal'
   get 'events/:year/:month/:day', to: 'events#index'
@@ -62,6 +62,7 @@ Scheduler::Application.routes.draw do
 	
 	
 	namespace :admin do
+		resources :accounts,				:only => [:index, :edit, :update, :destroy]
 		resources :subscription_plans,	:except => [:show]
 	end
 end
