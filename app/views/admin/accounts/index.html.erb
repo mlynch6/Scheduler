@@ -26,7 +26,10 @@
 						<%= account.name %><br />
 						<small class="text-muted"><%= account.time_zone %></small>
 					</td>
-					<td><%= account.status %></td>
+					<td>
+						<%= account.status %>
+						<small class="text-muted"><%= account.cancelled_at if account.cancelled_at.present? %></small>
+					</td>
 					<td><%= account.stripe_customer_token %></td>
 					<td><%= account.current_subscription_plan.name %></td>
 					<td class="mash-col-2-btn">

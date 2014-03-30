@@ -8,6 +8,7 @@ en:
         name: "Company"
         time_zone: "Time Zone"
         cancelled_at: "Canceled On"
+        stripe_customer_token: "Customer Id"
         current_subscription_plan: "Current Subscription"
         current_subscription_plan_id: "Subscription"
       account/phones:

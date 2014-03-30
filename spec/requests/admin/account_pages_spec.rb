@@ -56,6 +56,61 @@ describe "Admin Account Pages:" do
 			end
 		end
 	end
+	
+	context "#edit" do
+		before do
+			log_in
+			@account = FactoryGirl.create(:account)
+		end
+		
+		it "has correct title" do
+			log_in
+			click_link 'Administration'
+			click_link 'Accounts'
+			click_link "edit_#{@account.id}"
+	
+			should have_title 'Edit Account'
+			should have_selector 'h1', text: 'Edit Account'
+		end
+	
+		it "has correct Navigation" do
+			visit edit_admin_account_path(@account)
+	
+			should have_selector 'li.active', text: 'Administration'
+			should have_selector 'li.active', text: 'Accounts'
+		end
+		
+		it "has correct fields on form" do
+			visit edit_admin_account_path(@account)
+		
+			should have_field 'Company'
+			should have_select 'Time Zone'
+			should have_select 'Status'
+			should have_field 'Customer Id'
+			should have_select 'Subscription'
+		end
+	
+		it "record with error" do
+			visit edit_admin_account_path(current_account)
+	
+			fill_in 'Company', with: ''
+			click_button 'Update'
+	
+			should have_selector 'div.alert-danger'
+		end
+	
+		it "record with valid info saves account" do
+			visit edit_admin_account_path(@account)
+	
+			fill_in 'Customer Id', with: "New Id"
+			click_button 'Update'
+	
+			should have_selector 'div.alert-success'
+			should have_title 'Accounts'
+	
+			should have_content('New Id')
+		end
+	end
 
 	# context "#destroy" do
 	# 	it "deletes the record" do
