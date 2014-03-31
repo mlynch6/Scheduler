@@ -6,10 +6,13 @@
 	<h1><%= yield(:title) %></h1>
 </div>
 
-<div class="well well-sm mash-well-link">
-	<% if allow? "agma_contracts", "edit" %>
-		<%= edit_link "Edit", edit_agma_contract_path(@agma_contract) %>
-	<% end %>
+<div class="mash-show-tab">
+	<%= render 'agma_contracts/tabs' %>
+	<%= render 'agma_contracts/detail' %>
+	
+	<div class="mash-tab-actions">
+		<% if allow? "agma_contracts", "edit" %>
+			<%= edit_button "Edit", edit_agma_contract_path(@agma_contract) %>
+		<% end %>
+	</div>
 </div>
-
-<%= render 'agma_contracts/detail' %>

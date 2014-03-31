@@ -24,17 +24,51 @@ describe "Agma Contract Pages:" do
 			should have_selector 'li.active', text: 'Contract Settings'
 		end
 		
-		it "has correct fields on form" do
-			should have_select 'Rehearsal Start'
-	    should have_select 'Rehearsal End'
-	    should have_field 'Max Hours/Week'
-	    should have_field 'Max Hours/Day'
-	    should have_field 'Rehearsal Increments'
-	    
-	    should have_field 'Class Break'
-	    should have_field 'Rehearsal Break'
-	    
-	    should have_field 'Costume Fitting Increments'
+		context "has correct fields on", js: true do
+			it "Rehearsal Week tab" do
+				click_link 'Rehearsal Week'
+				
+				should have_select 'Rehearsal Start'
+				should have_select 'Rehearsal End'
+				should have_field 'Max Hours/Week'
+				should have_field 'Max Hours/Day'
+				should have_field 'Rehearsal Increments'
+				should have_field 'Rehearsal Break'
+		    
+		    should_not have_field 'Class Break'
+		    
+		    should_not have_field 'Costume Fitting Increments'
+			end
+			
+			it "Company Class tab" do
+				click_link 'Company Class'
+				
+				should_not have_select 'Rehearsal Start'
+				should_not have_select 'Rehearsal End'
+				should_not have_field 'Max Hours/Week'
+				should_not have_field 'Max Hours/Day'
+				should_not have_field 'Rehearsal Increments'
+				should_not have_field 'Rehearsal Break'
+					
+				should have_field 'Class Break'
+				
+				should_not have_field 'Costume Fitting Increments'
+			end
+			
+			it "Costume Fitting tab" do
+				click_link 'Costume Fittings'
+				
+				should_not have_select 'Rehearsal Start'
+				should_not have_select 'Rehearsal End'
+				should_not have_field 'Max Hours/Week'
+				should_not have_field 'Max Hours/Day'
+				should_not have_field 'Rehearsal Increments'
+				should_not have_field 'Rehearsal Break'
+					
+				should_not have_field 'Class Break'
+				
+				should have_field 'Costume Fitting Increments'
+			end
 		end
 		
 	  it "invalid record shows error" do
@@ -78,6 +112,53 @@ describe "Agma Contract Pages:" do
 		it "has correct Navigation" do
 			should have_selector 'li.active', text: 'Setup'
 			should have_selector 'li.active', text: 'Contract Settings'
+		end
+		
+		context "has correct fields on", js: true do
+			it "Rehearsal Week tab" do
+				click_link 'Rehearsal Week'
+				
+				should have_selector 'div.dtl-label', text: 'Rehearsal Start'
+				should have_selector 'div.dtl-label', text: 'Rehearsal End'
+				should have_selector 'div.dtl-label', text: 'Max Hours/Week'
+				should have_selector 'div.dtl-label', text: 'Max Hours/Day'
+				should have_selector 'div.dtl-label', text: 'Rehearsal Increments'
+				should have_selector 'div.dtl-label', text: 'Rehearsal Break'
+				
+				should_not have_selector 'div.dtl-label', text: 'Class Break'
+				
+				should_not have_selector 'div.dtl-label', text: 'Costume Fitting Increments'
+			end
+			
+			it "Company Class tab" do
+				click_link 'Company Class'
+				
+				should_not have_selector 'div.dtl-label', text: 'Rehearsal Start'
+				should_not have_selector 'div.dtl-label', text: 'Rehearsal End'
+				should_not have_selector 'div.dtl-label', text: 'Max Hours/Week'
+				should_not have_selector 'div.dtl-label', text: 'Max Hours/Day'
+				should_not have_selector 'div.dtl-label', text: 'Rehearsal Increments'
+				should_not have_selector 'div.dtl-label', text: 'Rehearsal Break'
+				
+				should have_selector 'div.dtl-label', text: 'Class Break'
+				
+				should_not have_selector 'div.dtl-label', text: 'Costume Fitting Increments'
+			end
+			
+			it "Costume Fitting tab" do
+				click_link 'Costume Fittings'
+				
+				should_not have_selector 'div.dtl-label', text: 'Rehearsal Start'
+				should_not have_selector 'div.dtl-label', text: 'Rehearsal End'
+				should_not have_selector 'div.dtl-label', text: 'Max Hours/Week'
+				should_not have_selector 'div.dtl-label', text: 'Max Hours/Day'
+				should_not have_selector 'div.dtl-label', text: 'Rehearsal Increments'
+				should_not have_selector 'div.dtl-label', text: 'Rehearsal Break'
+				
+				should_not have_selector 'div.dtl-label', text: 'Class Break'
+				
+				should have_selector 'div.dtl-label', text: 'Costume Fitting Increments'
+			end
 		end
 		
 		it "has links" do
