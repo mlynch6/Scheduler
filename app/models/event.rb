@@ -110,7 +110,7 @@ protected
 	end
 	
 	def contract
-		@contract ||= AgmaProfile.find_by_account_id(Account.current_id)
+		@contract ||= AgmaContract.find_by_account_id(Account.current_id)
 	end
 	
 	def warn_when_location_double_booked

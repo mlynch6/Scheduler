@@ -21,7 +21,7 @@ class Account < ActiveRecord::Base
 	attr_accessor :stripe_card_token
   
 	belongs_to :current_subscription_plan, class_name: "SubscriptionPlan"
-	has_one :agma_profile, dependent: :destroy
+	has_one :agma_contract, dependent: :destroy
 	has_many :employees, dependent: :destroy
 	has_many :users, dependent: :destroy
 	has_many :addresses, :as => :addressable, dependent: :destroy
@@ -39,7 +39,7 @@ class Account < ActiveRecord::Base
 	accepts_nested_attributes_for :employees
   
 	before_validation :set_defaults, :if => "self.new_record?"
-	after_create :create_profile
+	after_create :create_contract
 	before_destroy :destroy_stripe_customer
   
 	validates :name, presence: true, length: { maximum: 100 }
@@ -137,14 +137,14 @@ class Account < ActiveRecord::Base
 		false
 	end
 	
-	private
+private
   
 	def set_defaults
 		self.status = 'Active' if status.blank?
 	end
   
-	def create_profile
-		self.create_agma_profile
+	def create_contract
+		self.create_agma_contract
 	end
 	
 	def stripe_customer

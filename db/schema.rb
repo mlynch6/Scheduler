@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(:version => 20140117201845) do
 
   add_index "addresses", ["addressable_id", "addressable_type"], :name => "index_addresses_on_addressable_id_and_addressable_type"
 
-  create_table "agma_profiles", :force => true do |t|
+  create_table "agma_contracts", :force => true do |t|
     t.integer  "account_id",                 :null => false
     t.integer  "rehearsal_start_min",        :null => false
     t.integer  "rehearsal_end_min",          :null => false
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(:version => 20140117201845) do
     t.datetime "updated_at",                 :null => false
   end
 
-  add_index "agma_profiles", ["account_id"], :name => "index_agma_profiles_on_account_id", :unique => true
+  add_index "agma_contracts", ["account_id"], :name => "index_agma_contracts_on_account_id", :unique => true
 
   create_table "appearances", :force => true do |t|
     t.integer  "scene_id",     :null => false

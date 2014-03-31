@@ -4,7 +4,7 @@ namespace :db do
 		
 		#clear DB
 		Account.unscoped.delete_all
-		AgmaProfile.unscoped.delete_all
+		AgmaContract.unscoped.delete_all
 		Employee.unscoped.delete_all
 		User.unscoped.delete_all
 		Address.unscoped.delete_all
@@ -31,16 +31,16 @@ namespace :db do
 		a.save_with_payment
 		Account.current_id = a.id
 		
-		profile = a.agma_profile
-		profile.rehearsal_start_min = 570		# 9:30 AM
-		profile.rehearsal_end_min = 1710		# 6:30 PM
-		profile.rehearsal_max_hrs_per_week = 30
-		profile.rehearsal_max_hrs_per_day = 6
-		profile.rehearsal_increment_min = 30
-		profile.class_break_min = 15
-		profile.rehearsal_break_min_per_hr = 5
-		profile.costume_increment_min = 15
-		profile.save
+		contract = a.agma_contract
+		contract.rehearsal_start_min = 570		# 9:30 AM
+		contract.rehearsal_end_min = 1710		# 6:30 PM
+		contract.rehearsal_max_hrs_per_week = 30
+		contract.rehearsal_max_hrs_per_day = 6
+		contract.rehearsal_increment_min = 30
+		contract.class_break_min = 15
+		contract.rehearsal_break_min_per_hr = 5
+		contract.costume_increment_min = 15
+		contract.save
 		
 		a.addresses.create(
 			addr_type: "Work",
@@ -69,7 +69,7 @@ namespace :db do
 			password: "password",
 			password_confirmation: "password"
 			)
-		u.set_admin_role
+		u.update_attribute(:role, 'Super Administrator')
 			
 		#create Administrator account
 		e = Employee.create(

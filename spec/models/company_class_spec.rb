@@ -19,7 +19,7 @@ require 'spec_helper'
 
 describe CompanyClass do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:contract) { account.agma_profile }
+	let(:contract) { account.agma_contract }
 	let(:location) { FactoryGirl.create(:location, account: account) }
 	let(:cclass) { FactoryGirl.create(:company_class,
 											account: account,
@@ -52,19 +52,19 @@ describe CompanyClass do
 			cclass.reload.title.should == "Company Class"
 		end
   	
-		it "when start_time is the same as AgmaProfile rehearsal_start" do
+		it "when start_time is the same as AgmaContract rehearsal_start" do
 			@cclass.start_time = contract.rehearsal_start_time
 			@cclass.duration = contract.rehearsal_increment_min
 			should be_valid
 		end
   	
-		it "when end_time is the same as AgmaProfile rehearsal_end" do
+		it "when end_time is the same as AgmaContract rehearsal_end" do
 			@cclass.start_time = min_to_formatted_time(contract.rehearsal_end_min - contract.rehearsal_increment_min)
 			@cclass.duration = contract.rehearsal_increment_min
 			should be_valid
 		end
   	
-		it "when duration is a multiple of AgmaProfile rehearsal_increment_min" do
+		it "when duration is a multiple of AgmaContract rehearsal_increment_min" do
 			@cclass.start_time = contract.rehearsal_start_time
 			@cclass.duration = contract.rehearsal_increment_min
 			should be_valid
@@ -72,19 +72,19 @@ describe CompanyClass do
 	end
   
 	context "(Invalid)" do  	
-		it "when duration is NOT multiple of AgmaProfile rehearsal_increment_min" do
+		it "when duration is NOT multiple of AgmaContract rehearsal_increment_min" do
 			@cclass.start_time = contract.rehearsal_start_time
 			@cclass.duration = contract.rehearsal_increment_min - 5
 			should_not be_valid
 		end
   	
-		it "when start_time is before AgmaProfile rehearsal_start" do
+		it "when start_time is before AgmaContract rehearsal_start" do
 			@cclass.start_time = min_to_formatted_time(contract.rehearsal_start_min - 5)
 			@cclass.duration = contract.rehearsal_increment_min
 			should_not be_valid
 		end
   	
-		it "when end_time is after AgmaProfile rehearsal_end" do
+		it "when end_time is after AgmaContract rehearsal_end" do
 			@cclass.start_time = min_to_formatted_time(contract.rehearsal_end_min + 5)
 			@cclass.duration = contract.rehearsal_increment_min
 			should_not be_valid

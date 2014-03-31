@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: agma_profiles
+# Table name: agma_contracts
 #
 #  id                         :integer          not null, primary key
 #  account_id                 :integer          not null
@@ -16,7 +16,7 @@
 #  updated_at                 :datetime         not null
 #
 
-class AgmaProfile < ActiveRecord::Base
+class AgmaContract < ActiveRecord::Base
 	include ApplicationHelper
 	
   attr_accessible :rehearsal_start_min, :rehearsal_end_min, :rehearsal_max_hrs_per_week, :rehearsal_max_hrs_per_day, :rehearsal_increment_min

@@ -29,44 +29,44 @@ describe CostumeFitting do
 											duration: 60) }
 	before do
 		Account.current_id = account.id
-		contract = account.agma_profile
-  	contract.costume_increment_min = 10
-  	contract.save
+		contract = account.agma_contract
+		contract.costume_increment_min = 10
+		contract.save
 		@fitting = FactoryGirl.build(:costume_fitting)
 	end
 	
 	subject { @fitting }
 	
   context "(Valid)" do
-  	it "with minimum attributes" do
-  		should be_valid
-  		fitting.warnings.count.should == 0
-  	end
-  	
-  	it "without a title - title will be defaulted to 'Costume Fitting'" do
-  		fitting.title = ""
-  		fitting.save
-  		fitting.reload.title.should == "Costume Fitting"
-  	end
-  	
-  	it "when duration is a multiple of costume_increment_min" do
-  		@fitting.start_time = "4PM"
-  		@fitting.duration = 10
-  		should be_valid
-  	end
+	  	it "with minimum attributes" do
+	  		should be_valid
+	  		fitting.warnings.count.should == 0
+	  	end
+	  	
+	  	it "without a title - title will be defaulted to 'Costume Fitting'" do
+	  		fitting.title = ""
+	  		fitting.save
+	  		fitting.reload.title.should == "Costume Fitting"
+	  	end
+	  	
+	  	it "when duration is a multiple of costume_increment_min" do
+	  		@fitting.start_time = "4PM"
+	  		@fitting.duration = 10
+	  		should be_valid
+	  	end
   end
   
   context "(Invalid)" do  	
-  	it "when duration is NOT multiple of costume_increment_min" do
-  		@fitting.start_time = "4PM"
-  		@fitting.duration = 15
-  		should_not be_valid
-  	end
+	  	it "when duration is NOT multiple of costume_increment_min" do
+	  		@fitting.start_time = "4PM"
+	  		@fitting.duration = 15
+	  		should_not be_valid
+	  	end
   end
   
   context "correct value is returned for" do  
 	  it "type" do
-	  	fitting.reload.type.should == 'CostumeFitting'
+	  		fitting.reload.type.should == 'CostumeFitting'
 	  end
 	  
 	  it "break?" do

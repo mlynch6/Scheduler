@@ -96,10 +96,16 @@ footer {
 }
 
 .mash-show-tab {
+	.nav-tabs {
+		border-bottom: 4px solid $navbar-default-link-active-bg;
+		li.active a {
+			background: none repeat scroll 0 0 $navbar-default-link-active-bg;
+			font-weight: bold;
+		}
+	}
 	.mash-tab-body {
-		padding-top: 10px;
+		padding: 10px;
 		padding-bottom: 20px;
-		border-top: 4px solid $brand-primary;
 	}
 	.mash-tab-actions {
 		@extend .text-right;

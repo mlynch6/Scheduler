@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: agma_profiles
+# Table name: agma_contracts
 #
 #  id                         :integer          not null, primary key
 #  account_id                 :integer          not null
@@ -17,7 +17,7 @@
 #
 
 FactoryGirl.define do
-	factory :agma_profile do
+	factory :agma_contract do
 		account
 		rehearsal_start_min						540		# 9AM
 		rehearsal_end_min							1020	# 5PM

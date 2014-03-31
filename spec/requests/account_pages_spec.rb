@@ -150,9 +150,9 @@ describe "Account Pages:" do
     		account.name.should == company_name
     	end
     	
-    	it "creates the Agma Profile", js: true do
+    	it "creates the Agma Contract", js: true do
 				account = User.unscoped.find_by_username(username).account
-				account.agma_profile.should_not be_nil
+				account.agma_contract.should_not be_nil
     	end
     	
     	it "creates an Address", js: true do
