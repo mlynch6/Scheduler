@@ -21,7 +21,7 @@ describe Account do
 										:name => 'Milwaukee Ballet',
 										:time_zone => 'Eastern Time (US & Canada)',
 										:current_subscription_plan => subscription) }
-  before do
+	before do
 		@account = FactoryGirl.build(:account)
 	end
 	
@@ -29,31 +29,31 @@ describe Account do
 	
 	context "accessible attributes" do
 		it { should respond_to(:name) }
-  	it { should respond_to(:time_zone) }
-  	it { should respond_to(:status) }
-  	it { should respond_to(:cancelled_at) }
-  	it { should respond_to(:stripe_card_token) }
-  	it { should respond_to(:stripe_customer_token) }
+		it { should respond_to(:time_zone) }
+		it { should respond_to(:status) }
+		it { should respond_to(:cancelled_at) }
+		it { should respond_to(:stripe_card_token) }
+		it { should respond_to(:stripe_customer_token) }
   	
-  	it { should respond_to(:agma_profile) }
-  	it { should respond_to(:current_subscription_plan) }
-  	it { should respond_to(:addresses) }
-  	it { should respond_to(:phones) }
-  	it { should respond_to(:employees) }
-  	it { should respond_to(:users) }
-  	it { should respond_to(:locations) }
-  	it { should respond_to(:seasons) }
-  	it { should respond_to(:pieces) }
-  	it { should respond_to(:scenes) }
-  	it { should respond_to(:events) }
-  	it { should respond_to(:event_series) }
+		it { should respond_to(:agma_contract) }
+		it { should respond_to(:current_subscription_plan) }
+		it { should respond_to(:addresses) }
+		it { should respond_to(:phones) }
+		it { should respond_to(:employees) }
+		it { should respond_to(:users) }
+		it { should respond_to(:locations) }
+		it { should respond_to(:seasons) }
+		it { should respond_to(:pieces) }
+		it { should respond_to(:scenes) }
+		it { should respond_to(:events) }
+		it { should respond_to(:event_series) }
   	
-  	it { should respond_to(:save_with_payment) }
-  	it { should respond_to(:list_invoices) }
-  	it { should respond_to(:next_invoice_date) }
-  	it { should respond_to(:cancel_subscription) }
-  	it { should respond_to(:edit_subscription_payment) }
-  	it { should respond_to(:edit_subscription_plan) }
+		it { should respond_to(:save_with_payment) }
+		it { should respond_to(:list_invoices) }
+		it { should respond_to(:next_invoice_date) }
+		it { should respond_to(:cancel_subscription) }
+		it { should respond_to(:edit_subscription_payment) }
+		it { should respond_to(:edit_subscription_plan) }
   	
   	it "should not allow access to status" do
       expect do
@@ -157,17 +157,17 @@ describe Account do
   end
   
   context "(Associations)" do
-  	describe "agma_profile" do
+  	describe "agma_contract" do
   		before { Account.current_id = account.id }
 			
-			it "has one AGMA profile" do
-				account.agma_profile.should_not be_nil
+			it "has one AGMA contract" do
+				account.agma_contract.should_not be_nil
 			end
 			
-			it "deletes associated AGMA profile" do
-				p = account.agma_profile
+			it "deletes associated AGMA contract" do
+				p = account.agma_contract
 				account.destroy
-				AgmaProfile.find_by_id(p.id).should be_nil
+				AgmaContract.find_by_id(p.id).should be_nil
 			end
 		end
 		

@@ -7,9 +7,9 @@
 </div>
 
 <div class="well well-sm mash-well-link">
-	<% if allow? "agma_profiles", "edit" %>
-		<%= edit_link "Edit", edit_agma_profile_path(@agma_profile) %>
+	<% if allow? "agma_contracts", "edit" %>
+		<%= edit_link "Edit", edit_agma_contract_path(@agma_contract) %>
 	<% end %>
 </div>
 
-<%= render 'agma_profiles/detail' %>
+<%= render 'agma_contracts/detail' %>

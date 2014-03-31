@@ -596,9 +596,9 @@ describe "Event (non-Repeating) Pages:" do
 			it "break in popup window" do
 				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
-				profile = AgmaProfile.find_by_account_id(current_account.id)
-				profile.class_break_min = 15
-				profile.save
+				contract = AgmaContract.find_by_account_id(current_account.id)
+				contract.class_break_min = 15
+				contract.save
 				
 				emp = FactoryGirl.create(:employee, account: current_account)
 				event = FactoryGirl.create(:company_class,
@@ -618,9 +618,9 @@ describe "Event (non-Repeating) Pages:" do
 			it "without break if contract break is 0" do
 				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
-				profile = AgmaProfile.find_by_account_id(current_account.id)
-				profile.class_break_min = 0
-				profile.save
+				contract = AgmaContract.find_by_account_id(current_account.id)
+				contract.class_break_min = 0
+				contract.save
 				
 				FactoryGirl.create(:company_class,
 						account: current_account,
@@ -701,9 +701,9 @@ describe "Event (non-Repeating) Pages:" do
 				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
-				profile = AgmaProfile.find_by_account_id(current_account.id)
-				profile.rehearsal_break_min_per_hr = 5
-				profile.save
+				contract = AgmaContract.find_by_account_id(current_account.id)
+				contract.rehearsal_break_min_per_hr = 5
+				contract.save
 				
 				emp = FactoryGirl.create(:employee, account: current_account)
 				event = FactoryGirl.create(:rehearsal,
@@ -725,9 +725,9 @@ describe "Event (non-Repeating) Pages:" do
 				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
-				profile = AgmaProfile.find_by_account_id(current_account.id)
-				profile.rehearsal_break_min_per_hr = 0
-				profile.save
+				contract = AgmaContract.find_by_account_id(current_account.id)
+				contract.rehearsal_break_min_per_hr = 0
+				contract.save
 				
 				FactoryGirl.create(:rehearsal,
 						account: current_account,

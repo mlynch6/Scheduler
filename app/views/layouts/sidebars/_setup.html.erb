@@ -10,9 +10,9 @@
 			</li>
 		<% end %>
 		
-		<% if allow? "agma_profiles", "show" %>
+		<% if allow? "agma_contracts", "show" %>
 			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Contract" %>">
-				<%= link_to "Contract Settings", agma_profile_path(AgmaProfile.first) %>
+				<%= link_to "Contract Settings", agma_contract_path(AgmaContract.first) %>
 			</li>
 		<% end %>
 		

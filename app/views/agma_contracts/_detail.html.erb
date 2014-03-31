@@ -1,0 +1,52 @@
+<div class="dtl-form">
+	<h2>Rehearsal Week</h2>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= AgmaContract.human_attribute_name(:rehearsal_start_min) %></div>
+		<div class="dtl-text col-md-9"><%= @agma_contract.rehearsal_start_time %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= AgmaContract.human_attribute_name(:rehearsal_end_min) %></div>
+		<div class="dtl-text col-md-9"><%= @agma_contract.rehearsal_end_time %></div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= AgmaContract.human_attribute_name(:rehearsal_max_hrs_per_week) %></div>
+		<div class="dtl-text col-md-9"><%= @agma_contract.rehearsal_max_hrs_per_week %> hours/week</div>
+	</div>
+
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= AgmaContract.human_attribute_name(:rehearsal_max_hrs_per_day) %></div>
+		<div class="dtl-text col-md-9"><%= @agma_contract.rehearsal_max_hrs_per_day %> hours/day</div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= AgmaContract.human_attribute_name(:rehearsal_increment_min) %></div>
+		<div class="dtl-text col-md-9"><%= @agma_contract.rehearsal_increment_min %> minutes</div>
+	</div>
+</div>
+
+<div class="dtl-form">
+	<h2>Breaks</h2>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= AgmaContract.human_attribute_name(:class_break_min) %></div>
+		<div class="dtl-text col-md-9"><%= @agma_contract.class_break_min %> minutes</div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= AgmaContract.human_attribute_name(:rehearsal_break_min_per_hr) %></div>
+		<div class="dtl-text col-md-9"><%= @agma_contract.rehearsal_break_min_per_hr %> minutes/Hour Rehearsal</div>
+	</div>
+</div>
+
+
+<div class="dtl-form">
+	<h2>Costume Fittings</h2>
+	
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= AgmaContract.human_attribute_name(:costume_increment_min) %></div>
+		<div class="dtl-text col-md-9"><%= @agma_contract.costume_increment_min %> minutes</div>
+	</div>
+</div>

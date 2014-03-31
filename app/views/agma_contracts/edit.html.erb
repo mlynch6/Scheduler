@@ -6,7 +6,7 @@
 	<h1><%= yield(:title) %></h1>
 </div>
 
-<%= form_for @agma_profile, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for @agma_contract, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
 	<%= f.error_messages %>
 	<%= render 'form', :f => f %>
 	

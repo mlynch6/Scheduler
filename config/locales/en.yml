@@ -33,7 +33,7 @@ en:
         addr: "Address"
         addr2: "Address 2"
         zipcode: "Zip Code"
-      agma_profile:
+      agma_contract:
         rehearsal_start_min: "Rehearsal Start"
         rehearsal_end_min: "Rehearsal End"
         rehearsal_max_hrs_per_week: "Max Hours/Week"

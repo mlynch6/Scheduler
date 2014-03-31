@@ -63,7 +63,7 @@ class AccountsController < ApplicationController
 	end
 	
 	def show
-		@account = Account.joins(:agma_profile).find(Account.current_id)
+		@account = Account.joins(:agma_contract).find(Account.current_id)
 	end
 	
 private
