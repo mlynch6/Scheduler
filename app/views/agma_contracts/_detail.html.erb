@@ -27,11 +27,13 @@
 			</div>
 			
 			<div class="row">
-				<div class="dtl-label col-md-4"><%= AgmaContract.human_attribute_name(:rehearsal_break_min_per_hr) %></div>
-				<div class="dtl-text col-md-8"><%= @agma_contract.rehearsal_break_min_per_hr %> minutes/Hour Rehearsal</div>
+				<br />
+				<div class="col-md-10 col-md-offset-1">
+					<%= render 'rehearsal_breaks/table', contract: @agma_contract, rehearsal_breaks: @agma_contract.rehearsal_breaks %>
+				</div>
 			</div>
 		</div>
-	</div>
+	</div><!-- tab-pane -->
 
 	<div id="company-class" class="tab-pane">
 		<div class="dtl-form">
@@ -40,7 +42,7 @@
 				<div class="dtl-text col-md-8"><%= @agma_contract.class_break_min %> minutes</div>
 			</div>
 		</div>
-	</div>
+	</div><!-- tab-pane -->
 	
 	<div id="costume-fitting" class="tab-pane">
 		<div class="dtl-form">
@@ -49,5 +51,5 @@
 				<div class="dtl-text col-md-8"><%= @agma_contract.costume_increment_min %> minutes</div>
 			</div>
 		</div>
-	</div>
+	</div><!-- tab-pane -->
 </div>

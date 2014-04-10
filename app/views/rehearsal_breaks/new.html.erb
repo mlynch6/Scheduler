@@ -1,0 +1,16 @@
+<% provide(:title, "Contract Settings | Add Rehearsal Break") %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Contract') %>
+
+<div class="page-header">
+	<h1>Add Rehearsal Break</h1>
+</div>
+
+<%= form_for [@agma_contract, @rehearsal_break], :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= f.error_messages %>
+	<%= render 'form', :f => f %>
+
+	<%= f.submit_group do %>
+		<%= f.submit_primary 'Create' %>
+	<% end %>
+<% end %>

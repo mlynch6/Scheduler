@@ -38,7 +38,6 @@ namespace :db do
 		contract.rehearsal_max_hrs_per_day = 6
 		contract.rehearsal_increment_min = 30
 		contract.class_break_min = 15
-		contract.rehearsal_break_min_per_hr = 5
 		contract.costume_increment_min = 15
 		contract.save
 		

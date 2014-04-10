@@ -29,13 +29,18 @@ class Rehearsal < Event
 	end
 	
 	def break_duration
-		contract.rehearsal_break_min_per_hr if contract.present?
+		break_record = get_break_record
+		break_record.present? ? break_record.break_min : 0
 	end
 	
 	def break_time
-		if contract.present?
-			break_start = end_at - break_duration*60
+		break_record = get_break_record
+		
+		if break_record.present?
+			break_start = end_at - break_record.break_min*60
 			return "#{break_start.in_time_zone(account.time_zone).to_s(:hr12)} to #{end_time}"
+		else
+			return nil
 		end
 	end
 	
@@ -116,6 +121,17 @@ protected
 				overtime_list = dancers_above_max.map { |emp| emp.full_name }.join(", ")
 				return "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_week} hrs/week: "+overtime_list
 			end
+		end
+	end
+	
+	def get_break_record
+		if contract.present?
+			rb = contract.rehearsal_breaks.where(duration_min: duration).select('break_min').first
+			if rb.present?
+				rb
+			end
+		else
+			return nil
 		end
 	end
 end

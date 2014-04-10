@@ -10,7 +10,6 @@
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
-#  rehearsal_break_min_per_hr :integer          not null
 #  costume_increment_min      :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
@@ -35,10 +34,10 @@ describe AgmaContract do
 		it { should respond_to(:rehearsal_max_hrs_per_day) }
 		it { should respond_to(:rehearsal_increment_min) }
 		it { should respond_to(:class_break_min) }
-		it { should respond_to(:rehearsal_break_min_per_hr) }
 		it { should respond_to(:costume_increment_min) }
   	
 		it { should respond_to(:account) }
+		it { should respond_to(:rehearsal_breaks) }
   	
 		it { should respond_to(:rehearsal_start_time) }
 		it { should respond_to(:rehearsal_end_time) }
@@ -226,31 +225,6 @@ describe AgmaContract do
 			end
 		end
 	  
-		context "when rehearsal_break_min_per_hr" do
-			it "is blank" do
-				@contract.rehearsal_break_min_per_hr = " "
-				should_not be_valid
-			end
-	  	
-			it "not an integer" do
-				vals = ["abc", 8.6]
-				vals.each do |invalid_integer|
-					@contract.rehearsal_break_min_per_hr = invalid_integer
-					should_not be_valid
-				end
-			end
-	  	
-			it "< 0" do
-				@contract.rehearsal_break_min_per_hr = -1
-				should_not be_valid
-			end
-	  	
-			it "> 60 (1 hr)" do
-				@contract.rehearsal_break_min_per_hr = 61
-				should_not be_valid
-			end
-		end
-	  
 		context "when costume_increment_min" do
 			it "is blank" do
 				@contract.costume_increment_min = " "
@@ -296,6 +270,24 @@ describe AgmaContract do
 		it "has one account" do
 			@contract.reload.account.should == account
 		end
+		
+		describe "rehearsal_breaks" do
+			let(:contract) { account.agma_contract }
+			let!(:break1) { FactoryGirl.create(:rehearsal_break, agma_contract: contract, duration_min: 60) }
+			let!(:break2) { FactoryGirl.create(:rehearsal_break, agma_contract: contract, duration_min: 90) }
+		
+			it "has multiple breaks" do
+				contract.rehearsal_breaks.count.should == 2
+			end
+			
+			it "deletes associated breaks" do
+				breaks = contract.rehearsal_breaks
+				contract.destroy
+				breaks.each do |brk|
+					RehearsalBreak.find_by_id(brk.id).should be_nil
+				end
+			end
+		end
 	end
   
 	context "correct value is returned for" do
@@ -335,12 +327,6 @@ describe AgmaContract do
 			account.agma_contract.class_break_min.should == 10
 		end
 	  
-		it "rehearsal_break_min_per_hr" do
-			@contract.rehearsal_break_min_per_hr = 5
-			@contract.save
-			account.agma_contract.rehearsal_break_min_per_hr.should == 5
-		end
-	  
 		it "costume_increment_min" do
 			@contract.costume_increment_min = 15
 			@contract.save
@@ -373,10 +359,6 @@ describe AgmaContract do
 	  
 		it "defaults the class_break_min to '15'" do
 			account_defaults.agma_contract.class_break_min.should == 15
-		end
-	  
-		it "defaults the rehearsal_break_min_per_hr to '5'" do
-			account_defaults.agma_contract.rehearsal_break_min_per_hr.should == 5
 		end
 	  
 		it "defaults the costume_increment_min to '15'" do
