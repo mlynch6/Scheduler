@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140117201845) do
+ActiveRecord::Schema.define(:version => 20140401134615) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -47,7 +47,6 @@ ActiveRecord::Schema.define(:version => 20140117201845) do
     t.integer  "rehearsal_max_hrs_per_day",  :null => false
     t.integer  "rehearsal_increment_min",    :null => false
     t.integer  "class_break_min",            :null => false
-    t.integer  "rehearsal_break_min_per_hr", :null => false
     t.integer  "costume_increment_min",      :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
@@ -176,6 +175,17 @@ ActiveRecord::Schema.define(:version => 20140117201845) do
 
   add_index "pieces", ["account_id", "name", "choreographer"], :name => "index_pieces_on_account_id_and_name_and_choreographer", :unique => true
   add_index "pieces", ["account_id"], :name => "index_pieces_on_account_id"
+
+  create_table "rehearsal_breaks", :force => true do |t|
+    t.integer  "agma_contract_id", :null => false
+    t.integer  "break_min",        :null => false
+    t.integer  "duration_min",     :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "rehearsal_breaks", ["agma_contract_id", "duration_min"], :name => "index_rehearsal_breaks_on_agma_contract_id_and_duration_min", :unique => true
+  add_index "rehearsal_breaks", ["agma_contract_id"], :name => "index_rehearsal_breaks_on_agma_contract_id"
 
   create_table "scenes", :force => true do |t|
     t.integer  "account_id",                :null => false

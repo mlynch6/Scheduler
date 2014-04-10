@@ -2,7 +2,7 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 	# Based on  potenza / bootstrap_form
 	# Bootstrap 3
 	# Available Fields: text_field, select, time_zone_select, telephone_field, phone_field, password_field
-	#		email_field, number_field, checkbox
+	#		email_field, number_field, check_box
 	#		date_field, time_field, currency_field, static_control, submit, submit_primary
 
 	FORM_HELPERS = %w{text_field select time_zone_select telephone_field phone_field password_field email_field number_field} 

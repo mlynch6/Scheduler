@@ -8,7 +8,10 @@ Scheduler::Application.routes.draw do
 		resources :addresses, 			:except => [:index, :show]
 		resources :phones, 				:except => [:index, :show]
 	end
-	resources :agma_contracts, 	:only => [:show, :edit, :update]
+	resources :agma_contracts, 	:only => [:show, :edit, :update] do
+		resources :rehearsal_breaks, :only => [:new, :create]
+	end
+	resources :rehearsal_breaks, :only => [:destroy]
   resources :sessions
   resources :users, 						:except => [:show]
   

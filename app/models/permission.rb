@@ -14,7 +14,7 @@ class Permission
 				allow [:users, :seasons, :casts], [:index]
 				
 				#show
-				allow [:accounts, :subscriptions, :agma_profiles, :employees, :seasons], 
+				allow [:accounts, :subscriptions, :agma_contracts, :employees, :seasons], 
 						[:show]
 				
 				#new only
@@ -22,18 +22,19 @@ class Permission
 				
 				#new & create
 				allow [:addresses, :phones, :employees, :users, :seasons, :locations, :pieces, 
-						:scenes, :characters, :events, :rehearsals, :company_classes, :costume_fittings],
+						:scenes, :characters, :events, :rehearsals, :company_classes, :costume_fittings,
+						:rehearsal_breaks],
 						[:new, :create]
 				
 				#edit & update
-				allow [:accounts, :subscriptions, :payments, :agma_profiles, :addresses, 
+				allow [:accounts, :subscriptions, :payments, :agma_contracts, :addresses, 
 						:phones, :employees, :users, :seasons, :locations, :pieces, :scenes, 
 						:characters, :events, :rehearsals, :company_classes, :costume_fittings],
 						[:edit, :update]
 				
 				#destroy
 				allow [:subscriptions, :addresses, :phones, :seasons, :scenes, :characters, 
-						:casts, :events, :rehearsals, :company_classes, :costume_fittings],
+						:casts, :events, :rehearsals, :company_classes, :costume_fittings, :rehearsal_breaks],
 						[:destroy]
 				
 				#activate & inactivate

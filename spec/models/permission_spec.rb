@@ -147,10 +147,16 @@ shared_examples "an administrator" do
 		it { should allow(:phones, :destroy) }
 	end
 	
-	context "agma_profiles" do
-		it { should allow(:agma_profiles, :edit) }
-		it { should allow(:agma_profiles, :update) }
-		it { should allow(:agma_profiles, :show) }
+	context "agma_contracts" do
+		it { should allow(:agma_contracts, :edit) }
+		it { should allow(:agma_contracts, :update) }
+		it { should allow(:agma_contracts, :show) }
+	end
+	
+	context "rehearsal_breaks" do
+		it { should allow(:rehearsal_breaks, :new) }
+		it { should allow(:rehearsal_breaks, :create) }
+		it { should allow(:rehearsal_breaks, :destroy) }
 	end
 	
 	context "employees" do
@@ -219,10 +225,16 @@ shared_examples "a NON-administrator" do
 		it { should_not allow(:phones, :destroy) }
 	end
 	
-	context "agma_profiles" do
-		it { should_not allow(:agma_profiles, :edit) }
-		it { should_not allow(:agma_profiles, :update) }
-		it { should_not allow(:agma_profiles, :show) }
+	context "agma_contracts" do
+		it { should_not allow(:agma_contracts, :edit) }
+		it { should_not allow(:agma_contracts, :update) }
+		it { should_not allow(:agma_contracts, :show) }
+	end
+	
+	context "rehearsal_breaks" do
+		it { should_not allow(:rehearsal_breaks, :new) }
+		it { should_not allow(:rehearsal_breaks, :create) }
+		it { should_not allow(:rehearsal_breaks, :destroy) }
 	end
 	
 	context "employees" do

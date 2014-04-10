@@ -33,7 +33,6 @@ describe "Agma Contract Pages:" do
 				should have_field 'Max Hours/Week'
 				should have_field 'Max Hours/Day'
 				should have_field 'Rehearsal Increments'
-				should have_field 'Rehearsal Break'
 		    
 		    should_not have_field 'Class Break'
 		    
@@ -48,7 +47,6 @@ describe "Agma Contract Pages:" do
 				should_not have_field 'Max Hours/Week'
 				should_not have_field 'Max Hours/Day'
 				should_not have_field 'Rehearsal Increments'
-				should_not have_field 'Rehearsal Break'
 					
 				should have_field 'Class Break'
 				
@@ -63,7 +61,6 @@ describe "Agma Contract Pages:" do
 				should_not have_field 'Max Hours/Week'
 				should_not have_field 'Max Hours/Day'
 				should_not have_field 'Rehearsal Increments'
-				should_not have_field 'Rehearsal Break'
 					
 				should_not have_field 'Class Break'
 				
@@ -85,7 +82,6 @@ describe "Agma Contract Pages:" do
 			fill_in "Max Hours/Day", with: 8
 			fill_in "Rehearsal Increments", with: 15
 			fill_in "Class Break", with: 30
-			fill_in "Rehearsal Break", with: 10
 			fill_in "Costume Fitting Increments", with: 20
 			click_button 'Update'
 	
@@ -98,7 +94,6 @@ describe "Agma Contract Pages:" do
 			should have_content '8 hours/day'
 			should have_content '15 minutes'
 			should have_content '30 minutes'
-			should have_content '10 minutes'
 			should have_content '20 minutes'
 		end
 	end
@@ -123,11 +118,18 @@ describe "Agma Contract Pages:" do
 				should have_selector 'div.dtl-label', text: 'Max Hours/Week'
 				should have_selector 'div.dtl-label', text: 'Max Hours/Day'
 				should have_selector 'div.dtl-label', text: 'Rehearsal Increments'
-				should have_selector 'div.dtl-label', text: 'Rehearsal Break'
+				should have_selector 'h3', text: 'Rehearsal Breaks'
 				
 				should_not have_selector 'div.dtl-label', text: 'Class Break'
 				
 				should_not have_selector 'div.dtl-label', text: 'Costume Fitting Increments'
+			end
+			
+			it "Rehearsal Week tab for Rehearsal Breaks" do
+				click_link 'Rehearsal Week'
+					
+				should have_selector 'h3', text: 'Rehearsal Breaks'
+				should have_link 'Add Rehearsal Break'
 			end
 			
 			it "Company Class tab" do
@@ -138,7 +140,7 @@ describe "Agma Contract Pages:" do
 				should_not have_selector 'div.dtl-label', text: 'Max Hours/Week'
 				should_not have_selector 'div.dtl-label', text: 'Max Hours/Day'
 				should_not have_selector 'div.dtl-label', text: 'Rehearsal Increments'
-				should_not have_selector 'div.dtl-label', text: 'Rehearsal Break'
+				should_not have_selector 'h3', text: 'Rehearsal Breaks'
 				
 				should have_selector 'div.dtl-label', text: 'Class Break'
 				
@@ -153,7 +155,7 @@ describe "Agma Contract Pages:" do
 				should_not have_selector 'div.dtl-label', text: 'Max Hours/Week'
 				should_not have_selector 'div.dtl-label', text: 'Max Hours/Day'
 				should_not have_selector 'div.dtl-label', text: 'Rehearsal Increments'
-				should_not have_selector 'div.dtl-label', text: 'Rehearsal Break'
+				should_not have_selector 'h3', text: 'Rehearsal Breaks'
 				
 				should_not have_selector 'div.dtl-label', text: 'Class Break'
 				
@@ -165,15 +167,25 @@ describe "Agma Contract Pages:" do
 			should have_link 'Edit'
 		end
 		
-		it "displays correct data" do
+		it "displays correct Contract data" do
 			should have_content "9:00 AM"
 			should have_content "6:00 PM"
 			should have_content "30 hours/week"
 			should have_content "6 hours/day"
 			should have_content "30 minutes"
 			should have_content "15 minutes"
-			should have_content "5 minutes/Hour Rehearsal"
 			should have_content "15 minutes"
+		end
+		
+		it "displays correct Rehearsal Break data" do
+			@break60 = FactoryGirl.create(:rehearsal_break, 
+						agma_contract: current_account.agma_contract,
+						duration_min: 60,
+						break_min: 5)
+						
+			click_link "Contract Settings"
+			should have_content "60 min rehearsal"
+			should have_content "5 min break"
 		end
 	end
 end

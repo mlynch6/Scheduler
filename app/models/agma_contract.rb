@@ -10,7 +10,6 @@
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
-#  rehearsal_break_min_per_hr :integer          not null
 #  costume_increment_min      :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
@@ -20,9 +19,12 @@ class AgmaContract < ActiveRecord::Base
 	include ApplicationHelper
 	
   attr_accessible :rehearsal_start_min, :rehearsal_end_min, :rehearsal_max_hrs_per_week, :rehearsal_max_hrs_per_day, :rehearsal_increment_min
-  attr_accessible :class_break_min, :rehearsal_break_min_per_hr, :costume_increment_min
+  attr_accessible :class_break_min, :costume_increment_min
+  attr_accessible :rehearsal_breaks_attributes
   
   belongs_to :account
+  has_many :rehearsal_breaks, inverse_of: :agma_contract, dependent: :destroy
+  accepts_nested_attributes_for :rehearsal_breaks
   
   before_validation :set_defaults, on: :create
 	
@@ -34,13 +36,12 @@ class AgmaContract < ActiveRecord::Base
   validates :rehearsal_max_hrs_per_day,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 24 }
   validates :rehearsal_increment_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
   validates :class_break_min,	presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 144 }
-  validates :rehearsal_break_min_per_hr,	presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 60 }
   validates :costume_increment_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
   
   default_scope lambda { where(:account_id => Account.current_id) }
   
   def rehearsal_start_time
-  	min_to_formatted_time(rehearsal_start_min)
+		min_to_formatted_time(rehearsal_start_min)
 	end
 	
 	def rehearsal_end_time
@@ -56,7 +57,6 @@ private
 		self.rehearsal_max_hrs_per_day = 6 if rehearsal_max_hrs_per_day.blank?
 		self.rehearsal_increment_min = 30 if rehearsal_increment_min.blank?
 		self.class_break_min = 15 if class_break_min.blank?
-		self.rehearsal_break_min_per_hr = 5 if rehearsal_break_min_per_hr.blank?
 		self.costume_increment_min = 15 if costume_increment_min.blank?
 	end
 	

@@ -40,7 +40,6 @@ en:
         rehearsal_max_hrs_per_day: "Max Hours/Day"
         rehearsal_increment_min: "Rehearsal Increments"
         class_break_min: "Class Break"
-        rehearsal_break_min_per_hr: "Rehearsal Break"
         costume_increment_min: "Costume Fitting Increments"
       character:
         name: "Character"
@@ -80,6 +79,10 @@ en:
         start_date: "Date"
         start_time: "Start Time"
         employee_ids: "Invitees"
+      rehearsal_break:
+        break_min: "Break Length"
+        duration_min: "Rehearsal Length"
+        primary: "Default"
       season:
         start_dt: "Start Date"
         end_dt: "End Date"

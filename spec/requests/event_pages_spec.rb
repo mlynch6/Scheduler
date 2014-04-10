@@ -3,9 +3,12 @@ require 'spec_helper'
 describe "Event (non-Repeating) Pages:" do
 	subject { page }
 
+	before do
+		log_in
+	end
+	
 	context "#new" do
 		it "has correct title", js: true do
-			log_in
 			click_link 'Calendar'
 			open_modal(".fc-slot61 td")	#3:15
 
@@ -17,7 +20,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "has correct Navigation" do
-			log_in
 			visit new_event_path
 	
 			should have_selector 'li.active', text: 'Calendar'
@@ -26,7 +28,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 		context "defaults correct date & time", js: true do
 			it "from Daily Calendar" do
-				log_in
 				visit events_path+"/2014/1/1"
 				open_modal(".fc-slot61 td")	#3:15
 			
@@ -39,7 +40,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "from Weekly Calendar" do
-				log_in
 				visit events_path+"/2014/1/1"
 				find('.fc-button-agendaWeek').click	# Week button
 				open_modal(".fc-slot61 td")	#3:15
@@ -53,7 +53,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "from Monthly Calendar" do
-				log_in
 				visit events_path+"/2014/1/1"
 				find('.fc-button-month').click	# Month button
 				open_modal(".fc-first td.fc-first")	#12/29/2013
@@ -68,7 +67,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "only shows applicable fields in Overview tab", js: true do
-			log_in
 			visit new_event_path
 	
 			should have_field 'Title'
@@ -81,7 +79,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "is not repeating by default" do
-			log_in
 			visit new_event_path
 			click_link 'Repeat'
 	  	
@@ -89,7 +86,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 				
 		it "has only active Locations in dropdown" do
-			log_in
 			FactoryGirl.create(:location, account: current_account, name: 'Location A')
 			FactoryGirl.create(:location_inactive, account: current_account, name: 'Location B')
 			visit new_event_path
@@ -99,7 +95,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "has only active Employees in dropdown" do
-			log_in
 			FactoryGirl.create(:employee, account: current_account, last_name: 'Parker', first_name: 'Peter')
 			FactoryGirl.create(:employee_inactive, account: current_account, last_name: 'Kent', first_name: 'Clark')
 			visit new_event_path
@@ -110,7 +105,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 		context "with error" do
 			it "shows error message" do
-				log_in
 				visit new_event_path
 				click_button 'Create'
 		
@@ -118,7 +112,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "doesn't create Event" do
-				log_in
 				visit new_event_path
 		
 				expect { click_button 'Create' }.not_to change(Event, :count)
@@ -126,7 +119,6 @@ describe "Event (non-Repeating) Pages:" do
 			
 			it "has correct start time after error is shown" do
 				#tests error where start time displays full date
-				log_in
 				visit new_event_path
 				
 				fill_in 'Start Time', with: "10:15AM"
@@ -139,7 +131,6 @@ describe "Event (non-Repeating) Pages:" do
 
 		context "with valid info", js: true do
 			it "creates new Event without Invitees" do
-				log_in
 				location = FactoryGirl.create(:location, account: current_account)
 				visit new_event_path
 	  		
@@ -159,7 +150,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 		
 			it "creates new Event with Invitees" do
-				log_in
 				location = FactoryGirl.create(:location, account: current_account)
 				e1 = FactoryGirl.create(:employee, account: current_account)
 				visit new_event_path
@@ -188,7 +178,6 @@ describe "Event (non-Repeating) Pages:" do
 	
 		context "shows warning" do			
 			it "when location is double booked" do
-				log_in
 				location = FactoryGirl.create(:location, account: current_account)
 				
 				event = FactoryGirl.create(:event, account: current_account,
@@ -210,7 +199,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "when employee is double booked" do
-				log_in
 				loc1 = FactoryGirl.create(:location, account: current_account)
 				loc2 = FactoryGirl.create(:location, account: current_account)
 				e1 = FactoryGirl.create(:employee, account: current_account)
@@ -252,7 +240,6 @@ describe "Event (non-Repeating) Pages:" do
 	
 	context "#edit" do
 		it "has correct title", js: true do
-			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event, account: current_account,
 					location: location,
@@ -268,7 +255,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "has correct Navigation" do
-			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event, account: current_account,
 					location: location,
@@ -279,7 +265,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "only shows applicable fields in Overview tab", js: true do
-			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event, account: current_account,
 					location: location,
@@ -299,7 +284,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 	  describe "with error" do
 			it "shows error message" do
-				log_in
 				location = FactoryGirl.create(:location, account: current_account)
 				event = FactoryGirl.create(:event, account: current_account,
 						location: location,
@@ -314,7 +298,6 @@ describe "Event (non-Repeating) Pages:" do
 			
 			it "has correct start time after error is shown" do
 				#tests error where start time displays full date
-				log_in
 				location = FactoryGirl.create(:location, account: current_account)
 				event = FactoryGirl.create(:event, account: current_account,
 						location: location,
@@ -331,7 +314,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 	 
 		it "record with valid info saves record", js: true do
-			log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event, account: current_account,
 					location: location,
@@ -349,7 +331,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 		context "with warning" do			
 			it "when location is double booked" do
-				log_in
 				location = FactoryGirl.create(:location, account: current_account)
 				
 				event = FactoryGirl.create(:event, account: current_account,
@@ -373,7 +354,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "shows warning when employee is double booked" do
-				log_in
 				loc1 = FactoryGirl.create(:location, account: current_account)
 				loc2 = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
@@ -417,7 +397,6 @@ describe "Event (non-Repeating) Pages:" do
   
   context "#index", js: true do
 		it "has correct title & headers" do
-			log_in
 			click_link "Calendar"
 	  	
 			should have_title 'Calendar'
@@ -427,14 +406,12 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "has correct Navigation" do
-			log_in
 			visit events_path
 	
 			should have_selector 'li.active', text: 'Calendar'
 		end
 		
 		it "without records" do
-			log_in
 			visit events_path
 	  	
 			should_not have_selector 'div.event'
@@ -442,7 +419,6 @@ describe "Event (non-Repeating) Pages:" do
 	  
 	  context "lists records" do
 			it "with type of Event" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				event = FactoryGirl.create(:event,
 						account: current_account,
@@ -458,7 +434,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "with type of Company Class" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				FactoryGirl.create(:company_class,
 						account: current_account,
@@ -474,7 +449,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "with type of Costume Fitting" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				FactoryGirl.create(:costume_fitting,
 						account: current_account,
@@ -490,7 +464,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "with type of Rehearsal" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)	
 				FactoryGirl.create(:rehearsal,
@@ -510,7 +483,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 		describe "with date in URL" do
 			it "navigates to correct day" do
-				log_in
 				visit events_path+"/2014/1/1"
 				
 				should have_selector 'h2', text: "January 1, 2014"
@@ -520,7 +492,6 @@ describe "Event (non-Repeating) Pages:" do
 	
 	context "#show", js: true do
 		it "redirects back to #index if try to use show URL" do
-			log_in
 			loc = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event,
 					account: current_account,
@@ -533,7 +504,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "displays Event details in popup window" do
-			log_in
 			loc = FactoryGirl.create(:location, account: current_account)
 			emp = FactoryGirl.create(:employee, account: current_account)
 			event = FactoryGirl.create(:event,
@@ -564,7 +534,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 		describe "displays Company Class" do
 			it "details in popup window" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				emp = FactoryGirl.create(:employee, account: current_account)
 				event = FactoryGirl.create(:company_class,
@@ -594,7 +563,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "break in popup window" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				contract = AgmaContract.find_by_account_id(current_account.id)
 				contract.class_break_min = 15
@@ -616,7 +584,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "without break if contract break is 0" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				contract = AgmaContract.find_by_account_id(current_account.id)
 				contract.class_break_min = 0
@@ -634,7 +601,6 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "displays Costume Fitting details in popup window" do
-			log_in
 			loc = FactoryGirl.create(:location, account: current_account)
 			emp = FactoryGirl.create(:employee, account: current_account)
 			event = FactoryGirl.create(:costume_fitting,
@@ -665,7 +631,6 @@ describe "Event (non-Repeating) Pages:" do
 		
 		describe "displays Rehearsal" do
 			it "details in popup window" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				emp = FactoryGirl.create(:employee, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
@@ -698,12 +663,12 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "break in popup window" do
-				log_in
 				loc = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
-				contract = AgmaContract.find_by_account_id(current_account.id)
-				contract.rehearsal_break_min_per_hr = 5
-				contract.save
+				break60 = FactoryGirl.create(:rehearsal_break, 
+						agma_contract: current_account.agma_contract,
+						duration_min: 60,
+						break_min: 5)
 				
 				emp = FactoryGirl.create(:employee, account: current_account)
 				event = FactoryGirl.create(:rehearsal,
@@ -721,18 +686,35 @@ describe "Event (non-Repeating) Pages:" do
 				should have_content '11:10 AM to 11:15 AM for 5 min'
 			end
 			
-			it "without break if contract break is 0" do
-				log_in
+			it "without break if rehearsal break is 0" do
 				loc = FactoryGirl.create(:location, account: current_account)
 				piece = FactoryGirl.create(:piece, account: current_account)
-				contract = AgmaContract.find_by_account_id(current_account.id)
-				contract.rehearsal_break_min_per_hr = 0
-				contract.save
+				break60 = FactoryGirl.create(:rehearsal_break, 
+						agma_contract: current_account.agma_contract,
+						duration_min: 60,
+						break_min: 0)
 				
 				FactoryGirl.create(:rehearsal,
 						account: current_account,
 						location: loc,
 						start_date: Time.zone.today,
+						duration: 60,
+						piece: piece)
+				visit events_path
+				open_modal(".mash-event")
+				
+				should_not have_selector 'div.alert-info', text: 'Break'
+			end
+			
+			it "without break if no rehearsal breaks specified" do
+				loc = FactoryGirl.create(:location, account: current_account)
+				piece = FactoryGirl.create(:piece, account: current_account)
+				
+				FactoryGirl.create(:rehearsal,
+						account: current_account,
+						location: loc,
+						start_date: Time.zone.today,
+						duration: 60,
 						piece: piece)
 				visit events_path
 				open_modal(".mash-event")
@@ -744,7 +726,6 @@ describe "Event (non-Repeating) Pages:" do
 	
 	context "#destroy", js: true do
 		it "deletes the record" do
-	  	log_in
 			location = FactoryGirl.create(:location, account: current_account)
 			event = FactoryGirl.create(:event, account: current_account,
 								location: location,
