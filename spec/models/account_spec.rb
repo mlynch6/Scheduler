@@ -45,6 +45,7 @@ describe Account do
 		it { should respond_to(:seasons) }
 		it { should respond_to(:pieces) }
 		it { should respond_to(:scenes) }
+		it { should respond_to(:castings) }
 		it { should respond_to(:events) }
 		it { should respond_to(:event_series) }
   	
@@ -339,6 +340,28 @@ describe Account do
 				account.destroy
 				characters.each do |character|
 					Character.find_by_id(character.id).should be_nil
+				end
+			end
+		end
+		
+		describe "castings" do
+			before { Account.current_id = account.id }
+			let!(:season) { FactoryGirl.create(:season, account: account) }
+			let!(:piece) { FactoryGirl.create(:piece, account: account) }
+			let!(:character1) { FactoryGirl.create(:character, account: account, piece: piece) }
+			let!(:character2) { FactoryGirl.create(:character, account: account, piece: piece) }
+			let!(:season_piece) { FactoryGirl.create(:season_piece, season: season, piece: piece) }
+			let!(:cast) { FactoryGirl.create(:cast, season_piece: season_piece) }
+	
+			it "has multiple castings" do
+				account.castings.count.should == 2
+			end
+			
+			it "deletes associated castings" do
+				castings = account.castings
+				account.destroy
+				castings.each do |casting|
+					Casting.find_by_id(casting.id).should be_nil
 				end
 			end
 		end

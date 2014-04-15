@@ -44,6 +44,7 @@ describe Employee do
   	it { should respond_to(:phones) }
   	it { should respond_to(:invitations) }
   	it { should respond_to(:events) }
+		it { should respond_to(:castings) }
   	
   	it { should respond_to(:name) }
   	it { should respond_to(:full_name) }
@@ -244,6 +245,37 @@ describe Employee do
 	
 			it "has multiple events" do
 				employee.events.count.should == 2
+			end
+		end
+		
+  	describe "castings" do
+			let!(:season) { FactoryGirl.create(:season, account: account) }
+			let!(:piece) { FactoryGirl.create(:piece, account: account) }
+			let!(:character) { FactoryGirl.create(:character, account: account, piece: piece) }
+			let!(:season_piece) { FactoryGirl.create(:season_piece, season: season, piece: piece) }
+			let!(:cast1) { FactoryGirl.create(:cast, season_piece: season_piece) }
+			let!(:cast2) { FactoryGirl.create(:cast, season_piece: season_piece) }
+			
+			before do
+				casts = [cast1, cast2]
+				casts.each do |cast|
+					cast.castings.each do |casting|
+						casting.person = employee
+						casting.save
+					end
+				end
+			end
+	
+			it "has multiple castings" do
+				employee.castings.count.should == 2
+			end
+			
+			it "nulls person on associated castings when destroying" do
+				castings = employee.castings
+				employee.destroy
+				castings.each do |casting|
+					Casting.find_by_id(casting.id).person_id.should be_nil
+				end
 			end
 		end
   end

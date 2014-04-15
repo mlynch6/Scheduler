@@ -34,4 +34,7 @@ Scheduler::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+	
+	# to_yaml will display attribute name instead of !binary tags
+	YAML::ENGINE.yamler = 'syck' if defined?(Rails::Console)
 end

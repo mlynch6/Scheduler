@@ -39,15 +39,16 @@ Scheduler::Application.routes.draw do
   resources :scenes, :characters, 	:only => [:edit, :update, :destroy] do
 		collection { post :sort }
   end
-  resources :season_pieces, only: [] do
-		resources :casts,					:only => [:new, :index]
+  resources :season_pieces, 	:only => [] do
+		resources :casts,					:only => [:new, :show]
   end
   resources :casts,						:only => [:destroy]
-  
+	resources :castings,				:only => [:edit, :update]
+	
   resources :events
   resources :company_classes,	:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
-  resources :costume_fittings,	:except => [:index, :show], 	:controller => :events, :event_type => 'CostumeFitting'
-  resources :rehearsals,				:except => [:index, :show], 	:controller => :events, :event_type => 'Rehearsal'
+  resources :costume_fittings,	:except => [:index, :show], :controller => :events, :event_type => 'CostumeFitting'
+  resources :rehearsals,				:except => [:index, :show], :controller => :events, :event_type => 'Rehearsal'
   get 'events/:year/:month/:day', to: 'events#index'
 	
 	match 'dashboard' => 'static_pages#dashboard'

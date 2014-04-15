@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140401134615) do
+ActiveRecord::Schema.define(:version => 20140410172224) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -64,6 +64,21 @@ ActiveRecord::Schema.define(:version => 20140401134615) do
   add_index "appearances", ["character_id"], :name => "index_appearances_on_character_id"
   add_index "appearances", ["scene_id", "character_id"], :name => "index_appearances_on_scene_id_and_character_id", :unique => true
   add_index "appearances", ["scene_id"], :name => "index_appearances_on_scene_id"
+
+  create_table "castings", :force => true do |t|
+    t.integer  "account_id",   :null => false
+    t.integer  "cast_id",      :null => false
+    t.integer  "character_id", :null => false
+    t.integer  "person_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "castings", ["account_id"], :name => "index_castings_on_account_id"
+  add_index "castings", ["cast_id", "character_id"], :name => "index_castings_on_cast_id_and_character_id", :unique => true
+  add_index "castings", ["cast_id"], :name => "index_castings_on_cast_id"
+  add_index "castings", ["character_id"], :name => "index_castings_on_character_id"
+  add_index "castings", ["person_id"], :name => "index_castings_on_person_id"
 
   create_table "casts", :force => true do |t|
     t.integer  "season_piece_id",               :null => false

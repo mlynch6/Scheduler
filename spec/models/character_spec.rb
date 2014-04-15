@@ -36,6 +36,7 @@ describe Character do
   	it { should respond_to(:account) }
   	it { should respond_to(:piece) }
   	it { should respond_to(:appearances) }
+		it { should respond_to(:castings) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -148,6 +149,27 @@ describe Character do
 				character.destroy
 				appearances.each do |appearance|
 					Appearance.find_by_id(appearance.id).should be_nil
+				end
+			end
+		end
+		
+  	describe "castings" do
+			let!(:season) { FactoryGirl.create(:season, account: account) }
+			let!(:season_piece) { FactoryGirl.create(:season_piece, season: season, piece: piece) }
+			let!(:cast1) { FactoryGirl.create(:cast, season_piece: season_piece) }
+			let!(:cast2) { FactoryGirl.create(:cast, season_piece: season_piece) }
+			let!(:casting1) { FactoryGirl.create(:casting, cast: cast1, character: character) }
+			let!(:casting2) { FactoryGirl.create(:casting, cast: cast2, character: character) }
+	
+			it "has multiple castings" do
+				character.castings.count.should == 2
+			end
+			
+			it "deletes associated castings" do
+				castings = character.castings
+				character.destroy
+				castings.each do |casting|
+					Casting.find_by_id(casting.id).should be_nil
 				end
 			end
 		end

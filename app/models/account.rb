@@ -31,6 +31,7 @@ class Account < ActiveRecord::Base
 	has_many :pieces, dependent: :destroy
 	has_many :scenes, dependent: :destroy
 	has_many :characters, dependent: :destroy
+	has_many :castings, dependent: :destroy
 	has_many :events, dependent: :destroy
 	has_many :event_series, dependent: :destroy
   
