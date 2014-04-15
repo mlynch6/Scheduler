@@ -14,7 +14,9 @@ require 'spec_helper'
 describe Cast do
   let(:account) { FactoryGirl.create(:account) }
 	let(:season) { FactoryGirl.create(:season, account: account) }
-	let(:piece) { FactoryGirl.create(:piece, account: account) }
+	let!(:piece) { FactoryGirl.create(:piece, account: account) }
+	let!(:char1) { FactoryGirl.create(:character, account: account, piece: piece) }
+	let!(:char2) { FactoryGirl.create(:character, account: account, piece: piece) }
 	let(:season_piece) { FactoryGirl.create(:season_piece,
 											season: season,
 											piece: piece) }
@@ -31,6 +33,8 @@ describe Cast do
 	context "accessible attributes" do
   	it { should respond_to(:season_piece) }
   	it { should respond_to(:name) }
+		
+		it { should respond_to(:castings) }
 		
 		it "should not allow access to season_piece_id" do
       expect do
@@ -81,6 +85,20 @@ describe Cast do
 		it "has one season_piece" do
 			cast.reload.season_piece.should == season_piece
 		end
+		
+  	describe "castings" do	
+			it "has multiple castings" do
+				cast.castings.count.should == 2
+			end
+			
+			it "deletes associated castings" do
+				castings = cast.castings
+				cast.destroy
+				castings.each do |casting|
+					Castings.find_by_id(casting.id).should be_nil
+				end
+			end
+		end
   end
   
   context "correct value is returned for" do
@@ -108,6 +126,17 @@ describe Cast do
 		describe "default_scope" do
 			it "returns the records in alphabetical order" do
 				Cast.all.should == [first_cast, second_cast, cast_wrong_season]
+			end
+		end
+	end
+	
+	context "(On Create)" do
+		it "adds 1 Casting record of each character of the piece" do
+			characters = piece.characters
+			cast.castings.count.should == characters.count
+			
+			cast.castings.each do |casting|
+				characters.should include casting.character
 			end
 		end
 	end

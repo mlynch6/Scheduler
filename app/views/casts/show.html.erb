@@ -1,0 +1,38 @@
+<% provide(:title, "#{@sp.season.name} | #{@sp.piece.name} | #{@cast.name}".html_safe) %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Seasons') %>
+
+<div class="page-header">
+	<h1><%= "#{@cast.name} for #{@sp.piece.name}" %></h1>
+	<strong class="text-muted"><%= "#{@sp.season.name}" %></strong>
+</div>
+
+<% if @castings.length > 0 %>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="col-md-5">Character</th>
+				<th class="col-md-6">Artist</th>
+				<th class="mash-col-1-btn">&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @castings.each do |casting| %>
+			<tr>
+				<td><%= casting.character.name %></td>
+				<td><%= casting.person.full_name if casting.person %></td>
+				<td>
+					<% if allow? "castings", "edit" %>
+						<%= edit_button nil, edit_casting_path(casting), :class => 'btn-xs', :id => "edit_#{casting.id}" %>
+					<% end %>
+				</td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+			
+<% else %>
+	<p>This piece currently has no characters to cast.
+	</p>
+	<p>To begin, click the <em class="text-info">Add Character</em> link.</p>
+<% end %>

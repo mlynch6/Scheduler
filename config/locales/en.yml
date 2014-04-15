@@ -41,6 +41,8 @@ en:
         rehearsal_increment_min: "Rehearsal Increments"
         class_break_min: "Class Break"
         costume_increment_min: "Costume Fitting Increments"
+      casting:
+        person_id: "Artist"
       character:
         name: "Character"
       company_class:

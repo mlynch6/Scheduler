@@ -1,6 +1,12 @@
 class CastsController < ApplicationController	
+	before_filter :get_resource, :only => [:new, :show]
+	
+	def show
+		@cast = Cast.find(params[:id])
+		@castings = @cast.castings.joins(:character).order('characters.position ASC')
+	end
+	
 	def new
-		@sp = SeasonPiece.find(params[:season_piece_id])
 		if @sp.casts.create
 			redirect_to season_path(@sp.season), :notice => "Successfully created the cast."
 		else
@@ -15,4 +21,9 @@ class CastsController < ApplicationController
 		@cast.destroy
 		redirect_to season_path(@season), :notice => "Successfully deleted the cast."
 	end
+	
+	private
+		def get_resource
+			@sp = SeasonPiece.find(params[:season_piece_id])
+		end
 end

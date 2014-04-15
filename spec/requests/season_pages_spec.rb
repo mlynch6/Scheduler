@@ -276,9 +276,6 @@ describe "Season Pages:" do
 				FactoryGirl.create(:season_piece, season: season, piece: piece)
 			}
 			visit season_path(season)
-			
-			should have_selector('th', text: "Piece")
-		  should have_selector('th', text: "Casts")
 		  
 			season.pieces.each do |piece|
 				should have_content(piece.name)
@@ -310,7 +307,8 @@ describe "Season Pages:" do
 			visit season_path(season)
 	
 			should have_link('Add Cast')
-			should have_link('Delete')
+			should have_link('View Cast')
+			should have_link('Delete Cast')
 		end
 		
 		it "has links for Administrator" do
@@ -322,7 +320,8 @@ describe "Season Pages:" do
 			visit season_path(season)
 	
 			should have_link('Add Cast')
-			should have_link('Delete')
+			should have_link('View Cast')
+			should have_link('Delete Cast')
 		end
 	end
 end

@@ -27,6 +27,7 @@ class Employee < ActiveRecord::Base
   has_many :phones, :as => :phoneable, dependent: :destroy
   has_many :invitations, dependent: :destroy
   has_many :events, through: :invitations
+	has_many :castings, foreign_key: 'person_id', inverse_of: :person, dependent: :nullify
   
   accepts_nested_attributes_for :user
   

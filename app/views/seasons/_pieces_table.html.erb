@@ -1,26 +1,29 @@
-<table class="table">
-	<thead>
-		<tr>
-	  	<th>Piece</th>
-	  	<th>Casts</th>
-	  	<th style="width:105px;">&nbsp;</th>
-	  </tr>
-	</thead>
+<table class="table table-striped">
 	<tbody>
 		<% @season_pieces.each do |season_piece| %>
 			<tr>
-				<td><%= season_piece.piece.name %></td>
-				<td><ul class="list-unstyled">
+				<td>
+					<%= season_piece.piece.name %>
+					<%= "<br />".html_safe+content_tag(:span,"By: #{season_piece.piece.choreographer}", class: 'text-muted') if season_piece.piece.choreographer.present? %>
+				</td>
+				<td>
+					<ul class="list-unstyled">
 					<% season_piece.casts.each do |cast| %>
 						<li>
 							<%= cast.name %>
-							<% if allow? "casts", "destroy" %>
-								<%= delete_link nil, cast, :id => "delete_#{cast.id}" %>
+							<span class="pull-right">
+							<% if allow? "casts", "show" %>
+								<%= view_link nil, season_piece_cast_path(season_piece, cast), :id => "view_#{cast.id}", :title => 'View Cast' %>
 							<% end %>
+							<% if allow? "casts", "destroy" %>
+								<%= delete_link nil, cast, :id => "delete_#{cast.id}", :title => 'Delete Cast' %>
+							<% end %>
+						</span>
 						</li>
 					<% end %>
-				</ul></td>
-				<td>
+					</ul>
+				</td>
+				<td class="text-right">
 					<% if allow? "casts", "new" %>
 						<%= new_link "Add Cast", new_season_piece_cast_path(season_piece), :class => 'btn-small', :id => "newCast_#{season_piece.id}" %>
 					<% end %>

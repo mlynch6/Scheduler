@@ -11,10 +11,10 @@ class Permission
 			
 			if user.role == "Administrator"
 				#index
-				allow [:users, :seasons, :casts], [:index]
+				allow [:users, :seasons], [:index]
 				
 				#show
-				allow [:accounts, :subscriptions, :agma_contracts, :employees, :seasons], 
+				allow [:accounts, :subscriptions, :agma_contracts, :employees, :seasons, :casts], 
 						[:show]
 				
 				#new only
@@ -29,7 +29,8 @@ class Permission
 				#edit & update
 				allow [:accounts, :subscriptions, :payments, :agma_contracts, :addresses, 
 						:phones, :employees, :users, :seasons, :locations, :pieces, :scenes, 
-						:characters, :events, :rehearsals, :company_classes, :costume_fittings],
+						:characters, :events, :rehearsals, :company_classes, :costume_fittings,
+						:castings],
 						[:edit, :update]
 				
 				#destroy

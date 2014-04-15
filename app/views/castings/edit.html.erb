@@ -1,0 +1,16 @@
+<% provide(:title, "#{@cast.season_piece.season.name} | #{@cast.season_piece.piece.name} | #{@cast.name} | Edit Cast") %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Seasons') %>
+
+<div class="page-header">
+	<h1>Edit <%= @cast.name %> for <%= @cast.season_piece.piece.name %></h1>
+</div>
+
+<%= form_for @casting, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+	<%= f.error_messages %>
+	<%= render 'form', :f => f %>
+	
+	<%= f.submit_group do %>
+		<%= f.submit_primary 'Update' %>
+	<% end %>
+<% end %>
