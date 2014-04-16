@@ -7,7 +7,7 @@ describe "Cast Pages:" do
 		log_in
 		@season = FactoryGirl.create(:season, account: current_account)
 		@piece = FactoryGirl.create(:piece, account: current_account)
-		@season_piece = FactoryGirl.create(:season_piece, season: @season, piece: @piece)
+		@season_piece = FactoryGirl.create(:season_piece, account: current_account, season: @season, piece: @piece)
 	end
 	
 	context "#new" do
@@ -27,7 +27,7 @@ describe "Cast Pages:" do
 	
 	context "#destroy" do
 		it "deletes the record" do
-			cast = FactoryGirl.create(:cast, season_piece: @season_piece)
+			cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
 			visit season_path(@season)
 			
 			should have_content 'Cast A'
@@ -41,7 +41,7 @@ describe "Cast Pages:" do
 	
 	context "#show" do
 		before do
-			@cast = FactoryGirl.create(:cast, season_piece: @season_piece)
+			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
 			click_link 'Setup'
 			click_link 'Seasons'
 			click_link 'View'

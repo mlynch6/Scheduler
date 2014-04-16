@@ -18,8 +18,8 @@ describe Casting do
 	let(:season) { FactoryGirl.create(:season, account: account) }
 	let!(:piece) { FactoryGirl.create(:piece, account: account) }
 	let(:character) { FactoryGirl.create(:character, account: account, piece: piece) }
-	let(:season_piece) { FactoryGirl.create(:season_piece, season: season, piece: piece) }
-	let(:cast) { FactoryGirl.create(:cast, season_piece: season_piece) }
+	let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
+	let(:cast) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
 	let(:person) { FactoryGirl.create(:employee, account: account) }
 	let(:casting) { FactoryGirl.create(:casting,
 										account: account,

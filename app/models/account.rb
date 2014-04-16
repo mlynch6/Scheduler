@@ -26,11 +26,13 @@ class Account < ActiveRecord::Base
 	has_many :users, dependent: :destroy
 	has_many :addresses, :as => :addressable, dependent: :destroy
 	has_many :phones, :as => :phoneable, dependent: :destroy
-	has_many :seasons, dependent: :destroy
 	has_many :locations, dependent: :destroy
+	has_many :seasons, dependent: :destroy
 	has_many :pieces, dependent: :destroy
 	has_many :scenes, dependent: :destroy
 	has_many :characters, dependent: :destroy
+	has_many :season_pieces, dependent: :destroy
+	has_many :casts, dependent: :destroy
 	has_many :castings, dependent: :destroy
 	has_many :events, dependent: :destroy
 	has_many :event_series, dependent: :destroy

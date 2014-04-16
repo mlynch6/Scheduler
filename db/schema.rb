@@ -81,12 +81,14 @@ ActiveRecord::Schema.define(:version => 20140410172224) do
   add_index "castings", ["person_id"], :name => "index_castings_on_person_id"
 
   create_table "casts", :force => true do |t|
+    t.integer  "account_id",                    :null => false
     t.integer  "season_piece_id",               :null => false
     t.string   "name",            :limit => 20, :null => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
   end
 
+  add_index "casts", ["account_id"], :name => "index_casts_on_account_id"
   add_index "casts", ["season_piece_id", "name"], :name => "index_casts_on_season_piece_id_and_name", :unique => true
 
   create_table "characters", :force => true do |t|
@@ -216,12 +218,14 @@ ActiveRecord::Schema.define(:version => 20140410172224) do
   add_index "scenes", ["piece_id"], :name => "index_scenes_on_piece_id"
 
   create_table "season_pieces", :force => true do |t|
+    t.integer  "account_id", :null => false
     t.integer  "season_id",  :null => false
     t.integer  "piece_id",   :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  add_index "season_pieces", ["account_id"], :name => "index_season_pieces_on_account_id"
   add_index "season_pieces", ["piece_id"], :name => "index_season_pieces_on_piece_id"
   add_index "season_pieces", ["season_id", "piece_id"], :name => "index_season_pieces_on_season_id_and_piece_id", :unique => true
   add_index "season_pieces", ["season_id"], :name => "index_season_pieces_on_season_id"

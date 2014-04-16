@@ -115,8 +115,8 @@ describe Season do
 		describe "season_pieces" do
 			let(:piece1) { FactoryGirl.create(:piece, account: account) }
 			let(:piece2) { FactoryGirl.create(:piece, account: account) }
-			let!(:second_inter) { FactoryGirl.create(:season_piece, season: season, piece: piece1) }
-			let!(:first_inter) { FactoryGirl.create(:season_piece, season: season, piece: piece2) }
+			let!(:second_inter) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece1) }
+			let!(:first_inter) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2) }
 	
 			it "has multiple season_pieces" do
 				season.season_pieces.count.should == 2
@@ -134,8 +134,8 @@ describe Season do
 		describe "pieces" do
 			let(:piece1) { FactoryGirl.create(:piece, account: account) }
 			let(:piece2) { FactoryGirl.create(:piece, account: account) }
-			let!(:second_inter) { FactoryGirl.create(:season_piece, season: season, piece: piece1) }
-			let!(:first_inter) { FactoryGirl.create(:season_piece, season: season, piece: piece2) }
+			let!(:second_inter) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece1) }
+			let!(:first_inter) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2) }
 	
 			it "has multiple pieces" do
 				season.pieces.count.should == 2

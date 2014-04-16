@@ -3,6 +3,7 @@
 # Table name: season_pieces
 #
 #  id         :integer          not null, primary key
+#  account_id :integer          not null
 #  season_id  :integer          not null
 #  piece_id   :integer          not null
 #  created_at :datetime         not null
@@ -11,6 +12,7 @@
 
 FactoryGirl.define do
 	factory :season_piece do
+		account
 		season
 		piece
 	end
