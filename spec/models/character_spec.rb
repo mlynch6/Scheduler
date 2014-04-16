@@ -155,11 +155,11 @@ describe Character do
 		
   	describe "castings" do
 			let!(:season) { FactoryGirl.create(:season, account: account) }
-			let!(:season_piece) { FactoryGirl.create(:season_piece, season: season, piece: piece) }
-			let!(:cast1) { FactoryGirl.create(:cast, season_piece: season_piece) }
-			let!(:cast2) { FactoryGirl.create(:cast, season_piece: season_piece) }
-			let!(:casting1) { FactoryGirl.create(:casting, cast: cast1, character: character) }
-			let!(:casting2) { FactoryGirl.create(:casting, cast: cast2, character: character) }
+			let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
+			let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
+			let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
+			let!(:casting1) { FactoryGirl.create(:casting, account: account, cast: cast1, character: character) }
+			let!(:casting2) { FactoryGirl.create(:casting, account: account, cast: cast2, character: character) }
 	
 			it "has multiple castings" do
 				character.castings.count.should == 2

@@ -9,8 +9,8 @@ describe "Casting Pages:" do
 		@season = FactoryGirl.create(:season, account: current_account)
   	@piece = FactoryGirl.create(:piece, account: current_account)
 		@character = FactoryGirl.create(:character, account: current_account, piece: @piece)
-		@sp = FactoryGirl.create(:season_piece, season: @season, piece: @piece)
-		@cast = FactoryGirl.create(:cast, season_piece: @sp)
+		@sp = FactoryGirl.create(:season_piece, account: current_account, season: @season, piece: @piece)
+		@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @sp)
 		@casting = FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @character)
 	end
 	

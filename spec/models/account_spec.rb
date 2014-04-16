@@ -45,6 +45,9 @@ describe Account do
 		it { should respond_to(:seasons) }
 		it { should respond_to(:pieces) }
 		it { should respond_to(:scenes) }
+		it { should respond_to(:characters) }
+		it { should respond_to(:season_pieces) }
+		it { should respond_to(:casts) }
 		it { should respond_to(:castings) }
 		it { should respond_to(:events) }
 		it { should respond_to(:event_series) }
@@ -344,14 +347,56 @@ describe Account do
 			end
 		end
 		
+		describe "season_pieces" do
+			before { Account.current_id = account.id }
+			let!(:season) { FactoryGirl.create(:season, account: account) }
+			let!(:piece1) { FactoryGirl.create(:piece, account: account) }
+			let!(:piece2) { FactoryGirl.create(:piece, account: account) }
+			let!(:season_piece1) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece1) }
+			let!(:season_piece2) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2) }
+	
+			it "has multiple season_pieces" do
+				account.season_pieces.count.should == 2
+			end
+			
+			it "deletes associated season_pieces" do
+				season_pieces = account.season_pieces
+				account.destroy
+				season_pieces.each do |sp|
+					SeasonPiece.find_by_id(sp.id).should be_nil
+				end
+			end
+		end
+		
+		describe "casts" do
+			before { Account.current_id = account.id }
+			let!(:season) { FactoryGirl.create(:season, account: account) }
+			let!(:piece) { FactoryGirl.create(:piece, account: account) }
+			let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
+			let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
+			let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
+	
+			it "has multiple casts" do
+				account.casts.count.should == 2
+			end
+			
+			it "deletes associated casts" do
+				casts = account.casts
+				account.destroy
+				casts.each do |cast|
+					Cast.find_by_id(cast.id).should be_nil
+				end
+			end
+		end
+		
 		describe "castings" do
 			before { Account.current_id = account.id }
 			let!(:season) { FactoryGirl.create(:season, account: account) }
 			let!(:piece) { FactoryGirl.create(:piece, account: account) }
 			let!(:character1) { FactoryGirl.create(:character, account: account, piece: piece) }
 			let!(:character2) { FactoryGirl.create(:character, account: account, piece: piece) }
-			let!(:season_piece) { FactoryGirl.create(:season_piece, season: season, piece: piece) }
-			let!(:cast) { FactoryGirl.create(:cast, season_piece: season_piece) }
+			let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
+			let!(:cast) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
 	
 			it "has multiple castings" do
 				account.castings.count.should == 2

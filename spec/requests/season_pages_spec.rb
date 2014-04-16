@@ -238,90 +238,68 @@ describe "Season Pages:" do
 	end
 	
 	context "#show" do
-  	it "has correct title" do
+		before do
   		log_in
-  		season = FactoryGirl.create(:season, account: current_account)
-	  	click_link "Setup"
-	  	click_link "Seasons"
-	  	click_link "View"
-	  	
-	  	has_title?(season.name).should be_true
-		  should have_selector('h1', text: season.name)
+  		@season = FactoryGirl.create(:season, account: current_account)
+			@piece = FactoryGirl.create(:piece, account: current_account)
+			@season_piece = FactoryGirl.create(:season_piece, account: current_account, season: @season, piece: @piece)
+			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
+			visit season_path(@season)
+	  	click_link 'Setup'
+	  	click_link 'Seasons'
+	  	click_link 'View'
+		end
+		
+  	it "has correct title" do
+	  	should have_title @season.name
+		  should have_selector 'h1', text: @season.name
 		end
 		
 		it "has correct Navigation" do
-			log_in
-	  	season = FactoryGirl.create(:season, account: current_account)
-			visit season_path(season)
-	
-			should have_selector('li.active', text: 'Setup')
-			should have_selector('li.active', text: 'Seasons')
+			should have_selector 'li.active', text: 'Setup'
+			should have_selector 'li.active', text: 'Seasons'
 		end
 		
 		it "displays correct data" do
-			log_in
-			season = FactoryGirl.create(:season, account: current_account)
-			visit season_path(season)
-		  
-			should have_content(season.name)
-			should have_content(season.start_dt)
-			should have_content(season.end_dt)
+			should have_content @season.name
+			should have_content @season.start_dt
+			should have_content @season.end_dt
 		end
 		
 		it "displays associated pieces" do
-			log_in
-			season = FactoryGirl.create(:season, account: current_account)
-			3.times {
+			2.times {
 				piece = FactoryGirl.create(:piece, account: current_account)
-				FactoryGirl.create(:season_piece, season: season, piece: piece)
+				FactoryGirl.create(:season_piece, account: current_account, season: @season, piece: piece)
 			}
-			visit season_path(season)
+			visit season_path(@season)
 		  
-			season.pieces.each do |piece|
-				should have_content(piece.name)
+			@season.pieces.each do |piece|
+				should have_content piece.name
 			end
 		end
 		
 		it "displays casts for each associated piece" do
-			log_in
-			season = FactoryGirl.create(:season, account: current_account)
-			piece = FactoryGirl.create(:piece, account: current_account)
-			season_piece = FactoryGirl.create(:season_piece, season: season, piece: piece)
-			3.times { FactoryGirl.create(:cast, season_piece: season_piece) }
-			visit season_path(season)
+			2.times { @season_piece.casts.create }
+			visit season_path(@season)
 
-			should have_content(piece.name)
-			season_piece.casts.each do |cast|
-				should have_content(cast.name)
-				should have_link('Add Cast', href: new_season_piece_cast_path(season_piece))
-				should have_link('Delete')
+			should have_content @piece.name
+			@season_piece.casts.each do |cast|
+				should have_content cast.name
+				should have_link 'Add Cast', href: new_season_piece_cast_path(@season_piece)
+				should have_link 'Delete'
 			end
 		end
 		
 		it "has links for Super Admin" do
-			log_in
-			season = FactoryGirl.create(:season, account: current_account)
-			piece = FactoryGirl.create(:piece, account: current_account)
-			season_piece = FactoryGirl.create(:season_piece, season: season, piece: piece)
-			cast = FactoryGirl.create(:cast, season_piece: season_piece)
-			visit season_path(season)
-	
-			should have_link('Add Cast')
-			should have_link('View Cast')
-			should have_link('Delete Cast')
+			should have_link 'Add Cast'
+			should have_link 'View Cast'
+			should have_link 'Delete Cast'
 		end
 		
 		it "has links for Administrator" do
-			log_in_admin
-			season = FactoryGirl.create(:season, account: current_account)
-			piece = FactoryGirl.create(:piece, account: current_account)
-			season_piece = FactoryGirl.create(:season_piece, season: season, piece: piece)
-			cast = FactoryGirl.create(:cast, season_piece: season_piece)
-			visit season_path(season)
-	
-			should have_link('Add Cast')
-			should have_link('View Cast')
-			should have_link('Delete Cast')
+			should have_link 'Add Cast'
+			should have_link 'View Cast'
+			should have_link 'Delete Cast'
 		end
 	end
 end
