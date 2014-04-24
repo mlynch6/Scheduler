@@ -292,12 +292,14 @@ describe "Season Pages:" do
 		
 		it "has links for Super Admin" do
 			should have_link 'Add Cast'
+			should have_link 'View All Casts'
 			should have_link 'View Cast'
 			should have_link 'Delete Cast'
 		end
 		
 		it "has links for Administrator" do
 			should have_link 'Add Cast'
+			should have_link 'View All Casts'
 			should have_link 'View Cast'
 			should have_link 'Delete Cast'
 		end

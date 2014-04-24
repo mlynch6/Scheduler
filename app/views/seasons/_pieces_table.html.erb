@@ -27,6 +27,10 @@
 					<% if allow? "casts", "new" %>
 						<%= new_link "Add Cast", new_season_piece_cast_path(season_piece), :class => 'btn-small', :id => "newCast_#{season_piece.id}" %>
 					<% end %>
+          <br />
+					<% if allow? "casts", "index" %>
+						<%= link_to "View All Casts", season_piece_casts_path(season_piece), :class => 'btn-small', :id => "viewCast_#{season_piece.id}" %>
+					<% end %>
 				</td>
 			</tr>
 		<% end %>

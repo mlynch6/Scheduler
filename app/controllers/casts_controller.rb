@@ -1,6 +1,19 @@
 class CastsController < ApplicationController	
 	before_filter :get_resource, :only => [:new, :show]
 	
+	def index
+		@sp = SeasonPiece.find(params[:season_piece_id])
+		@casts = @sp.casts.pluck(:name)
+		@castings = Casting.includes(:person).joins(:cast, :character).where(casts: {season_piece_id: @sp.id}).select("castings.*, casts.name as cast_name, characters.name as character_name").order("characters.position ASC, casts.name ASC").group_by(&:character_name)
+		respond_to do |format|
+			format.html
+			format.pdf do
+				pdf = CastingPdf.new(@sp, @casts, @castings, view_context)
+				send_data pdf.render, filename: "#{@sp.piece.name} Casting.pdf", type: "application/pdf"
+			end
+		end
+	end
+	
 	def show
 		@cast = Cast.find(params[:id])
 		@castings = @cast.castings.joins(:character).order('characters.position ASC')

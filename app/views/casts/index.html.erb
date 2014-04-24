@@ -1,0 +1,51 @@
+<% provide(:title, "#{@sp.season.name} | #{@sp.piece.name} | Casting".html_safe) %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Seasons') %>
+
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1>
+      <%= "Casting for #{@sp.piece.name}" %>
+      <small><%= "#{@sp.season.name}" %></small>
+    </h1>
+  </div>
+  <div class="col-md-1">
+    <%= gear_dropdown do %>
+      <% if allow? "casts", "new" %>
+        <li><%= new_link "Add Cast", new_season_piece_cast_path(@sp) %></li>
+      <% end %>
+      <li><%= pdf_link "Download PDF", season_piece_casts_path(@sp, format: "pdf") %></li>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+<% if @casts.length > 0 %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <% @casts.each do |cast_name| %>
+        <th><%= cast_name %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @castings.each do |character_name, casting_per_char| %>
+      <tr>
+        <td><%= character_name %></td>
+        <% casting_by_cast = casting_per_char.group_by(&:cast_name) %>
+        <% @casts.each do |cast_name| %>
+        <% c = casting_by_cast[cast_name].first if casting_by_cast.has_key?(cast_name) %>
+        <td><%= if c && c.person then c.person.full_name else "" end  %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+	<p>No casts found.
+	</p>
+	<p>To begin, click the <em class="text-info">Add Cast</em> link above.</p>
+<% end %>
+</div>

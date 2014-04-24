@@ -74,6 +74,15 @@ module LinkHelper
 	  icon_link(name, 'thumbs-down', *args)
 	end
 
+	def gear_dropdown(&block)
+		html = content_tag(:button, content_tag(:span, nil, class: "glyphicon glyphicon-cog"), type: "button", class: "btn btn-default btn-sm dropdown-toggle", data: {toggle: "dropdown"}, title: "Additional Actions")
+		html << content_tag(:ul, class: "dropdown-menu", role: "menu") do
+			yield
+		end
+		content_tag(:div, class: "btn-group pull-right", style: "margin-top: 10px;") do
+			html
+		end
+	end
 private
 
 	def create_link(name, icon, *args)

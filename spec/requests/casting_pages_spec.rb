@@ -15,7 +15,6 @@ describe "Casting Pages:" do
 	end
 	
 	context "#edit" do
-		let!(:char) { FactoryGirl.create(:character, account: current_account, piece: @piece) }
 		before do
 			click_link 'Setup'
 			click_link 'Seasons'

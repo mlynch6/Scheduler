@@ -40,7 +40,7 @@ Scheduler::Application.routes.draw do
 		collection { post :sort }
   end
   resources :season_pieces, 	:only => [] do
-		resources :casts,					:only => [:new, :show]
+		resources :casts,					:only => [:index, :show, :new]
   end
   resources :casts,						:only => [:destroy]
 	resources :castings,				:only => [:edit, :update]

@@ -11,7 +11,7 @@ class Permission
 			
 			if user.role == "Administrator"
 				#index
-				allow [:users, :seasons], [:index]
+				allow [:users, :seasons, :casts], [:index]
 				
 				#show
 				allow [:accounts, :subscriptions, :agma_contracts, :employees, :seasons, :casts], 
