@@ -4,6 +4,8 @@ class CreateSeasonPieces < ActiveRecord::Migration
 			t.integer :account_id, :null => false
 			t.integer :season_id, :null => false
 			t.integer :piece_id, :null => false
+			t.boolean :published, :null => false, :default => false
+			t.datetime :published_at
 
 			t.timestamps
 		end

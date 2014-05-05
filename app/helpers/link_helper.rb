@@ -30,8 +30,7 @@ module LinkHelper
 	end
 	
 	def pdf_link(name, *args)
-		icon = image_tag("file_extension_pdf.png")
-		create_link(name, icon, *args)
+		icon_link(name, 'download', *args)
 	end
 	
 # BUTTONS
@@ -75,7 +74,7 @@ module LinkHelper
 	end
 
 	def gear_dropdown(&block)
-		html = content_tag(:button, content_tag(:span, nil, class: "glyphicon glyphicon-cog"), type: "button", class: "btn btn-default btn-sm dropdown-toggle", data: {toggle: "dropdown"}, title: "Additional Actions")
+		html = content_tag(:button, content_tag(:span, nil, class: "glyphicon glyphicon-cog", title: 'Tools'), type: "button", class: "btn btn-default btn-sm dropdown-toggle", data: {toggle: "dropdown"}, title: "Tools")
 		html << content_tag(:ul, class: "dropdown-menu", role: "menu") do
 			yield
 		end

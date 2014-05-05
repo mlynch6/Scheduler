@@ -9,34 +9,50 @@
       <small><%= "#{@sp.season.name}" %></small>
     </h1>
   </div>
-  <div class="col-md-1">
-    <%= gear_dropdown do %>
-      <% if allow? "casts", "new" %>
-        <li><%= new_link "Add Cast", new_season_piece_cast_path(@sp) %></li>
-      <% end %>
-      <li><%= pdf_link "Download PDF", season_piece_casts_path(@sp, format: "pdf") %></li>
-    <% end %>
-  </div>
+  <%= render 'casts/tools_menu' %>
 </div>
 
 <div class="row">
+  <% if @sp.published? %>
+    <small class="pull-right"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-lock') %> <%= @sp.published_at.to_s(:full) %> </small>
+  <% end %>
+  
 <% if @casts.length > 0 %>
   <table class="table table-striped">
     <thead>
       <tr>
+        <th class="mash-col-2-btn">&nbsp;</th>
         <th>&nbsp;</th>
-        <% @casts.each do |cast_name| %>
-        <th><%= cast_name %></th>
+        <% @casts.each do |cast| %>
+        <th>
+          <%= cast.name %>
+          &nbsp;
+					<%= view_link nil, season_piece_cast_path(@sp, cast), :id => "view_#{cast.id}", :title => 'View' if allow? "casts", "show" %>
+					<%= delete_link nil, cast, :id => "delete_#{cast.id}" if allow? "casts", "destroy" %>
+        </th>
         <% end %>
       </tr>
     </thead>
     <tbody>
       <% @castings.each do |character_name, casting_per_char| %>
+      <% char = casting_per_char.first.character %>
       <tr>
-        <td><%= character_name %></td>
+        <td class="mash-col-2-btn text-center">
+          <%= char.gender[0] if char.gender.present? %>
+          <%= "K" if char.is_child? %>
+          <%= "A" if char.animal? %>
+          <%= content_tag :span, nil, class: 'glyphicon glyphicon-bullhorn', title: 'Speaking Role' if char.speaking? %>
+        </td>
+        <td>
+          <% if allow? "characters", "edit" %>
+						<%= link_to char.name, edit_character_path(char), :id => "edit_#{char.id}" %>
+          <% else %>
+            <%= character_name %>
+					<% end %>
+        </td>
         <% casting_by_cast = casting_per_char.group_by(&:cast_name) %>
-        <% @casts.each do |cast_name| %>
-        <% c = casting_by_cast[cast_name].first if casting_by_cast.has_key?(cast_name) %>
+        <% @casts.each do |cast| %>
+        <% c = casting_by_cast[cast.name].first if casting_by_cast.has_key?(cast.name) %>
         <td><%= if c && c.person then c.person.full_name else "" end  %></td>
         <% end %>
       </tr>

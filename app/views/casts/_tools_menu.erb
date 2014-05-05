@@ -1,0 +1,11 @@
+<div class="col-md-1">
+  <%= gear_dropdown do %>
+    <% if allow? "casts", "new" %>
+      <li><%= new_link "Add Cast", new_season_piece_cast_path(@sp) %></li>
+    <% end %>
+    <% if allow? "publish_casts", "update" %>
+      <li><%= icon_link 'Publish Casting', 'file', company_publish_cast_path(@sp), method: :put %></li>
+    <% end %>
+    <li><%= pdf_link "Download PDF", season_piece_casts_path(@sp, format: "pdf") %></li>
+  <% end %>
+</div>

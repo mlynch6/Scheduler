@@ -6,12 +6,12 @@ Scheduler::Application.routes.draw do
 	
 	resources :accounts do
 		resources :addresses, 			:except => [:index, :show]
-		resources :phones, 				:except => [:index, :show]
+		resources :phones, 					:except => [:index, :show]
 	end
-	resources :agma_contracts, 	:only => [:show, :edit, :update] do
+	resources :agma_contracts, 		:only => [:show, :edit, :update] do
 		resources :rehearsal_breaks, :only => [:new, :create]
 	end
-	resources :rehearsal_breaks, :only => [:destroy]
+	resources :rehearsal_breaks, 	:only => [:destroy]
   resources :sessions
   resources :users, 						:except => [:show]
   
@@ -21,7 +21,7 @@ Scheduler::Application.routes.draw do
   		get 'activate'
   		get 'inactivate'
   	end
-  	resources :addresses, 				:except => [:index, :show]
+  	resources :addresses, 			:except => [:index, :show]
   	resources :phones, 					:except => [:index, :show]
   end
   
@@ -46,7 +46,7 @@ Scheduler::Application.routes.draw do
 	resources :castings,				:only => [:edit, :update]
 	
   resources :events
-  resources :company_classes,	:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
+  resources :company_classes,		:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
   resources :costume_fittings,	:except => [:index, :show], :controller => :events, :event_type => 'CostumeFitting'
   resources :rehearsals,				:except => [:index, :show], :controller => :events, :event_type => 'Rehearsal'
   get 'events/:year/:month/:day', to: 'events#index'
@@ -64,9 +64,12 @@ Scheduler::Application.routes.draw do
 	match 'payments/edit' => 'payments#edit'
 	match 'payments/update' => 'payments#update'
 	
+	namespace :company do
+		resources :publish_casts,				:only => [:update]
+	end
 	
 	namespace :admin do
-		resources :accounts,				:only => [:index, :edit, :update, :destroy]
+		resources :accounts,						:only => [:index, :edit, :update, :destroy]
 		resources :subscription_plans,	:except => [:show]
 	end
 end

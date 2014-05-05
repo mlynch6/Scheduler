@@ -58,12 +58,19 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 	def check_box(name, options = {}, checked_value = '1', unchecked_value = '0')
 		options = options.symbolize_keys!
 		
-		html = super(name, options.except(:label, :help, :inline), checked_value, unchecked_value)
-		html << ' ' + (options[:label] || object.class.human_attribute_name(name) || name.to_s.humanize)
+		html = super(name, options.except(:label, :help, :inline, :checkbox_only, :checkbox_as_row), checked_value, unchecked_value)
 			
 		if options[:inline]
+			html << ' ' + (options[:label] || object.class.human_attribute_name(name) || name.to_s.humanize)
 			label(name, html, class: 'checkbox-inline')
+		elsif options[:checkbox_only]
+			super(name, options.except(:label, :help, :inline, :checkbox_only), checked_value, unchecked_value)
+		elsif options[:checkbox_as_row]
+			content_tag :div, class: 'form-group' do
+			  label(name, class: 'col-md-3 control-label') + content_tag(:div, html, class: 'col-md-9')
+			end
 		else
+			html << ' ' + (options[:label] || object.class.human_attribute_name(name) || name.to_s.humanize)
 			content_tag(:div, class: 'checkbox') do
 				label(name, html)
 			end

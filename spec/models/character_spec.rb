@@ -9,6 +9,12 @@
 #  position   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  gender     :string(10)
+#  animal     :boolean          default(FALSE), not null
+#  is_child   :boolean          default(FALSE), not null
+#  speaking   :boolean          default(FALSE), not null
+#  deleted    :boolean          default(FALSE), not null
+#  deleted_at :datetime
 #
 
 require 'spec_helper'
@@ -21,7 +27,8 @@ describe Character do
 	let(:character) { FactoryGirl.create(:character,
 											account: account,
 											piece: piece,
-											name: 'Peter') }
+											name: 'Peter',
+											gender: 'Male') }
 	before do
 		Account.current_id = account.id
 		@character = FactoryGirl.build(:character)
@@ -32,11 +39,19 @@ describe Character do
 	context "accessible attributes" do
 		it { should respond_to(:name) }
 		it { should respond_to(:position) }
+		it { should respond_to(:gender) }
+		it { should respond_to(:animal) }
+		it { should respond_to(:is_child) }
+		it { should respond_to(:speaking) }
+		it { should respond_to(:deleted) }
+		it { should respond_to(:deleted_at) }
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:piece) }
   	it { should respond_to(:appearances) }
 		it { should respond_to(:castings) }
+		
+		it { should respond_to(:soft_delete) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -63,28 +78,20 @@ describe Character do
 			
 			it { character.reload.piece_id.should == piece.id }
 		end
+		
+    it "should not allow access to deleted_at" do
+      expect do
+        Character.new(deleted_at: Time.zone.now)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
   end
 
-  context "(Valid)" do  	
+  context "(Valid)" do
   	it "with minimum attributes" do
   		should be_valid
   	end
   end
-  
-  context "(Saving)" do
-  	let!(:p2) { FactoryGirl.create(:piece, account: account) }
-  	let!(:character1) { FactoryGirl.create(:character, account: account, piece: p2) }
-  	let!(:character2) { FactoryGirl.create(:character, account: account, piece: p2) }
-  		
-  	it "1st character for a piece, position should be 1" do
-  		character1.position.should == 1
-  	end
-  	
-  	it "character for a piece with existing characters, position should be max + 1" do
-  		character2.position.should == 2
-  	end
-  end
-  
+	
   context "(Invalid)" do
   	it "when account_id is blank" do
   		@character.account_id = " "
@@ -125,6 +132,42 @@ describe Character do
 	  		should_not be_valid
 	  	end
 	  end
+		
+  	it "when gender is invalid" do
+  		genders = ["abc", 3, true]
+  		genders.each do |invalid_gender|
+  			@character.gender = invalid_gender
+  			should_not be_valid
+  		end
+		end
+		
+  	it "when animal is blank" do
+  		@character.animal = ""
+  		should_not be_valid
+  	end
+		
+  	it "when is_child is blank" do
+  		@character.is_child = ""
+  		should_not be_valid
+  	end
+		
+  	it "when speaking is blank" do
+  		@character.speaking = ""
+  		should_not be_valid
+  	end
+		
+  	it "when deleted is blank" do
+  		@character.deleted = ""
+  		should_not be_valid
+  	end
+		
+  	it "when deleted_at is invalid" do
+  		dts = ["abc", "2/31/2012", "13:00:00"]
+  		dts.each do |invalid_datetime|
+  			@character.deleted_at = invalid_datetime
+  			should_not be_valid
+  		end
+		end
   end
 
 	context "(Associations)" do
@@ -158,8 +201,6 @@ describe Character do
 			let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
 			let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
 			let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
-			let!(:casting1) { FactoryGirl.create(:casting, account: account, cast: cast1, character: character) }
-			let!(:casting2) { FactoryGirl.create(:casting, account: account, cast: cast2, character: character) }
 	
 			it "has multiple castings" do
 				character.castings.count.should == 2
@@ -183,6 +224,26 @@ describe Character do
 	  it "position" do
 	  	character.reload.position.should == 1
 	  end
+		
+		it "gender" do
+			character.reload.gender.should == "Male"
+		end
+		
+		it "animal?" do
+			character.reload.animal?.should be_false
+		end
+		
+		it "is_child?" do
+			character.reload.is_child?.should be_false
+		end
+		
+		it "speaking?" do
+			character.reload.speaking?.should be_false
+		end
+		
+		it "deleted?" do
+			character.reload.deleted?.should be_false
+		end
 	end
 
 	describe "(Scopes)" do
@@ -199,6 +260,145 @@ describe Character do
 		describe "default_scope" do
 			it "returns the records in position order" do
 				Character.all.should == [character1, character3, character2]
+			end
+		end
+		
+		describe "active" do
+			let!(:character_del) { FactoryGirl.create(:character, account: account, position: 1, deleted: true) }
+			
+			it "returns the non-deleted records" do
+				Character.active.should == [character1, character3, character2]
+			end
+		end
+	end
+	
+	context "(On Create)" do
+		let(:season1) { FactoryGirl.create(:season, account: account) }
+		let(:season2) { FactoryGirl.create(:season, account: account) }
+		let(:sp1) { FactoryGirl.create(:season_piece, account: account, season: season1, piece: piece) }
+		let(:sp2) { FactoryGirl.create(:season_piece_published, account: account, season: season2, piece: piece) }
+		let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: sp1) }
+		let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: sp1) }
+		let!(:castA) { FactoryGirl.create(:cast, account: account, season_piece: sp2) }
+		
+  	it "animal is false by default" do
+  		character.reload.animal.should be_false
+  	end
+		
+  	it "is_child is false by default" do
+  		character.reload.is_child.should be_false
+  	end
+		
+  	it "speaking is false by default" do
+  		character.reload.speaking.should be_false
+  	end
+		
+  	it "deleted is false by default" do
+  		character.reload.deleted.should be_false
+  	end
+		
+		describe "when character is added to a piece, " do
+			it "a casting record is added to non-published casts" do
+				new_char = piece.characters.create(name: Faker::Name.name)
+				new_char.castings.count.should == 2
+				
+				cast1.castings.count.should == 1
+				cast2.castings.count.should == 1
+			end
+			
+			it "a casting record is NOT added to published casts" do
+				new_char = piece.characters.create(name: Faker::Name.name)
+				new_char.castings.count.should == 2
+				
+				castA.castings.count.should == 0
+			end
+		end
+		
+		it "deleted_at is set when deleted" do
+			Timecop.freeze
+			@deleted = FactoryGirl.create(:character_deleted, account: account, piece: piece)
+			@deleted.deleted_at.should == Time.zone.now
+		end
+	end
+	
+	context "(On Update)" do
+		before do
+			Timecop.freeze
+			@for_update = FactoryGirl.create(:character, account: account, piece: piece)
+		end
+		
+		it "deleted_at is set when deleted" do
+			@for_update.update_attribute(:deleted, true)
+			
+			@for_update.deleted_at.should == Time.zone.now
+		end
+	end
+	
+  context "(Saving)" do
+  	let!(:p2) { FactoryGirl.create(:piece, account: account) }
+  	let!(:character1) { FactoryGirl.create(:character, account: account, piece: p2) }
+  	let!(:character2) { FactoryGirl.create(:character, account: account, piece: p2) }
+  		
+  	it "1st character for a piece, position should be 1" do
+  		character1.position.should == 1
+  	end
+  	
+  	it "character for a piece with existing characters, position should be max + 1" do
+  		character2.position.should == 2
+  	end
+  end
+  
+	context "(Methods)" do
+		describe "soft_delete" do
+			let!(:char1) { FactoryGirl.create(:character, account: account, piece: piece) }
+			let!(:char2) { FactoryGirl.create(:character, account: account, piece: piece) }
+			let(:season) { FactoryGirl.create(:season, account: account) }
+			let(:sp) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
+			let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: sp) }
+			let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: sp) }
+		
+			describe "with no published casts" do
+				before { char2.soft_delete }
+				
+				it "the record is deleted" do
+					Character.find_by_id(char2.id).should be_nil
+				end
+			
+				it "associated casting records are removed" do
+					Casting.find_by_character_id(char2).should be_nil
+					cast1.castings.count.should == 1
+					cast2.castings.count.should == 1
+				end
+			end
+		
+			describe "with at least 1 published cast" do
+				let(:season2) { FactoryGirl.create(:season, account: account) }
+				let(:sp_published) { FactoryGirl.create(:season_piece_published, account: account, season: season2, piece: piece) }
+				let!(:castA) { FactoryGirl.create(:cast, account: account, season_piece: sp_published) }
+				let!(:castB) { FactoryGirl.create(:cast, account: account, season_piece: sp_published) }
+				
+				before do
+					Timecop.freeze
+					char2.soft_delete
+				end
+			
+				it "the record is soft-deleted" do
+					Character.find_by_id(char2.id).should_not be_nil
+					char2.deleted.should be_true
+					char2.deleted_at.should == Time.zone.now
+				end
+			
+				it "associated casting records are removed for non-published casts" do
+					sp.published.should be_false
+					cast1.castings.count.should == 1
+					cast2.castings.count.should == 1
+				end
+			
+				it "associated casting records remain for published casts" do
+					sp_published.published.should be_true
+					castA.castings.count.should == 2
+					castB.castings.count.should == 2
+				end
 			end
 		end
 	end

@@ -11,7 +11,6 @@ class CastingPdf < Prawn::Document
 		
 		repeat :all do
 			set_header
-			#set_footer
 		end
 		
 		bounding_box([bounds.left, bounds.top - 30], :width  => bounds.width, :height => bounds.height - 40) do
@@ -24,7 +23,11 @@ class CastingPdf < Prawn::Document
 	def set_header
 		bounding_box [bounds.left, bounds.top], :width  => bounds.width, height: 30 do
 			text "#{@season_piece.piece.name} Casting", size: 16, style: :bold
-			text "As on #{Time.zone.today}", size: 8
+			if @season_piece.published?
+				text "Published on #{@season_piece.published_at.to_s(:full)}", size: 8
+			else
+				text "As of #{Time.zone.now.to_s(:full)}", size: 8
+			end
 		end
 	end
 	
@@ -39,7 +42,8 @@ class CastingPdf < Prawn::Document
 	end
 	
 	def casting_table_per_page
-		casts_per_pg = @casts.in_groups_of(@num_casts_per_page)
+		cast_names = @casts.map {|c| c.name }
+		casts_per_pg = cast_names.in_groups_of(@num_casts_per_page)
 		i=1
 		casts_per_pg.each do |casts_for_page|
 			casting_table(casts_for_page)
@@ -50,8 +54,8 @@ class CastingPdf < Prawn::Document
 	
 	def casting_table(casts_for_table)
 		casts_for_table = casts_for_table.delete_if { |elem| elem.nil? }
-		col_widths = [140] + Array.new(casts_for_table.length, 100)
-		data = cast_header(casts_for_table)+cast_rows(casts_for_table)
+		col_widths = [32, 108] + Array.new(casts_for_table.length, 100)
+		data = cast_header(casts_for_table) + cast_rows(casts_for_table)
 		
 		table data do
 			self.header = true
@@ -62,14 +66,25 @@ class CastingPdf < Prawn::Document
 		end
 	end
 	
-	def cast_header(cast_names)
-		[[""] + cast_names]
+	def cast_header(casts)
+		[["", ""] + casts]
 	end
 	
 	def cast_rows(casts_for_table)
 		@castings.map do |character_name, casting_per_char|
-			[character_name] + get_artist_names(casts_for_table, casting_per_char)
+			get_attributes(casting_per_char) + [character_name] + get_artist_names(casts_for_table, casting_per_char)
 		end
+	end
+	
+	def get_attributes(casting_per_char)
+		x = casting_per_char.map do |casting|
+			m = casting.character.gender == "Male" ? "M" : ""
+			f = casting.character.gender == "Female" ? "F" : ""
+			k = casting.character.is_child? ? "K" : ""
+			a = casting.character.animal? ? "A" : ""
+			m+f+k+a
+		end
+		[x[0]]
 	end
 	
 	def get_artist_names(casts, casting_per_char)

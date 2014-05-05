@@ -243,8 +243,8 @@ describe "Season Pages:" do
   		@season = FactoryGirl.create(:season, account: current_account)
 			@piece = FactoryGirl.create(:piece, account: current_account)
 			@season_piece = FactoryGirl.create(:season_piece, account: current_account, season: @season, piece: @piece)
-			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
-			visit season_path(@season)
+			@castA = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
+			
 	  	click_link 'Setup'
 	  	click_link 'Seasons'
 	  	click_link 'View'
@@ -278,30 +278,18 @@ describe "Season Pages:" do
 			end
 		end
 		
-		it "displays casts for each associated piece" do
-			2.times { @season_piece.casts.create }
-			visit season_path(@season)
-
+		it "displays cast count for each associated piece" do
 			should have_content @piece.name
-			@season_piece.casts.each do |cast|
-				should have_content cast.name
-				should have_link 'Add Cast', href: new_season_piece_cast_path(@season_piece)
-				should have_link 'Delete'
-			end
+			should have_selector 'td', text: "Casts"
+			should have_selector 'span.badge', text: "1"
 		end
 		
 		it "has links for Super Admin" do
-			should have_link 'Add Cast'
-			should have_link 'View All Casts'
-			should have_link 'View Cast'
-			should have_link 'Delete Cast'
+			should have_link 'View Casts'
 		end
 		
 		it "has links for Administrator" do
-			should have_link 'Add Cast'
-			should have_link 'View All Casts'
-			should have_link 'View Cast'
-			should have_link 'Delete Cast'
+			should have_link 'View Casts'
 		end
 	end
 end

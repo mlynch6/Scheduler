@@ -45,6 +45,8 @@ en:
         person_id: "Artist"
       character:
         name: "Character"
+        is_child: "Child"
+        speaking: "Speaking Role"
       company_class:
         start_at: "Start At"
         end_at: "End At"

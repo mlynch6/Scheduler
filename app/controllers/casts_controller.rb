@@ -3,7 +3,7 @@ class CastsController < ApplicationController
 	
 	def index
 		@sp = SeasonPiece.find(params[:season_piece_id])
-		@casts = @sp.casts.pluck(:name)
+		@casts = @sp.casts
 		@castings = Casting.includes(:person).joins(:cast, :character).where(casts: {season_piece_id: @sp.id}).select("castings.*, casts.name as cast_name, characters.name as character_name").order("characters.position ASC, casts.name ASC").group_by(&:character_name)
 		respond_to do |format|
 			format.html
@@ -21,10 +21,10 @@ class CastsController < ApplicationController
 	
 	def new
 		if @sp.casts.create
-			redirect_to season_path(@sp.season), :notice => "Successfully created the cast."
+			redirect_to season_piece_casts_path(@sp), :notice => "Successfully created the cast."
 		else
 			flash[:error] = "Cast was not created."
-			redirect_to season_path(@sp.season)
+			redirect_to season_piece_casts_path(@sp)
 		end
 	end
 	
@@ -32,7 +32,7 @@ class CastsController < ApplicationController
 		@cast = Cast.find(params[:id])
 		@season = @cast.season_piece.season
 		@cast.destroy
-		redirect_to season_path(@season), :notice => "Successfully deleted the cast."
+		redirect_to season_piece_casts_path(@cast.season_piece), :notice => "Successfully deleted the cast."
 	end
 	
 	private

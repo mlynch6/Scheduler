@@ -89,6 +89,7 @@ shared_examples "a member of the Artistic Staff" do
 		it { should allow(:casts, :destroy) }
 		it { should allow(:castings, :edit) }
 		it { should allow(:castings, :update) }
+		it { should allow(:publish_casts, :update) }
 	end
 	
 	context "events" do
@@ -348,6 +349,7 @@ describe Permission do
 		it { should_not allow(:casts, :destroy) }
 		it { should_not allow(:castings, :edit) }
 		it { should_not allow(:castings, :update) }
+		it { should_not allow(:publish_casts, :update) }
 		
 		it { should_not allow(:events, :index) }
 		it { should_not allow(:events, :destroy) }
@@ -419,6 +421,7 @@ describe Permission do
 		it { should_not allow(:casts, :destroy) }
 		it { should_not allow(:castings, :edit) }
 		it { should_not allow(:castings, :update) }
+		it { should_not allow(:publish_casts, :update) }
 		
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }

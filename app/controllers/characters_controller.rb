@@ -3,7 +3,7 @@ class CharactersController < ApplicationController
 
 	def index
 		@piece = Piece.find(params[:piece_id])
-		@characters = @piece.characters
+		@characters = @piece.characters.active
 	end
 	
 	def new
@@ -43,7 +43,7 @@ class CharactersController < ApplicationController
 	end
 	
 	def destroy
-		@character.destroy
+		@character.soft_delete
 		redirect_to piece_characters_path(@character.piece_id), :notice => "Successfully deleted the character."
 	end
 

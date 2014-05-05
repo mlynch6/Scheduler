@@ -161,12 +161,12 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = pdf_link("Text", "#")
-			html.should =~ /<img alt="File_extension_pdf" src="\/images\/file_extension_pdf.png" \/>/
+			html.should =~ /<span class=\"glyphicon glyphicon-download\"><\/span>/
 		end
 		
 		it "without text displays correct link" do
 			html = pdf_link(nil, "#")
-			html.should =~ /\/><\/a>/
+			html.should =~ /<\/span><\/a>/
 		end
 	end
 	
@@ -352,6 +352,27 @@ describe LinkHelper do
 		it "without text displays correct link" do
 			html = inactivate_button(nil, '#')
 			html.should =~ /<\/span><\/a>/
+		end
+	end
+	
+	context 'gear_dropdown' do
+		before { @html = gear_dropdown { 'AZdS' } }
+			
+		it "displays a dropdown" do
+			@html.should =~ /dropdown-toggle/
+		end
+		
+		it "displays correct icon" do
+			@html.should =~ /<span class="glyphicon glyphicon-cog"/
+			@html.should =~ /<\/span>/
+		end
+		
+		it "has tooltip of 'Tools'" do
+			@html.should =~ /title="Tools"/
+		end
+		
+		it "displays the block text" do
+			@html.should =~ /AZdS/
 		end
 	end
 end

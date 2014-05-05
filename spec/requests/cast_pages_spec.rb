@@ -18,7 +18,7 @@ describe "Cast Pages:" do
   		click_link 'Setup'
 	  	click_link 'Seasons'
 			click_link 'View'
-			click_link 'View All Casts'
+			click_link 'View Casts'
 		end
 		
   	it "has correct title" do
@@ -41,6 +41,8 @@ describe "Cast Pages:" do
 			visit season_piece_casts_path(@season_piece)
 	
 			should have_selector 'th', text: "#{@castA.name}"
+			should have_link 'View'
+			should have_link 'Delete'
 			
 			@castA.castings.each do |casting|
 				should have_selector 'td', text: casting.character.name
@@ -48,20 +50,70 @@ describe "Cast Pages:" do
 	    end
 		end
 		
+		it "shows Male gender on list" do
+			@char = FactoryGirl.create(:character_male, account: current_account, piece: @piece)
+			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
+			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
+			visit season_piece_casts_path(@season_piece)
+	
+			should have_selector 'td', text: 'M'
+		end
+		
+		it "shows Female gender on list" do
+			@char = FactoryGirl.create(:character_female, account: current_account, piece: @piece)
+			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
+			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
+			visit season_piece_casts_path(@season_piece)
+	
+			should have_selector 'td', text: 'F'
+		end
+		
+		it "shows Animal on list" do
+			@char = FactoryGirl.create(:character_animal, account: current_account, piece: @piece)
+			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
+			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
+			visit season_piece_casts_path(@season_piece)
+	
+			should have_selector 'td', text: 'A'
+		end
+		
+		it "shows Child on list" do
+			@char = FactoryGirl.create(:character_child, account: current_account, piece: @piece)
+			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
+			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
+			visit season_piece_casts_path(@season_piece)
+	
+			should have_selector 'td', text: 'K'
+		end
+		
+		it "shows Speaking Role on list" do
+			@char = FactoryGirl.create(:character_speaking, account: current_account, piece: @piece)
+			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
+			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
+			visit season_piece_casts_path(@season_piece)
+	
+			should have_selector 'span.glyphicon-bullhorn'
+		end
+		
 		it "has links for Super Admin" do
 			should have_link 'Add Cast'
+			should have_link 'Publish Casting'
 			should have_link 'Download PDF'
 		end
 	end
 	
 	context "#new" do
+		before do
+			click_link 'Setup'
+	  	click_link 'Seasons'
+			click_link 'View'
+			click_link 'View Casts'
+			click_link 'Add Cast'
+		end
+		
 		it "creates new Cast for Season/Piece" do
-			visit season_path(@season)
-			
-	  	click_link 'Add Cast'
-			
 			should have_selector 'div.alert-success'
-			should have_title @season.name
+			should have_title "#{@season.name} | #{@piece.name} | Casting"
 			should have_content 'Cast A'
 			
 			click_link 'Add Cast'
@@ -72,13 +124,13 @@ describe "Cast Pages:" do
 	context "#destroy" do
 		it "deletes the record" do
 			cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
-			visit season_path(@season)
+			visit season_piece_casts_path(@season_piece)
 			
 			should have_content 'Cast A'
 			click_link 'Delete'
 			
 			should have_selector 'div.alert-success'
-			should have_title @season.name
+			should have_title "#{@season.name} | #{@piece.name} | Casting"
 			should_not have_content 'Cast A'
 		end
 	end
@@ -89,7 +141,8 @@ describe "Cast Pages:" do
 			click_link 'Setup'
 			click_link 'Seasons'
 			click_link 'View'
-			click_link 'View Cast'
+			click_link 'View Casts'
+			click_link 'View'
 		end
 		
 		it "has correct title" do

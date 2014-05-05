@@ -1,2 +1,16 @@
 <%= f.static_control :piece_id do @piece.name end %>
 <%= f.text_field :name %>
+<%= f.select :gender, ['Male', 'Female'], { :include_blank => '-- Unspecified --' }, field_size: 'col-md-3' %>
+
+<div class="form-group">
+  <div class="col-md-offset-3 col-md-2">
+    <%= f.check_box :is_child %>
+  </div>
+  <div class="col-md-2">
+  <%= f.check_box :animal %>
+  </div>
+  <div class="col-md-3">
+  <%= f.check_box :speaking %>
+  </div>
+</div>
+

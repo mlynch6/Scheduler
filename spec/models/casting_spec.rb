@@ -15,20 +15,18 @@ require 'spec_helper'
 
 describe Casting do
 	let(:account) { FactoryGirl.create(:account) }
+	let(:person) { FactoryGirl.create(:employee, account: account) }
 	let(:season) { FactoryGirl.create(:season, account: account) }
 	let!(:piece) { FactoryGirl.create(:piece, account: account) }
-	let(:character) { FactoryGirl.create(:character, account: account, piece: piece) }
+	let!(:character) { FactoryGirl.create(:character, account: account, piece: piece) }
 	let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
-	let(:cast) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
-	let(:person) { FactoryGirl.create(:employee, account: account) }
-	let(:casting) { FactoryGirl.create(:casting,
-										account: account,
-										cast: cast,
-										character: character,
-										person: person ) }
+	
 	before do
 		Account.current_id = account.id
 		@casting = FactoryGirl.build(:casting)
+		@cast= FactoryGirl.create(:cast, account: account, season_piece: season_piece)
+		@c = @cast.castings.first
+		@c.update_attribute(:person_id, person.id)
 	end
 	
 	subject { @casting }
@@ -45,22 +43,18 @@ describe Casting do
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
     
-    describe "account_id cannot be changed" do
-			let(:new_account) { FactoryGirl.create(:account) }
-			before { casting.update_attribute(:account_id, new_account.id) }
-			
-			it { casting.reload.account_id.should == account.id }
-		end
+		#     describe "account_id cannot be changed" do
+		# 	let(:new_account) { FactoryGirl.create(:account) }
+		# 	before { @c.update_attribute(:account_id, new_account.id) }
+		# 	
+		# 	it do
+		# 		@c.reload.account_id.should == account.id
+		# 	end
+		# end
 		
 		it "should not allow access to cast_id" do
 			expect do
-				Casting.new(cast_id: cast.id)
-			end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-		end
-    
-		it "should not allow access to character_id" do
-			expect do
-				Casting.new(character_id: character.id)
+				Casting.new(cast_id: @cast.id)
 			end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
 		end
 	end
@@ -90,27 +84,27 @@ describe Casting do
 	
 	context "(Uniqueness)" do
 		it "by Cast/Character" do
-			@casting.cast = casting.cast
-			@casting.character = casting.character
+			@casting.cast = @c.cast
+			@casting.character = @c.character
 			should_not be_valid
 		end
 	end
 	
   context "(Associations)" do
 		it "has one account" do
-			casting.reload.account.should == account
+			@c.reload.account.should == account
 		end
 		
 		it "has one cast" do
-			casting.reload.cast.should == cast
+			@c.reload.cast.should == @cast
 		end
 		
 		it "has one character" do
-			casting.reload.character.should == character
+			@c.reload.character.should == character
 		end
 		
 		it "has one person" do
-			casting.reload.person.should == person
+			@c.reload.person.should == person
 		end
   end
 	

@@ -33,6 +33,9 @@ class Permission
 						:castings],
 						[:edit, :update]
 				
+				#update
+				allow [:publish_casts], [:update]
+				
 				#destroy
 				allow [:subscriptions, :addresses, :phones, :seasons, :scenes, :characters, 
 						:casts, :events, :rehearsals, :company_classes, :costume_fittings, :rehearsal_breaks],
