@@ -3,69 +3,23 @@ require 'spec_helper'
 describe "Agma Contract Pages:" do
   subject { page }
   
-  before do
-	  log_in
-	  click_link "Setup"
-	  click_link "Contract Settings"
-	end
-	
 	context "#edit" do
-		before do
-			click_link "Edit"
+	  before do
+		  log_in
+		  click_link 'Setup'
+		  click_link 'Contract Settings'
+			click_link 'Edit Contract Settings'
 		end
 		
 		it "has correct title" do
 			should have_title 'Edit Contract Settings'
-			should have_selector 'h1', text: 'Edit Contract Settings'
+			should have_selector 'h1', text: 'Contract Settings'
+			should have_selector 'h1 small', text: 'Edit'
 		end
 		
 		it "has correct Navigation" do
 			should have_selector 'li.active', text: 'Setup'
 			should have_selector 'li.active', text: 'Contract Settings'
-		end
-		
-		context "has correct fields on", js: true do
-			it "Rehearsal Week tab" do
-				click_link 'Rehearsal Week'
-				
-				should have_select 'Rehearsal Start'
-				should have_select 'Rehearsal End'
-				should have_field 'Max Hours/Week'
-				should have_field 'Max Hours/Day'
-				should have_field 'Rehearsal Increments'
-		    
-		    should_not have_field 'Class Break'
-		    
-		    should_not have_field 'Costume Fitting Increments'
-			end
-			
-			it "Company Class tab" do
-				click_link 'Company Class'
-				
-				should_not have_select 'Rehearsal Start'
-				should_not have_select 'Rehearsal End'
-				should_not have_field 'Max Hours/Week'
-				should_not have_field 'Max Hours/Day'
-				should_not have_field 'Rehearsal Increments'
-					
-				should have_field 'Class Break'
-				
-				should_not have_field 'Costume Fitting Increments'
-			end
-			
-			it "Costume Fitting tab" do
-				click_link 'Costume Fittings'
-				
-				should_not have_select 'Rehearsal Start'
-				should_not have_select 'Rehearsal End'
-				should_not have_field 'Max Hours/Week'
-				should_not have_field 'Max Hours/Day'
-				should_not have_field 'Rehearsal Increments'
-					
-				should_not have_field 'Class Break'
-				
-				should have_field 'Costume Fitting Increments'
-			end
 		end
 		
 	  it "invalid record shows error" do
@@ -96,9 +50,81 @@ describe "Agma Contract Pages:" do
 			should have_content '30 minutes'
 			should have_content '20 minutes'
 		end
+		
+		it "has links for Super Admin" do
+	  	should have_link 'Rehearsal Week'
+			should have_link 'Company Class'
+	  	should have_link 'Costume Fittings'
+			
+			should have_link 'Edit Contract Settings'
+	  	should have_link 'Add Rehearsal Break'
+		end
+	end
+	
+	context "#edit", js: true do
+	  before do
+		  log_in
+		  visit edit_agma_contract_path(current_account.agma_contract)
+		end
+		
+		context "has correct fields on" do
+			it "Rehearsal Week tab" do
+				click_link 'Rehearsal Week'
+				
+				should have_select 'Rehearsal Start'
+				should have_select 'Rehearsal End'
+				should have_field 'Max Hours/Week'
+				should have_field 'Max Hours/Day'
+				should have_field 'Rehearsal Increments'
+		    
+		    should_not have_field 'Class Break'
+		    
+		    should_not have_field 'Costume Fitting Increments'
+				
+				should have_link 'Cancel', href: agma_contract_path(current_account.agma_contract)
+			end
+			
+			it "Company Class tab" do
+				click_link 'Company Class'
+				
+				should_not have_select 'Rehearsal Start'
+				should_not have_select 'Rehearsal End'
+				should_not have_field 'Max Hours/Week'
+				should_not have_field 'Max Hours/Day'
+				should_not have_field 'Rehearsal Increments'
+					
+				should have_field 'Class Break'
+				
+				should_not have_field 'Costume Fitting Increments'
+				
+				should have_link 'Cancel', href: agma_contract_path(current_account.agma_contract)
+			end
+			
+			it "Costume Fitting tab" do
+				click_link 'Costume Fittings'
+				
+				should_not have_select 'Rehearsal Start'
+				should_not have_select 'Rehearsal End'
+				should_not have_field 'Max Hours/Week'
+				should_not have_field 'Max Hours/Day'
+				should_not have_field 'Rehearsal Increments'
+					
+				should_not have_field 'Class Break'
+				
+				should have_field 'Costume Fitting Increments'
+				
+				should have_link 'Cancel', href: agma_contract_path(current_account.agma_contract)
+			end
+		end
 	end
 	
 	context "#show" do
+	  before do
+		  log_in
+		  click_link 'Setup'
+		  click_link 'Contract Settings'
+		end
+		
 		it "has correct title" do
 			should have_title 'Contract Settings'
 			should have_selector 'h1', text: 'Contract Settings'
@@ -129,7 +155,6 @@ describe "Agma Contract Pages:" do
 				click_link 'Rehearsal Week'
 					
 				should have_selector 'h3', text: 'Rehearsal Breaks'
-				should have_link 'Add Rehearsal Break'
 			end
 			
 			it "Company Class tab" do
@@ -163,10 +188,6 @@ describe "Agma Contract Pages:" do
 			end
 		end
 		
-		it "has links" do
-			should have_link 'Edit'
-		end
-		
 		it "displays correct Contract data" do
 			should have_content "9:00 AM"
 			should have_content "6:00 PM"
@@ -177,15 +198,31 @@ describe "Agma Contract Pages:" do
 			should have_content "15 minutes"
 		end
 		
-		it "displays correct Rehearsal Break data" do
-			@break60 = FactoryGirl.create(:rehearsal_break, 
-						agma_contract: current_account.agma_contract,
-						duration_min: 60,
-						break_min: 5)
-						
-			click_link "Contract Settings"
-			should have_content "60 min rehearsal"
-			should have_content "5 min break"
+		describe "displays correct Rehearsal Break data" do
+			it "without records" do
+		    should have_selector 'p', text: 'To begin'
+				should_not have_selector 'td'
+			end
+			
+			it "with records" do
+				@break60 = FactoryGirl.create(:rehearsal_break, 
+							agma_contract: current_account.agma_contract,
+							duration_min: 60,
+							break_min: 5)		
+				click_link "Contract Settings"
+				
+				should have_content "60 min rehearsal"
+				should have_content "5 min break"
+			end
+		end
+		
+		it "has links for Super Admin" do
+	  	should have_link 'Rehearsal Week'
+			should have_link 'Company Class'
+	  	should have_link 'Costume Fittings'
+			
+			should have_link 'Edit Contract Settings'
+	  	should have_link 'Add Rehearsal Break'
 		end
 	end
 end

@@ -1,9 +1,22 @@
+<% class_active = ' class=active' %>
 <ul class="nav navbar-nav">
-	<li><%= link_to "Home", root_path %></li>
-	<li><%= link_to "Features", features_path %></li>
-	<li><%= link_to "Pricing & Signup", pricing_path %></li>
-	<li><%= link_to "Contact Us", contact_path %></li>
+	<li<%= class_active if yield(:header_current) == "GuestHome" %>>
+    <%= link_to "Home", root_path %>
+  </li>
+  
+	<li<%= class_active if yield(:header_current) == "Features" %>>
+    <%= link_to "Features", features_path %>
+  </li>
+	
+  <li<%= class_active if yield(:header_current) == "Pricing" %>>
+    <%= link_to "Pricing & Signup", pricing_path %>
+  </li>
+	
+  <li<%= class_active if yield(:header_current) == "Contact" %>>
+    <%= link_to "Contact Us", contact_path %>
+  </li>
 </ul>
+
 <ul class="nav navbar-nav navbar-right">
 	<li class="divider-vertical"></li>
 	<li><%= link_to "Sign In", login_path %></li>

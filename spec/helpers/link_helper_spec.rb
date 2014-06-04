@@ -34,7 +34,7 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = new_link("Text", '#')
-			html.should =~ /<span class="glyphicon glyphicon-plus mash-green">/
+			html.should =~ /<span class="glyphicon glyphicon-plus-sign mash-green">/
 			html.should =~ /<\/span>/
 		end
 		
@@ -92,7 +92,7 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = delete_link("Text", '#')
-			html.should =~ /<span class="glyphicon glyphicon-trash mash-red">/
+			html.should =~ /<span class="glyphicon glyphicon-minus-sign mash-red">/
 			html.should =~ /<\/span>/
 		end
 		

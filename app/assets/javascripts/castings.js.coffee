@@ -3,4 +3,5 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 jQuery ->
-	$('#casting_person_id').chosen()
+	$('#casting_person_id').chosen
+    allow_single_deselect: true

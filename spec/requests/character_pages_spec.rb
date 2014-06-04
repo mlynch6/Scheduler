@@ -10,18 +10,20 @@ describe "Character Pages:" do
 	  	
 			click_link 'Setup'
 	  	click_link "Pieces"
-	  	click_link "View"
+	  	click_link @piece.name
 	  	click_link "Characters"
 		end
 		
   	it "has correct title" do
 	  	should have_title "#{@piece.name} | Characters"
 		  should have_selector 'h1', text: "#{@piece.name}"
+			should have_selector 'h1 small', text: "Characters"
 		end
 		
 		it "has correct Navigation" do
 			should have_selector 'li.active', text: 'Setup'
 			should have_selector 'li.active', text: 'Pieces'
+			should have_selector 'li.active', text: 'Characters'
 		end
 		
 		it "without records" do
@@ -78,36 +80,21 @@ describe "Character Pages:" do
 		end
 		
 		it "has links for Super Admin" do
-			log_in
-			piece = FactoryGirl.create(:piece, account: current_account)
-			character = FactoryGirl.create(:character, account: current_account, piece: piece)
-			visit piece_characters_path(piece)
+			character = FactoryGirl.create(:character, account: current_account, piece: @piece)
+			visit piece_characters_path(@piece)
 	
-			should have_link 'Add Character'
-			should have_link "#{character.name}"
+			should have_link character.name
 			should have_link 'Delete'
-		end
+			
+	  	should have_link 'Overview'
+	  	should have_link 'Scenes'
+	  	should have_link 'Characters'
 		
-		it "doesn't have links for Employee" do
-			log_in_employee
-			piece = FactoryGirl.create(:piece, account: current_account)
-			character = FactoryGirl.create(:character, account: current_account, piece: piece)
-			visit piece_characters_path(piece)
-	
-			should_not have_link 'Add Character'
-			should_not have_link "#{character.name}"
-			should_not have_link 'Delete'
-		end
-		
-		it "has links for Administrator" do
-			log_in_admin
-			piece = FactoryGirl.create(:piece, account: current_account)
-			character = FactoryGirl.create(:character, account: current_account, piece: piece)
-			visit piece_characters_path(piece)
-	
+			should have_link 'Add Piece'
+			should have_link 'Delete Piece'
 			should have_link 'Add Character'
-			should have_link "#{character.name}"
-			should have_link 'Delete'
+			should have_link 'Add Scene'
+			should have_link 'Download Scenes PDF'
 		end
 	end
 	
@@ -118,7 +105,7 @@ describe "Character Pages:" do
 
 	  	click_link 'Setup'
 	  	click_link "Pieces"
-	  	click_link "View"
+	  	click_link @piece.name
 	  	click_link "Characters"
 	  	click_link "Add Character"
 		end
@@ -126,12 +113,13 @@ describe "Character Pages:" do
 		it "has correct title" do
 			should have_title "#{@piece.name} | Add Character"
 		  should have_selector 'h1', text: "#{@piece.name}"
-			should have_selector 'small', text: "Add Character"
+			should have_selector 'h1 small', text: "Add Character"
 		end
 		
 		it "has correct Navigation" do
 			should have_selector 'li.active', text: 'Setup'
 			should have_selector 'li.active', text: 'Pieces'
+			should have_selector 'li.active', text: 'Characters'
 		end
 		
 		it "has correct fields on form" do
@@ -140,6 +128,7 @@ describe "Character Pages:" do
 			should have_field 'character_is_child'
 			should have_field 'character_animal'
 			should have_field 'character_speaking'
+			should have_link 'Cancel', href: piece_characters_path(@piece)
 		end
 		
 		context "with error" do
@@ -165,6 +154,18 @@ describe "Character Pages:" do
 				should have_content new_name
 			end
 		end
+		
+		it "has links for Super Admin" do
+	  	should have_link 'Overview'
+	  	should have_link 'Scenes'
+	  	should have_link 'Characters'
+			
+			should have_link 'Add Piece'
+			should have_link 'Delete Piece'
+			should have_link 'Add Character'
+			should have_link 'Add Scene'
+			should have_link 'Download Scenes PDF'
+		end
 	end
 	
 	context "#edit" do
@@ -175,20 +176,21 @@ describe "Character Pages:" do
 			
 	  	click_link 'Setup'
 	  	click_link "Pieces"
-	  	click_link "View"
+	  	click_link @piece.name
 	  	click_link "Characters"
-	  	click_link "#{@character.name}"
+	  	click_link @character.name
 		end
 		
 		it "has correct title" do
 	  	should have_title "#{@piece.name} | Edit Character"
 		  should have_selector 'h1', text: "#{@piece.name}"
-			should have_selector 'small', text: "Edit Character"
+			should have_selector 'h1 small', text: "Edit Character"
 		end
 		
 		it "has correct Navigation" do
 			should have_selector 'li.active', text: 'Setup'
 			should have_selector 'li.active', text: 'Pieces'
+			should have_selector 'li.active', text: 'Characters'
 		end
 		
 		it "has correct fields on form" do
@@ -197,6 +199,7 @@ describe "Character Pages:" do
 			should have_field 'character_is_child'
 			should have_field 'character_animal'
 			should have_field 'character_speaking'
+			should have_link 'Cancel', href: piece_characters_path(@piece)
 		end
 		
 	  it "with error shows error message" do
@@ -214,6 +217,19 @@ describe "Character Pages:" do
 			should have_selector 'div.alert-success'
 			should have_title "#{@piece.name} | Characters"
 			should have_content new_name
+		end
+		
+		it "has links for Super Admin" do
+	  	should have_link 'Overview'
+	  	should have_link 'Scenes'
+	  	should have_link 'Characters'
+			
+			should have_link 'Add Piece'
+			should have_link 'Delete Piece'
+			should have_link 'Add Character'
+			should have_link 'Delete Character'
+			should have_link 'Add Scene'
+			should have_link 'Download Scenes PDF'
 		end
 	end
   
@@ -293,7 +309,7 @@ describe "Character Pages:" do
 	  	
 			click_link 'Setup'
 	  	click_link "Pieces"
-	  	click_link "View"
+	  	click_link @piece.name
 	  	click_link "Characters"
 		end
 		

@@ -7,7 +7,7 @@ module ApplicationHelper
 		if page_title.empty?
 			base_title
 		else
-			"#{base_title} | #{page_title}"
+			"#{base_title} | #{page_title}".html_safe
 		end
 	end
 	
@@ -17,10 +17,6 @@ module ApplicationHelper
 	# %v OR %e-%b-%Y	=>	25-Aug-2012
 	def formatted_date(dt, format="%m/%d/%Y")
 		Date.strptime(dt, '%Y-%m-%d').strftime(format)
-	end
-
-	def active_inactive(bool)
-		bool ? "Active" : "Inactive"
 	end
 	
 	#Input: number of minutes past midnight

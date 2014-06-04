@@ -1,0 +1,23 @@
+<div class="col-md-1">
+  <%= gear_dropdown do %>
+    <% if allow? "employees", "new" %>
+    	<li><%= new_link "Add Employee", new_employee_path %></li>
+    <% end %>
+  
+  	<% if params['id'].present?  %>
+      <% if allow? "employees", "destroy" %>
+        <li><%= delete_link 'Delete Employee', @employee %></li>
+  	  <% end %>
+  
+      <li class="divider"></li>
+      
+    	<% if allow? "addresses", "new" %>
+        <li><%= new_link "Add Address", [:new, @employee, :address] %></li>
+      <% end %>
+      
+      <% if allow? "phones", "new" %>
+        <li><%= new_link "Add Phone Number", [:new, @employee, :phone] %></li>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

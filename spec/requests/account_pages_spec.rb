@@ -185,121 +185,134 @@ describe "Account Pages:" do
 	end
 	
 	context "#show" do
-		it "has correct title" do
+		before do
 			log_in
-			click_link 'Setup'
-			click_link "Company Information"
-	  	
-	  	has_title?('Company Information').should be_true
-			should have_selector('h1', text: 'Company Information')
+			click_link 'Home'
+			click_link 'My Account'
+		end
+		
+		it "has correct title" do
+	  	should have_title 'My Account'
+			should have_selector 'h1', text: 'My Account'
 		end
 		
 		it "has correct Navigation" do
-			log_in
-			visit account_path(current_account)
-	
-			should have_selector('li.active', text: 'Setup')
-			should have_selector('li.active', text: 'Company Information')
+			should have_selector 'li.active', text: 'Home'
+			should have_selector 'li.active', text: 'My Account'
+			should have_selector 'li.active', text: 'Overview'
 		end
 		
 		it "displays correct data" do
-			log_in
-			visit account_path(current_account)
-	  	
-			should have_content(current_account.name)
-			should have_content(current_account.time_zone)
-			should have_content(current_account.status)
-			should have_content(current_account.cancelled_at)
+			should have_content current_account.name
+			should have_content current_account.time_zone
+			should have_content current_account.status
+			should have_content current_account.cancelled_at
 		end
 		
 		it "has addresses shown" do
-			log_in
 			3.times { FactoryGirl.create(:address, addressable: current_account) }
 			visit account_path(current_account)
 
 			should have_selector('h3', text: 'Addresses')
 			current_account.addresses.each do |address|
-				should have_content("#{address.addr_type} Address")
-				should have_content(address.addr)
-				should have_content(address.addr2) if address.addr2.present?
-				should have_content(address.city)
-				should have_content(address.state)
-				should have_content(address.zipcode)
+				should have_content "#{address.addr_type} Address"
+				should have_content address.addr
+				should have_content address.addr2 if address.addr2.present?
+				should have_content address.city
+				should have_content address.state
+				should have_content address.zipcode
 				
-				should have_link('Edit', href: edit_account_address_path(current_account, address))
-				should have_link('Delete', href: account_address_path(current_account, address))
+				should have_link 'Edit', href: edit_account_address_path(current_account, address)
+				should have_link 'Delete', href: account_address_path(current_account, address)
 			end
-	    should have_link('Add Address')
+		end
+		
+		it "without address records" do
+	    should have_selector 'p', text: 'To begin, click the Add Address link above.'
 		end
 		
 		it "has phone numbers shown" do
-			log_in
 			3.times { FactoryGirl.create(:phone, phoneable: current_account) }
 			visit account_path(current_account)
 
-			should have_selector('h3', text: 'Phone Numbers')
+			should have_selector 'h3', text: 'Phone Numbers'
 			current_account.phones.each do |phone|
-				should have_content("#{phone.phone_type}:")
-				should have_content(phone.phone_num)
+				should have_content "#{phone.phone_type}:"
+				should have_content phone.phone_num
 				
-				should have_link('Edit', href: edit_account_phone_path(current_account, phone))
-				should have_link('Delete', href: account_phone_path(current_account, phone))
+				should have_link 'Edit', href: edit_account_phone_path(current_account, phone)
+				should have_link 'Delete', href: account_phone_path(current_account, phone)
 			end
-	    should have_link('Add Phone Number')
 		end
 		
-		it "has links" do
-			log_in
-			visit account_path(current_account)
-	  	
-	  	should have_link('Edit')
-	  	should have_link('Add Address')
-	  	should have_link('Add Phone Number')
+		it "without phone records" do
+	    should have_selector 'p', text: 'To begin, click the Add Phone Number link above.'
+		end
+		
+		it "has links for Super Admin" do
+	  	should have_link current_account.name
+			
+	  	should have_link 'Overview'
+			should have_link 'Subscription'
+			
+	  	should have_link 'Add Address'
+	  	should have_link 'Add Phone Number'
+			should have_link 'Change Payment Method'
 		end
 	end
 	
 	context "#edit" do
-		it "has correct title" do
+		before do
 			log_in
-			click_link 'Setup'
-			click_link "Company Information"
-			click_link "Edit"
-	  	
-	  	has_title?('Edit Company Information').should be_true
-			should have_selector('h1', text: 'Edit Company Information')
+			click_link 'Home'
+			click_link 'My Account'
+			click_link current_account.name
+		end
+		
+		it "has correct title" do
+	  	should have_title 'Edit Account'
+			should have_selector 'h1', text: 'My Account'
+			should have_selector 'h1 small', text: 'Edit'
 		end
 		
 		it "has correct Navigation" do
-			log_in
-			visit edit_account_path(current_account)
-	
-			should have_selector('li.active', text: 'Setup')
-			should have_selector('li.active', text: 'Company Information')
+			should have_selector 'li.active', text: 'Home'
+			should have_selector 'li.active', text: 'My Account'
+			should have_selector('li.active', text: 'Overview')
+		end
+		
+		it "has correct fields on form" do	  	
+	    should have_select 'Time Zone'
+			should have_link 'Cancel', href: account_path(current_account)
 		end
 		
 	  it "record with error" do
 			pending "No field can currently cause an error"
-	  	log_in
-			visit edit_account_path(current_account)
-	  	
 	  	fill_in "Company", with: ""
 	  	click_button 'Update'
 	
-			should have_selector('div.alert-danger')
+			should have_selector 'div.alert-danger'
 		end
 	 
 		it "record with valid info saves account" do
-			log_in
-			visit edit_account_path(current_account)
-			should have_content(current_account.name)
+			should have_content current_account.name
 			
     	select  "(GMT-10:00) Hawaii", from: "Time Zone"
 			click_button 'Update'
 	
-			should have_selector('div.alert-success')
-			has_title?('Company Information').should be_true
+			should have_selector 'div.alert-success'
+			should have_title 'My Account'
 			
-			should have_content("Hawaii")
+			should have_content "Hawaii"
+		end
+		
+		it "has links for Super Admin" do
+	  	should have_link 'Overview'
+			should have_link 'Subscription'
+			
+			should have_link 'Add Address'
+	  	should have_link 'Add Phone Number'
+			should have_link 'Change Payment Method'
 		end
 	end
 end

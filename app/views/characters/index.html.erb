@@ -9,14 +9,13 @@
       <small>Characters</small>
     </h1>
   </div>
-  <%= render 'characters/tools_menu' %>
+  <%= render 'pieces/tools_menu' %>
 </div>
 
-<div class="row">
-<div class="mash-show-tab">
+<div class="row mash-show">
 	<%= render 'pieces/tabs' %>
 	
-	<div class="mash-tab-body">
+	<div class="mash-body">
 		<% if @characters.length > 0 %>
 			<table class="table table-striped">
 				<thead>
@@ -27,7 +26,7 @@
 			  		<th class="mash-col-1-btn">&nbsp;</th>
 			  	</tr>
 			  </thead>
-			  <tbody id="characters" data-update-url="<%= sort_characters_url %>">
+			  <tbody id="characters" class="position-sort" data-update-url="<%= sort_characters_url %>">
 			  	<% @characters.each do |character| %>
 						<%= content_tag_for :tr, character do %>
 							<td class="mash-col-1-btn">
@@ -64,5 +63,4 @@
 			<p>To begin, click the <em class="text-info">Add Character</em> link above.</p>
 		<% end %>
 	</div>
-</div>
 </div>

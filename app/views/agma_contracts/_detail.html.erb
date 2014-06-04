@@ -1,5 +1,5 @@
-<div class="tab-content mash-tab-body">
-	<div id="rehearsal-week" class="tab-pane active">
+<div class="tab-content">
+	<div id="rehearsal-week-tab" class="tab-pane active">
 		<div class="dtl-form">
 			<div class="row">
 				<div class="dtl-label col-md-4"><%= AgmaContract.human_attribute_name(:rehearsal_start_min) %></div>
@@ -26,8 +26,7 @@
 				<div class="dtl-text col-md-8"><%= @agma_contract.rehearsal_increment_min %> minutes</div>
 			</div>
 			
-			<div class="row">
-				<br />
+			<div class="row" style="margin-top:15px;">
 				<div class="col-md-10 col-md-offset-1">
 					<%= render 'rehearsal_breaks/table', contract: @agma_contract, rehearsal_breaks: @agma_contract.rehearsal_breaks %>
 				</div>
@@ -35,7 +34,7 @@
 		</div>
 	</div><!-- tab-pane -->
 
-	<div id="company-class" class="tab-pane">
+	<div id="company-class-tab" class="tab-pane">
 		<div class="dtl-form">
 			<div class="row">
 				<div class="dtl-label col-md-4"><%= AgmaContract.human_attribute_name(:class_break_min) %></div>
@@ -44,7 +43,7 @@
 		</div>
 	</div><!-- tab-pane -->
 	
-	<div id="costume-fitting" class="tab-pane">
+	<div id="costume-fitting-tab" class="tab-pane">
 		<div class="dtl-form">
 			<div class="row">
 				<div class="dtl-label col-md-4"><%= AgmaContract.human_attribute_name(:costume_increment_min) %></div>

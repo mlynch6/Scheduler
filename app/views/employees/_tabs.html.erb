@@ -1,0 +1,8 @@
+<% klass = ' class="active"'.html_safe %>
+<ul class="nav nav-tabs">
+	<% if allow? "employees", "show" %>
+		<li id="overview-tab" <%= klass if params[:controller]=='employees' %>>
+			<%= icon_link 'Overview', 'asterisk', employee_path(@employee) %>
+		</li>
+	<% end %>
+</ul>

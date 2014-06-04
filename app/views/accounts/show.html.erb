@@ -1,64 +1,28 @@
-<% provide(:title, 'Company Information') %>
-<% provide(:header_current, 'Setup') %>
-<% provide(:sidebar_current, 'Company Info') %>
-
-<div class="page-header">
-	<h1><%= yield(:title) %></h1>
-</div>
-<div class="well well-sm mash-well-link">
-	<% if allow? "accounts", "edit" %>
-		<%= edit_link "Edit", edit_account_path(@account) %>
-	<% end %>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-body">
-    <%= render 'accounts/detail' %>
-  </div>
-</div>
+<% provide(:title, 'My Account') %>
+<% provide(:header_current, 'Home') %>
+<% provide(:sidebar_current, 'Account') %>
 
 <div class="row">
-	<div class="col-md-6">
-		<div class="panel panel-info">
-		  <div class="panel-heading">
-		    <h3 class="panel-title">Addresses</h3>
-		  </div>
-		  <table class="table table-striped">
-				<% @account.addresses.each do |addr| %>
-					<tr><td>
-						<strong><%= addr.addr_type %> Address</strong>
-						&nbsp;<%= edit_link nil, [:edit, @account, addr], :id => "edit_address_#{addr.id}" %>
-						&nbsp;<%= delete_link nil, [@account, addr], :id => "delete_address_#{addr.id}" %>
-						<br />
-						<%= addr.addr %><br />
-						<%= addr.addr2+tag(:br) if addr.addr2.present? %>
-						<%= "#{addr.city}, #{addr.state} #{addr.zipcode}" %>
-					</td></tr>
-				<% end %>
-				<tr><td>
-					<%= new_link "Add Address", [:new, @account, :address] %>
-				</td></tr>
-			</table>
-		</div>
-	</div>
+  <div class="page-header col-md-11">
+  	 <h1><%= yield(:title) %></h1>
+  </div>
+  <%= render 'accounts/tools_menu' %>
+</div>
+
+<div class="row mash-show">
+	<%= render 'accounts/tabs' %>
 	
-	<div class="col-md-6">
-		<div class="panel panel-info">
-		  <div class="panel-heading">
-		    <h3 class="panel-title">Phone Numbers</h3>
-		  </div>
-		  <table class="table table-striped">
-				<% @account.phones.each do |phone| %>
-					<tr><td>
-						<strong><%= phone.phone_type %>: </strong><%= phone.phone_num %>
-						<%= edit_link nil, [:edit, @account, phone], :id => "edit_phone_#{phone.id}" %>
-						<%= delete_link nil, [@account, phone], :id => "delete_phone_#{phone.id}" %>
-					</td></tr>
-				<% end %>
-				<tr><td>
-					<%= new_link "Add Phone Number", [:new, @account, :phone] %>
-				</td></tr>
-			</table>
-		</div>
+	<div class="mash-body">
+		<%= render 'accounts/detail' %>
+    
+    <div class="row" style="margin-top:15px;">
+    	<div class="col-md-offset-1 col-md-5">
+        <%= render 'addresses/table', parent: @account, addresses: @account.addresses %>
+    	</div>
+	
+    	<div class="col-md-5">
+        <%= render 'phones/table', parent: @account, phones: @account.phones %>
+    	</div>
+    </div>
 	</div>
 </div>

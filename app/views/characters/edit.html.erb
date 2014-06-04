@@ -9,16 +9,21 @@
       <small>Edit Character</small>
     </h1>
   </div>
-  <%= render 'characters/tools_menu' %>
+  <%= render 'pieces/tools_menu' %>
 </div>
 
-<div class="row">
-  <%= form_for @character, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-  	<%= f.error_messages %>
-  	<%= render 'form', :f => f %>
+<div class="row mash-show">
+	<%= render 'pieces/tabs' %>
 	
-  	<%= f.submit_group do %>
-  		<%= f.submit_primary 'Update' %>
-  	<% end %>
-  <% end %>
+	<div class="mash-body">
+    <%= form_for @character, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+    	<%= f.error_messages %>
+    	<%= render 'form', :f => f %>
+	
+    	<%= f.submit_group do %>
+    		<%= f.submit_primary 'Update' %>
+        <%= link_to 'Cancel', piece_characters_path(@piece), class: 'btn btn-link' %>
+    	<% end %>
+    <% end %>
+  </div>
 </div>

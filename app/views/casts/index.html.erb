@@ -4,9 +4,8 @@
 
 <div class="row">
   <div class="page-header col-md-11">
-  	 <h1>
-      <%= "Casting for #{@sp.piece.name}" %>
-      <small><%= "#{@sp.season.name}" %></small>
+  	 <h1>Casting for <%= @sp.piece.name %>
+      <small><%= @sp.season.name %></small>
     </h1>
   </div>
   <%= render 'casts/tools_menu' %>
@@ -25,9 +24,12 @@
         <th>&nbsp;</th>
         <% @casts.each do |cast| %>
         <th>
-          <%= cast.name %>
+          <% if allow? "casts", "show" %>
+            <%= link_to cast.name, season_piece_cast_path(@sp, cast), :id => "view_#{cast.id}" %>
+          <% else %>
+            <%= cast.name %>
+          <% end %>
           &nbsp;
-					<%= view_link nil, season_piece_cast_path(@sp, cast), :id => "view_#{cast.id}", :title => 'View' if allow? "casts", "show" %>
 					<%= delete_link nil, cast, :id => "delete_#{cast.id}" if allow? "casts", "destroy" %>
         </th>
         <% end %>
@@ -53,7 +55,7 @@
         <% casting_by_cast = casting_per_char.group_by(&:cast_name) %>
         <% @casts.each do |cast| %>
         <% c = casting_by_cast[cast.name].first if casting_by_cast.has_key?(cast.name) %>
-        <td><%= if c && c.person then c.person.full_name else "" end  %></td>
+        <td><%= if c && c.person then c.person.full_name else '' end  %></td>
         <% end %>
       </tr>
       <% end %>

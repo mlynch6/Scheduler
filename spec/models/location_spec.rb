@@ -106,6 +106,17 @@ describe Location do
 	  it "active?" do
 	  	location.reload.active?.should be_true
 	  end
+		
+	  describe "status" do
+			it "when active is true" do
+		  	location.status.should == "Active"
+			end
+			
+			it "when active is false" do
+				location.update_attribute(:active, false)
+		  	location.reload.status.should == "Inactive"
+			end
+	  end
 	end
 	
 	context "(Uniqueness)" do

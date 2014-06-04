@@ -1,7 +1,13 @@
 <div class="dtl-form">
 	<div class="row">
 		<div class="dtl-label col-md-4"><%= Account.human_attribute_name(:current_subscription_plan) %></div>
-		<div class="dtl-text col-md-8"><%= @account.current_subscription_plan.name %> &nbsp;<%= link_to '[change]', subscriptions_edit_path %></div>
+		<div class="dtl-text col-md-8">
+      <% if allow? "subscriptions", "edit" %>
+    		<%= link_to @account.current_subscription_plan.name , subscriptions_edit_path %>
+      <% else %>
+        <%= @account.current_subscription_plan.name %>
+    	<% end %>
+    </div>
 	</div>
 	
 	<div class="row">

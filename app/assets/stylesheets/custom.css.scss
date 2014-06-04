@@ -48,3 +48,16 @@ td.mash-col-3-btn {
 	cursor: move; 
 	.ui-icon { float: left; margin: 0 4px; }
 }
+
+/*** SUB NAV ***/
+.mash-sub-navbar {
+  font-size: .9em;
+  min-height: 25px;
+  padding-left: 75px;
+  padding-right: 75px;
+  margin-bottom: 5px;
+  .navbar-nav > li > a {
+      padding: 5px 15px;
+      line-height: 15px;
+  }
+}

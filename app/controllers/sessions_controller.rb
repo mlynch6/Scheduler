@@ -1,6 +1,4 @@
 class SessionsController < ApplicationController
-	layout "public_application"
-	
 	def new
 	end
 	

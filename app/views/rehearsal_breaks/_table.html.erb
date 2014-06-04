@@ -1,26 +1,28 @@
-<div class="panel panel-info">
+<div class="panel panel-default">
 	<div class="panel-heading">
 		<h3 class="panel-title">Rehearsal Breaks</h3>
 	</div>
 	
-	<table class="table table-striped">
-		<tbody>
-			<% rehearsal_breaks.each do |brk| %>
-				<tr>
-					<td><%= brk.duration_min %> min rehearsal</td>
-					<td><%= brk.break_min %> min break</td>
-					<td class="mash-col-1-btn">
-						<% if allow? "rehearsal_breaks", "destroy" %>
-							<%= delete_button nil, brk, :class => 'btn-xs', :id => "delete_#{brk.id}" %>
-						<% end %>
-					</td>
-				</tr>
-			<% end %>
-			<% if allow? "rehearsal_breaks", "new" %>
-			<tr><td colspan="3">
-				<%= new_link 'Add Rehearsal Break', [:new, contract, :rehearsal_break] %>
-			</td></tr>
-			<% end %>
-		</tbody>
-	</table>
+  <% if rehearsal_breaks.length > 0 %>
+  	<table class="table table-striped">
+  		<tbody>
+  			<% rehearsal_breaks.each do |brk| %>
+  				<tr>
+  					<td><%= brk.duration_min %> min rehearsal</td>
+  					<td><%= brk.break_min %> min break</td>
+  					<td class="mash-col-1-btn">
+  						<% if allow? "rehearsal_breaks", "destroy" %>
+  							<%= delete_button nil, brk, :class => 'btn-xs', :id => "delete_#{brk.id}" %>
+  						<% end %>
+  					</td>
+  				</tr>
+  			<% end %>
+  		</tbody>
+  	</table>
+  <% else %>
+    <div class="panel-body">
+      <p>There are currently no breaks for this contract.</p>
+    	<p>To begin, click the <em class="text-info">Add Rehearsal Break</em> link above.</p>
+    </div>
+  <% end %>
 </div>

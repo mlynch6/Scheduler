@@ -1,34 +1,22 @@
-<div class="panel panel-primary mash-sidebar hidden-print" role="complementary">
+<% klass = ' class="active"'.html_safe %>
+<div class="panel panel-default mash-sidebar hidden-print" role="complementary">
 	<div class="panel-heading">
-		<h3 class="panel-title"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-filter')%> Filter</h3>
+		<h3 class="panel-title"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-search')%> Search</h3>
 	</div>
 	
-	<ul class="list-group">
-		<li class="list-group-item text-center">
-			<div class="btn-group btn-group-sm">
-				<% active_class = (params[:status] == "active") ? ' active' : "" %>
-				<%= link_to "Active", locations_path(status: 'active'), class: "btn btn-default#{active_class}" %>
-					
-				<% active_class = (params[:status] == "inactive") ? ' active' : "" %>
-				<%= link_to "Inactive", locations_path(status: 'inactive'), class: "btn btn-default#{active_class}" %>
-					
-				<% active_class = (!params.include?(:status) || (params[:status] != "active" && params[:status] != "inactive")) ? ' active' : "" %>
-				<%= link_to "All", locations_path, class: "btn btn-default#{active_class}" %>
-			</div>
+  <div class="panel-body">
+    <h4>Status</h4>
+    <ul class="list-unstyled mash-filter">
+		  <li<%= klass if params[:status] == "active" %>>
+        <%= link_to "Active", locations_path(status: 'active') %>
+      </li>
+			<li<%= klass if params[:status] == "inactive" %>>
+        <%= link_to "Inactive", locations_path(status: 'inactive') %>
+      </li>
+			<li<%= klass if !params.include?(:status) || (params[:status] != "active" && params[:status] != "inactive") %>>
+        <%= link_to "All", locations_path %>
+      </li>
 		</li>
 	</ul>
-</div>
-
-<div class="panel panel-primary mash-sidebar hidden-print" role="complementary">
-	<div class="panel-heading">
-		<h3 class="panel-title">Actions</h3>
-	</div>
-
-	<ul class="list-group">
-		<li class="list-group-item">
-			<% if allow? "locations", "new" %>
-				<%= new_link "Add Location", new_location_path %>
-			<% end %>
-		</li>
-	</ul>
+  </div>
 </div>

@@ -17,6 +17,7 @@ h1, h2, h3 {
 	margin: 10px 0 10px;
 	padding-bottom: 0px;
 }
+.nav-tabs > li > a { border: 1px solid #DDDDDD; }
 
 thead { background: $panel-default-border; }
 .pagination { margin: 0px; padding-left: 20px;}
@@ -24,6 +25,7 @@ thead { background: $panel-default-border; }
 label:after { content: " :"; }
 .radio label:after { content: ""; }
 .checkbox label:after, label.checkbox-inline:after { content: none }
+.radio label:after, label.radio-inline:after { content: none }
 .required:before { color: red; font-size: 1.2em; content: "* "; }
 
 /*** SIGN IN ***/
@@ -49,7 +51,7 @@ label:after { content: " :"; }
 
 /*** FOOTER ***/
 footer {
-  margin-top: 45px;
+  margin-top: 30px;
   padding-top: 5px;
   border-top: 1px solid $input-border;
   color: $gray-light;
@@ -71,48 +73,35 @@ footer {
 
 .mash-sidebar {
 	font-size: .9em;
-	margin-top: 20px;
 	.panel-heading {
 		padding-top: 8px; padding-bottom: 8px;
 		h3 { font-size: ($font-size-h3 * 0.75); }
 		}
-	ul > li { padding-top: 5px; padding-bottom: 5px; }
-	ul > li:hover { background: #F4F8FA; }
-	ul > li.active {
-		background: $panel-info-heading-bg;
-		color: $panel-info-text;
-		font-weight: bold;
-	}
+  h4 {
+    font-size: ($font-size-h4 * 0.85);
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 2px 0;
+  }
+  .mash-filter {
+  	a { color: $gray; }
+  	li.active a { font-weight: bold; color: $brand-primary;}
+  }
 }
 
-.mash-well-link {
-	background: $state-warning-bg;
-	border-color: $state-warning-border;
-	font-size: .9em;
-	padding: 8px;
-	margin-top: -12px;
-	margin-bottom: 10px;
-	a { margin: 0 5px;}
-}
-
-.mash-show-tab {
+.mash-show {
 	.nav-tabs {
-		border-bottom: 4px solid $navbar-default-link-active-bg;
-		li.active a {
-			background: none repeat scroll 0 0 $navbar-default-link-active-bg;
-			font-weight: bold;
-		}
+    li a { background: none repeat scroll 0 0 $navbar-default-link-active-bg; }
+		li.active a { 
+      background: none repeat scroll 0 0 $body-bg;
+      font-weight: bold; }
 	}
-	.mash-tab-body {
-		padding: 10px;
-		padding-bottom: 20px;
-	}
-	.mash-tab-actions {
-		@extend .text-right;
-		font-size: 0.9em;
-		padding: 10px;
-		border-top: 1px solid $nav-tabs-border-color;
-		.btn { margin-left: 5px; margin-right: 5px;}
+	.mash-body {
+    border-right: 1px solid $navbar-default-link-active-bg;
+    border-left: 1px solid $navbar-default-link-active-bg;
+    border-bottom: 1px solid $navbar-default-link-active-bg;
+		padding: 10px 10px 20px 10px;
+    min-height: 200px;
 	}
 }
 

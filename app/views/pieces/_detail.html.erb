@@ -1,7 +1,13 @@
 <div class="dtl-form">
 	<div class="row">
 		<div class="dtl-label col-md-3"><%= Piece.human_attribute_name(:name) %></div>
-		<div class="dtl-text col-md-9"><%= @piece.name %></div>
+		<div class="dtl-text col-md-9">
+  		<% if allow? "pieces", "edit" %>
+  			<%= link_to @piece.name, edit_piece_path(@piece) %>
+      <% else %>
+        <%= @piece.name %>
+  		<% end %>
+    </div>
 	</div>
 	
 	<div class="row">

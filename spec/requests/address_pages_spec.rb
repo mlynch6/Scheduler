@@ -5,58 +5,48 @@ describe "Address Pages:" do
 	
 	context "#new" do
 		context "for Account" do
-			it "has correct title" do
+			before do
 				log_in
-				click_link "Setup"
-				click_link "Company Information"
+				click_link 'Home'
+				click_link 'My Account'
 		  	click_link 'Add Address'
-		
-				has_title?('Add Address').should be_true
-				should have_selector('h1', text: 'Add Address')
+			end
+			
+			it "has correct title" do
+				should have_title 'Add Address'
+				should have_selector 'h1', text: 'Address'
+				should have_selector 'h1 small', text: 'Add'
 			end
 			
 			it "has correct Navigation" do
-				log_in
-				visit new_account_address_path(current_account)
-		
-				should have_selector('li.active', text: 'Setup')
-				should have_selector('li.active', text: 'Company Information')
+				should have_selector 'li.active', text: 'Home'
+				should have_selector 'li.active', text: 'My Account'
 			end
 			
 			it "has correct fields on form" do
-				log_in
-				visit new_account_address_path(current_account)
-				
-		  	has_select?('Address Type').should be_true
-		    has_field?('Address').should be_true
-		    has_field?('Address 2').should be_true
-		    has_field?('City').should be_true
-		    has_select?('State').should be_true
-		    has_field?('Zip Code').should be_true
+		  	should have_select 'Address Type'
+		    should have_field 'Address'
+		    should have_field 'Address 2'
+		    should have_field 'City'
+		    should have_select 'State'
+		    should have_field 'Zip Code'
+				should have_link 'Cancel', href: account_path(current_account)
 			end
 			
 			context "with error" do
 				it "shows error message" do
-					log_in
-					visit new_account_address_path(current_account)
 			  	click_button 'Create'
 			
-					should have_selector('div.alert-danger')
+					should have_selector 'div.alert-danger'
 				end
 				
 				it "doesn't create Address" do
-					log_in
-					visit new_account_address_path(current_account)
-			
 					expect { click_button 'Create' }.not_to change(Address, :count)
 				end
 			end
 		
 			context "with valid info" do
 				it "creates new Address" do
-					log_in
-					visit new_account_address_path(current_account)
-					
 			  	new_addr = Faker::Address.street_address
 			  	new_addr2 = Faker::Address.street_address
 			  	new_city = Faker::Address.city
@@ -70,78 +60,64 @@ describe "Address Pages:" do
 					fill_in "Zip Code", with: new_zip
 					click_button 'Create'
 			
-					should have_selector('div.alert-success')
-					has_title?('Company Information').should be_true
+					should have_selector 'div.alert-success'
+					should have_title 'Account'
 					
-					should have_content("Work Address")
-					should have_content(new_addr)
-					should have_content(new_addr2)
-					should have_content(new_city)
-					should have_content("AL")
-					should have_content(new_zip)
+					should have_content "Work Address"
+					should have_content new_addr
+					should have_content new_addr2
+					should have_content new_city
+					should have_content "AL"
+					should have_content new_zip
 				end
 			end
 		end
 		
 		context "for Employee" do
-			it "has correct title" do
+			before do
 				log_in
-				click_link "People"
-				click_link "Employees"
-		  	click_link "View"
+				@employee = FactoryGirl.create(:employee, account: current_account)
+				click_link 'People'
+				click_link 'Employees'
+				click_link @employee.name
 		  	click_link 'Add Address'
-		
-				has_title?('Add Address').should be_true
-				should have_selector('h1', text: 'Add Address')
+			end
+			
+			it "has correct title" do
+				should have_title 'Add Address'
+				should have_selector 'h1', text: 'Address'
+				should have_selector 'h1 small', text: 'Add'
 			end
 			
 			it "has correct Navigation" do
-				log_in
-				employee = FactoryGirl.create(:employee, account: current_account)
-				visit new_employee_address_path(employee)
-		
-				should have_selector('li.active', text: 'People')
-				should have_selector('li.active', text: 'Employees')
+				should have_selector 'li.active', text: 'People'
+				should have_selector 'li.active', text: 'Employees'
 			end
 			
 			it "has correct fields on form" do
-				log_in
-				employee = FactoryGirl.create(:employee, account: current_account)
-				visit new_employee_address_path(employee)
-					
-		  	has_select?('Address Type').should be_true
-		    has_field?('Address').should be_true
-		    has_field?('Address 2').should be_true
-		    has_field?('City').should be_true
-		    has_select?('State').should be_true
-		    has_field?('Zip Code').should be_true
+		  	should have_select 'Address Type'
+		    should have_field 'Address'
+		    should have_field 'Address 2'
+		    should have_field 'City'
+		    should have_select 'State'
+		    should have_field 'Zip Code'
+				should have_link 'Cancel', href: employee_path(@employee)
 			end
 			
 			context "with error" do
 				it "shows error message" do
-					log_in
-					employee = FactoryGirl.create(:employee, account: current_account)
-					visit new_employee_address_path(employee)
 			  	click_button 'Create'
 			
-					should have_selector('div.alert-danger')
+					should have_selector 'div.alert-danger'
 				end
 				
 				it "doesn't create Address" do
-					log_in
-					employee = FactoryGirl.create(:employee, account: current_account)
-					visit new_employee_address_path(employee)
-			
 					expect { click_button 'Create' }.not_to change(Address, :count)
 				end
 			end
 		
 			context "with valid info" do
 				it "creates new Address" do
-					log_in
-					employee = FactoryGirl.create(:employee, account: current_account)
-					visit new_employee_address_path(employee)
-					
 			  	new_addr = Faker::Address.street_address
 			  	new_addr2 = Faker::Address.street_address
 			  	new_city = Faker::Address.city
@@ -155,15 +131,15 @@ describe "Address Pages:" do
 					fill_in "Zip Code", with: new_zip
 					click_button 'Create'
 			
-					should have_selector('div.alert-success')
-					has_title?('Employee').should be_true
+					should have_selector 'div.alert-success'
+					should have_title @employee.full_name
 					
-					should have_content("Work Address")
-					should have_content(new_addr)
-					should have_content(new_addr2)
-					should have_content(new_city)
-					should have_content("WV")
-					should have_content(new_zip)
+					should have_content "Work Address"
+					should have_content new_addr
+					should have_content new_addr2
+					should have_content new_city
+					should have_content "WV"
+					should have_content new_zip
 				end
 			end
 		end
@@ -171,56 +147,43 @@ describe "Address Pages:" do
 
 	context "#edit" do
 		context "for Account" do
-			it "has correct title" do
+			before do
 				log_in
-				address = FactoryGirl.create(:address, addressable: current_account)
-				
-				click_link "Setup"
-				click_link "Company Information"
-		  	click_link "edit_address_#{address.id}"
-		  	
-		  	has_title?('Update Address').should be_true
-				should have_selector('h1', text: 'Update Address')
+				@address = FactoryGirl.create(:address, addressable: current_account)
+				click_link 'Home'
+				click_link 'My Account'
+		  	click_link "edit_address_#{@address.id}"
+			end
+			
+			it "has correct title" do
+		  	should have_title 'Edit Address'
+				should have_selector 'h1', text: 'Address'
+				should have_selector 'h1 small', text: 'Edit'
 			end
 			
 			it "has correct Navigation" do
-				log_in
-				address = FactoryGirl.create(:address, addressable: current_account)
-				visit edit_account_address_path(current_account, address)
-		
-				should have_selector('li.active', text: 'Setup')
-				should have_selector('li.active', text: 'Company Information')
+				should have_selector 'li.active', text: 'Home'
+				should have_selector 'li.active', text: 'My Account'
 			end
 			
 			it "has correct fields on form" do
-				log_in
-				address = FactoryGirl.create(:address, addressable: current_account)
-				visit edit_account_address_path(current_account, address)
-					
-		  	has_select?('Address Type').should be_true
-		    has_field?('Address').should be_true
-		    has_field?('Address 2').should be_true
-		    has_field?('City').should be_true
-		    has_select?('State').should be_true
-		    has_field?('Zip Code').should be_true
+		  	should have_select 'Address Type'
+		    should have_field 'Address'
+		    should have_field 'Address 2'
+		    should have_field 'City'
+		    should have_select 'State'
+		    should have_field 'Zip Code'
+				should have_link 'Cancel', href: account_path(current_account)
 			end
 			
 			it "with error shows error message" do
-				log_in
-				address = FactoryGirl.create(:address, addressable: current_account)
-				visit edit_account_address_path(current_account, address)
-				
 				fill_in "Address", with: ""
 		  	click_button 'Update'
 		
-				should have_selector('div.alert-danger')
+				should have_selector'div.alert-danger'
 			end
 		
 			it "record with valid info saves address" do
-				log_in
-				address = FactoryGirl.create(:address, addressable: current_account)
-				visit edit_account_address_path(current_account, address)
-				
 		  	new_addr = Faker::Address.street_address
 		  	new_addr2 = Faker::Address.street_address
 		  	new_city = Faker::Address.city
@@ -234,75 +197,58 @@ describe "Address Pages:" do
 				fill_in "Zip Code", with: new_zip
 				click_button 'Update'
 		
-				should have_selector('div.alert-success')
-				has_title?('Company Information').should be_true
+				should have_selector 'div.alert-success'
+				should have_title 'Account'
 				
-				should have_content("Work Address")
-				should have_content(new_addr)
-				should have_content(new_addr2)
-				should have_content(new_city)
-				should have_content("AL")
-				should have_content(new_zip)
+				should have_content "Work Address"
+				should have_content new_addr
+				should have_content new_addr2
+				should have_content new_city
+				should have_content "AL"
+				should have_content new_zip
 			end
 		end
 		
 		context "for Employee" do
-			it "has correct title" do
+			before do
 				log_in
-				employee = FactoryGirl.create(:employee, account: current_account)
-				address = FactoryGirl.create(:address_employee, addressable: employee)
-				
-				click_link "People"
-				click_link "Employees"
-				click_link "show_#{employee.id}"
-		  	click_link "edit_address_#{address.id}"
-		  	
-		  	has_title?('Update Address').should be_true
-				should have_selector('h1', text: 'Update Address')
+				@employee = FactoryGirl.create(:employee, account: current_account)
+				@address = FactoryGirl.create(:address_employee, addressable: @employee)
+				click_link 'People'
+				click_link 'Employees'
+				click_link @employee.name
+		  	click_link "edit_address_#{@address.id}"
+			end
+			
+			it "has correct title" do
+		  	should have_title 'Edit Address'
+				should have_selector 'h1', text: 'Address'
+				should have_selector 'h1 small', text: 'Edit'
 			end
 			
 			it "has correct Navigation" do
-				log_in
-				employee = FactoryGirl.create(:employee, account: current_account)
-				address = FactoryGirl.create(:address_employee, addressable: employee)
-				visit edit_employee_address_path(employee, address)
-		
-				should have_selector('li.active', text: 'People')
-				should have_selector('li.active', text: 'Employees')
+				should have_selector 'li.active', text: 'People'
+				should have_selector 'li.active', text: 'Employees'
 			end
 			
 			it "has correct fields on form" do
-				log_in
-				employee = FactoryGirl.create(:employee, account: current_account)
-				address = FactoryGirl.create(:address_employee, addressable: employee)
-				visit edit_employee_address_path(employee, address)
-					
-		  	has_select?('Address Type').should be_true
-		    has_field?('Address').should be_true
-		    has_field?('Address 2').should be_true
-		    has_field?('City').should be_true
-		    has_select?('State').should be_true
-		    has_field?('Zip Code').should be_true
+		  	should have_select 'Address Type'
+		    should have_field 'Address'
+		    should have_field 'Address 2'
+		    should have_field 'City'
+		    should have_select 'State'
+		    should have_field 'Zip Code'
+				should have_link 'Cancel', href: employee_path(@employee)
 			end
 			
 			it "with error shows error message" do
-				log_in
-				employee = FactoryGirl.create(:employee, account: current_account)
-				address = FactoryGirl.create(:address_employee, addressable: employee)
-				visit edit_employee_address_path(employee, address)
-				
 				fill_in "Address", with: ""
 		  	click_button 'Update'
 		
-				should have_selector('div.alert-danger')
+				should have_selector 'div.alert-danger'
 			end
 		
 			it "record with valid info saves address" do
-				log_in
-				employee = FactoryGirl.create(:employee, account: current_account)
-				address = FactoryGirl.create(:address_employee, addressable: employee)
-				visit edit_employee_address_path(employee, address)
-				
 		  	new_addr = Faker::Address.street_address
 		  	new_addr2 = Faker::Address.street_address
 		  	new_city = Faker::Address.city
@@ -316,56 +262,63 @@ describe "Address Pages:" do
 				fill_in "Zip Code", with: new_zip
 				click_button 'Update'
 		
-				should have_selector('div.alert-success')
-				has_title?('Employee').should be_true
+				should have_selector 'div.alert-success'
+				should have_title @employee.full_name
 				
-				should have_content("Work Address")
-				should have_content(new_addr)
-				should have_content(new_addr2)
-				should have_content(new_city)
-				should have_content("AL")
-				should have_content(new_zip)
+				should have_content "Work Address"
+				should have_content new_addr
+				should have_content new_addr2
+				should have_content new_city
+				should have_content "AL"
+				should have_content new_zip
 			end
 		end
 	end
 	
 	context "#destroy" do
 		context "for Account" do
-			it "deletes the address record" do
+			before do
 				log_in
-				address = FactoryGirl.create(:address, addressable: current_account)
-				visit account_path(current_account)
-				click_link "delete_address_#{address.id}"
+				@address = FactoryGirl.create(:address, addressable: current_account)
+				click_link 'Home'
+				click_link 'My Account'
+				click_link "delete_address_#{@address.id}"
+			end
+			
+			it "deletes the address record" do
+				should have_selector 'div.alert-success'
+				should have_title 'My Account'
 				
-				should have_selector('div.alert-success')
-				has_title?('Company Information').should be_true
-				
-				should_not have_content("#{address.addr_type} Address")
-				should_not have_content(address.addr)
-				should_not have_content(address.addr2) if address.addr2.present?
-				should_not have_content(address.city)
-				should_not have_content(address.state)
-				should_not have_content(address.zipcode)
+				should_not have_content "#{@address.addr_type} Address"
+				should_not have_content @address.addr
+				should_not have_content @address.addr2 if @address.addr2.present?
+				should_not have_content @address.city
+				should_not have_content @address.state
+				should_not have_content @address.zipcode
 			end
 		end
 		
 		context "for Employee" do
-			it "deletes the address record" do
+			before do
 				log_in
-				employee = FactoryGirl.create(:employee, account: current_account)
-				address = FactoryGirl.create(:address_employee, addressable: employee)
-				visit employee_path(employee)
-				click_link "delete_address_#{address.id}"
+				@employee = FactoryGirl.create(:employee, account: current_account)
+				@address = FactoryGirl.create(:address_employee, addressable: @employee)
+				click_link 'People'
+				click_link 'Employees'
+				click_link @employee.name
+				click_link "delete_address_#{@address.id}"
+			end
+			
+			it "deletes the address record" do
+				should have_selector 'div.alert-success'
+				should have_title @employee.full_name
 				
-				should have_selector('div.alert-success')
-				has_title?('Employee').should be_true
-				
-				should_not have_content("#{address.addr_type} Address")
-				should_not have_content(address.addr)
-				should_not have_content(address.addr2) if address.addr2.present?
-				should_not have_content(address.city)
-				should_not have_content(address.state)
-				should_not have_content(address.zipcode)
+				should_not have_content "#{@address.addr_type} Address"
+				should_not have_content @address.addr
+				should_not have_content @address.addr2 if @address.addr2.present?
+				should_not have_content @address.city
+				should_not have_content @address.state
+				should_not have_content @address.zipcode
 			end
 		end
 	end

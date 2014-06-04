@@ -1,4 +1,3 @@
-<%= f.static_control :piece_id do @piece.name end %>
 <%= f.text_field :name %>
-<%= f.text_field :track, :class => 'input-small' %>
-<%= f.select :character_ids, @characters, {}, { :multiple => true, :class => 'input-xxlarge' } %>
+<%= f.text_field :track, field_size: 'col-md-1' %>
+<%= f.select :character_ids, @characters, {}, { :multiple => true, :class => 'chosen-select input-xxlarge' } %>

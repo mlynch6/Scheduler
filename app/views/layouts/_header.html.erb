@@ -17,3 +17,7 @@
 	<% end %>
 	</div>
 </nav>
+
+<% if yield(:header_current).present? && lookup_context.exists?(yield(:header_current).downcase, ["layouts/sidebars"], true) %>
+   <%= render "layouts/sidebars/#{yield(:header_current).downcase}" %>
+<% end %>

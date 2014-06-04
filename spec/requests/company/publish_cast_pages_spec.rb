@@ -12,7 +12,8 @@ describe "Publish Cast Pages:" do
 		
 		click_link 'Setup'
   	click_link 'Seasons'
-		click_link 'View'
+		click_link @season.name
+		click_link 'pieces-tab-link'
 		click_link 'View Casts'
 		click_link 'Publish Casting'
 	end

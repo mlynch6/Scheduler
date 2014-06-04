@@ -46,6 +46,7 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
+    addressable (2.3.6)
     afm (0.2.0)
     annotate (2.5.0)
       rake
@@ -136,6 +137,8 @@ GEM
       railties (>= 3.1.0)
     json (1.8.0)
     kgio (2.8.1)
+    launchy (2.4.2)
+      addressable (~> 2.3)
     less (2.4.0)
       commonjs (~> 0.2.7)
     less-rails (2.4.2)
@@ -293,6 +296,7 @@ DEPENDENCIES
   jbuilder
   jquery-rails
   jquery-ui-rails
+  launchy
   less-rails
   pg (~> 0.12.2)
   populator (= 1.0.0)

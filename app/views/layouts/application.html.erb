@@ -15,16 +15,7 @@
 	<div class="container">
 		<%= render 'layouts/flash', flash: flash %>
 		
-		<div class="row">
-			<div class="col-md-9">
-				<%= yield %>
-			</div>
-	
-			<div class="col-md-3">
-				<%= render "layouts/sidebars/#{yield(:header_current).downcase}" if yield(:header_current).present?%>
-				<%= render yield(:sidebar_extra) if yield(:sidebar_extra).present? %>
-			</div>
-		</div>
+		<div class="row"><%= yield %></div>
 		
 		<%= render 'layouts/footer' %>
 		

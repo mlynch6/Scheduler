@@ -31,6 +31,10 @@ class Location < ActiveRecord::Base
 		self.update_attribute(:active, false)
 	end
 	
+	def status
+		self.active? ? "Active" : "Inactive"
+	end
+	
 	def self.search(query)
 		#Default show all
 		locations = Location.order('name ASC')

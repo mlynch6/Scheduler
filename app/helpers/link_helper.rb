@@ -6,7 +6,7 @@ module LinkHelper
 
 	def new_link(name, *args)
 		args << default_title('Add', *args)
-		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus mash-green")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus-sign mash-green")
 		create_link(name, icon, *args)
 	end
 	
@@ -19,7 +19,7 @@ module LinkHelper
 		args << default_title('Delete', *args)
 	  args << add_delete_method('Delete?', *args)
 	  
-		icon = content_tag(:span, nil, class: "glyphicon glyphicon-trash mash-red")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-minus-sign mash-red")
 		create_link(name, icon, *args)
 	end
 	

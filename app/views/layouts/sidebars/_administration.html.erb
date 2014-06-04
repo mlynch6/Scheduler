@@ -1,19 +1,16 @@
-<div class="panel panel-primary mash-sidebar hidden-print" role="complementary">
-	<div class="panel-heading">
-		<h3 class="panel-title"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-cog')%> Administration</h3>
-	</div>
-	
-	<ul class="list-group">
+<% klass = ' class="active"'.html_safe %>
+<nav class="navbar navbar-default mash-sub-navbar" role="navigation">
+  <ul class="nav navbar-nav">
 		<% if allow? "admin_accounts", "index" %>
-			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Accounts" %>">
-				<%= link_to "Accounts", admin_accounts_path %>
-			</li>
+			<li<%= klass if yield(:sidebar_current) == "Accounts" %>>
+        <%= link_to "Accounts", admin_accounts_path %>
+      </li>
 		<% end %>
-		
+    
 		<% if allow? "subscription_plans", "index" %>
-			<li class="list-group-item<%= ' active' if yield(:sidebar_current) == "Subscription Plans" %>">
-				<%= link_to "Subscription Plans", admin_subscription_plans_path %>
-			</li>
+			<li<%= klass if yield(:sidebar_current) == "Subscription Plans" %>>
+        <%= link_to "Subscription Plans", admin_subscription_plans_path %>
+      </li>
 		<% end %>
-	</ul>
-</div>
+  </ul>
+</nav>

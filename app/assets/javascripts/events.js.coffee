@@ -15,12 +15,6 @@ hideRepeatingFields = () ->
 
 jQuery ->
 	# NEW / UPDATE FORMS
-	$('#event_start_date').datepicker
-		dateFormat: 'mm/dd/yy'
-	$('#event_end_date').datepicker
-		dateFormat: 'mm/dd/yy'
-	$('#event_piece_id').chosen()
-	$('#event_employee_ids').chosen()
 	hideEventFields()
 	hideRepeatingFields()
 	$('.mash-no-confirm').removeAttr('data-confirm')
@@ -56,7 +50,7 @@ jQuery ->
 		header:
 			left: 			'prev today next'
 			center: 		'title'
-			right: 		'agendaDay agendaWeek month'
+			right: 		'agendaDay agendaWeek'
 		buttonText:
 			today: 		'Today'
 			month: 		'Month'

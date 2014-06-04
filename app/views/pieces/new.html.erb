@@ -2,15 +2,24 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Pieces') %>
 
-<div class="page-header">
-	<h1><%= yield(:title) %></h1>
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1>
+      Pieces
+      <small>Add</small>
+    </h1>
+  </div>
+  <%= render 'pieces/tools_menu' %>
 </div>
 
-<%= form_for @piece, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-	<%= f.error_messages %>
-	<%= render 'form', :f => f %>
+<div class="row">
+  <%= form_for @piece, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+  	<%= f.error_messages %>
+  	<%= render 'form', :f => f %>
 	
-	<%= f.submit_group do %>
-		<%= f.submit_primary 'Create' %>
-	<% end %>
-<% end %>
+  	<%= f.submit_group do %>
+  		<%= f.submit_primary 'Create' %>
+      <%= link_to 'Cancel', pieces_path, class: 'btn btn-link' %>
+  	<% end %>
+  <% end %>
+</div>

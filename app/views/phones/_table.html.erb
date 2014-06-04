@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Phone Numbers</h3>
+  </div>
+<% if phones.length > 0 %>
+  <table class="table table-striped">
+  	<% phones.each do |phone| %>
+  		<tr><td>
+  			<strong><%= phone.phone_type %>: </strong><%= phone.phone_num %>
+  			<%= edit_link nil, [:edit, parent, phone], :id => "edit_phone_#{phone.id}" %>
+  			<%= delete_link nil, [parent, phone], :id => "delete_phone_#{phone.id}" %>
+  		</td></tr>
+  	<% end %>
+  </table>
+<% else %>
+  <div class="panel-body">
+	  <p>To begin, click the <em class="text-info">Add Phone Number</em> link above.</p>
+  </div>
+<% end %>
+</div>

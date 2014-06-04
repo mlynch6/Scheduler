@@ -4,35 +4,30 @@ describe "Admin Account Pages:" do
 	subject { page }
 
 	context "#index" do
-		it "has correct title" do
+		before do
 			log_in
 			click_link "Administration"
 			click_link "Accounts"
-
+		end
+		
+		it "has correct title" do
 			should have_title 'Accounts'
 			should have_selector 'h1', text: 'Accounts'
 		end
 
 		it "has correct Navigation" do
-			log_in
-			visit admin_accounts_path
-
 			should have_selector 'li.active', text: 'Administration'
 			should have_selector 'li.active', text: 'Accounts'
 		end
 
 		it "without records" do
 			pending "Will always have at least 1 account (the one you are logged in under)"
-			log_in
-			visit admin_accounts_path
-
 			should have_selector 'p', text: 'No accounts found'
 			should_not have_selector 'td'
 			should_not have_selector 'div.pagination'
 		end
 
 		it "lists records" do
-			log_in
 			4.times { FactoryGirl.create(:account) }
 			visit admin_accounts_path(per_page: 3)
 
@@ -51,7 +46,7 @@ describe "Admin Account Pages:" do
 				should have_selector 'td', text: account.stripe_customer_token
 				should have_selector 'td', text: account.current_subscription_plan.name
 
-				should have_link 'Edit', href: edit_admin_account_path(account)
+				should have_link account.name, href: edit_admin_account_path(account)
 				should have_link 'Delete', href: admin_account_path(account)
 			end
 		end
@@ -61,38 +56,32 @@ describe "Admin Account Pages:" do
 		before do
 			log_in
 			@account = FactoryGirl.create(:account)
-		end
-		
-		it "has correct title" do
-			log_in
 			click_link 'Administration'
 			click_link 'Accounts'
 			click_link "edit_#{@account.id}"
-	
+		end
+		
+		it "has correct title" do
 			should have_title 'Edit Account'
-			should have_selector 'h1', text: 'Edit Account'
+			should have_selector 'h1', text: 'Accounts'
+			should have_selector 'h1 small', text: 'Edit'
 		end
 	
 		it "has correct Navigation" do
-			visit edit_admin_account_path(@account)
-	
 			should have_selector 'li.active', text: 'Administration'
 			should have_selector 'li.active', text: 'Accounts'
 		end
 		
 		it "has correct fields on form" do
-			visit edit_admin_account_path(@account)
-		
 			should have_field 'Company'
 			should have_select 'Time Zone'
 			should have_select 'Status'
 			should have_field 'Customer Id'
 			should have_select 'Subscription'
+			should have_link 'Cancel', href: admin_accounts_path
 		end
 	
 		it "record with error" do
-			visit edit_admin_account_path(current_account)
-	
 			fill_in 'Company', with: ''
 			click_button 'Update'
 	
@@ -100,8 +89,6 @@ describe "Admin Account Pages:" do
 		end
 	
 		it "record with valid info saves account" do
-			visit edit_admin_account_path(@account)
-	
 			fill_in 'Customer Id', with: "New Id"
 			click_button 'Update'
 	

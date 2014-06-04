@@ -1,11 +1,6 @@
 <%= f.text_field :name %>
 <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, { :class => 'input-xlarge' } %>
 
-<div class="alert alert-info">
-	<strong>Don't Forget!</strong>
-	Update Stripe if you make changes to the Status, Customer Id, or Subscription.
-</div>
-
 <%= f.select :status, Account::STATUS_VALUES %>
 <%= f.text_field :stripe_customer_token %>
 <%= f.select :current_subscription_plan_id, @plans %>

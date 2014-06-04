@@ -29,16 +29,6 @@ describe ApplicationHelper do
 		end
 	end
 	
-	context 'active_inactive' do
-		it "when true displays Active" do
-			active_inactive(true).should == 'Active'
-		end
-		
-		it "when false displays Inactive" do
-			active_inactive(false).should == 'Inactive'
-		end
-	end
-	
 	context 'min_to_formatted_time' do
 		it "formats am time" do
 			min_to_formatted_time(60).should == "1:00 AM"
