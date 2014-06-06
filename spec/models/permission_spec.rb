@@ -34,7 +34,7 @@ shared_examples "an employee" do
 	it_behaves_like "a guest"
 	
 	context "static pages" do
-		it { should allow(:static_pages, :dashboard) }
+		it { should allow(:dashboards, :index) }
 	end
 	
 	context "events" do
@@ -307,7 +307,7 @@ describe Permission do
 		it_behaves_like "a guest"
 		it_behaves_like "a NON-administrator"
 		
-		it { should_not allow(:static_pages, :dashboard) }
+		it { should_not allow(:dashboards, :index) }
 		it { should_not allow(:employees, :index) }
 		it { should_not allow(:locations, :index) }
 		

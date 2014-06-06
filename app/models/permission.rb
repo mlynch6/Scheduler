@@ -5,8 +5,7 @@ class Permission
 		allow :accounts, [:new, :create]
 		
 		if user
-			allow :static_pages, [:dashboard]
-			allow [:locations, :pieces, :scenes, :characters, :employees, :events], [:index]
+			allow [:dashboards, :locations, :pieces, :scenes, :characters, :employees, :events], [:index]
 			allow [:pieces, :events], [:show]
 			
 			if user.role == "Administrator"

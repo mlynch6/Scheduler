@@ -3,6 +3,7 @@ Scheduler::Application.routes.draw do
 	match 'login' => 'sessions#new'
 	match 'logout' =>'sessions#destroy'
 	match 'signup' => 'accounts#new'
+	get 'dashboard', to: 'dashboards#index'
 	
 	resources :accounts do
 		resources :addresses, 			:except => [:index, :show]
@@ -51,7 +52,6 @@ Scheduler::Application.routes.draw do
   resources :rehearsals,				:except => [:index, :show], :controller => :events, :event_type => 'Rehearsal'
   get 'events/:year/:month/:day', to: 'events#index'
 	
-	match 'dashboard' => 'static_pages#dashboard'
 	match 'features' => 'static_pages#features'
 	match 'pricing' => 'static_pages#pricing'
 	match 'contact' => 'static_pages#contact'

@@ -41,6 +41,7 @@ Spork.prefork do
 	  
 	  # To use DatabaseCleaner gem
 		config.before(:suite) do
+			FactoryGirl.reload
 			DatabaseCleaner.clean_with(:truncation)
 		end
 		
@@ -76,6 +77,8 @@ Spork.prefork do
 	  config.include AuthMacros
 	  config.include Utilities
 	  config.include ChosenSelect
+		
+		Capybara.server_port = 6543
 	end
 
 end

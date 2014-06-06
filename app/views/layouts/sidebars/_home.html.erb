@@ -1,7 +1,11 @@
 <% klass = ' class="active"'.html_safe %>
 <nav class="navbar navbar-default mash-sub-navbar" role="navigation">
   <ul class="nav navbar-nav">
-    <li><a href="#">My Schedule</a></li>
+    <% if allow? "dashboards", "index" %>
+      <li<%= klass if yield(:sidebar_current) == "Dashboard" %>>
+        <%= icon_link 'Dashboard', 'dashboard', dashboard_path %>
+      </li>
+    <% end %>
     <li><a href="#">Current Season</a></li>
     
 		<% if allow? "accounts", "show" %>

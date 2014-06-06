@@ -1,5 +1,5 @@
 class StaticPagesController < ApplicationController
-  def home
+	def home
   end
   
   def features
@@ -10,7 +10,10 @@ class StaticPagesController < ApplicationController
   
   def contact
   end
-  
-  def dashboard
-  end
+	
+private
+	
+	def use_https?
+		false
+	end
 end
