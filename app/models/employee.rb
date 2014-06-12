@@ -51,6 +51,10 @@ class Employee < ActiveRecord::Base
 		"#{first_name} #{last_name}"
 	end
 	
+	def status
+		self.active? ? "Active" : "Inactive"
+	end
+	
 	def activate
 		self.update_attribute(:active, true)
 	end

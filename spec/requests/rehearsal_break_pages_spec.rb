@@ -9,7 +9,6 @@ describe "Rehearsal Break Pages:" do
 							agma_contract: current_account.agma_contract,
 							duration_min: 60,
 							break_min: 5)
-		
 		click_link "Setup"
 		click_link "Contract Settings"
 		click_link "Rehearsal Week"
@@ -22,24 +21,26 @@ describe "Rehearsal Break Pages:" do
 		
 		it "has correct title" do
 			should have_title 'Contract Settings | Add Rehearsal Break'
-			should have_selector 'h1', text: 'Add Rehearsal Break'
+			should have_selector 'h1', text: 'Contract Settings'
+			should have_selector 'h1 small', text: 'Add Rehearsal Break'
 		end
 
 		it "has correct Navigation" do
-			should have_selector('li.active', text: 'Setup')
-			should have_selector('li.active', text: 'Contract Settings')
+			should have_selector 'li.active', text: 'Setup'
+			should have_selector 'li.active', text: 'Contract Settings'
 		end
 
 		it "has correct fields on form" do
 			should have_field 'Rehearsal Length'
 			should have_field 'Break Length'
+			should have_link 'Cancel', href: agma_contract_path(current_account.agma_contract)
 		end
 
 		context "with error" do
 			it "shows error message" do
 				click_button 'Create'
 
-				should have_selector('div.alert-danger')
+				should have_selector 'div.alert-danger'
 			end
 
 			it "doesn't create record" do

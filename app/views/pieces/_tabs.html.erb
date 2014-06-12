@@ -1,17 +1,18 @@
+<% klass = ' class="active"'.html_safe %>
 <ul class="nav nav-tabs">
 	<% if allow? "pieces", "show" %>
-		<li<%= " class=""active""" if params[:controller]=='pieces' && params[:action]=='show' %>>
+		<li id="overview-tab" <%= klass if params[:controller]=='pieces' %>>
 			<%= icon_link 'Overview', 'asterisk', piece_path(@piece) %>
 		</li>
 	<% end %>
-	<% if allow? "scenes", "index" %>
-		<li<%= " class=""active""" if params[:controller]=='scenes' && params[:action]=='index' %>>
-			<%= icon_link 'Scenes', 'film', piece_scenes_path(@piece) %>
+	<% if allow? "pieces", "show" %>
+		<li id="characters-tab" <%= klass if params[:controller]=='characters' %>>
+			<%= icon_link 'Characters', 'user', piece_characters_path(@piece) %>
 		</li>
 	<% end %>
-	<% if allow? "pieces", "show" %>
-		<li<%= " class=""active""" if params[:controller]=='characters' && params[:action]=='index' %>>
-			<%= icon_link 'Characters', 'user', piece_characters_path(@piece) %>
+	<% if allow? "scenes", "index" %>
+		<li id="scenes-tab" <%= klass if params[:controller]=='scenes' %>>
+			<%= icon_link 'Scenes', 'film', piece_scenes_path(@piece) %>
 		</li>
 	<% end %>
 </ul>

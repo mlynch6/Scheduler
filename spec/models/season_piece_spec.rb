@@ -2,12 +2,14 @@
 #
 # Table name: season_pieces
 #
-#  id         :integer          not null, primary key
-#  account_id :integer          not null
-#  season_id  :integer          not null
-#  piece_id   :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id           :integer          not null, primary key
+#  account_id   :integer          not null
+#  season_id    :integer          not null
+#  piece_id     :integer          not null
+#  published    :boolean          default(FALSE), not null
+#  published_at :datetime
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
 #
 
 require 'spec_helper'
@@ -32,6 +34,8 @@ describe SeasonPiece do
 		it { should respond_to(:season) }
   	it { should respond_to(:piece) }
   	it { should respond_to(:casts) }
+		it { should respond_to(:published) }
+		it { should respond_to(:published_at) }
 		
   	it "should not allow access to account_id" do
       expect do
@@ -57,11 +61,21 @@ describe SeasonPiece do
         SeasonPiece.new(piece_id: piece.id)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
+		
+    it "should not allow access to published_at" do
+      expect do
+        SeasonPiece.new(published_at: Time.zone.now)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
   end
 	
   context "(Valid)" do  	
   	it "with minimum attributes" do
   		should be_valid
+  	end
+		
+  	it "published is false when created" do
+  		season_piece.reload.published.should be_false
   	end
   end
 
@@ -81,11 +95,18 @@ describe SeasonPiece do
   		should_not be_valid
   	end
   	
-  	it "when season/piece uniqueness is violated" do
-  		@season_piece.season = season_piece.season
-	  	@season_piece.piece = season_piece.piece
-	  	should_not be_valid
+  	it "when published is blank" do
+  		@season_piece.published = ""
+  		should_not be_valid
   	end
+		
+  	it "when published_at is invalid" do
+  		dts = ["abc", "2/31/2012", "13:00:00"]
+  		dts.each do |invalid_datetime|
+  			@season_piece.published_at = invalid_datetime
+  			should_not be_valid
+  		end
+		end
 	end
 	
   context "(Associations)" do
@@ -119,6 +140,20 @@ describe SeasonPiece do
 		end
   end
 	
+  context "correct value is returned for" do
+		it "published?" do
+			season_piece.reload.published?.should be_false
+		end
+	end
+	
+	context "(Uniqueness)" do
+  	it "by Season/Piece" do
+  		@season_piece.season = season_piece.season
+	  	@season_piece.piece = season_piece.piece
+	  	should_not be_valid
+  	end
+	end
+	
 	describe "(Scopes)" do
 		before do
 			account.season_pieces.delete_all
@@ -127,7 +162,7 @@ describe SeasonPiece do
 		let!(:season_piece1) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece1) }
 		
 		let!(:piece2) { FactoryGirl.create(:piece, account: account) }
-		let!(:season_piece2) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2) }
+		let!(:season_piece2) { FactoryGirl.create(:season_piece_published, account: account, season: season, piece: piece2) }
 		
 		let!(:wrong_acnt) { FactoryGirl.create(:account) }
 		let!(:season_wrong_acnt) { FactoryGirl.create(:season, account: wrong_acnt) }
@@ -142,6 +177,49 @@ describe SeasonPiece do
 				season_pieces.should include(season_piece2)
 				season_pieces.should_not include(season_piece_wrong_acnt)
 			end
+		end
+		
+		describe "published_casting" do
+			it "returns the published records" do
+				season_pieces = SeasonPiece.unscoped.published_casting
+				season_pieces.count.should == 1
+				season_pieces.should_not include(season_piece1)
+				season_pieces.should include(season_piece2)
+				season_pieces.should_not include(season_piece_wrong_acnt)
+			end
+		end
+		
+		describe "unpublished_casting" do
+			it "returns the unpublished records" do
+				season_pieces = SeasonPiece.unscoped.unpublished_casting
+				season_pieces.count.should == 2
+				season_pieces.should include(season_piece1)
+				season_pieces.should_not include(season_piece2)
+				season_pieces.should include(season_piece_wrong_acnt)
+			end
+		end
+	end
+	
+	context "(On Create)" do
+		it "published_at is set when published" do
+			Timecop.freeze
+			piece2 = FactoryGirl.create(:piece, account: account)
+			@published = FactoryGirl.create(:season_piece_published, account: account, season: season, piece: piece2)
+			@published.published_at.should == Time.zone.now
+		end
+	end
+	
+	context "(On Update)" do
+		before do
+			Timecop.freeze
+			piece2 = FactoryGirl.create(:piece, account: account)
+			@for_update = FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2)
+		end
+		
+		it "published_at is set when published" do
+			@for_update.update_attribute(:published, true)
+			
+			@for_update.published_at.should == Time.zone.now
 		end
 	end
 end

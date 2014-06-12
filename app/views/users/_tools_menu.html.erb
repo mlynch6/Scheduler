@@ -1,0 +1,7 @@
+<div class="col-md-1">
+  <%= gear_dropdown do %>
+  	<% if allow? "users", "new" %>
+  		<li><%= new_link "Add User", new_user_path %></li>
+  	<% end %>
+  <% end %>
+</div>

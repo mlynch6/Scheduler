@@ -1,0 +1,19 @@
+<div class="col-md-1">
+  <%= gear_dropdown do %>
+		<% if allow? "company_classes", "new" %>
+			<li><%= new_link "Add Company Class", new_company_class_path(date: @date) %></li>
+		<% end %>
+    
+		<% if allow? "rehearsals", "new" %>
+			<li><%= new_link "Add Rehearsal", new_rehearsal_path(date: @date) %></li>
+		<% end %>
+		
+		<% if allow? "costume_fittings", "new" %>
+			<li><%= new_link "Add Costume Fitting", new_costume_fitting_path(date: @date) %></li>
+		<% end %>
+		
+		<% if allow? "events", "new" %>
+			<li><%= new_link "Add Event", new_event_path(date: @date) %></li>
+		<% end %>
+  <% end %>
+</div>

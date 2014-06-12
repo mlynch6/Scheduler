@@ -6,8 +6,6 @@ class EventsController < ApplicationController
 		params[:month] ||= Time.zone.today.month
 		params[:day] ||= Time.zone.today.day
 		@events = Event.between(Time.at(params[:start].to_i).to_s(:db), Time.at(params[:end].to_i).to_s(:db))
-
-		render layout: "public_application"
 	end
 	
 	def show

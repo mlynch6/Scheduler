@@ -292,6 +292,18 @@ describe Employee do
 	  it "active?" do
 	  	employee.reload.active?.should be_false
 	  end
+		
+	  describe "status" do
+			it "when active is true" do
+				employee.update_attribute(:active, true)
+		  	employee.reload.status.should == "Active"
+			end
+			
+			it "when active is false" do
+				employee.update_attribute(:active, false)
+		  	employee.reload.status.should == "Inactive"
+			end
+	  end
 	  
 	  it "role" do
 	  	employee.reload.role.should == 'Artistic Director'

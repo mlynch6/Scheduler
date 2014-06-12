@@ -1,11 +1,22 @@
-<table class="table table-striped">
-	<tbody>
-		<% @invoices.each do |invoice| %>
-		  <tr>
-		  	<td><%= Time.zone.at(invoice.date).to_date %></td>
-		  	<td><span class="text-right"><%= number_to_currency(invoice.total/100) %></span></td>
-		  	<td>Printable Receipt (PDF)</td>
-		  </tr>
-		<% end %>
-	</tbody>
-</table>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Payment History</h3>
+  </div>
+<% if @invoices && @invoices.length > 0 %>
+  <table class="table table-striped">
+  	<tbody>
+  		<% @invoices.each do |invoice| %>
+  		  <tr>
+  		  	<td><%= Time.zone.at(invoice.date).to_date %></td>
+  		  	<td><span class="text-right"><%= number_to_currency(invoice.total/100) %></span></td>
+  		  	<td>Printable Receipt (PDF)</td>
+  		  </tr>
+  		<% end %>
+  	</tbody>
+  </table>
+<% else %>
+	<div class="panel-body">
+    <p>No payments found.</p>
+  </div>
+<% end %>
+</div>

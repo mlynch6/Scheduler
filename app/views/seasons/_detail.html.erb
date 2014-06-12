@@ -1,5 +1,16 @@
 <div class="dtl-form">
 	<div class="row">
+		<div class="dtl-label col-md-3">Name</div>
+		<div class="dtl-text col-md-9">
+			<% if allow? "seasons", "edit" %>
+				<%= link_to @season.name, edit_season_path(@season) %>
+      <% else %>
+        <%= @season.name %>
+			<% end %>
+    </div>
+	</div>
+  
+	<div class="row">
 		<div class="dtl-label col-md-3">Start Date</div>
 		<div class="dtl-text col-md-9"><%= @season.start_dt %></div>
 	</div>

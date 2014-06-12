@@ -28,13 +28,21 @@ shared_examples "a guest" do
 		it { should allow(:accounts, :new) }
 		it { should allow(:accounts, :create) }
 	end
+	
+	context "password_resets" do
+		it { should allow(:password_resets, :index) }
+		it { should allow(:password_resets, :new) }
+		it { should allow(:password_resets, :create) }
+		it { should allow(:password_resets, :edit) }
+		it { should allow(:password_resets, :update) }
+	end
 end
 
 shared_examples "an employee" do
 	it_behaves_like "a guest"
 	
 	context "static pages" do
-		it { should allow(:static_pages, :dashboard) }
+		it { should allow(:dashboards, :index) }
 	end
 	
 	context "events" do
@@ -83,11 +91,13 @@ shared_examples "a member of the Artistic Staff" do
 	end
 	
 	context "casts/castings" do
+		it { should allow(:casts, :index) }
 		it { should allow(:casts, :show) }
 		it { should allow(:casts, :new) }
 		it { should allow(:casts, :destroy) }
 		it { should allow(:castings, :edit) }
 		it { should allow(:castings, :update) }
+		it { should allow(:publish_casts, :update) }
 	end
 	
 	context "events" do
@@ -305,7 +315,7 @@ describe Permission do
 		it_behaves_like "a guest"
 		it_behaves_like "a NON-administrator"
 		
-		it { should_not allow(:static_pages, :dashboard) }
+		it { should_not allow(:dashboards, :index) }
 		it { should_not allow(:employees, :index) }
 		it { should_not allow(:locations, :index) }
 		
@@ -341,11 +351,13 @@ describe Permission do
 		it { should_not allow(:characters, :destroy) }
 		it { should_not allow(:characters, :sort) }
 		
+		it { should_not allow(:casts, :index) }
 		it { should_not allow(:casts, :show) }
 		it { should_not allow(:casts, :new) }
 		it { should_not allow(:casts, :destroy) }
 		it { should_not allow(:castings, :edit) }
 		it { should_not allow(:castings, :update) }
+		it { should_not allow(:publish_casts, :update) }
 		
 		it { should_not allow(:events, :index) }
 		it { should_not allow(:events, :destroy) }
@@ -411,11 +423,13 @@ describe Permission do
 		it { should_not allow(:characters, :destroy) }
 		it { should_not allow(:characters, :sort) }
 		
+		it { should_not allow(:casts, :index) }
 		it { should_not allow(:casts, :show) }
 		it { should_not allow(:casts, :new) }
 		it { should_not allow(:casts, :destroy) }
 		it { should_not allow(:castings, :edit) }
 		it { should_not allow(:castings, :update) }
+		it { should_not allow(:publish_casts, :update) }
 		
 		it { should_not allow(:rehearsals, :new) }
 		it { should_not allow(:rehearsals, :create) }

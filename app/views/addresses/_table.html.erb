@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Addresses</h3>
+  </div>
+<% if addresses.length > 0 %>
+  <table class="table table-striped">
+  	<% addresses.each do |addr| %>
+  		<tr><td>
+  			<strong><%= addr.addr_type %> Address</strong>
+  			&nbsp;<%= edit_link nil, [:edit, parent, addr], :id => "edit_address_#{addr.id}" %>
+  			&nbsp;<%= delete_link nil, [parent, addr], :id => "delete_address_#{addr.id}" %>
+  			<br />
+  			<%= addr.addr %><br />
+  			<%= addr.addr2+tag(:br) if addr.addr2.present? %>
+  			<%= "#{addr.city}, #{addr.state} #{addr.zipcode}" %>
+  		</td></tr>
+  	<% end %>
+  </table>
+<% else %>
+  <div class="panel-body">
+	  <p>To begin, click the <em class="text-info">Add Address</em> link above.</p>
+  </div>
+<% end %>
+</div>

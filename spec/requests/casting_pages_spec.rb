@@ -8,25 +8,27 @@ describe "Casting Pages:" do
 		@employee = FactoryGirl.create(:employee, account: current_account)
 		@season = FactoryGirl.create(:season, account: current_account)
   	@piece = FactoryGirl.create(:piece, account: current_account)
-		@character = FactoryGirl.create(:character, account: current_account, piece: @piece)
+		Account.current_id = current_account.id
+		@character = @piece.characters.create(name: Faker::Name.name)
 		@sp = FactoryGirl.create(:season_piece, account: current_account, season: @season, piece: @piece)
 		@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @sp)
-		@casting = FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @character)
 	end
 	
 	context "#edit" do
-		let!(:char) { FactoryGirl.create(:character, account: current_account, piece: @piece) }
 		before do
 			click_link 'Setup'
 			click_link 'Seasons'
-			click_link 'View'
-			click_link 'View Cast'
+			click_link @season.name
+			click_link 'pieces-tab-link'
+			click_link 'View Casts'
+			click_link @cast.name
 			click_link 'Edit'
 		end
 		
 		it "has correct title" do
-			should have_title "#{@season.name} | #{@piece.name} | #{@cast.name} | Edit Cast"
+			should have_title "#{@season.name} | #{@piece.name} | Edit #{@cast.name}"
 			should have_selector 'h1', text: "Edit #{@cast.name} for #{@piece.name}"
+			should have_selector 'h1 small', text: @season.name
 		end
 		
 		it "has correct Navigation" do
@@ -37,6 +39,7 @@ describe "Casting Pages:" do
 		it "has correct fields on form" do
 			should have_content "#{@character.name}"
 			should have_field 'Artist'	#Using Chosen
+			should have_link 'Cancel', href: season_piece_cast_path(@sp, @cast)
 		end
 		
 	  it "with error shows error message" do

@@ -171,15 +171,4 @@ describe Cast do
 			end
 		end
 	end
-	
-	context "(On Create)" do
-		it "adds 1 Casting record of each character of the piece" do
-			characters = piece.characters
-			cast.castings.count.should == characters.count
-			
-			cast.castings.each do |casting|
-				characters.should include casting.character
-			end
-		end
-	end
 end

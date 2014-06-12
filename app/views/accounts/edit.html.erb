@@ -1,16 +1,28 @@
-<% provide(:title, 'Edit Company Information') %>
-<% provide(:header_current, 'Setup') %>
-<% provide(:sidebar_current, 'Company Info') %>
+<% provide(:title, 'Edit Account') %>
+<% provide(:header_current, 'Home') %>
+<% provide(:sidebar_current, 'Account') %>
 
-<div class="page-header">
-	<h1><%= yield(:title) %></h1>
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1>My Account
+      <small>Edit</small>
+    </h1>
+  </div>
+  <%= render 'accounts/tools_menu' %>
 </div>
 
-<%= form_for @account, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-	<%= f.error_messages %>
-	<%= render 'form', :f => f %>
+<div class="row mash-show">
+	<%= render 'accounts/tabs' %>
 	
-	<%= f.submit_group do %>
-		<%= f.submit_primary 'Update' %>
-	<% end %>
-<% end %>
+	<div class="mash-body">
+    <%= form_for @account, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+    	<%= f.error_messages %>
+    	<%= render 'form', :f => f %>
+	
+    	<%= f.submit_group do %>
+    		<%= f.submit_primary 'Update' %>
+        <%= link_to 'Cancel', account_path(current_user.account_id), class: 'btn btn-link' %>
+    	<% end %>
+    <% end %>
+  </div>
+</div>

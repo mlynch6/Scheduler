@@ -19,7 +19,10 @@ FactoryGirl.define do
 		sequence(:first_name)	{ |n| "#{Faker::Name.first_name}" }
 		sequence(:last_name)	{ |n| "#{Faker::Name.last_name}" }
 		role					"Employee"
-		#email					Faker::Internet.free_email
+		
+		factory :employee_complete do
+			email				Faker::Internet.free_email
+		end
 	 	
 	 	factory :employee_inactive do
 			active 			false

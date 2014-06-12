@@ -3,9 +3,11 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 jQuery ->
-	$('#scenes').sortable
+	$('.chosen-select').chosen()
+	$('.date-select').datepicker
+		dateFormat: 'mm/dd/yy'
+	$('.position-sort').sortable
 		axis: 'y'
 		handle: '.handle'
 		update: ->
 			$.post($(this).data('update-url'), $(this).sortable('serialize'))
-	$('#scene_character_ids').chosen()

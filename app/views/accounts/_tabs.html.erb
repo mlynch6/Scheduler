@@ -1,0 +1,14 @@
+<% klass = ' class="active"'.html_safe %>
+<ul class="nav nav-tabs">
+	<% if allow? "accounts", "show" %>
+		<li id="overview-tab" <%= klass if params[:controller]=='accounts' %>>
+			<%= icon_link 'Overview', 'asterisk', account_path(current_user.employee.account_id) %>
+		</li>
+	<% end %>
+  
+	<% if allow? "subscriptions", "show" %>
+		<li id="subscription-tab" <%= klass if %w[subscriptions payments].include?(params[:controller]) %>>
+			<%= link_to "Subscription", subscriptions_current_path %>
+		</li>
+	<% end %>
+</ul>

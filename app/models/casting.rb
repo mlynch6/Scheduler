@@ -12,7 +12,7 @@
 #
 
 class Casting < ActiveRecord::Base
-	attr_accessible :person_id
+	attr_accessible :character_id, :person_id
 	
 	belongs_to :account, inverse_of: :castings
 	belongs_to :cast, inverse_of: :castings

@@ -1,5 +1,5 @@
-<div class="tab-content mash-tab-body">
-	<div id="rehearsal-week" class="tab-pane active">
+<div class="tab-content">
+	<div id="rehearsal-week-tab" class="tab-pane active">
 		<%= f.select :rehearsal_start_min, @times, {}, 
 					:field_size => 'col-md-3',
 					:help =>'Class & Rehearsals will start no earlier than this' %>
@@ -18,21 +18,16 @@
 					:field_size => 'col-md-3',
 					:append => 'min',
 					:help => 'Increment in which a Rehearsal can be called and counted' %>
-		
-		<h2>Breaks</h2>
-		<%= f.fields_for :rehearsal_breaks do |builder| %>
-			<%= render 'rehearsal_breaks/form', :f => builder %>
-		<% end %>
 	</div>
 	
-	<div id="company-class" class="tab-pane">
+	<div id="company-class-tab" class="tab-pane">
 		<%= f.number_field :class_break_min,
 					:field_size => 'col-md-2',
 					:append => 'min',
 					:help => 'Amount of break time following the end of class and the first rehearsal' %>
 	</div>
 	
-	<div id="costume-fitting" class="tab-pane">
+	<div id="costume-fitting-tab" class="tab-pane">
 		<%= f.number_field :costume_increment_min,
 					:field_size => 'col-md-2',
 					:append => 'min',

@@ -1,7 +1,13 @@
 <div class="dtl-form">
 	<div class="row">
-		<div class="dtl-label col-md-3"><%= Employee.human_attribute_name(:active) %></div>
-		<div class="dtl-text col-md-9"><%= active_inactive(@employee.active) %></div>
+		<div class="dtl-label col-md-3">Name</div>
+		<div class="dtl-text col-md-9">
+    	<% if allow? "employees", "edit" %>
+    		<%= link_to @employee.full_name, edit_employee_path(@employee) %>
+      <% else %>
+        <%= @employee.full_name %>
+      <% end %>
+    </div>
 	</div>
 	
 	<div class="row">

@@ -1,55 +1,55 @@
 <% provide(:title, 'Seasons') %>
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Seasons') %>
-	
-<div class="page-header">
-	<h1><%= yield(:title) %></h1>
-</div>
-<div class="well well-sm mash-well-link">
-	<% if allow? "seasons", "new" %>
-		<%= new_link "Add Season", new_season_path %>
-	<% end %>
+
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1><%= yield(:title) %></h1>
+  </div>
+  <%= render 'seasons/tools_menu' %>
 </div>
 
-<% if @seasons.length > 0 %>
-	<table class="table table-striped">
-		<thead>
-	  	<tr>
-	  		<th>Name</th>
-	  		<th>Start Date</th>
-	  		<th>End Date</th>
-	  		<th style="width:105px;">&nbsp;</th>
-	  	</tr>
-	  </thead>
-	  <tbody>
-	  	<% @seasons.each do |season| %>
-				<tr>
-					<td><%= season.name %></td>
-					<td><%= season.start_dt %></td>
-					<td><%= season.end_dt %></td>
-					<td>
-						<% if allow? "seasons", "show" %>
-							<%= view_button nil, season_path(season), :class => 'btn-xs', :id => "view_#{season.id}" %>
-						<% end %>
-						<% if allow? "seasons", "edit" %>
-							<%= edit_button nil, edit_season_path(season), :class => 'btn-xs', :id => "edit_#{season.id}" %>
-						<% end %>
-						<% if allow? "seasons", "destroy" %>
-							<%= delete_button nil, season_path(season), :class => 'btn-xs', :id => "delete_#{season.id}" %>
-						<% end %>
-					</td>
-				</tr>
-			<% end %>
-		</tbody>
-	</table>
-	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+<div class="row">
+  <% if @seasons.length > 0 %>
+  	<table class="table table-striped">
+  		<thead>
+  	  	<tr>
+  	  		<th>Name</th>
+  	  		<th>Start Date</th>
+  	  		<th>End Date</th>
+  	  		<th class="mash-col-1-btn">&nbsp;</th>
+  	  	</tr>
+  	  </thead>
+  	  <tbody>
+  	  	<% @seasons.each do |season| %>
+  				<tr>
+  					<td>
+  						<% if allow? "seasons", "show" %>
+  							<%= link_to season.name, season_path(season), :id => "view_#{season.id}" %>
+              <% else %>
+                <%= season.name %>
+  						<% end %>
+            </td>
+  					<td><%= season.start_dt %></td>
+  					<td><%= season.end_dt %></td>
+  					<td class="mash-col-1-btn">
+  						<% if allow? "seasons", "destroy" %>
+  							<%= delete_button nil, season_path(season), :class => 'btn-xs', :id => "delete_#{season.id}" %>
+  						<% end %>
+  					</td>
+  				</tr>
+  			<% end %>
+  		</tbody>
+  	</table>
+  	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
 	
-<% else %>
-	<p>A season is a period of time during which classes, reheasrsals, performances, etc are held.
-		A season will have pieces that are being rehearsed and/or performed.
-	</p>
-	<p>Example: <em>2012-2013 Season</em> running from 8/1/2012 to 5/15/2013 <br />
-		&nbsp;&nbsp;&nbsp; Performing 'The Nutcracker', 'Sleeping Beauty', and 'Symphony in C'
-	</p>
-	<p>To begin, click the <em class="text-info">Add Season</em> link above.</p>
-<% end %>
+  <% else %>
+  	<p>A season is a period of time during which classes, reheasrsals, performances, etc are held.
+  		A season will have pieces that are being rehearsed and/or performed.
+  	</p>
+  	<p>Example: <em>2012-2013 Season</em> running from 8/1/2012 to 5/15/2013 <br />
+  		&nbsp;&nbsp;&nbsp; Performing 'The Nutcracker', 'Sleeping Beauty', and 'Symphony in C'
+  	</p>
+  	<p>To begin, click the <em class="text-info">Add Season</em> link above.</p>
+  <% end %>
+</div>

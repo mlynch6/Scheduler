@@ -2,40 +2,52 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Pieces') %>
 
-<div class="page-header">
-	<h1><%= @piece.name %></h1>
-</div>
-<div class="well well-sm mash-well-link">	
-	<% if allow? "characters", "new" %>
-		<%= new_link "Add Character", new_piece_character_path(@piece) %>
-	<% end %>
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1>
+      <%= @piece.name %>
+      <small>Characters</small>
+    </h1>
+  </div>
+  <%= render 'pieces/tools_menu' %>
 </div>
 
-<div class="mash-show-tab">
+<div class="row mash-show">
 	<%= render 'pieces/tabs' %>
 	
-	<div class="mash-tab-body">
+	<div class="mash-body">
 		<% if @characters.length > 0 %>
 			<table class="table table-striped">
 				<thead>
 			  	<tr>
+            <th class="mash-col-1-btn">&nbsp;</th>
 			  		<th>Characters</th>
-			  		<th style="width:70px;">&nbsp;</th>
+            <th class="mash-col-2-btn">&nbsp;</th>
+			  		<th class="mash-col-1-btn">&nbsp;</th>
 			  	</tr>
 			  </thead>
-			  <tbody id="characters" data-update-url="<%= sort_characters_url %>">
+			  <tbody id="characters" class="position-sort" data-update-url="<%= sort_characters_url %>">
 			  	<% @characters.each do |character| %>
 						<%= content_tag_for :tr, character do %>
-							<td>
+							<td class="mash-col-1-btn">
 								<% if allow? "characters", "sort" %>
 									<%= content_tag :i, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' %>
 								<% end %>
-								<%= character.name %>
-							</td>
-							<td>
+              </td>
+              <td>
 								<% if allow? "characters", "edit" %>
-									<%= edit_button nil, edit_character_path(character), :class => 'btn-xs', :id => "edit_#{character.id}" %>
+									<%= link_to character.name, edit_character_path(character), :id => "edit_#{character.id}" %>
+                <% else %>
+                  <%= character.name %>
 								<% end %>
+              </td>
+              <td class="mash-col-2-btn text-center">
+                <%= character.gender[0] if character.gender.present? %>
+                <%= "K" if character.is_child? %>
+                <%= "A" if character.animal? %>
+                <%= content_tag :span, nil, class: 'glyphicon glyphicon-bullhorn', title: 'Speaking Role' if character.speaking? %>
+              </td>
+							<td class="mash-col-1-btn">
 								<% if allow? "characters", "destroy" %>
 									<%= delete_button nil, character, :class => 'btn-xs', :id => "delete_#{character.id}" %>
 								<% end %>

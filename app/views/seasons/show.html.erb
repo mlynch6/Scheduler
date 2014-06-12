@@ -2,25 +2,29 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Seasons') %>
 
-<div class="page-header">
-	<h1><%= yield(:title) %></h1>
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1><%= @season.name %></h1>
+  </div>
+  <%= render 'seasons/tools_menu' %>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-body">
-    <%= render 'seasons/detail' %>
-  </div>
-</div>
-
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <h3 class="panel-title">Pieces</h3>
-  </div>
-	<% if @season_pieces.length > 0 %>
-		<%= render 'seasons/pieces_table' %>
-	<% else %>
-		<div class="panel-body">
-	    <p>No pieces found.</p>
-	  </div>
-	<% end %>
+<div class="row mash-show">
+	<%= render 'seasons/tabs' %>
+	
+	<div class="tab-content mash-body">
+    <div class="tab-pane active" id="overview">
+		  <%= render 'seasons/detail' %>
+    </div>
+    
+    <div class="tab-pane" id="pieces">
+    	<% if @season_pieces.length > 0 %>
+    		<%= render 'seasons/pieces_table' %>
+    	<% else %>
+    		<div class="panel-body">
+    	    <p>No pieces found.</p>
+    	  </div>
+    	<% end %>
+    </div>
+	</div>
 </div>

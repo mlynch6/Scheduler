@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140410172224) do
+ActiveRecord::Schema.define(:version => 20140610201845) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -92,12 +92,18 @@ ActiveRecord::Schema.define(:version => 20140410172224) do
   add_index "casts", ["season_piece_id", "name"], :name => "index_casts_on_season_piece_id_and_name", :unique => true
 
   create_table "characters", :force => true do |t|
-    t.integer  "account_id",               :null => false
-    t.integer  "piece_id",                 :null => false
-    t.string   "name",       :limit => 30, :null => false
-    t.integer  "position",                 :null => false
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.integer  "account_id",                                  :null => false
+    t.integer  "piece_id",                                    :null => false
+    t.string   "name",       :limit => 30,                    :null => false
+    t.integer  "position",                                    :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+    t.string   "gender",     :limit => 10
+    t.boolean  "animal",                   :default => false, :null => false
+    t.boolean  "is_child",                 :default => false, :null => false
+    t.boolean  "speaking",                 :default => false, :null => false
+    t.boolean  "deleted",                  :default => false, :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "characters", ["account_id"], :name => "index_characters_on_account_id"
@@ -218,11 +224,13 @@ ActiveRecord::Schema.define(:version => 20140410172224) do
   add_index "scenes", ["piece_id"], :name => "index_scenes_on_piece_id"
 
   create_table "season_pieces", :force => true do |t|
-    t.integer  "account_id", :null => false
-    t.integer  "season_id",  :null => false
-    t.integer  "piece_id",   :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "account_id",                      :null => false
+    t.integer  "season_id",                       :null => false
+    t.integer  "piece_id",                        :null => false
+    t.boolean  "published",    :default => false, :null => false
+    t.datetime "published_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   add_index "season_pieces", ["account_id"], :name => "index_season_pieces_on_account_id"
@@ -249,13 +257,15 @@ ActiveRecord::Schema.define(:version => 20140410172224) do
   end
 
   create_table "users", :force => true do |t|
-    t.integer  "account_id",                    :null => false
-    t.integer  "employee_id",                   :null => false
-    t.string   "username",        :limit => 20, :null => false
-    t.string   "password_digest",               :null => false
-    t.string   "role",            :limit => 20, :null => false
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.integer  "account_id",                           :null => false
+    t.integer  "employee_id",                          :null => false
+    t.string   "username",               :limit => 20, :null => false
+    t.string   "password_digest",                      :null => false
+    t.string   "role",                   :limit => 20, :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.string   "password_reset_token",   :limit => 50
+    t.datetime "password_reset_sent_at"
   end
 
   add_index "users", ["account_id"], :name => "index_users_on_account_id"

@@ -1,0 +1,11 @@
+<div class="col-md-1">
+  <%= gear_dropdown do %>
+		<% if allow? "agma_contracts", "edit" %>
+			<li><%= edit_link 'Edit Contract Settings', edit_agma_contract_path(@agma_contract) %></li>
+		<% end %>
+    
+		<% if allow? "rehearsal_breaks", "new" %>
+			<li><%= new_link 'Add Rehearsal Break', [:new, @agma_contract, :rehearsal_break] %></li>
+		<% end %>
+  <% end %>
+</div>

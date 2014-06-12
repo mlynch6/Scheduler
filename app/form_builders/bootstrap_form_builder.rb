@@ -2,7 +2,7 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 	# Based on  potenza / bootstrap_form
 	# Bootstrap 3
 	# Available Fields: text_field, select, time_zone_select, telephone_field, phone_field, password_field
-	#		email_field, number_field, check_box
+	#		email_field, number_field, check_box, radio_button
 	#		date_field, time_field, currency_field, static_control, submit, submit_primary
 
 	FORM_HELPERS = %w{text_field select time_zone_select telephone_field phone_field password_field email_field number_field} 
@@ -58,16 +58,34 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 	def check_box(name, options = {}, checked_value = '1', unchecked_value = '0')
 		options = options.symbolize_keys!
 		
-		html = super(name, options.except(:label, :help, :inline), checked_value, unchecked_value)
-		html << ' ' + (options[:label] || object.class.human_attribute_name(name) || name.to_s.humanize)
+		html = super(name, options.except(:label, :help, :inline, :checkbox_only, :checkbox_as_row), checked_value, unchecked_value)
 			
 		if options[:inline]
+			html << ' ' + (options[:label] || object.class.human_attribute_name(name) || name.to_s.humanize)
 			label(name, html, class: 'checkbox-inline')
+		elsif options[:checkbox_only]
+			super(name, options.except(:label, :help, :inline, :checkbox_only), checked_value, unchecked_value)
+		elsif options[:checkbox_as_row]
+			content_tag :div, class: 'form-group' do
+			  label(name, class: 'col-md-3 control-label') + content_tag(:div, html, class: 'col-md-9')
+			end
 		else
+			html << ' ' + (options[:label] || object.class.human_attribute_name(name) || name.to_s.humanize)
 			content_tag(:div, class: 'checkbox') do
 				label(name, html)
 			end
 		end
+	end
+	
+	def radio_button(name, value, *args)
+		options = args.extract_options!.symbolize_keys!
+		args << options.except(:label, :help, :inline)
+
+		html = super(name, value, *args) + " " + options[:label]
+
+		css = "radio"
+		css << "-inline" if options[:inline]
+		label(name, html, class: css, for: nil)
 	end
 
 	def static_control(name, options = {}, &block)
@@ -171,13 +189,13 @@ private
 		
 		options = case method_name
 			when 'time_zone_select' then {:field_size => 'col-md-5'}.merge(options)
-			when 'date_field' then {:field_size => 'col-md-4', :placeholder => 'MM/DD/YYYY', :prepend => content_tag(:span, nil, class: 'glyphicon glyphicon-calendar')}.merge(options)
+			when 'date_field' then {:class => 'date-select', :field_size => 'col-md-4', :placeholder => 'MM/DD/YYYY', :prepend => content_tag(:span, nil, class: 'glyphicon glyphicon-calendar')}.merge(options)
 			when 'time_field' then {:field_size => 'col-md-4', :placeholder => 'HH:MM AM/PM', :prepend => content_tag(:span, nil, class: 'glyphicon glyphicon-time')}.merge(options)
 			when 'telephone_field' then {:field_size => 'col-md-4', :placeholder => 'xxx-xxx-xxxx', :prepend => content_tag(:span, nil, class: 'glyphicon glyphicon-phone-alt')}.merge(options)
 			when 'phone_field' then {:field_size => 'col-md-4', :placeholder => 'xxx-xxx-xxxx', :prepend => content_tag(:span, nil, class: 'glyphicon glyphicon-phone-alt')}.merge(options)
 			when 'password_field' then {:prepend => content_tag(:span, nil, class: 'glyphicon glyphicon-lock')}.merge(options)
 			when 'email_field' then  {:prepend => '@'}.merge(options)
-			when 'currency_field' then {:field_size => 'col-md-3', :prepend => '$'}.merge(options)
+			when 'currency_field' then {:field_size => 'col-md-3', :prepend => content_tag(:span, nil, class: 'glyphicon glyphicon-usd')}.merge(options)
 			else options
 		end
 	  

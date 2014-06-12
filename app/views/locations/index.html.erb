@@ -1,51 +1,74 @@
 <% provide(:title, 'Locations') %>
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Locations') %>
-<% provide(:sidebar_extra, 'locations/sidebar') %>
 
-<div class="page-header">
-	<h1><%= yield(:title) %></h1>
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1><%= yield(:title) %>
+       <small>
+       <% if params[:status] == "active" %>
+         Active
+       <% elsif params[:status] == "inactive" %>
+         Inactive
+       <% else %>
+         All
+       <% end %>
+     </small>
+     </h1>
+  </div>
+  <%= render 'locations/tools_menu' %>
 </div>
 
-<% if @locations.length > 0 %>
-	<table class="table table-striped">
-		<thead>
-	  	<tr>
-	  		<th>Name</th>
-	  		<th>Status</th>
-	  		<th class="mash-col-3-btn">&nbsp;</th>
-	  	</tr>
-	  </thead>
-	  <tbody>
-	  	<% @locations.each do |location| %>
-				<tr>
-					<td><%= location.name %></td>
-					<td><%= active_inactive(location.active) %></td>
-					<td class="mash-col-3-btn">
-						<% if allow? "locations", "edit" %>
-							<%= edit_button nil, edit_location_path(location), :class => 'btn-xs', :id => "edit_#{location.id}" %>
-						<% end %>
-						<% if !location.active && allow?("locations", "activate") %>
-							<%= activate_button nil, activate_location_path(location), :class => 'btn-xs', :id => "activate_#{location.id}" %>
-						<% end %>
-						<% if location.active && allow?("locations", "inactivate") %>
-							<%= inactivate_button nil, inactivate_location_path(location), :class => 'btn-xs', :id => "inactivate_#{location.id}" %>
-						<% end %>
-						<% if allow? "locations", "destroy" %>
-							<%= delete_button nil, location, :class => 'btn-xs', :id => "delete_#{location.id}" %>
-						<% end %>
-					</td>
-				</tr>
-			<% end %>
-		</tbody>
-	</table>
-	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+<div class="row">
+  <div class="col-md-10">
+  <% if @locations.length > 0 %>
+  	<table class="table table-striped">
+  		<thead>
+  	  	<tr>
+  	  		<th>Name</th>
+  	  		<th>Status</th>
+  	  		<th class="mash-col-2-btn">&nbsp;</th>
+  	  	</tr>
+  	  </thead>
+  	  <tbody>
+  	  	<% @locations.each do |location| %>
+  				<tr>
+  					<td>
+  						<% if allow? "locations", "edit" %>
+  							<%= link_to location.name, edit_location_path(location), :id => "edit_#{location.id}" %>
+              <% else %>
+                <%= location.name %>
+  						<% end %>
+            </td>
+  					<td><%= location.status %></td>
+  					<td class="mash-col-2-btn">
+  						<% if !location.active && allow?("locations", "activate") %>
+  							<%= activate_button nil, activate_location_path(location), :class => 'btn-xs', :id => "activate_#{location.id}" %>
+  						<% end %>
+  						<% if location.active && allow?("locations", "inactivate") %>
+  							<%= inactivate_button nil, inactivate_location_path(location), :class => 'btn-xs', :id => "inactivate_#{location.id}" %>
+  						<% end %>
+  						<% if allow? "locations", "destroy" %>
+  							<%= delete_button nil, location, :class => 'btn-xs', :id => "delete_#{location.id}" %>
+  						<% end %>
+  					</td>
+  				</tr>
+  			<% end %>
+  		</tbody>
+  	</table>
+  	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
 
-<% else %>
-	<p>Some businesses have multiple locations that operate as a single entity - with a single 
-		list of staff and students.  If you have more than one location, each physical address 
-		can be entered as a separate location. Each location can then maintain a set of rooms used 
-		for rehearsals, performaces, or classes with a seperate schedule.
-	</p>
-	<p>To begin, click the <em class="text-info">Add Location</em> link above.</p>
-<% end %>
+  <% else %>
+  	<p>Some businesses have multiple locations that operate as a single entity - with a single 
+  		list of staff and students.  If you have more than one location, each physical address 
+  		can be entered as a separate location. Each location can then maintain a set of rooms used 
+  		for rehearsals, performaces, or classes with a seperate schedule.
+  	</p>
+  	<p>To begin, click the <em class="text-info">Add Location</em> link above.</p>
+  <% end %>
+  </div>
+  
+  <div class="col-md-2">
+    <%= render 'locations/sidebar' %>
+  </div>
+</div>

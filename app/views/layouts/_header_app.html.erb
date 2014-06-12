@@ -16,9 +16,9 @@
 		</li>
 	<% end %>
 	
-	<% if allow? "accounts", "show" %>
+	<% if allow? "locations", "index" %>
 		<li<%= class_active if yield(:header_current) == "Setup" %>>
-			<%= icon_link 'Setup', 'wrench', account_path(current_user.employee.account_id) %>
+			<%= icon_link 'Setup', 'wrench', locations_path(status: 'active') %>
 		</li>
 	<% end %>
 	

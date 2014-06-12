@@ -3,15 +3,15 @@ class Permission
 		allow :static_pages, [:home, :features, :pricing, :contact]
 		allow :sessions, [:new, :create, :destroy]
 		allow :accounts, [:new, :create]
+		allow :password_resets, [:index, :new, :create, :edit, :update]
 		
 		if user
-			allow :static_pages, [:dashboard]
-			allow [:locations, :pieces, :scenes, :characters, :employees, :events], [:index]
+			allow [:dashboards, :locations, :pieces, :scenes, :characters, :employees, :events], [:index]
 			allow [:pieces, :events], [:show]
 			
 			if user.role == "Administrator"
 				#index
-				allow [:users, :seasons], [:index]
+				allow [:users, :seasons, :casts], [:index]
 				
 				#show
 				allow [:accounts, :subscriptions, :agma_contracts, :employees, :seasons, :casts], 
@@ -32,6 +32,9 @@ class Permission
 						:characters, :events, :rehearsals, :company_classes, :costume_fittings,
 						:castings],
 						[:edit, :update]
+				
+				#update
+				allow [:publish_casts], [:update]
 				
 				#destroy
 				allow [:subscriptions, :addresses, :phones, :seasons, :scenes, :characters, 

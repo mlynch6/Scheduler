@@ -1,1 +1,9 @@
 <%= f.text_field :name %>
+
+<div class="form-group">
+  <label class="col-md-3 control-label required" for="location_active_true">Status</label>
+  <div class="col-md-9">
+    <%= f.radio_button :active, true, label: "Active", inline: true %>
+    <%= f.radio_button :active, false, label: "Inactive", inline: true %>
+  </div>
+</div>

@@ -6,7 +6,7 @@ module LinkHelper
 
 	def new_link(name, *args)
 		args << default_title('Add', *args)
-		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus mash-green")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus-sign mash-green")
 		create_link(name, icon, *args)
 	end
 	
@@ -19,7 +19,7 @@ module LinkHelper
 		args << default_title('Delete', *args)
 	  args << add_delete_method('Delete?', *args)
 	  
-		icon = content_tag(:span, nil, class: "glyphicon glyphicon-trash mash-red")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-minus-sign mash-red")
 		create_link(name, icon, *args)
 	end
 	
@@ -30,8 +30,7 @@ module LinkHelper
 	end
 	
 	def pdf_link(name, *args)
-		icon = image_tag("file_extension_pdf.png")
-		create_link(name, icon, *args)
+		icon_link(name, 'download', *args)
 	end
 	
 # BUTTONS
@@ -74,6 +73,15 @@ module LinkHelper
 	  icon_link(name, 'thumbs-down', *args)
 	end
 
+	def gear_dropdown(&block)
+		html = content_tag(:button, content_tag(:span, nil, class: "glyphicon glyphicon-cog", title: 'Tools'), type: "button", class: "btn btn-default btn-sm dropdown-toggle", data: {toggle: "dropdown"}, title: "Tools")
+		html << content_tag(:ul, class: "dropdown-menu", role: "menu") do
+			yield
+		end
+		content_tag(:div, class: "btn-group pull-right", style: "margin-top: 10px;") do
+			html
+		end
+	end
 private
 
 	def create_link(name, icon, *args)

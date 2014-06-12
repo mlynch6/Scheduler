@@ -1,64 +1,30 @@
-<% provide(:title, 'Employee') %>
+<% provide(:title, @employee.full_name) %>
 <% provide(:header_current, 'People') %>
 <% provide(:sidebar_current, 'Employees') %>
 
-<div class="page-header">
-	<h1><%= @employee.full_name %></h1>
-</div>
-<div class="well well-sm mash-well-link">
-	<% if allow? "employees", "edit" %>
-		<%= edit_link "Edit", edit_employee_path(@employee) %>
-	<% end %>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-body">
-    <%= render 'employees/detail' %>
-  </div>
-</div>
-
 <div class="row">
-	<div class="col-md-6">
-		<div class="panel panel-info">
-		  <div class="panel-heading">
-		    <h3 class="panel-title">Addresses</h3>
-		  </div>
-		  <table class="table table-striped">
-				<% @employee.addresses.each do |addr| %>
-					<tr><td>
-						<strong><%= addr.addr_type %> Address</strong>
-						&nbsp;<%= edit_link nil, [:edit, @employee, addr], :id => "edit_address_#{addr.id}" %>
-						&nbsp;<%= delete_link nil, [@employee, addr], :id => "delete_address_#{addr.id}" %>
-						<br />
-						<%= addr.addr %><br />
-						<%= addr.addr2+tag(:br) if addr.addr2.present? %>
-						<%= "#{addr.city}, #{addr.state} #{addr.zipcode}" %>
-					</td></tr>
-				<% end %>
-				<tr><td>
-					<%= new_link "Add Address", [:new, @employee, :address] %>
-				</td></tr>
-			</table>
-		</div>
-	</div>
-	
-	<div class="col-md-6">
-		<div class="panel panel-info">
-		  <div class="panel-heading">
-		    <h3 class="panel-title">Phone Numbers</h3>
-		  </div>
-		  <table class="table table-striped">
-				<% @employee.phones.each do |phone| %>
-					<tr><td>
-						<strong><%= phone.phone_type %>: </strong><%= phone.phone_num %>
-						<%= edit_link nil, [:edit, @employee, phone], :id => "edit_phone_#{phone.id}" %>
-						<%= delete_link nil, [@employee, phone], :id => "delete_phone_#{phone.id}" %>
-					</td></tr>
-				<% end %>
-				<tr><td>
-					<%= new_link "Add Phone Number", [:new, @employee, :phone] %>
-				</td></tr>
-			</table>
-		</div>
-	</div>
+  <div class="page-header col-md-11">
+  	 <h1><%= yield(:title) %>
+       <small><%= @employee.status %></small>
+     </h1>
+  </div>
+  <%= render 'employees/tools_menu' %>
+</div>
+
+<div class="row mash-show">
+  <%= render 'employees/tabs' %>
+  <div class="mash-body">
+    <%= render 'employees/detail' %>
+    
+    <div class="row" style="margin-top:15px;">
+      <div class="col-md-offset-1 col-md-5">
+        <%= render 'addresses/table', parent: @employee, addresses: @employee.addresses %>
+      </div>
+
+      <div class="col-md-5">
+        <%= render 'phones/table', parent: @employee, phones: @employee.phones %>
+      </div>
+    </div>
+
+  </div>
 </div>

@@ -4,32 +4,41 @@ describe "Payment Pages:" do
   subject { page }
 	
 	context "#edit" do
-		it "has correct title" do
+		before do
 			log_in
-	  		click_link 'Setup'
-	  		click_link 'My Subscription'
-	  		click_link 'Change Payment Method'
-	  	
-			should have_title 'Change Payment Method'
-			should have_selector 'h1', text: 'Change Payment Method'
+			click_link 'Home'
+			click_link 'My Account'
+			click_link 'Subscription'
+			click_link 'Change Payment Method'
+		end
+		
+		it "has correct title" do
+			should have_title 'Account | Change Payment Method'
+			should have_selector 'h1', text: 'Account'
+			should have_selector 'h1 small', text: 'Change Payment Method'
 		end
 		
 		it "has correct Navigation" do
-			log_in
-			visit payments_edit_path
-			
-			should have_selector 'li.active', text: 'Setup'
-			should have_selector 'li.active', text: 'My Subscription'
+			should have_selector 'li.active', text: 'Home'
+			should have_selector 'li.active', text: 'My Account'
+			should have_selector 'li.active', text: 'Subscription'
 		end
 		
 		it "has correct fields on form" do
-			log_in
-			visit payments_edit_path
-			
 			should have_field 'Credit Card Number'
 	    should have_select 'card_month'
 	    should have_select 'card_year'
 	    should have_field 'Security Code'
+			should have_link 'Cancel', href: subscriptions_current_path
+		end
+		
+		it "has links for Super Admin" do
+	  	should have_link 'Overview'
+			should have_link 'Subscription'
+			
+	  	should have_link 'Add Address'
+	  	should have_link 'Add Phone Number'
+			should have_link 'Change Payment Method'
 		end
 	end
 	
@@ -37,9 +46,7 @@ describe "Payment Pages:" do
 		before do
 			log_in
 			create_stripe_account(current_account)
-  		
-			visit subscriptions_current_path
-			click_link "Change Payment Method"
+			visit payments_edit_path
 		end
   	
 		after do
@@ -53,7 +60,7 @@ describe "Payment Pages:" do
 			click_button "Update"
 		  
 			should have_selector 'div.alert-success'
-		  should have_title 'My Subscription'
+		  should have_title 'Account | Subscription'
 		end
 		
 		describe "invalid Payment" do

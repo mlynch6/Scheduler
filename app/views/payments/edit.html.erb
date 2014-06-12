@@ -1,19 +1,30 @@
-<% provide(:title, 'Change Payment Method') %>
-<% provide(:header_current, 'Setup') %>
-<% provide(:sidebar_current, 'Subscription') %>
+<% provide(:title, 'Account | Change Payment Method') %>
+<% provide(:header_current, 'Home') %>
+<% provide(:sidebar_current, 'Account') %>
 
-<div class="page-header">
-	<h1><%= yield(:title) %></h1>
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1>Account
+       <small>Change Payment Method</small>
+     </h1>
+  </div>
+  <%= render 'accounts/tools_menu' %>
 </div>
-<p class="muted">Fill out the form below to change your subscription credit card.</p>
 
-<% if allow? "payments", "edit" %>
-	<%= form_for @account, :url => payments_update_path, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal', :id => 'edit_payment' } do |f| %>
-		<%= f.error_messages %>
-		<%= render 'form', :f => f %>
+<div class="row mash-show">
+	<%= render 'accounts/tabs' %>
+	
+	<div class="mash-body">
+    <p class="muted">Fill out the form below to change your subscription credit card.</p>
+
+    <%= form_for @account, :url => payments_update_path, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal', :id => 'edit_payment' } do |f| %>
+    	<%= f.error_messages %>
+    	<%= render 'form', :f => f %>
 		
-		<%= f.submit_group do %>
-			<%= f.submit_primary 'Update' %>
-		<% end %>
-	<% end %>
-<% end %>
+    	<%= f.submit_group do %>
+    		<%= f.submit_primary 'Update' %>
+        <%= link_to 'Cancel', subscriptions_current_path, class: 'btn btn-link' %>
+    	<% end %>
+    <% end %>
+  </div>
+</div>

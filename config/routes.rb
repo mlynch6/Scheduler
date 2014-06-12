@@ -1,17 +1,21 @@
 Scheduler::Application.routes.draw do
+  
+
   root :to => 'static_pages#home'
 	match 'login' => 'sessions#new'
 	match 'logout' =>'sessions#destroy'
 	match 'signup' => 'accounts#new'
+	get 'dashboard', to: 'dashboards#index'
+	resources :password_resets,		:except => [:show, :destroy]
 	
 	resources :accounts do
 		resources :addresses, 			:except => [:index, :show]
-		resources :phones, 				:except => [:index, :show]
+		resources :phones, 					:except => [:index, :show]
 	end
-	resources :agma_contracts, 	:only => [:show, :edit, :update] do
+	resources :agma_contracts, 		:only => [:show, :edit, :update] do
 		resources :rehearsal_breaks, :only => [:new, :create]
 	end
-	resources :rehearsal_breaks, :only => [:destroy]
+	resources :rehearsal_breaks, 	:only => [:destroy]
   resources :sessions
   resources :users, 						:except => [:show]
   
@@ -21,7 +25,7 @@ Scheduler::Application.routes.draw do
   		get 'activate'
   		get 'inactivate'
   	end
-  	resources :addresses, 				:except => [:index, :show]
+  	resources :addresses, 			:except => [:index, :show]
   	resources :phones, 					:except => [:index, :show]
   end
   
@@ -40,18 +44,17 @@ Scheduler::Application.routes.draw do
 		collection { post :sort }
   end
   resources :season_pieces, 	:only => [] do
-		resources :casts,					:only => [:new, :show]
+		resources :casts,					:only => [:index, :show, :new]
   end
   resources :casts,						:only => [:destroy]
 	resources :castings,				:only => [:edit, :update]
 	
   resources :events
-  resources :company_classes,	:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
+  resources :company_classes,		:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
   resources :costume_fittings,	:except => [:index, :show], :controller => :events, :event_type => 'CostumeFitting'
   resources :rehearsals,				:except => [:index, :show], :controller => :events, :event_type => 'Rehearsal'
   get 'events/:year/:month/:day', to: 'events#index'
 	
-	match 'dashboard' => 'static_pages#dashboard'
 	match 'features' => 'static_pages#features'
 	match 'pricing' => 'static_pages#pricing'
 	match 'contact' => 'static_pages#contact'
@@ -64,9 +67,12 @@ Scheduler::Application.routes.draw do
 	match 'payments/edit' => 'payments#edit'
 	match 'payments/update' => 'payments#update'
 	
+	namespace :company do
+		resources :publish_casts,				:only => [:update]
+	end
 	
 	namespace :admin do
-		resources :accounts,				:only => [:index, :edit, :update, :destroy]
+		resources :accounts,						:only => [:index, :edit, :update, :destroy]
 		resources :subscription_plans,	:except => [:show]
 	end
 end

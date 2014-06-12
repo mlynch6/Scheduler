@@ -1,0 +1,69 @@
+<% provide(:title, "#{@sp.season.name} | #{@sp.piece.name} | Casting".html_safe) %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Seasons') %>
+
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1>Casting for <%= @sp.piece.name %>
+      <small><%= @sp.season.name %></small>
+    </h1>
+  </div>
+  <%= render 'casts/tools_menu' %>
+</div>
+
+<div class="row">
+  <% if @sp.published? %>
+    <small class="pull-right"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-lock') %> <%= @sp.published_at.to_s(:full) %> </small>
+  <% end %>
+  
+<% if @casts.length > 0 %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="mash-col-2-btn">&nbsp;</th>
+        <th>&nbsp;</th>
+        <% @casts.each do |cast| %>
+        <th>
+          <% if allow? "casts", "show" %>
+            <%= link_to cast.name, season_piece_cast_path(@sp, cast), :id => "view_#{cast.id}" %>
+          <% else %>
+            <%= cast.name %>
+          <% end %>
+          &nbsp;
+					<%= delete_link nil, cast, :id => "delete_#{cast.id}" if allow? "casts", "destroy" %>
+        </th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @castings.each do |character_name, casting_per_char| %>
+      <% char = casting_per_char.first.character %>
+      <tr>
+        <td class="mash-col-2-btn text-center">
+          <%= char.gender[0] if char.gender.present? %>
+          <%= "K" if char.is_child? %>
+          <%= "A" if char.animal? %>
+          <%= content_tag :span, nil, class: 'glyphicon glyphicon-bullhorn', title: 'Speaking Role' if char.speaking? %>
+        </td>
+        <td>
+          <% if allow? "characters", "edit" %>
+						<%= link_to char.name, edit_character_path(char), :id => "edit_#{char.id}" %>
+          <% else %>
+            <%= character_name %>
+					<% end %>
+        </td>
+        <% casting_by_cast = casting_per_char.group_by(&:cast_name) %>
+        <% @casts.each do |cast| %>
+        <% c = casting_by_cast[cast.name].first if casting_by_cast.has_key?(cast.name) %>
+        <td><%= if c && c.person then c.person.full_name else '' end  %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+	<p>No casts found.
+	</p>
+	<p>To begin, click the <em class="text-info">Add Cast</em> link above.</p>
+<% end %>
+</div>

@@ -14,7 +14,21 @@ Scheduler::Application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+	
+  # Change mail delivery to either :smtp, :sendmail, :file, :test
+  config.action_mailer.delivery_method = :smtp
+	config.action_mailer.perform_deliveries = true
+	config.action_mailer.default_url_options = { :host => "scheduler.dev" }
+	config.action_mailer.smtp_settings = {
+		address: 							"smtp.live.com",
+		port: 								587,
+		domain: 							"scheduler.dev",
+		authentication: 			"plain",
+		enable_starttls_auto: true,
+		user_name: 						ENV["HOTMAIL_USERNAME"],
+		password: 						ENV["HOTMAIL_PASSWORD"]
+	}
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log

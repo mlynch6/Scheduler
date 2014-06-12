@@ -1,4 +1,4 @@
 <%= f.text_field :name %>
 <%= f.date_field :start_dt, :label => 'From' %>
 <%= f.date_field :end_dt, :label => 'To' %>
-<%= f.select :piece_ids, @pieces, {}, {:multiple => true } %>
+<%= f.select :piece_ids, @pieces, {}, {:multiple => true, :class => 'chosen-select' } %>

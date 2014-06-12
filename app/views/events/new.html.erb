@@ -1,17 +1,29 @@
 <% type = (@event.event_type || 'Event').underscore.humanize.titleize %>
-<% provide(:title, "New #{type}") %>
+<% provide(:title, "Add #{type}") %>
 <% provide(:header_current, 'Calendar') %>
-<% provide(:sidebar_current, "New #{type}") %>
+<% provide(:sidebar_current, type.pluralize) %>
 
-<div class="page-header">
-	<h1><%= yield(:title) %></h1>
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1><%= type.pluralize %>
+      <small>Add</small>
+    </h1>
+  </div>
+  <%= render 'events/tools_menu' %>
 </div>
 
-<%= form_for @event, as: :event, builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-	<%= f.error_messages %>
-	<%= render 'form', :f => f %>
+<div class="row mash-show">
+	<%= render 'events/tabs' %>
 	
-	<%= f.submit_group do %>
-		<%= f.submit_primary 'Create' %>
-	<% end %>
-<% end %>
+	<div class="mash-body">
+    <%= form_for @event, as: :event, builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+    	<%= f.error_messages %>
+    	<%= render 'form', :f => f %>
+	
+    	<%= f.submit_group do %>
+    		<%= f.submit_primary 'Create' %>
+        <%= link_to 'Cancel', events_path, class: 'btn btn-link' %>
+    	<% end %>
+    <% end %>
+  </div>
+</div>

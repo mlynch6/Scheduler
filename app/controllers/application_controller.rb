@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   helper :link
   
+	before_filter :https_redirect
   before_filter :authorize
   around_filter :scope_current_account
   around_filter :account_time_zone, if: :current_user
@@ -36,5 +37,19 @@ private
 			flash[:error] = "Not authorized"
 			redirect_to root_url
 		end
+	end
+	
+	def https_redirect
+		if ENV["ENABLE_HTTPS"] == "yes"
+			if request.ssl? && !use_https? || !request.ssl? && use_https?
+				protocol = request.ssl? ? "http" : "https"
+				flash.keep
+				redirect_to params: request.query_parameters, protocol: "#{protocol}://", status: :moved_permanently
+			end
+		end
+	end
+	
+	def use_https?
+		true # Override in other controllers
 	end
 end

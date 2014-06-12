@@ -2,15 +2,23 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Contract') %>
 
-<div class="page-header">
-	<h1>Add Rehearsal Break</h1>
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1>Contract Settings
+       <small>Add Rehearsal Breaks</small>
+     </h1>
+  </div>
+  <%= render 'agma_contracts/tools_menu' %>
 </div>
 
-<%= form_for [@agma_contract, @rehearsal_break], :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-	<%= f.error_messages %>
-	<%= render 'form', :f => f %>
+<div class="row">
+  <%= form_for [@agma_contract, @rehearsal_break], :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+  	<%= f.error_messages %>
+  	<%= render 'form', :f => f %>
 
-	<%= f.submit_group do %>
-		<%= f.submit_primary 'Create' %>
-	<% end %>
-<% end %>
+  	<%= f.submit_group do %>
+  		<%= f.submit_primary 'Create' %>
+      <%= link_to 'Cancel', agma_contract_path(AgmaContract.first), class: 'btn btn-link' %>
+  	<% end %>
+  <% end %>
+</div>

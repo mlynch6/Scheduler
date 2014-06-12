@@ -1,0 +1,48 @@
+<% provide(:title, "Dashboard") %>
+<% provide(:header_current, 'Home') %>
+<% provide(:sidebar_current, 'Dashboard') %>
+
+<div class="page-header">
+	<h1><%= yield(:title) %></h1>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">My Schedule</h3>
+		  </div>
+		  <div class="panel-body">
+        events here
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">	
+  	<div class="panel panel-default">
+  	  <div class="panel-heading">
+        <h3 class="panel-title">Questions for Beta Users</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+  				<li>Need a name for the application</li>
+  				<li>Should Calendar show 15 min (currently shown) or 30 min increments?</li>
+  				<li>Should Calendar have the Day or Week view as default?</li>
+  			</ul>
+  		 </div>
+  	</div>
+    
+  	<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Announcements <span class="badge">5</span></h3>
+		  </div>
+		  <table class="table">
+			  <tbody>
+					<tr><td>Message 1</td></tr>
+					<tr><td>Message 2</td></tr>
+					<tr><td>Message 3</td></tr>
+				</tbody>
+		  </table>
+  	</div>
+  </div>
+</div>
