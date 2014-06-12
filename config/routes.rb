@@ -1,9 +1,12 @@
 Scheduler::Application.routes.draw do
+  
+
   root :to => 'static_pages#home'
 	match 'login' => 'sessions#new'
 	match 'logout' =>'sessions#destroy'
 	match 'signup' => 'accounts#new'
 	get 'dashboard', to: 'dashboards#index'
+	resources :password_resets,		:except => [:show, :destroy]
 	
 	resources :accounts do
 		resources :addresses, 			:except => [:index, :show]

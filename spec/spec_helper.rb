@@ -47,6 +47,7 @@ Spork.prefork do
 		
 		config.before(:each) do
 			DatabaseCleaner.strategy = :transaction
+			reset_email
 		end
 
 		config.before(:each, :js => true) do
@@ -77,6 +78,7 @@ Spork.prefork do
 	  config.include AuthMacros
 	  config.include Utilities
 	  config.include ChosenSelect
+		config.include MailerMacros
 		
 		Capybara.server_port = 6543
 	end

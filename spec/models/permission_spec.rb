@@ -28,6 +28,14 @@ shared_examples "a guest" do
 		it { should allow(:accounts, :new) }
 		it { should allow(:accounts, :create) }
 	end
+	
+	context "password_resets" do
+		it { should allow(:password_resets, :index) }
+		it { should allow(:password_resets, :new) }
+		it { should allow(:password_resets, :create) }
+		it { should allow(:password_resets, :edit) }
+		it { should allow(:password_resets, :update) }
+	end
 end
 
 shared_examples "an employee" do

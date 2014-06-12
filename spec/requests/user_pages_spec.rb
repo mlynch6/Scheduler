@@ -140,6 +140,7 @@ describe "User Pages:" do
 		end
 		
 	  it "record with error" do
+			pending "change password functionality"
 	  	fill_in "Password", with: ""
 	  	click_button 'Update'
 	

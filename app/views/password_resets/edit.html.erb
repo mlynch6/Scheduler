@@ -1,0 +1,21 @@
+<% provide(:title, 'Reset Your Password') %>
+
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1><%= yield(:title) %></h1>
+  </div>
+</div>
+
+<div class="row">
+  <%= form_for @user, :url => password_reset_path(params[:id]), :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+    <%= f.error_messages %>
+      
+    <%= f.password_field :password, field_size: 'col-md-4' %>
+    <%= f.password_field :password_confirmation, field_size: 'col-md-4' %>
+	
+    <%= f.submit_group do %>
+    	<%= f.submit_primary 'Update Password' %>
+      <%= link_to 'Cancel', login_path, class: 'btn btn-link' %>
+    <% end %>
+  <% end %>
+</div>

@@ -2,14 +2,16 @@
 #
 # Table name: users
 #
-#  id              :integer          not null, primary key
-#  account_id      :integer          not null
-#  employee_id     :integer          not null
-#  username        :string(20)       not null
-#  password_digest :string(255)      not null
-#  role            :string(20)       not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                     :integer          not null, primary key
+#  account_id             :integer          not null
+#  employee_id            :integer          not null
+#  username               :string(20)       not null
+#  password_digest        :string(255)      not null
+#  role                   :string(20)       not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  password_reset_token   :string(50)
+#  password_reset_sent_at :datetime
 #
 
 FactoryGirl.define do

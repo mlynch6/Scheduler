@@ -3,6 +3,7 @@ class Permission
 		allow :static_pages, [:home, :features, :pricing, :contact]
 		allow :sessions, [:new, :create, :destroy]
 		allow :accounts, [:new, :create]
+		allow :password_resets, [:index, :new, :create, :edit, :update]
 		
 		if user
 			allow [:dashboards, :locations, :pieces, :scenes, :characters, :employees, :events], [:index]

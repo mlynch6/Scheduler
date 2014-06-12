@@ -2,21 +2,23 @@
 #
 # Table name: users
 #
-#  id              :integer          not null, primary key
-#  account_id      :integer          not null
-#  employee_id     :integer          not null
-#  username        :string(20)       not null
-#  password_digest :string(255)      not null
-#  role            :string(20)       not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                     :integer          not null, primary key
+#  account_id             :integer          not null
+#  employee_id            :integer          not null
+#  username               :string(20)       not null
+#  password_digest        :string(255)      not null
+#  role                   :string(20)       not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  password_reset_token   :string(50)
+#  password_reset_sent_at :datetime
 #
 
 require 'spec_helper'
 
 describe User do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:employee) { FactoryGirl.create(:employee, account: account) }
+	let(:employee) { FactoryGirl.create(:employee, account: account, email: 'testuser@example.com') }
 	let(:user) { FactoryGirl.create(:user,
 				account: account,
 				employee: employee,
@@ -34,6 +36,8 @@ describe User do
   	it { should respond_to(:password) }
   	it { should respond_to(:password_confirmation) }
   	it { should respond_to(:role) }
+		it { should respond_to(:password_reset_token) }
+		it { should respond_to(:password_reset_sent_at) }
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:employee) }
@@ -41,6 +45,7 @@ describe User do
   	it { should respond_to(:new_registration) }
   	it { should respond_to(:authenticate) }
   	it { should respond_to(:set_admin_role) }
+		it { should respond_to(:send_password_reset_email) }
     
     it "employee_id cannot be changed" do
 			new_employee = FactoryGirl.create(:employee)
@@ -203,6 +208,30 @@ describe User do
 			describe "sets role to Administrator" do
 				before { user.set_admin_role }
 				it { user.reload.role.should == "Administrator" }
+			end
+		end
+		
+		describe ".send_password_reset_email" do
+			before do
+				# Done by a user who is not logged in
+				Account.current_id = nil
+			end
+			
+			it "generates a unique password_reset_token each time" do
+				last_token = user.password_reset_token
+				user.send_password_reset_email
+				user.password_reset_token.should_not == last_token
+			end
+			
+			it "saves the time the password reset was sent" do
+				Timecop.freeze
+				user.send_password_reset_email
+				user.reload.password_reset_sent_at.should == Time.zone.now
+			end
+			
+			it "delivers email to the person" do
+				user.send_password_reset_email
+				last_email.to.should include(user.employee.email)
 			end
 		end
 	end
