@@ -8,6 +8,7 @@ class Permission
 		if user
 			allow [:dashboards, :locations, :pieces, :scenes, :characters, :employees, :events], [:index]
 			allow [:pieces, :events], [:show]
+			allow [:passwords], [:new, :create]
 			
 			if user.role == "Administrator"
 				#index
@@ -28,7 +29,7 @@ class Permission
 				
 				#edit & update
 				allow [:accounts, :subscriptions, :payments, :agma_contracts, :addresses, 
-						:phones, :employees, :users, :seasons, :locations, :pieces, :scenes, 
+						:phones, :employees, :seasons, :locations, :pieces, :scenes, 
 						:characters, :events, :rehearsals, :company_classes, :costume_fittings,
 						:castings],
 						[:edit, :update]

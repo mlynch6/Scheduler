@@ -1,0 +1,23 @@
+<% provide(:title, 'Change Password') %>
+<% provide(:header_current, 'Home') %>
+
+<div class="row">
+  <div class="page-header col-md-11">
+  	 <h1><%= yield(:title) %></h1>
+  </div>
+</div>
+
+<div class="row">
+  <%= form_for @password_form, :url => passwords_path, method: :post, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+    <%= f.error_messages %>
+      
+    <%= f.password_field :current_password, label: 'Current Password', field_size: 'col-md-4' %>
+    <%= f.password_field :new_password, label: 'New Password', field_size: 'col-md-4' %>
+    <%= f.password_field :new_password_confirmation, label: 'Confirm Password', field_size: 'col-md-4' %>
+	
+    <%= f.submit_group do %>
+    	<%= f.submit_primary 'Update Password' %>
+      <%= link_to 'Cancel', dashboard_path, class: 'btn btn-link' %>
+    <% end %>
+  <% end %>
+</div>

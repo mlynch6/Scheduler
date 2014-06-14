@@ -17,7 +17,8 @@ Scheduler::Application.routes.draw do
 	end
 	resources :rehearsal_breaks, 	:only => [:destroy]
   resources :sessions
-  resources :users, 						:except => [:show]
+  resources :users, 						:only => [:index, :new, :create, :destroy]
+	resources :passwords,					:only => [:new, :create]
   
   resources :employees do
   	get 'inactive', on: :collection

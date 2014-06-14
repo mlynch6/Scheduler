@@ -45,6 +45,11 @@ shared_examples "an employee" do
 		it { should allow(:dashboards, :index) }
 	end
 	
+	context "passwords" do
+		it { should allow(:passwords, :new) }
+		it { should allow(:passwords, :create) }
+	end
+	
 	context "events" do
 		it { should allow(:events, :index) }
 		it { should allow(:events, :show) }
@@ -187,8 +192,6 @@ shared_examples "an administrator" do
 		it { should allow(:users, :index) }
 		it { should allow(:users, :new) }
 		it { should allow(:users, :create) }
-		it { should allow(:users, :edit) }
-		it { should allow(:users, :update) }
 	end
 	
 	context "locations" do
@@ -265,8 +268,6 @@ shared_examples "a NON-administrator" do
 		it { should_not allow(:users, :index) }
 		it { should_not allow(:users, :new) }
 		it { should_not allow(:users, :create) }
-		it { should_not allow(:users, :edit) }
-		it { should_not allow(:users, :update) }
 	end
 	
 	context "locations" do
@@ -379,6 +380,9 @@ describe Permission do
 		it { should_not allow(:costume_fittings, :edit) }
 		it { should_not allow(:costume_fittings, :update) }
 		it { should_not allow(:costume_fittings, :destroy) }
+		
+		it { should_not allow(:passwords, :new) }
+		it { should_not allow(:passwords, :create) }
 	end
 	
 	context "as Employee" do

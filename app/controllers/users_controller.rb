@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	before_filter :get_resource, :only => [:destroy]
 	
   def index
   	@users = User.includes(:employee).paginate(page: params[:page], per_page: params[:per_page])
@@ -19,19 +19,6 @@ class UsersController < ApplicationController
   		render "new"
   	end
   end
-
-	def edit
-		form_setup
-	end
-	
-	def update
-		if @user.update_attributes(params[:user])
-			redirect_to users_path, :notice => "Successfully updated the user."
-		else
-			form_setup
-			render 'edit'
-		end
-	end
 	
 	def destroy
 		@user.destroy
