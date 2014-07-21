@@ -53,7 +53,7 @@ describe "Cast Pages:" do
 		end
 		
 		it "shows Male gender on list" do
-			@char = FactoryGirl.create(:character_male, account: current_account, piece: @piece)
+			@char = FactoryGirl.create(:character, :male, account: current_account, piece: @piece)
 			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
 			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
 			visit season_piece_casts_path(@season_piece)
@@ -62,7 +62,7 @@ describe "Cast Pages:" do
 		end
 		
 		it "shows Female gender on list" do
-			@char = FactoryGirl.create(:character_female, account: current_account, piece: @piece)
+			@char = FactoryGirl.create(:character, :female, account: current_account, piece: @piece)
 			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
 			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
 			visit season_piece_casts_path(@season_piece)
@@ -71,7 +71,7 @@ describe "Cast Pages:" do
 		end
 		
 		it "shows Animal on list" do
-			@char = FactoryGirl.create(:character_animal, account: current_account, piece: @piece)
+			@char = FactoryGirl.create(:character, :animal, account: current_account, piece: @piece)
 			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
 			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
 			visit season_piece_casts_path(@season_piece)
@@ -80,7 +80,7 @@ describe "Cast Pages:" do
 		end
 		
 		it "shows Child on list" do
-			@char = FactoryGirl.create(:character_child, account: current_account, piece: @piece)
+			@char = FactoryGirl.create(:character, :child, account: current_account, piece: @piece)
 			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
 			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
 			visit season_piece_casts_path(@season_piece)
@@ -89,7 +89,7 @@ describe "Cast Pages:" do
 		end
 		
 		it "shows Speaking Role on list" do
-			@char = FactoryGirl.create(:character_speaking, account: current_account, piece: @piece)
+			@char = FactoryGirl.create(:character, :speaking, account: current_account, piece: @piece)
 			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
 			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char)
 			visit season_piece_casts_path(@season_piece)
@@ -140,11 +140,10 @@ describe "Cast Pages:" do
 	
 	context "#show" do
 		before do
-			@employee = FactoryGirl.create(:employee, account: current_account)
 			@char1 = FactoryGirl.create(:character, account: current_account, piece: @piece)
 			@char2 = FactoryGirl.create(:character, account: current_account, piece: @piece)
 			@cast = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
-			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char1, person: @employee)
+			FactoryGirl.create(:casting, :with_person, account: current_account, cast: @cast, character: @char1)
 			FactoryGirl.create(:casting, account: current_account, cast: @cast, character: @char2)
 			
 			click_link 'Setup'

@@ -6,7 +6,7 @@ describe "Event Series Pages:" do
   context "#new" do
 		before do
 			log_in
-			@location = FactoryGirl.create(:location, account: current_account, name: 'Loc1')
+			@location = FactoryGirl.create(:location, account: current_account)
 		  click_link 'Calendar'
 			click_button 'Tools'
 		  click_link 'Add Event'
@@ -80,13 +80,8 @@ describe "Event Series Pages:" do
 
 		context "with valid info", js: true do
 			before do
-				log_in
-				location = FactoryGirl.create(:location, account: current_account, name: 'Loc1')
-				emp = FactoryGirl.create(:employee, account: current_account, first_name: 'Peter', last_name: 'Parker')
-				visit new_event_path
-				
 				fill_in "Title", with: "Repeating Event"
-				select location.name, from: "Location"
+				select @location.name, from: "Location"
 				fill_in 'Date', with: "01/01/2013"
 				fill_in 'Start Time', with: "10:15AM"
 				fill_in 'Duration', with: 60
@@ -114,17 +109,15 @@ describe "Event Series Pages:" do
 		context "with warnings" do
 			it "shows warning when location is booked" do
 				pending
-				log_in
-				location = FactoryGirl.create(:location, account: current_account, name: 'Loc1')
 				event = FactoryGirl.create(:event, account: current_account,
-										location: location,
+										location: @location,
 										start_date: Date.new(2013, 1, 2),
 										start_time: "10 AM",
 										duration: 90)
 				visit new_event_path
 				
 				fill_in "Title", with: "Repeating Event"
-				select location.name, from: "Location"
+				select @location.name, from: "Location"
 				fill_in 'Date', with: "01/01/2013"
 				fill_in 'Start Time', with: "10AM"
 				fill_in 'Duration', with: 60
@@ -134,7 +127,7 @@ describe "Event Series Pages:" do
 				click_button 'Create'
 		
 				should have_selector 'div.alert-warning', text: "is double booked during this time"
-				should have_selector 'div.alert-warning', text: location.name
+				should have_selector 'div.alert-warning', text: @location.name
 			end
 			
 			it "shows warning when employee is double booked" do
@@ -146,12 +139,12 @@ describe "Event Series Pages:" do
 	context "#edit", js: true do
 		before do
 			log_in
-			location = FactoryGirl.create(:location, account: current_account)
+			@location = FactoryGirl.create(:location, account: current_account)
 			Account.current_id = current_account.id
 			series = FactoryGirl.create(:event_series, 
 									account: current_account, 
 									title: 'My Repeating',
-									location_id: location.id,
+									location_id: @location.id,
 									start_date: Date.new(2014,1,1),
 									start_time: "11 AM",
 									duration: 60,
@@ -407,12 +400,12 @@ describe "Event Series Pages:" do
 	context "#destroy", js: true do
 		before do
 			log_in
-			location = FactoryGirl.create(:location, account: current_account)
+			@location = FactoryGirl.create(:location, account: current_account)
 			Account.current_id = current_account.id
 			series = FactoryGirl.create(:event_series, 
 								account: current_account,
 								title: 'My Repeating',
-								location_id: location.id,
+								location_id: @location.id,
 								start_date: Date.new(2014,1,1),
 								start_time: "11 AM",
 								duration: 60,

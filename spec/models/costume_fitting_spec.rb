@@ -19,10 +19,8 @@ require 'spec_helper'
 
 describe CostumeFitting do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:location) { FactoryGirl.create(:location, account: account) }
 	let(:fitting) { FactoryGirl.create(:costume_fitting,
 											account: account,
-											location: location,
 											title: 'My Costume Fitting',
 											start_date: Date.new(2012,1,1),
 											start_time: "9AM",

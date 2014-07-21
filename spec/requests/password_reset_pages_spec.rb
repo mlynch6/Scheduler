@@ -5,12 +5,11 @@ describe "Password Reset Pages:" do
 	
 	context "#index" do
 		before do
-			@account = FactoryGirl.create(:account)
-			@employee = FactoryGirl.create(:employee, account: @account)
-			@user = FactoryGirl.create(:user, employee: @employee)
+			@user = FactoryGirl.create(:user)
+			@person = @user.person
 			visit login_path
 			click_link 'Forgot password'
-      fill_in 'Email', with: @employee.email
+      fill_in 'Email', with: @person.email
 			click_button 'Reset Password'
 		end
 		
@@ -26,9 +25,8 @@ describe "Password Reset Pages:" do
 	
   context "#new" do
 		before do
-			@account = FactoryGirl.create(:account)
-			@employee = FactoryGirl.create(:employee, account: @account, email: Faker::Internet.email)
-			@user = FactoryGirl.create(:user, employee: @employee)
+			@person = FactoryGirl.create(:person, :complete_record)
+			@user = FactoryGirl.create(:user, account: @person.account, person: @person)
 			visit login_path
 			click_link 'Forgot password'
 		end
@@ -44,11 +42,11 @@ describe "Password Reset Pages:" do
 		end
 		
     it "emails user when requesting password reset" do
-      fill_in 'Email', with: @employee.email
+      fill_in 'Email', with: @person.email
 			click_button 'Reset Password'
 			
 			should have_title 'Password Reset Instructions Sent'
-			last_email.to.should include(@employee.email)
+			last_email.to.should include(@person.email)
     end
 		
 		it "does not email invalid user when requesting password reset" do
@@ -62,11 +60,10 @@ describe "Password Reset Pages:" do
 	
 	context "#edit" do
 		before do
-			@account = FactoryGirl.create(:account)
-			@employee = FactoryGirl.create(:employee, account: @account, email: Faker::Internet.email)
-			@user = FactoryGirl.create(:user, 
-					account: @account,
-					employee: @employee, 
+			@person = FactoryGirl.create(:person, :complete_record)
+			@user = FactoryGirl.create(:user,
+					account: @person.account,
+					person: @person,
 					password_reset_token: "something", 
 					password_reset_sent_at: 3.hours.ago)
 			visit edit_password_reset_path(@user.password_reset_token)

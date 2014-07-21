@@ -62,8 +62,6 @@ describe "Subscription Pages:" do
 	  	should have_link 'Overview'
 			should have_link 'Subscription'
 			
-	  	should have_link 'Add Address'
-	  	should have_link 'Add Phone Number'
 			should have_link 'Change Payment Method'
 		end
 	end
@@ -104,8 +102,6 @@ describe "Subscription Pages:" do
 	  	should have_link 'Overview'
 			should have_link 'Subscription'
 			
-	  	should have_link 'Add Address'
-	  	should have_link 'Add Phone Number'
 			should have_link 'Change Payment Method'
 		end
 		

@@ -27,7 +27,7 @@ describe "Piece Pages:" do
 		end
   
 		it "lists records" do
-			4.times { FactoryGirl.create(:piece_complete, account: current_account) }
+			4.times { FactoryGirl.create(:piece, :complete_record, account: current_account) }
 			visit pieces_path(per_page: 3)
 		
 			should have_selector 'th', text: "Piece/Choreographer"
@@ -218,7 +218,7 @@ describe "Piece Pages:" do
 	context "#show" do
 		before do
 			log_in
-			@piece = FactoryGirl.create(:piece_complete, account: current_account)
+			@piece = FactoryGirl.create(:piece, :complete_record, account: current_account)
 			click_link "Setup"
 			click_link "Pieces"
 			click_link "#{@piece.name}"

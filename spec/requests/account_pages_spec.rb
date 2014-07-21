@@ -37,7 +37,7 @@ describe "Account Pages:" do
 	    should have_field 'Password'
 	    should have_field 'Confirm Password'
 	    
-	    should have_field 'Credit Card Number'
+	    should have_field 'Credit Card #'
 	    should have_select 'card_month'
 	    should have_select 'card_year'
 	    should have_field 'Security Code'
@@ -45,7 +45,7 @@ describe "Account Pages:" do
 		
 	  describe "invalid Signup", js: true do
 		  it "with invalid credit card number shows error" do
-		  	fill_in "Credit Card Number", with: "4242424242424241"
+		  	fill_in "Credit Card #", with: "4242424242424241"
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Create Account"
@@ -55,7 +55,7 @@ describe "Account Pages:" do
 	    end
 	    
 	    it "with invalid credit card CVC shows error" do
-		  	fill_in "Credit Card Number", with: "4242424242424242"
+		  	fill_in "Credit Card #", with: "4242424242424242"
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "99"
 		  	click_button "Create Account"
@@ -65,46 +65,13 @@ describe "Account Pages:" do
 	    end
 		  
 		  it "valid credit card with incomplete account information shows error" do
-		  	fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
+		  	fill_in "Credit Card #", with: "378282246310005" #valid testing Am Ex
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "213"
 		  	click_button "Create Account"
 	    	
 	    	should have_selector 'div.alert-danger'
 	    	should have_content 'Credit Card has been provided'
-	    end
-	    
-	    it "with card declined error" do
-	    	company_name = "New York City Ballet #{Time.now}"
-    		username = "pmartin#{DateTime.now.seconds_since_midnight}"
-    	
-	    	fill_in "Company", with: company_name
-    		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
-    		fill_in "Phone #", with: "414-543-1000"
-		  	
-		  	fill_in "Address", with: Faker::Address.street_address
-				fill_in "Address 2", with: Faker::Address.street_address
-				fill_in "City", with: Faker::Address.city
-				select "New York", from: "State"
-				fill_in "Zip Code", with: Faker::Address.zip.first(5)
-    		
-    		fill_in "First Name", with: "Peter"
-    		fill_in "Last Name", with: "Martin"
-    		select  "Artistic Director", from: "Role"
-    		fill_in "Email", with: "peter.martin@nycb.org"
-    		
-    		fill_in "Username", with: username
-    		fill_in "Password", with: "password"
-    		fill_in "Confirm Password", with: "password"
-    		
-		  	fill_in "Credit Card Number", with: "4000000000000002" #always returns card declined
-		  	select (Date.today.year+1).to_s, from: "card_year"
-		  	fill_in "Security Code", with: "213"
-		  	click_button "Create Account"
-	    	
-	    	should have_selector 'div.alert-danger'
-	    	should have_content 'card was declined'
-	    	should have_content 'Credit Card Number'
 	    end
 	  end
     
@@ -131,7 +98,7 @@ describe "Account Pages:" do
     		fill_in "Password", with: "password"
     		fill_in "Confirm Password", with: "password"
     		
-    		fill_in "Credit Card Number", with: "378282246310005" #valid testing Am Ex
+    		fill_in "Credit Card #", with: "378282246310005" #valid testing Am Ex
 		  	select (Date.today.year+1).to_s, from: "card_year"
 		  	fill_in "Security Code", with: "213"
 		  	
@@ -145,7 +112,6 @@ describe "Account Pages:" do
     	end
     	
     	it "creates the Account" do
-    		should have_content(company_name)
     		account = User.unscoped.find_by_username(username).account
     		account.name.should == company_name
     	end
@@ -167,6 +133,11 @@ describe "Account Pages:" do
 				account.phones.first.phone_type.should == "Work"
     	end
     	
+    	it "creates a Person" do
+    		account = User.unscoped.find_by_username(username).account
+				account.people.count.should == 1
+    	end
+			
     	it "creates an Employee" do
     		account = User.unscoped.find_by_username(username).account
 				account.employees.count.should == 1
@@ -310,8 +281,6 @@ describe "Account Pages:" do
 	  	should have_link 'Overview'
 			should have_link 'Subscription'
 			
-			should have_link 'Add Address'
-	  	should have_link 'Add Phone Number'
 			should have_link 'Change Payment Method'
 		end
 	end

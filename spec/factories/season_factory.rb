@@ -13,9 +13,13 @@
 
 FactoryGirl.define do
 	factory :season do
-		account
 		sequence(:name)	{ |n| "Season #{n}" }
 	 	start_dt				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 	 	end_dt 					{ start_dt + 6.months }
+		
+		after_build do |s|
+			# association :account
+			s.account = FactoryGirl.create(:account) unless s.account
+		end
 	end
 end

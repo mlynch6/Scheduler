@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	before_filter :get_resource, :only => [:destroy]
 	
   def index
-  	@users = User.includes(:employee).paginate(page: params[:page], per_page: params[:per_page])
+  	@users = User.includes(:person).paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
   def new
@@ -19,19 +19,6 @@ class UsersController < ApplicationController
   		render "new"
   	end
   end
-
-	def edit
-		form_setup
-	end
-	
-	def update
-		if @user.update_attributes(params[:user])
-			redirect_to users_path, :notice => "Successfully updated the user."
-		else
-			form_setup
-			render 'edit'
-		end
-	end
 	
 	def destroy
 		@user.destroy
@@ -45,6 +32,6 @@ private
 	
 	#setup for form - dropdowns, etc
 	def form_setup
-		@employees = Employee.active.without_user.map { |employee| [employee.full_name, employee.id] }
+		@employees = Person.active.employees.map { |employee| [employee.full_name, employee.id] }
 	end
 end

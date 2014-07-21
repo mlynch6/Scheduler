@@ -21,16 +21,17 @@ require 'application_helper'
 describe Rehearsal do
 	let(:account) { FactoryGirl.create(:account) }
 	let(:contract) { account.agma_contract }
-	let(:location) { FactoryGirl.create(:location, account: account) }
-	let(:piece) { FactoryGirl.create(:piece, account: account) }
+	#let(:location) { FactoryGirl.create(:location, account: account) }
 	let(:rehearsal) { FactoryGirl.create(:rehearsal,
 											account: account,
-											location: location,
+											#location: location,
 											title: 'Test Rehearsal',
 											start_date: Date.new(2012,1,1),
 											start_time: "9AM",
 											duration: 60,
-											piece: piece) }
+											) }
+	let(:piece) { rehearsal.piece }
+	
 	before do
 		Account.current_id = account.id
 		@rehearsal = FactoryGirl.build(:rehearsal)
@@ -207,45 +208,43 @@ describe Rehearsal do
 	end
 	
 	context "(Warnings)" do
-		let(:location2) { FactoryGirl.create(:location, account: account) }
-		let(:e1) { FactoryGirl.create(:dancer, account: account) }
-		let(:e2) { FactoryGirl.create(:dancer, account: account) }
-		let(:e3) { FactoryGirl.create(:dancer, account: account) }
+		let(:p1) { FactoryGirl.create(:person, :agma, account: account) }
+		let(:p2) { FactoryGirl.create(:person, :agma, account: account) }
+		let(:p3) { FactoryGirl.create(:person, :agma, account: account) }
 		
 		context "when employee is double booked" do
 			let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account, 
-													location: location2,
 													start_date: Time.zone.today,
 													start_time: "9AM",
 													duration: 30,
-													employee_ids: [e1.id, e2.id, e3.id]) }
+													invitee_ids: [p1.id, p2.id, p3.id]) }
 			
 			let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account, 
-													location: location2,
+													location: rehearsal1.location,
 													start_date: Time.zone.today,
 													start_time: "10AM",
 													duration: 30,
-													employee_ids: [e1.id]) }
+													invitee_ids: [p1.id]) }
 			
 			it "gives warning message" do
 				rehearsal.start_date = Time.zone.today
 				rehearsal.start_time = "9AM"
 				rehearsal.duration = 90
-				rehearsal.employee_ids = [e1.id]
+				rehearsal.invitee_ids = [p1.id]
 				rehearsal.save
 				
 				rehearsal.warnings.count.should == 1
-				rehearsal.warnings[:emp_double_booked].should == "The following people are double booked during this time: #{e1.full_name}"
+				rehearsal.warnings[:emp_double_booked].should == "The following people are double booked during this time: #{p1.full_name}"
 			end
 		end
 		
-		context "when employee has reached maximum rehearsal hours in day" do
+		context "when AGMA Dancer has reached maximum rehearsal hours in day" do
 			let!(:r_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: location,
+													location: rehearsal.location,
 													start_date: Time.zone.today,
 													start_time: "10AM",
 													duration: 360,
-													employee_ids: [e1.id, e2.id, e3.id]) }
+													invitee_ids: [p1.id, p2.id, p3.id]) }
 													
 			it "gives warning message" do
 				contract.rehearsal_max_hrs_per_day = 6
@@ -254,45 +253,45 @@ describe Rehearsal do
 				rehearsal.start_date = Time.zone.today
 				rehearsal.start_time = "4PM"
 				rehearsal.duration = 30
-				rehearsal.employee_ids = [e1.id]
+				rehearsal.invitee_ids = [p1.id]
 				rehearsal.save
 				
 				rehearsal.warnings.count.should == 1
-				rehearsal.warnings[:emp_max_hr_per_day].should == "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_day} hrs/day: #{e1.full_name}"
+				rehearsal.warnings[:emp_max_hr_per_day].should == "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_day} hrs/day: #{p1.full_name}"
 			end
 		end
 		
-		context "when employee has reached maximum rehearsal hours in a week" do
+		context "when AGMA Dancer has reached maximum rehearsal hours in a week" do
 			let!(:mon_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: location,
+													location: rehearsal.location,
 													start_date: Date.new(2014,1,6),
 													start_time: "10AM",
 													duration: 360,
-													employee_ids: [e1.id, e2.id, e3.id]) }
+													invitee_ids: [p1.id, p2.id, p3.id]) }
 			let!(:tues_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: location,
+													location: rehearsal.location,
 													start_date: Date.new(2014,1,7),
 													start_time: "10AM",
 													duration: 360,
-													employee_ids: [e1.id, e2.id, e3.id]) }
+													invitee_ids: [p1.id, p2.id, p3.id]) }
 			let!(:wed_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: location,
+													location: rehearsal.location,
 													start_date: Date.new(2014,1,8),
 													start_time: "10AM",
 													duration: 360,
-													employee_ids: [e1.id, e2.id, e3.id]) }
+													invitee_ids: [p1.id, p2.id, p3.id]) }
 			let!(:thurs_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: location,
+													location: rehearsal.location,
 													start_date: Date.new(2014,1,9),
 													start_time: "10AM",
 													duration: 360,
-													employee_ids: [e1.id, e2.id, e3.id]) }
+													invitee_ids: [p1.id, p2.id, p3.id]) }
 			let!(:fri_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: location,
+													location: rehearsal.location,
 													start_date: Date.new(2014,1,10),
 													start_time: "10AM",
 													duration: 360,
-													employee_ids: [e1.id, e3.id]) }
+													invitee_ids: [p1.id, p3.id]) }
 			
 			it "gives warning message" do
 				contract.rehearsal_max_hrs_per_day = 6
@@ -302,11 +301,11 @@ describe Rehearsal do
 				rehearsal.start_date = Date.new(2014,1,11)
 				rehearsal.start_time = "10AM"
 				rehearsal.duration = 30
-				rehearsal.employee_ids = [e1.id, e2.id]
+				rehearsal.invitee_ids = [p1.id, p2.id]
 				rehearsal.save
 				
 				rehearsal.warnings.count.should == 1
-				rehearsal.warnings[:emp_max_hr_per_week].should == "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_week} hrs/week: #{e1.full_name}"
+				rehearsal.warnings[:emp_max_hr_per_week].should == "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_week} hrs/week: #{p1.full_name}"
 			end
 		end
 	end

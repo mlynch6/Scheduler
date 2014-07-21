@@ -4,7 +4,7 @@
 #
 #  id                     :integer          not null, primary key
 #  account_id             :integer          not null
-#  employee_id            :integer          not null
+#  person_id              :integer          not null
 #  username               :string(20)       not null
 #  password_digest        :string(255)      not null
 #  role                   :string(20)       not null
@@ -16,17 +16,23 @@
 
 FactoryGirl.define do
 	factory :user do
-		account
-		employee
 		sequence(:username)	{ |n| "username#{n}" }
 	 	password 							"Password"
 		password_confirmation	"Password"
 		
-		factory :admin do
+		after_build do |u|
+			# association :account
+			u.account = FactoryGirl.create(:account) unless u.account
+			
+			# association :person
+			u.person = FactoryGirl.create(:person, account: u.account) unless u.person
+		end
+		
+		trait :admin do
 			role	"Administrator"
 		end
 		
-		factory :superadmin do
+		trait :superadmin do
 			role	"Super Administrator"
 		end
 	end

@@ -16,12 +16,10 @@ require 'spec_helper'
 
 describe SeasonPiece do
   let(:account) { FactoryGirl.create(:account) }
-	let(:season) { FactoryGirl.create(:season, account: account) }
-	let(:piece) { FactoryGirl.create(:piece, account: account) }
-	let(:season_piece) { FactoryGirl.create(:season_piece,
-											account: account,
-											season: season,
-											piece: piece) }
+	let(:season_piece) { FactoryGirl.create(:season_piece, account: account) }
+	let(:season) { season_piece.season }
+	let(:piece) { season_piece.piece }
+	
 	before do
 		Account.current_id = account.id
 		@season_piece = FactoryGirl.build(:season_piece)
@@ -156,18 +154,11 @@ describe SeasonPiece do
 	
 	describe "(Scopes)" do
 		before do
-			account.season_pieces.delete_all
+			SeasonPiece.unscoped.delete_all
 		end
-		let!(:piece1) { FactoryGirl.create(:piece, account: account) }
-		let!(:season_piece1) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece1) }
-		
-		let!(:piece2) { FactoryGirl.create(:piece, account: account) }
-		let!(:season_piece2) { FactoryGirl.create(:season_piece_published, account: account, season: season, piece: piece2) }
-		
-		let!(:wrong_acnt) { FactoryGirl.create(:account) }
-		let!(:season_wrong_acnt) { FactoryGirl.create(:season, account: wrong_acnt) }
-		let!(:piece_wrong_acnt) { FactoryGirl.create(:piece, account: wrong_acnt) }
-		let!(:season_piece_wrong_acnt) { FactoryGirl.create(:season_piece, account: wrong_acnt, season: season_wrong_acnt, piece: piece_wrong_acnt) }
+		let!(:season_piece1) { FactoryGirl.create(:season_piece, account: account) }
+		let!(:season_piece2) { FactoryGirl.create(:season_piece, :published, account: account) }
+		let!(:season_piece_wrong_acnt) { FactoryGirl.create(:season_piece, account: FactoryGirl.create(:account)) }
 		
 		describe "default_scope" do
 			it "returns the records in current account" do
@@ -203,8 +194,7 @@ describe SeasonPiece do
 	context "(On Create)" do
 		it "published_at is set when published" do
 			Timecop.freeze
-			piece2 = FactoryGirl.create(:piece, account: account)
-			@published = FactoryGirl.create(:season_piece_published, account: account, season: season, piece: piece2)
+			@published = FactoryGirl.create(:season_piece, :published, account: account)
 			@published.published_at.should == Time.zone.now
 		end
 	end
@@ -212,8 +202,7 @@ describe SeasonPiece do
 	context "(On Update)" do
 		before do
 			Timecop.freeze
-			piece2 = FactoryGirl.create(:piece, account: account)
-			@for_update = FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2)
+			@for_update = FactoryGirl.create(:season_piece, account: account)
 		end
 		
 		it "published_at is set when published" do

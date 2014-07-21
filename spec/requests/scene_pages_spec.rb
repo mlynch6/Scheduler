@@ -172,8 +172,8 @@ describe "Scene Pages:" do
 		end
 		
 		it "has links for Super Admin" do
-			scene = FactoryGirl.create(:scene, account: current_account, piece: @piece)
-			visit piece_scenes_path(@piece)
+			scene = FactoryGirl.create(:scene, account: current_account)
+			visit piece_scenes_path(scene.piece)
 			
 	  	should have_link 'Overview'
 	  	should have_link 'Scenes'
@@ -190,8 +190,8 @@ describe "Scene Pages:" do
 	context "#edit" do
 		before do
 			log_in
-			@piece = FactoryGirl.create(:piece, account: current_account)
-			@scene = FactoryGirl.create(:scene, account: current_account, piece: @piece)
+			@scene = FactoryGirl.create(:scene, account: current_account)
+			@piece = @scene.piece
 	  	click_link 'Setup'
 	  	click_link "Pieces"
 	  	click_link @piece.name
@@ -255,15 +255,14 @@ describe "Scene Pages:" do
   describe "#destroy" do
 		before do
 	  	log_in
-			@piece = FactoryGirl.create(:piece, account: current_account)
-			@scene = FactoryGirl.create(:scene, account: current_account, piece: @piece)
-			visit piece_scenes_path(@piece)
+			@scene = FactoryGirl.create(:scene, account: current_account)
+			visit piece_scenes_path(@scene.piece)
 			click_link "delete_#{@scene.id}"
 		end
 		
   	it "deletes the record" do
 			should have_selector 'div.alert-success'
-			should have_title "#{@piece.name} | Scenes"
+			should have_title "#{@scene.piece.name} | Scenes"
 			
 			should_not have_content @scene.name
 		end
@@ -272,12 +271,11 @@ describe "Scene Pages:" do
   describe "#sort" do
 		before do
   		log_in
-  		@piece = FactoryGirl.create(:piece, account: current_account)
-			scene = FactoryGirl.create(:scene, account: current_account, piece: @piece)
+			scene = FactoryGirl.create(:scene, account: current_account)
 	  	
 			click_link 'Setup'
 	  	click_link "Pieces"
-	  	click_link @piece.name
+	  	click_link scene.piece.name
 	  	click_link "Scenes"
 		end
 		

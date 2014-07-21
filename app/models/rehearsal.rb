@@ -81,10 +81,9 @@ protected
 	
 	def warn_when_emp_over_hrs_per_day
 		if contract.present?
-			dancers = employees.where(:role => 'AGMA Dancer')
 			dancers_above_max = []
 			
-			dancers.each do |dancer|
+			Person.agma_members.each do |dancer|
 				#Find rehearsals for specified date
 				rehearsals = dancer.events.for_daily_calendar(start_at.to_date).where(:events => { :type => 'Rehearsal'})
 				total_min = 0
@@ -104,10 +103,9 @@ protected
 	
 	def warn_when_emp_over_hrs_per_week
 		if contract.present?
-			dancers = employees.where(:role => 'AGMA Dancer')
 			dancers_above_max = []
 			
-			dancers.each do |dancer|
+			Person.agma_members.each do |dancer|
 				#Find rehearsals for specified date
 				rehearsals = dancer.events.for_week(start_at.to_date).where(:events => { :type => 'Rehearsal'})
 				total_min = 0

@@ -6,8 +6,7 @@ describe "User Pages:" do
   context "#index" do
 		before do
   		log_in
-			@employee = FactoryGirl.create(:employee, account: current_account)
-			@user = FactoryGirl.create(:user, account: current_account, employee: @employee)
+			@user = FactoryGirl.create(:user, account: current_account)
   		click_link 'People'
 	  	click_link 'Users'
 		end
@@ -29,24 +28,21 @@ describe "User Pages:" do
 	  
 		it "lists records" do
 			4.times {
-				employee = FactoryGirl.create(:employee, account: current_account)
-				FactoryGirl.create(:user, account: current_account, employee: employee)
+				FactoryGirl.create(:user, account: current_account)
 				}
 			visit users_path(per_page: 3)
 	
 			should have_selector 'div.pagination'
 			
 			User.paginate(page: 1, per_page: 3).each do |user|
-				should have_selector 'td', text: user.employee.name
+				should have_selector 'td', text: user.person.name
 				should have_selector 'td', text: user.username
-				should have_link user.username, href: edit_user_path(user)
 				should have_link 'Delete', href: user_path(user)
 	    end
 		end
 		
 		it "has links for Super Admin" do
 			should have_link 'Add User'
-			should have_link @user.username
 			should have_link 'Delete'
 		end
   end
@@ -54,7 +50,7 @@ describe "User Pages:" do
   context "#new" do
 		before do
 			log_in
-			@employee = FactoryGirl.create(:employee, account: current_account)
+			@person = FactoryGirl.create(:person, account: current_account)
 			click_link 'People'
 	  	click_link 'Users'
 	  	click_link 'Add User'
@@ -72,7 +68,7 @@ describe "User Pages:" do
 		end
 		
 		it "has correct fields on form" do
-	  	should have_content 'Employee' 	#Using Chosen
+	  	should have_content 'Person' 	#Using Chosen
 			should have_field 'Username'
 	    should have_field 'Password'
 	    should have_field 'Confirm Password'
@@ -95,7 +91,7 @@ describe "User Pages:" do
 			it "creates new User" do
 		  	new_username = "New_Username"
 				
-		  	select @employee.full_name, from: "Employee"
+		  	select @person.full_name, from: "Person"
 				fill_in "Username", with: new_username
 				fill_in "Password", with: "password"
 				fill_in "Confirm Password", with: "password"
@@ -103,65 +99,16 @@ describe "User Pages:" do
 		
 				should have_selector 'div.alert-success'
 				should have_title 'Users'
-				should have_content @employee.name
+				should have_content @person.name
 				should have_content new_username.downcase
 			end
-		end
-  end
-  
-  context "#edit" do
-		before do
-			log_in
-			@employee = FactoryGirl.create(:employee, account: current_account)
-			@user = FactoryGirl.create(:user, account: current_account, employee: @employee)
-			click_link 'People'
-	  	click_link 'Users'
-	  	click_link @user.username
-		end
-		
-  	it "has correct title" do
-			should have_title 'Edit User'
-			should have_selector 'h1', text: 'User'
-			should have_selector 'h1 small', text: 'Edit'
-			
-			should have_content @user.username
-			should have_content @user.employee.full_name
-		end
-		
-		it "has correct Navigation" do
-			should have_selector 'li.active', text: 'People'
-			should have_selector 'li.active', text: 'Users'
-		end
-		
-		it "has correct fields on form" do
-	  	should have_field 'Password'
-	    should have_field 'Confirm Password'
-			should have_link 'Cancel', href: users_path
-		end
-		
-	  it "record with error" do
-			pending "change password functionality"
-	  	fill_in "Password", with: ""
-	  	click_button 'Update'
-	
-			should have_selector 'div.alert-danger'
-		end
-	 
-		it "record with valid info saves user" do
-			fill_in "Password", with: 'Updated'
-			fill_in "Confirm Password", with: 'Updated'
-			click_button 'Update'
-	
-			should have_selector 'div.alert-success'
-			should have_title 'Users'
 		end
   end
   
   context "#destroy" do
 		before do
 	  	log_in
-			@employee = FactoryGirl.create(:employee, account: current_account)
-			@user = FactoryGirl.create(:user, account: current_account, employee: @employee)
+			@user = FactoryGirl.create(:user, account: current_account)
 			click_link 'People'
 	  	click_link 'Users'
 			click_link "delete_#{@user.id}"

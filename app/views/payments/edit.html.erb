@@ -19,7 +19,7 @@
 
     <%= form_for @account, :url => payments_update_path, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal', :id => 'edit_payment' } do |f| %>
     	<%= f.error_messages %>
-    	<%= render 'form', :f => f %>
+    	<%= render 'form', :f => f, account: @account %>
 		
     	<%= f.submit_group do %>
     		<%= f.submit_primary 'Update' %>

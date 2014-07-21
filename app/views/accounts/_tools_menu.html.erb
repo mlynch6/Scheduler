@@ -1,15 +1,5 @@
 <div class="col-md-1">
   <%= gear_dropdown do %>
-    <% if allow? "addresses", "new" %>
-      <li><%= new_link "Add Address", [:new, @account, :address] %></li>
-    <% end %>
-    
-    <% if allow? "phones", "new" %>
-      <li><%= new_link "Add Phone Number", [:new, @account, :phone] %></li>
-    <% end %>
-    
-    <li class="divider"></li>
-    
     <% if allow? "payments", "edit" %>
       <% icon = content_tag(:span, nil, class: "glyphicon glyphicon-credit-card") %>
   		<li><%= link_to icon+' Change Payment Method', payments_edit_path %></li>

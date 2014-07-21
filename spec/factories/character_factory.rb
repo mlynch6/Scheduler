@@ -19,31 +19,37 @@
 
 FactoryGirl.define do
 	factory :character do
-		account
-		piece
 		sequence(:name)	{ |n| "Character #{n}" }
 		
-	 	factory :character_male do
+		after_build do |char|
+			# association :account
+			char.account = FactoryGirl.create(:account) unless char.account
+			
+			# association :piece
+			char.piece = FactoryGirl.create(:piece, account: char.account) unless char.piece
+		end
+		
+	 	trait :male do
 			gender 					'Male'
 		end
 		
-	 	factory :character_female do
+	 	trait :female do
 			gender 					'Female'
 		end
 		
-	 	factory :character_animal do
+	 	trait :animal do
 			animal 					true
 		end
 		
-	 	factory :character_child do
+	 	trait :child do
 			is_child 				true
 		end
 		
-	 	factory :character_speaking do
+	 	trait :speaking do
 			speaking 				true
 		end
 		
-	 	factory :character_deleted do
+	 	trait :deleted do
 			deleted 				true
 		end
 	end

@@ -1,0 +1,30 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  activemodel:
+    attributes:
+      account:
+        #Used by SignupForm
+        name: "Company"
+        time_zone: "Time Zone"
+        cancelled_at: "Canceled On"
+        stripe_customer_token: "Customer Id"
+        current_subscription_plan: "Current Subscription"
+        current_subscription_plan_id: "Subscription"
+        phone_num: 'Phone #'
+        addr: 'Address'
+        addr2: "Address 2"
+        zipcode: "Zip Code"
+        first_name: "First Name"
+        last_name: "Last Name"
+        password_digest: "Password"
+        password_confirmation: "Confirm Password"
+      employee:
+        first_name: "First Name"
+        middle_name: "Middle Name"
+        last_name: "Last Name"
+        birth_date: "Birth Date"
+        employee_num: "Employee #"
+        employment_start_date: "Employment Start Date"
+        employment_end_date: "Employment End Date"

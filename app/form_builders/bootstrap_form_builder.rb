@@ -5,8 +5,8 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 	#		email_field, number_field, check_box, radio_button
 	#		date_field, time_field, currency_field, static_control, submit, submit_primary
 
-	FORM_HELPERS = %w{text_field select time_zone_select telephone_field phone_field password_field email_field number_field} 
-	#TBD: text_area file_field url_field collection_select date_select time_select datetime_select
+	FORM_HELPERS = %w{text_field select text_area time_zone_select telephone_field phone_field password_field email_field number_field} 
+	#TBD: file_field url_field collection_select date_select time_select datetime_select
 
 	DEFAULT_LABEL_WIDTH = 'col-md-3'
 	DEFAULT_FIELD_WIDTH = 'col-md-9'
@@ -79,12 +79,13 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
 	
 	def radio_button(name, value, *args)
 		options = args.extract_options!.symbolize_keys!
-		args << options.except(:label, :help, :inline)
+		args << options.except(:label, :help, :inline, :button)
 
 		html = super(name, value, *args) + " " + options[:label]
 
 		css = "radio"
 		css << "-inline" if options[:inline]
+		css = "btn btn-default" if options[:button]
 		label(name, html, class: css, for: nil)
 	end
 

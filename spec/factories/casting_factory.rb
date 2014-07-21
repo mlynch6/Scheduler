@@ -13,8 +13,20 @@
 
 FactoryGirl.define do
 	factory :casting do
-		association :cast
-		association :character
-		association :person, factory: :employee
+		after_build do |casting|
+			# association :account
+			casting.account = FactoryGirl.create(:account) unless casting.account
+			# association :cast
+			casting.cast = FactoryGirl.create(:cast, account: casting.account) unless casting.cast
+			# association :character
+			casting.character = FactoryGirl.create(:character, account: casting.account) unless casting.character
+		end
+		
+		trait :with_person do
+			after_build do |casting|
+				# association :person
+				casting.person = FactoryGirl.create(:person, account: casting.account) unless casting.person
+			end
+		end
 	end
 end

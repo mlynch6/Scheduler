@@ -2,7 +2,7 @@ class EmployeesController < ApplicationController
 	before_filter :get_resource, :only => [:show, :edit, :update, :destroy, :activate, :inactivate]
 
   def index
-  	@employees = Employee.active.paginate(page: params[:page], per_page: params[:per_page])
+  	@employees = Employee.active.joins(:person).order("people.last_name ASC, people.first_name ASC").paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
 	def inactive
@@ -11,12 +11,12 @@ class EmployeesController < ApplicationController
 	
 	def new
 		form_setup
-		@employee = Employee.new
+		@employee_form = EmployeeForm.new
 	end
 	
 	def create
-		@employee = Employee.new(params[:employee])
-		if @employee.save
+		@employee_form = EmployeeForm.new
+		if @employee_form.submit(params[:employee])
 			redirect_to employees_path, :notice => "Successfully created the employee."
 		else
 			form_setup
@@ -29,10 +29,12 @@ class EmployeesController < ApplicationController
 	
 	def edit
 		form_setup
+		@employee_form = EmployeeForm.new(@employee)
 	end
 	
 	def update
-		if @employee.update_attributes(params[:employee])
+		@employee_form = EmployeeForm.new(@employee)
+		if @employee_form.submit(params[:employee])
 			redirect_to employees_path, :notice => "Successfully updated the employee."
 		else
 			form_setup

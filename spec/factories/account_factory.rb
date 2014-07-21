@@ -17,6 +17,10 @@ FactoryGirl.define do
 	factory :account do
 		name				Faker::Company.name
 		time_zone		"Eastern Time (US & Canada)"
-		association :current_subscription_plan, factory: :subscription_plan
+		
+		after_build do |acnt|
+			acnt.current_subscription_plan = SubscriptionPlan.first unless acnt.current_subscription_plan
+			acnt.current_subscription_plan = FactoryGirl.create(:subscription_plan) unless acnt.current_subscription_plan
+		end
 	end
 end

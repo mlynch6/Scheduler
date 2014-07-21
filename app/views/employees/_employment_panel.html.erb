@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Employment</h3>
+  </div><!-- panel-heading -->
+
+  <div class="panel-body dtl-form">
+  	<div class="row">
+  		<div class="dtl-label col-md-5"><%= Employee.human_attribute_name(:employee_num) %></div>
+  		<div class="dtl-text col-md-7"><%= @employee.employee_num %></div>
+  	</div>
+    
+  	<div class="row">
+  		<div class="dtl-label col-md-5">Start Date</div>
+  		<div class="dtl-text col-md-7"><%= @employee.employment_start_date %></div>
+  	</div>
+  
+  	<div class="row">
+  		<div class="dtl-label col-md-5">End Date</div>
+  		<div class="dtl-text col-md-7"><%= @employee.employment_end_date %></div>
+  	</div>
+  </div><!-- panel-body -->
+</div>

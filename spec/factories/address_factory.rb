@@ -17,15 +17,22 @@
 
 FactoryGirl.define do
 	factory :address do
-		association :addressable, :factory => :account
 		addr_type					"Home"
 		addr							Faker::Address.street_address.first(50)
 		city							Faker::Address.city.first(50)
 		state							"MA"
 		zipcode						Faker::Address.zip.first(5)
 		
-		factory :address_employee, parent: :address do
-		  association :addressable, :factory => :employee
+		after_build do |addr|
+			# association :addressable
+			addr.addressable = FactoryGirl.create(:account) unless addr.addressable
+		end
+		
+		factory :address_person, parent: :address do
+			after_build do |addr|
+				# association :addressable
+				addr.addressable = FactoryGirl.create(:person) unless addr.addressable
+			end
 		end
 	end
 end

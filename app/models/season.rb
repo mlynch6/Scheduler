@@ -26,5 +26,4 @@ class Season < ActiveRecord::Base
 	validates :end_dt,	presence: true
 	
 	default_scope lambda { order('start_dt DESC').where(:account_id => Account.current_id) }
-	#scope :with_date, lambda { |date| where("start_dt <= :dt AND end_dt >= :dt", { :dt => date }) }
 end

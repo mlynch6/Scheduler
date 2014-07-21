@@ -202,8 +202,7 @@ describe "Season Pages:" do
 		before do
   		log_in
   		@season = FactoryGirl.create(:season, account: current_account)
-			@piece = FactoryGirl.create(:piece, account: current_account)
-			@season_piece = FactoryGirl.create(:season_piece, account: current_account, season: @season, piece: @piece)
+			@season_piece = FactoryGirl.create(:season_piece, account: current_account, season: @season)
 			@castA = FactoryGirl.create(:cast, account: current_account, season_piece: @season_piece)
 			
 	  	click_link 'Setup'
@@ -230,8 +229,7 @@ describe "Season Pages:" do
 		
 		it "displays associated pieces", js: true do
 			2.times {
-				piece = FactoryGirl.create(:piece, account: current_account)
-				FactoryGirl.create(:season_piece, account: current_account, season: @season, piece: piece)
+				FactoryGirl.create(:season_piece, account: current_account, season: @season)
 			}
 			visit season_path(@season)
 			click_link 'pieces-tab-link'
@@ -242,7 +240,7 @@ describe "Season Pages:" do
 		end
 		
 		it "displays cast count for each associated piece" do
-			should have_content @piece.name
+			should have_content @season_piece.piece.name
 			should have_selector 'td', text: "Casts"
 			should have_selector 'span.badge', text: "1"
 		end

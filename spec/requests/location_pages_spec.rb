@@ -58,7 +58,7 @@ describe "Location Pages:" do
 	  
 		it "lists active records by default" do
 			4.times { FactoryGirl.create(:location, account: current_account) }
-			4.times { FactoryGirl.create(:location_inactive, account: current_account) }
+			4.times { FactoryGirl.create(:location, :inactive, account: current_account) }
 			visit locations_path(per_page: 3)
 			
 			Location.active.paginate(page: 1, per_page: 3).each do |location|
@@ -74,7 +74,7 @@ describe "Location Pages:" do
 		
 		it "can filter for inactive records" do
 			4.times { FactoryGirl.create(:location, account: current_account) }
-			4.times { FactoryGirl.create(:location_inactive, account: current_account) }
+			4.times { FactoryGirl.create(:location, :inactive, account: current_account) }
 			visit locations_path
 			click_link "Inactive"
 			
@@ -91,7 +91,7 @@ describe "Location Pages:" do
 		
 		it "can filter for all records" do
 			4.times { FactoryGirl.create(:location, account: current_account) }
-			4.times { FactoryGirl.create(:location_inactive, account: current_account) }
+			4.times { FactoryGirl.create(:location, :inactive, account: current_account) }
 			visit locations_path
 			click_link "All"
 			
@@ -124,7 +124,7 @@ describe "Location Pages:" do
 	context "#inactivate" do
 		before do
 			log_in
-			@location = FactoryGirl.create(:location, account: current_account, name: 'Inactivate Test')
+			@location = FactoryGirl.create(:location, account: current_account)
 			visit locations_path
 			click_link "inactivate_#{@location.id}"
 		end
@@ -144,7 +144,7 @@ describe "Location Pages:" do
 	context "#activate" do
 		before do
 			log_in
-			@location = FactoryGirl.create(:location_inactive, account: current_account, name: 'Activate Test')
+			@location = FactoryGirl.create(:location, :inactive, account: current_account)
 			visit locations_path
 			click_link 'Inactive'
 			click_link "activate_#{@location.id}"

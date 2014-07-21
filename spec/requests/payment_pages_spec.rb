@@ -25,7 +25,7 @@ describe "Payment Pages:" do
 		end
 		
 		it "has correct fields on form" do
-			should have_field 'Credit Card Number'
+			should have_field 'Credit Card #'
 	    should have_select 'card_month'
 	    should have_select 'card_year'
 	    should have_field 'Security Code'
@@ -36,8 +36,6 @@ describe "Payment Pages:" do
 	  	should have_link 'Overview'
 			should have_link 'Subscription'
 			
-	  	should have_link 'Add Address'
-	  	should have_link 'Add Phone Number'
 			should have_link 'Change Payment Method'
 		end
 	end
@@ -54,7 +52,7 @@ describe "Payment Pages:" do
 		end
 		
 		it "can update the credit card" do
-			fill_in "Credit Card Number", with: "5105105105105100" #valid testing Mastercard
+			fill_in "Credit Card #", with: "5105105105105100" #valid testing Mastercard
 			select (Date.today.year+1).to_s, from: "card_year"
 			fill_in "Security Code", with: "213"
 			click_button "Update"
@@ -65,7 +63,7 @@ describe "Payment Pages:" do
 		
 		describe "invalid Payment" do
 			it "with invalid credit card number shows error" do
-				fill_in "Credit Card Number", with: "4242424242424241"
+				fill_in "Credit Card #", with: "4242424242424241"
 				select (Date.today.year+1).to_s, from: "card_year"
 				fill_in "Security Code", with: "213"
 				click_button "Update"
@@ -74,7 +72,7 @@ describe "Payment Pages:" do
 			end
 	    
 			it "with invalid security code shows error" do
-				fill_in "Credit Card Number", with: "4242424242424242"
+				fill_in "Credit Card #", with: "4242424242424242"
 				select (Date.today.year+1).to_s, from: "card_year"
 				fill_in "Security Code", with: "99"
 				click_button "Update"
@@ -83,7 +81,7 @@ describe "Payment Pages:" do
 	    end
 	    
 			it "with card declined error" do
-				fill_in "Credit Card Number", with: "4000000000000002" #always returns card declined
+				fill_in "Credit Card #", with: "4000000000000002" #always returns card declined
 				select (Date.today.year+1).to_s, from: "card_year"
 				fill_in "Security Code", with: "213"
 				click_button "Update"

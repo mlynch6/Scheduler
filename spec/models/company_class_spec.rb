@@ -20,10 +20,8 @@ require 'spec_helper'
 describe CompanyClass do
 	let(:account) { FactoryGirl.create(:account) }
 	let(:contract) { account.agma_contract }
-	let(:location) { FactoryGirl.create(:location, account: account) }
 	let(:cclass) { FactoryGirl.create(:company_class,
 											account: account,
-											location: location,
 											title: 'Class',
 											start_date: Date.new(2012,1,1),
 											start_time: "9AM",

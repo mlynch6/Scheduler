@@ -10,7 +10,12 @@ class PhonesController < ApplicationController
   def create
   	@phone = @phoneable.phones.new(params[:phone])
   	if @phone.save
-			redirect_to [@phoneable], :notice => "Successfully created the phone number."
+			flash[:notice] = "Successfully created the phone number."
+			if @phoneable.class.name == 'Person'
+				redirect_to employee_path(@phoneable.profile)
+			else
+				redirect_to [@phoneable]
+			end
 		else
 			form_setup
 			render :new
@@ -23,7 +28,12 @@ class PhonesController < ApplicationController
 	
 	def update
 		if @phone.update_attributes(params[:phone])
-			redirect_to [@phoneable], :notice => "Successfully updated the phone number."
+			flash[:notice] = "Successfully updated the phone number."
+			if @phoneable.class.name == 'Person'
+				redirect_to employee_path(@phoneable.profile)
+			else
+				redirect_to [@phoneable]
+			end
 		else
 			form_setup
 			render 'edit'
@@ -32,7 +42,12 @@ class PhonesController < ApplicationController
 	
 	def destroy
 		@phone.destroy
-		redirect_to [@phoneable], :notice => "Successfully deleted the phone number."
+		flash[:notice] = "Successfully deleted the phone number."
+		if @phoneable.class.name == 'Person'
+			redirect_to employee_path(@phoneable.profile)
+		else
+			redirect_to [@phoneable]
+		end
 	end
 
 private

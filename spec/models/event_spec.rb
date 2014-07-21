@@ -19,14 +19,14 @@ require 'spec_helper'
 
 describe Event do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:location) { FactoryGirl.create(:location, account: account) }
 	let(:event) { FactoryGirl.create(:event,
 											account: account,
-											location: location,
 											title: 'Test Event',
 											start_date: Date.new(2012,1,1),
 											start_time: "9AM",
 											duration: 60) }
+	let(:location) { event.location }
+	
 	before do
 		Account.current_id = account.id
 		@event = FactoryGirl.build(:event)
@@ -52,9 +52,9 @@ describe Event do
 	  	it { should respond_to(:location) }
 	  	it { should respond_to(:event_series) }
 	  	it { should respond_to(:invitations) }
-	  	it { should respond_to(:employees) }
-	  	
-	  	it { should respond_to(:employee_ids) }
+	  	it { should respond_to(:invitees) }
+	  	it { should respond_to(:invitee_ids) }
+			
 	  	#For Event Series
 	  	it { should respond_to(:period) }
 	  	it { should respond_to(:end_date) }
@@ -73,6 +73,7 @@ describe Event do
 		end
 		
 		it "should allow access to location_id" do
+			location = FactoryGirl.create(:location, account: account)
       expect do
         Event.new(location_id: location.id)
       end.not_to raise_error(ActiveModel::MassAssignmentSecurity::Error)
@@ -180,10 +181,8 @@ describe Event do
 		end
 		
 		describe "invitations" do
-			let(:employee1) { FactoryGirl.create(:employee, account: account) }
-			let(:employee2) { FactoryGirl.create(:employee, account: account) }
-			let!(:second_invite) { FactoryGirl.create(:invitation, event: event, employee: employee1) }
-			let!(:first_invite) { FactoryGirl.create(:invitation, event: event, employee: employee2) }
+			let!(:second_invite) { FactoryGirl.create(:invitation, event: event) }
+			let!(:first_invite) { FactoryGirl.create(:invitation, event: event) }
 	
 			it "has multiple invitations" do
 				event.invitations.count.should == 2
@@ -198,14 +197,12 @@ describe Event do
 			end
 		end
 		
-		describe "employees" do
-			let(:employee1) { FactoryGirl.create(:employee, account: account) }
-			let(:employee2) { FactoryGirl.create(:employee, account: account) }
-			let!(:second_invite) { FactoryGirl.create(:invitation, event: event, employee: employee1) }
-			let!(:first_invite) { FactoryGirl.create(:invitation, event: event, employee: employee2) }
+		describe "invitees" do
+			let!(:second_invite) { FactoryGirl.create(:invitation, event: event) }
+			let!(:first_invite) { FactoryGirl.create(:invitation, event: event) }
 	
-			it "has multiple employees" do
-				event.employees.count.should == 2
+			it "has multiple invitees" do
+				event.invitees.count.should == 2
 			end
 		end
   end
@@ -301,23 +298,24 @@ describe Event do
 
 	describe "(Scopes)" do
 		before do
-			account.events.delete_all
+			Event.unscoped.delete_all
 		end
-		let!(:event3) { FactoryGirl.create(:event, account: account, 
-												start_date: Time.zone.today + 1.day,
-												start_time: "8AM",
-												duration: 30) }
-		let!(:event2) { FactoryGirl.create(:event, account: account, 
-												start_date: Time.zone.today,
-												start_time: "9AM",
-												duration: 30) }
-		let!(:event1) { FactoryGirl.create(:event, account: account, 
-												start_date: Time.zone.today,
-												start_time: "8AM",
-												duration: 30) }
-		let!(:location_wrong_acnt) { FactoryGirl.create(:event) }
 		
 		describe "default_scope" do	
+			let!(:event3) { FactoryGirl.create(:event, account: account, 
+													start_date: Time.zone.today + 1.day,
+													start_time: "8AM",
+													duration: 30) }
+			let!(:event2) { FactoryGirl.create(:event, account: account, 
+													start_date: Time.zone.today,
+													start_time: "9AM",
+													duration: 30) }
+			let!(:event1) { FactoryGirl.create(:event, account: account, 
+													start_date: Time.zone.today,
+													start_time: "8AM",
+													duration: 30) }
+			let!(:event_wrong_acnt) { FactoryGirl.create(:event, account: FactoryGirl.create(:account)) }
+			
 			it "returns the records in chronological order by start" do
 				Event.all.should == [event1, event2, event3]
 			end
@@ -333,7 +331,8 @@ describe Event do
 														start_date: Date.new(2012,12,3),
 														start_time: "12AM",
 														duration: 60) }
-			let!(:current_day_wrong_acnt) { FactoryGirl.create(:event, 
+			let!(:current_day_wrong_acnt) { FactoryGirl.create(:event,
+														account: FactoryGirl.create(:account),
 														start_date: Date.new(2012,12,3),
 														start_time: "9AM",
 														duration: 60) }
@@ -355,7 +354,12 @@ describe Event do
 														duration: 60) }
 			
 			it "returns the records for the day" do
-				Event.for_daily_calendar(Date.new(2012,12,3)).should == [current_day_good, current_day_good3, current_day_good2]
+				events = Event.for_daily_calendar(Date.new(2012,12,3))
+				events.count.should == 3
+				
+				events.should include(current_day_good)
+				events.should include(current_day_good3)
+				events.should include(current_day_good2)
 			end
 		end
 		
@@ -404,6 +408,8 @@ describe Event do
 			
 			it "returns the records for the week starting on Monday" do
 				events = Event.for_week(Date.new(2013,1,1))
+				events.count.should == 7
+				
 				events.should include(current_week_mon)
 				events.should include(current_week_tue)
 				events.should include(current_week_wed)
@@ -439,12 +445,12 @@ describe Event do
 		  end
 		  
 		  it "with overlap at end" do
-		  		event.start_date = existing_event.start_date
+		  	event.start_date = existing_event.start_date
 				event.start_time = "3PM"
 				event.duration = 120
-		  		event.save
+		  	event.save
 		  	
-		  		event.warnings.count.should == 1
+		  	event.warnings.count.should == 1
 				event.warnings[:loc_double_booked].should == warning_msg
 		  end
 		  
@@ -480,105 +486,31 @@ describe Event do
 		end
 		
 		context "when employee is double booked" do
-			let(:location2) { FactoryGirl.create(:location, account: account) }
-			let(:e1) { FactoryGirl.create(:employee, account: account) }
-			let(:e2) { FactoryGirl.create(:employee, account: account) }
-			let(:e3) { FactoryGirl.create(:employee, account: account) }
+			let(:p1) { FactoryGirl.create(:person, account: account) }
+			let(:p2) { FactoryGirl.create(:person, account: account) }
+			let(:p3) { FactoryGirl.create(:person, account: account) }
 			let!(:event1) { FactoryGirl.create(:event, account: account, 
-													location: location2,
 													start_date: Time.zone.today,
 													start_time: "8AM",
 													duration: 30,
-													employee_ids: [e1.id, e2.id, e3.id]) }
-			
+													invitee_ids: [p1.id, p2.id, p3.id]) }
 			let!(:event2) { FactoryGirl.create(:event, account: account, 
-													location: location2,
+													location: event1.location,
 													start_date: Time.zone.today,
 													start_time: "9AM",
 													duration: 30,
-													employee_ids: [e1.id]) }
+													invitee_ids: [p1.id]) }
 			
 			it "gives warning message" do
 				event.start_date = Time.zone.today
 				event.start_time = "8AM"
 				event.duration = 90
-				event.employee_ids = [e1.id]
+				event.invitee_ids = [p1.id]
 				event.save
 				
 				event.warnings.count.should == 1
-				event.warnings[:emp_double_booked].should == "The following people are double booked during this time: #{e1.full_name}"
+				event.warnings[:emp_double_booked].should == "The following people are double booked during this time: #{p1.full_name}"
 			end
 		end
-	end
-	
-	context "(Private)" do
-#	  context "overlapping" do
-#	  	let!(:e) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "1PM",
-#											duration: 60) }
-#											
-#	  	let!(:location2) { FactoryGirl.create(:location, account: account) }
-#	  	let!(:location3) { FactoryGirl.create(:location, account: account) }
-#	  	let!(:overlap_start) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location2,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "12:15 PM",
-#											duration: 60) }
-#			let!(:overlap_subset) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location2,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "1:15 PM",
-#											duration: 30) }
-#			let!(:overlap_end) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location2,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "1:45 PM",
-#											duration: 60) }
-#			let!(:overlap_entire) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location3,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "12:00 PM",
-#											duration: 155) }
-#			let!(:before_event) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "12:30 PM",
-#											duration: 30) }
-#			let!(:after_event) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,2),
-#											start_time: "2:00 PM",
-#											duration: 90) }
-#			let!(:day_before) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,1)) }
-#			let!(:day_after) { FactoryGirl.create(:event,
-#											account: account,
-#											location: location,
-#											start_date: Date.new(2012,1,3)) }
-#			
-#			it "shows events that have an overlap" do
-#				e.overlapping.should include(overlap_start)
-#				e.overlapping.should include(overlap_subset)
-#				e.overlapping.should include(overlap_end)
-#				e.overlapping.should include(overlap_entire)
-#				
-#				e.overlapping.should_not include(e)
-#				e.overlapping.should_not include(before_event)
-#				e.overlapping.should_not include(after_event)
-#				e.overlapping.should_not include(day_before)
-#				e.overlapping.should_not include(day_after)
-#			end
-#	  end
 	end
 end

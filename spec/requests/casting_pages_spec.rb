@@ -5,7 +5,7 @@ describe "Casting Pages:" do
 
 	before do
 		log_in
-		@employee = FactoryGirl.create(:employee, account: current_account)
+		@person = FactoryGirl.create(:person, account: current_account)
 		@season = FactoryGirl.create(:season, account: current_account)
   	@piece = FactoryGirl.create(:piece, account: current_account)
 		Account.current_id = current_account.id
@@ -51,12 +51,12 @@ describe "Casting Pages:" do
 		end
 	 
 		it "with valid info", js: true do
-			select_from_chosen @employee.full_name, from: 'Artist'
+			select_from_chosen @person.full_name, from: 'Artist'
 			click_button 'Update'
 	
 			should have_selector 'div.alert-success'
 			should have_title "#{@season.name} | #{@piece.name} | #{@cast.name}"
-			should have_content @employee.full_name
+			should have_content @person.full_name
 		end
 	end
 end

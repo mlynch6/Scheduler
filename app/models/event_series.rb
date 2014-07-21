@@ -16,8 +16,8 @@ class EventSeries < ActiveRecord::Base
   
   attr_accessible :period, :start_date, :end_date
 	#Event fields
-  attr_accessor :event_type, :title, :location_id, :start_time, :duration, :piece_id, :employee_ids
-  attr_accessible :event_type, :title, :location_id, :start_time, :duration, :piece_id, :employee_ids
+  attr_accessor :event_type, :title, :location_id, :start_time, :duration, :piece_id, :invitee_ids
+  attr_accessible :event_type, :title, :location_id, :start_time, :duration, :piece_id, :invitee_ids
 
 	belongs_to :account
 	has_many :events, dependent: :destroy
@@ -96,7 +96,7 @@ private
 						start_time: start_time,
 						duration: duration,
 						piece_id: piece_id,
-						employee_ids: employee_ids)
+						invitee_ids: invitee_ids)
 	end
 	
 	def update_single_event(event, params)
@@ -122,7 +122,7 @@ private
 			params[:start_time] ||= event.start_time
 			params[:duration] ||= event.duration
 			params[:piece_id] ||= event.piece_id
-			params[:employee_ids] ||= event.employee_ids
+			params[:invitee_ids] ||= event.invitee_ids
 					
 			params[:period] ||= period
 			params[:start_date] ||= event.start_date
@@ -157,7 +157,7 @@ private
 			start_time = params.delete(:start_time) || event.start_time
 			duration = params.delete(:duration) || event.duration
 			piece_id = params.delete(:piece_id) || event.piece_id
-			employee_ids = params.delete(:employee_ids) || event.employee_ids
+			invitee_ids = params.delete(:invitee_ids) || event.invitee_ids
 				
 			if valid?
 				events.destroy_all

@@ -1,5 +1,5 @@
-<div class="dtl-form">
-	<div class="row">
+<div class="dtl-form" style="margin-bottom:15px;">
+  <div class="row">
 		<div class="dtl-label col-md-3">Name</div>
 		<div class="dtl-text col-md-9">
     	<% if allow? "employees", "edit" %>
@@ -9,12 +9,20 @@
       <% end %>
     </div>
 	</div>
-	
+  
 	<div class="row">
 		<div class="dtl-label col-md-3"><%= Employee.human_attribute_name(:role) %></div>
 		<div class="dtl-text col-md-9"><%= @employee.role %></div>
 	</div>
-	
+  
+	<div class="row">
+		<div class="dtl-label col-md-3"><%= Person.human_attribute_name(:gender) %></div>
+		<div class="dtl-text col-md-3"><%= @employee.gender %></div>
+    
+		<div class="dtl-label col-md-3"><%= Person.human_attribute_name(:birth_date) %></div>
+		<div class="dtl-text col-md-3"><%= @employee.birth_date %></div>
+	</div>
+  
 	<div class="row">
 		<div class="dtl-label col-md-3"><%= Employee.human_attribute_name(:email) %></div>
 		<div class="dtl-text col-md-9"><%= @employee.email %></div>

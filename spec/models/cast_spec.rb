@@ -14,17 +14,8 @@ require 'spec_helper'
 
 describe Cast do
   let(:account) { FactoryGirl.create(:account) }
-	let(:season) { FactoryGirl.create(:season, account: account) }
-	let(:piece) { FactoryGirl.create(:piece, account: account) }
-	let!(:char1) { FactoryGirl.create(:character, account: account, piece: piece) }
-	let!(:char2) { FactoryGirl.create(:character, account: account, piece: piece) }
-	let(:season_piece) { FactoryGirl.create(:season_piece,
-											account: account,
-											season: season,
-											piece: piece) }
 	let(:cast) { FactoryGirl.create(:cast,
-											account: account,
-											season_piece: season_piece) }
+											account: account) }
 											
 	before do
 		Account.current_id = account.id
@@ -54,6 +45,7 @@ describe Cast do
 		end
 		
 		it "should not allow access to season_piece_id" do
+			season_piece = FactoryGirl.create(:season_piece, account: account)
       expect do
         Cast.new(season_piece_id: season_piece.id)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
@@ -76,6 +68,8 @@ describe Cast do
   	end
   	
   	it "2nd record without a name - name will be defaulted to 'Cast B'" do
+			season_piece = cast.season_piece
+			
   		season_piece.casts.delete_all
   		cast1 = season_piece.casts.create
   		cast1.name.should == "Cast A"
@@ -109,10 +103,16 @@ describe Cast do
 		end
 		
 		it "has one season_piece" do
+			season_piece = cast.season_piece
 			cast.reload.season_piece.should == season_piece
 		end
 		
-  	describe "castings" do	
+  	describe "castings" do
+			let!(:casting1) { FactoryGirl.create(:casting,
+													cast: cast) }
+			let!(:casting2) { FactoryGirl.create(:casting,
+													cast: cast) }
+																							
 			it "has multiple castings" do
 				cast.castings.count.should == 2
 			end
@@ -146,19 +146,11 @@ describe Cast do
 			Cast.delete_all
 			
 			wrong_acnt = FactoryGirl.create(:account)
-			Account.current_id = wrong_acnt.id
-			season_wrong_acnt = FactoryGirl.create(:season, account: wrong_acnt)
-			piece_wrong_acnt = FactoryGirl.create(:piece, account: wrong_acnt)
-			char_wrong_acnt = FactoryGirl.create(:character, account: wrong_acnt, piece: piece_wrong_acnt)
-			season_piece_wrong_acnt = FactoryGirl.create(:season_piece,
-													account: wrong_acnt,
-													season: season_wrong_acnt,
-													piece: piece_wrong_acnt)
 			@cast_wrong_acnt = FactoryGirl.create(:cast,
-													account: wrong_acnt,
-													season_piece: season_piece_wrong_acnt)
+													account: wrong_acnt)
 			Account.current_id = account.id
 		end
+		let!(:season_piece) { FactoryGirl.create(:season_piece, account: account) }
 		let!(:second_cast) { FactoryGirl.create(:cast, account: account, season_piece: season_piece, name: "Cast B") }
 		let!(:first_cast) { FactoryGirl.create(:cast, account: account, season_piece: season_piece, name: "Cast A") }
 		

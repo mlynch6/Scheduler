@@ -17,7 +17,7 @@
 
 class Event < ActiveRecord::Base
 	attr_accessible :event_type, :title, :location_id, :start_date, :start_time, :duration, :piece_id
-	attr_accessible :employee_ids, :period, :end_date
+	attr_accessible :invitee_ids, :period, :end_date
 	attr_accessor :event_type, :period, :end_date
 	attr_writer :start_date, :start_time, :duration
 
@@ -25,7 +25,7 @@ class Event < ActiveRecord::Base
 	belongs_to :location
 	belongs_to :event_series
 	has_many :invitations, dependent: :destroy
-	has_many :employees, through: :invitations
+	has_many :invitees, through: :invitations, source: :person
 
 	before_validation :save_start_at, :if => "@start_date.present? && @start_time.present?"
 	before_validation :save_end_at, :if => "start_at.present? && @duration.present?"
@@ -120,10 +120,10 @@ protected
 	end
 	
 	def warn_when_employee_double_booked
-		double_booked_employees = Employee.joins(:invitations).where(id: self.employees, invitations: {event_id: self.overlapping}).uniq_by(&:id)
-		if double_booked_employees.any?
-			employee_list = double_booked_employees.map { |emp| emp.full_name }.join(", ")
-			return "The following people are double booked during this time: "+employee_list
+		double_booked_people = Person.joins(:invitations).where(id: self.invitees, invitations: {event_id: self.overlapping}).uniq_by(&:id)
+		if double_booked_people.any?
+			person_list = double_booked_people.map { |person| person.full_name }.join(", ")
+			return "The following people are double booked during this time: "+person_list
 		end
 	end
 	

@@ -22,14 +22,8 @@
     <tbody>
     	<% @users.each do |user| %>
   			<tr>
-  				<td><%= user.employee.name %></td>
-  				<td>
-  					<% if allow? "users", "edit" %>
-  						<%= link_to user.username, edit_user_path(user), :id => "edit_#{user.id}" %>
-  					<% else %>
-              <%= user.username %>
-            <% end %>
-          </td>
+  				<td><%= user.person.name %></td>
+  				<td><%= user.username %></td>
   				<td class="mash-col-1-btn">
   					<% if allow? "users", "destroy" %>
   						<%= delete_button nil, user, :class => 'btn-xs', :id => "delete_#{user.id}" %>
