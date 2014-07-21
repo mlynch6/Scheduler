@@ -22,7 +22,7 @@
     <tbody>
     	<% @users.each do |user| %>
   			<tr>
-  				<td><%= user.employee.name %></td>
+  				<td><%= user.person.name %></td>
   				<td><%= user.username %></td>
   				<td class="mash-col-1-btn">
   					<% if allow? "users", "destroy" %>

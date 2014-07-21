@@ -14,8 +14,14 @@
 
 FactoryGirl.define do
 	factory :scene do
-		account
-		piece
 		sequence(:name)	{ |n| "Scene #{n}" }
+		
+		after_build do |scene|
+			# association :account
+			scene.account = FactoryGirl.create(:account) unless scene.account
+			
+			# association :piece
+			scene.piece = FactoryGirl.create(:piece, account: scene.account) unless scene.piece
+		end
 	end
 end

@@ -1,6 +1,6 @@
 <% provide(:title, 'Edit Address') %>
 
-<% if @address.addressable_type == "Employee" %>
+<% if @address.addressable_type == "Person" %>
 	<% provide(:header_current, 'People') %>
 	<% provide(:sidebar_current, 'Employees') %>
 <% end %>
@@ -26,8 +26,8 @@
   	<%= f.submit_group do %>
   		<%= f.submit_primary 'Update' %>
       
-      <% if @address.addressable_type == "Employee" %>
-        <%= link_to 'Cancel', employee_path(@addressable), class: 'btn btn-link' %>
+      <% if @address.addressable_type == "Person" %>
+        <%= link_to 'Cancel', employee_path(@addressable.profile), class: 'btn btn-link' %>
       <% elsif @address.addressable_type == "Account" %>
         <%= link_to 'Cancel', account_path(@addressable), class: 'btn btn-link' %>
       <% end %>

@@ -17,7 +17,7 @@ class Casting < ActiveRecord::Base
 	belongs_to :account, inverse_of: :castings
 	belongs_to :cast, inverse_of: :castings
 	belongs_to :character, inverse_of: :castings
-	belongs_to :person, class_name: 'Employee'
+	belongs_to :person, inverse_of: :castings
 	
 	validates :account_id, presence: true
 	validates :cast_id, presence: true

@@ -10,7 +10,12 @@ class AddressesController < ApplicationController
   def create
   	@address = @addressable.addresses.new(params[:address])
   	if @address.save
-			redirect_to [@addressable], :notice => "Successfully created the address."
+			flash[:notice] = "Successfully created the address."
+			if @addressable.class.name == 'Person'
+				redirect_to employee_path(@addressable.profile)
+			else
+				redirect_to [@addressable]
+			end
 		else
 			form_setup
 			render :new
@@ -23,7 +28,12 @@ class AddressesController < ApplicationController
 	
 	def update
 		if @address.update_attributes(params[:address])
-			redirect_to [@addressable], :notice => "Successfully updated the address."
+			flash[:notice] = "Successfully updated the address."
+			if @addressable.class.name == 'Person'
+				redirect_to employee_path(@addressable.profile)
+			else
+				redirect_to [@addressable]
+			end
 		else
 			form_setup
 			render 'edit'
@@ -32,7 +42,12 @@ class AddressesController < ApplicationController
 	
 	def destroy
 		@address.destroy
-		redirect_to [@addressable], :notice => "Successfully deleted the address."
+		flash[:notice] = "Successfully deleted the address."
+		if @addressable.class.name == 'Person'
+			redirect_to employee_path(@addressable.profile)
+		else
+			redirect_to [@addressable]
+		end
 	end
 
 private

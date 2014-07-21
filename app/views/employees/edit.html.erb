@@ -12,7 +12,7 @@
 </div>
 
 <div class="row">
-  <%= form_for @employee, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= form_for @employee_form, url: @employee, :method => :put, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
   	<%= f.error_messages %>
   	<%= render 'form', :f => f %>
 	

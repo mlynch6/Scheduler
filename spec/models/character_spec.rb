@@ -21,14 +21,9 @@ require 'spec_helper'
 
 describe Character do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:piece) { FactoryGirl.create(:piece,
+	let(:character) { FactoryGirl.create(:character, :male, :speaking,
 											account: account,
-											name: 'Peter Pan') }
-	let(:character) { FactoryGirl.create(:character,
-											account: account,
-											piece: piece,
-											name: 'Peter',
-											gender: 'Male') }
+											name: 'Peter') }
 	before do
 		Account.current_id = account.id
 		@character = FactoryGirl.build(:character)
@@ -60,23 +55,29 @@ describe Character do
     end
     
     describe "account_id cannot be changed" do
-			let(:new_account) { FactoryGirl.create(:account) }
-			before { character.update_attribute(:account_id, new_account.id) }
+			before do
+				@new_account = FactoryGirl.create(:account)
+				character.update_attribute(:account_id, @new_account.id)
+			end
 			
 			it { character.reload.account_id.should == account.id }
 		end
 		
   	it "should not allow access to piece_id" do
+			new_piece = FactoryGirl.create(:piece, account: account)
       expect do
-        Character.new(piece_id: piece.id)
+        Character.new(piece_id: new_piece.id)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
     
     describe "piece_id cannot be changed" do
-			let(:new_piece) { FactoryGirl.create(:piece) }
-			before { character.update_attribute(:piece_id, new_piece.id) }
+			before do
+				@piece = character.piece
+				@new_piece = FactoryGirl.create(:piece, account: account)
+				character.update_attribute(:piece_id, @new_piece.id)
+			end
 			
-			it { character.reload.piece_id.should == piece.id }
+			it { character.reload.piece_id.should == @piece.id }
 		end
 		
     it "should not allow access to deleted_at" do
@@ -176,7 +177,11 @@ describe Character do
 		end
 		
   	it "has one piece" do
-			character.reload.piece.should == piece
+			@piece = FactoryGirl.create(:piece, account: account)
+			@c = FactoryGirl.create(:character, 
+					account: account,
+					piece: @piece)
+			@c.reload.piece.should == @piece
 		end
 		
 		describe "appearances" do
@@ -197,10 +202,8 @@ describe Character do
 		end
 		
   	describe "castings" do
-			let!(:season) { FactoryGirl.create(:season, account: account) }
-			let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
-			let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
-			let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
+			let!(:casting1) { FactoryGirl.create(:casting, account: account, character: character) }
+			let!(:casting2) { FactoryGirl.create(:casting, account: account, character: character) }
 	
 			it "has multiple castings" do
 				character.castings.count.should == 2
@@ -238,7 +241,7 @@ describe Character do
 		end
 		
 		it "speaking?" do
-			character.reload.speaking?.should be_false
+			character.reload.speaking?.should be_true
 		end
 		
 		it "deleted?" do
@@ -253,8 +256,7 @@ describe Character do
 		let!(:character2) { FactoryGirl.create(:character, account: account, position: 2) }
 		let!(:character1) { FactoryGirl.create(:character, account: account, position: 1) }
 		let!(:wrong_acnt) { FactoryGirl.create(:account) }
-		let!(:piece_wrong_acnt) { FactoryGirl.create(:piece, account: wrong_acnt) }
-		let!(:character_wrong_acnt) { FactoryGirl.create(:character, account: wrong_acnt, piece: piece_wrong_acnt) }
+		let!(:character_wrong_acnt) { FactoryGirl.create(:character, account: wrong_acnt) }
 		let!(:character3) { FactoryGirl.create(:character, account: account, position: 1) }
 		
 		describe "default_scope" do
@@ -264,7 +266,7 @@ describe Character do
 		end
 		
 		describe "active" do
-			let!(:character_del) { FactoryGirl.create(:character, account: account, position: 1, deleted: true) }
+			let!(:character_del) { FactoryGirl.create(:character, :deleted, account: account) }
 			
 			it "returns the non-deleted records" do
 				Character.active.should == [character1, character3, character2]
@@ -273,28 +275,31 @@ describe Character do
 	end
 	
 	context "(On Create)" do
-		let(:season1) { FactoryGirl.create(:season, account: account) }
-		let(:season2) { FactoryGirl.create(:season, account: account) }
-		let(:sp1) { FactoryGirl.create(:season_piece, account: account, season: season1, piece: piece) }
-		let(:sp2) { FactoryGirl.create(:season_piece_published, account: account, season: season2, piece: piece) }
+		let!(:piece) { FactoryGirl.create(:piece, account: account) }
+		let!(:sp1) { FactoryGirl.create(:season_piece, account: account, piece: piece) }
+		let!(:sp2) { FactoryGirl.create(:season_piece, :published, account: account, piece: piece) }
 		let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: sp1) }
 		let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: sp1) }
 		let!(:castA) { FactoryGirl.create(:cast, account: account, season_piece: sp2) }
 		
   	it "animal is false by default" do
-  		character.reload.animal.should be_false
+			char = FactoryGirl.build(:character, account: account)
+  		char.animal.should be_false
   	end
 		
   	it "is_child is false by default" do
-  		character.reload.is_child.should be_false
+			char = FactoryGirl.build(:character, account: account)
+  		char.is_child.should be_false
   	end
 		
   	it "speaking is false by default" do
-  		character.reload.speaking.should be_false
+			char = FactoryGirl.build(:character, account: account)
+  		char.speaking.should be_false
   	end
 		
   	it "deleted is false by default" do
-  		character.reload.deleted.should be_false
+			char = FactoryGirl.build(:character, account: account)
+  		char.deleted.should be_false
   	end
 		
 		describe "when character is added to a piece, " do
@@ -316,7 +321,7 @@ describe Character do
 		
 		it "deleted_at is set when deleted" do
 			Timecop.freeze
-			@deleted = FactoryGirl.create(:character_deleted, account: account, piece: piece)
+			@deleted = FactoryGirl.create(:character, :deleted, account: account)
 			@deleted.deleted_at.should == Time.zone.now
 		end
 	end
@@ -324,7 +329,7 @@ describe Character do
 	context "(On Update)" do
 		before do
 			Timecop.freeze
-			@for_update = FactoryGirl.create(:character, account: account, piece: piece)
+			@for_update = FactoryGirl.create(:character, account: account)
 		end
 		
 		it "deleted_at is set when deleted" do
@@ -350,10 +355,10 @@ describe Character do
   
 	context "(Methods)" do
 		describe "soft_delete" do
+			let!(:piece) { FactoryGirl.create(:piece, account: account) }
 			let!(:char1) { FactoryGirl.create(:character, account: account, piece: piece) }
 			let!(:char2) { FactoryGirl.create(:character, account: account, piece: piece) }
-			let(:season) { FactoryGirl.create(:season, account: account) }
-			let(:sp) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
+			let(:sp) { FactoryGirl.create(:season_piece, account: account, piece: piece) }
 			let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: sp) }
 			let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: sp) }
 		
@@ -372,8 +377,7 @@ describe Character do
 			end
 		
 			describe "with at least 1 published cast" do
-				let(:season2) { FactoryGirl.create(:season, account: account) }
-				let(:sp_published) { FactoryGirl.create(:season_piece_published, account: account, season: season2, piece: piece) }
+				let(:sp_published) { FactoryGirl.create(:season_piece, :published, account: account, piece: piece) }
 				let!(:castA) { FactoryGirl.create(:cast, account: account, season_piece: sp_published) }
 				let!(:castB) { FactoryGirl.create(:cast, account: account, season_piece: sp_published) }
 				

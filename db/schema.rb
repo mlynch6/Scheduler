@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140610201845) do
+ActiveRecord::Schema.define(:version => 20140718192045) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -110,14 +110,14 @@ ActiveRecord::Schema.define(:version => 20140610201845) do
   add_index "characters", ["piece_id"], :name => "index_characters_on_piece_id"
 
   create_table "employees", :force => true do |t|
-    t.integer  "account_id",                                 :null => false
-    t.string   "first_name", :limit => 30,                   :null => false
-    t.string   "last_name",  :limit => 30,                   :null => false
-    t.boolean  "active",                   :default => true, :null => false
-    t.string   "role",       :limit => 50,                   :null => false
-    t.string   "email",      :limit => 50
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.integer  "account_id",                          :null => false
+    t.string   "role",                  :limit => 50, :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.string   "employee_num",          :limit => 20
+    t.date     "employment_start_date"
+    t.date     "employment_end_date"
+    t.text     "biography"
   end
 
   add_index "employees", ["account_id"], :name => "index_employees_on_account_id"
@@ -152,15 +152,15 @@ ActiveRecord::Schema.define(:version => 20140610201845) do
   add_index "events", ["piece_id"], :name => "index_events_on_piece_id"
 
   create_table "invitations", :force => true do |t|
-    t.integer  "event_id",    :null => false
-    t.integer  "employee_id", :null => false
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.integer  "event_id",   :null => false
+    t.integer  "person_id",  :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
-  add_index "invitations", ["employee_id"], :name => "index_invitations_on_employee_id"
-  add_index "invitations", ["event_id", "employee_id"], :name => "index_invitations_on_event_id_and_employee_id", :unique => true
+  add_index "invitations", ["event_id", "person_id"], :name => "index_invitations_on_event_id_and_employee_id", :unique => true
   add_index "invitations", ["event_id"], :name => "index_invitations_on_event_id"
+  add_index "invitations", ["person_id"], :name => "index_invitations_on_employee_id"
 
   create_table "locations", :force => true do |t|
     t.integer  "account_id",                                 :null => false
@@ -172,6 +172,25 @@ ActiveRecord::Schema.define(:version => 20140610201845) do
 
   add_index "locations", ["account_id", "name"], :name => "index_locations_on_account_id_and_name", :unique => true
   add_index "locations", ["account_id"], :name => "index_locations_on_account_id"
+
+  create_table "people", :force => true do |t|
+    t.integer  "account_id",                                   :null => false
+    t.integer  "profile_id",                                   :null => false
+    t.string   "profile_type", :limit => 50,                   :null => false
+    t.string   "first_name",   :limit => 30,                   :null => false
+    t.string   "middle_name",  :limit => 30
+    t.string   "last_name",    :limit => 30,                   :null => false
+    t.string   "suffix",       :limit => 10
+    t.string   "gender",       :limit => 10
+    t.date     "birth_date"
+    t.string   "email",        :limit => 50
+    t.boolean  "active",                     :default => true, :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
+  end
+
+  add_index "people", ["account_id"], :name => "index_people_on_account_id"
+  add_index "people", ["profile_id", "profile_type"], :name => "index_people_on_profile_id_and_profile_type"
 
   create_table "phones", :force => true do |t|
     t.integer  "phoneable_id",                                    :null => false
@@ -258,7 +277,7 @@ ActiveRecord::Schema.define(:version => 20140610201845) do
 
   create_table "users", :force => true do |t|
     t.integer  "account_id",                           :null => false
-    t.integer  "employee_id",                          :null => false
+    t.integer  "person_id",                            :null => false
     t.string   "username",               :limit => 20, :null => false
     t.string   "password_digest",                      :null => false
     t.string   "role",                   :limit => 20, :null => false
@@ -269,7 +288,7 @@ ActiveRecord::Schema.define(:version => 20140610201845) do
   end
 
   add_index "users", ["account_id"], :name => "index_users_on_account_id"
-  add_index "users", ["employee_id"], :name => "index_users_on_employee_id"
+  add_index "users", ["person_id"], :name => "index_users_on_employee_id"
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
 
 end

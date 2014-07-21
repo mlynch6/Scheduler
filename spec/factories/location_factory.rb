@@ -12,10 +12,14 @@
 
 FactoryGirl.define do
 	factory :location do
-		account
 		sequence(:name)	{ |n| "Studio #{n}" }
+		
+		after_build do |loc|
+			# association :account
+			loc.account = FactoryGirl.create(:account) unless loc.account
+		end
   
-	  factory :location_inactive do
+	  trait :inactive do
 			active 	false
 		end
 	end

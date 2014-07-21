@@ -47,7 +47,7 @@ describe "Password Pages:" do
 			fill_in "Confirm Password", :with => "foobar"
 			click_button "Update Password"
 			
-			should have_title current_user.employee.full_name
+			should have_title current_user.person.full_name
 			should have_selector 'div.alert-success', text: 'Password has been changed.'
 			
 			click_link 'Sign Out'

@@ -122,8 +122,8 @@ describe Piece do
 		
 		describe "scenes" do
 			before { Account.current_id = account.id }
-			let!(:second_scene) { FactoryGirl.create(:scene, account: account, piece: piece, position: 2) }
-			let!(:first_scene) { FactoryGirl.create(:scene, account: account, piece: piece, position: 1) }
+			let!(:second_scene) { FactoryGirl.create(:scene, account: account, piece: piece) }
+			let!(:first_scene) { FactoryGirl.create(:scene, account: account, piece: piece) }
 	
 			it "has multiple scenes" do
 				piece.scenes.count.should == 2
@@ -140,8 +140,8 @@ describe Piece do
 		
 		describe "characters" do
 			before { Account.current_id = account.id }
-			let!(:second_char) { FactoryGirl.create(:character, account: account, piece: piece, position: 2) }
-			let!(:first_char) { FactoryGirl.create(:character, account: account, piece: piece, position: 1) }
+			let!(:second_char) { FactoryGirl.create(:character, account: account, piece: piece) }
+			let!(:first_char) { FactoryGirl.create(:character, account: account, piece: piece) }
 	
 			it "has multiple characters" do
 				piece.characters.count.should == 2
@@ -175,10 +175,8 @@ describe Piece do
 		end
 		
 		describe "season_pieces" do
-			let(:season1) { FactoryGirl.create(:season, account: account) }
-			let(:season2) { FactoryGirl.create(:season, account: account) }
-			let!(:second_inter) { FactoryGirl.create(:season_piece, account: account, season: season1, piece: piece) }
-			let!(:first_inter) { FactoryGirl.create(:season_piece, account: account, season: season2, piece: piece) }
+			let!(:sp1) { FactoryGirl.create(:season_piece, account: account, piece: piece) }
+			let!(:sp2) { FactoryGirl.create(:season_piece, account: account, piece: piece) }
 	
 			it "has multiple season_pieces" do
 				piece.season_pieces.count.should == 2
@@ -194,10 +192,8 @@ describe Piece do
 		end
 		
 		describe "seasons" do
-			let(:season1) { FactoryGirl.create(:season, account: account) }
-			let(:season2) { FactoryGirl.create(:season, account: account) }
-			let!(:second_inter) { FactoryGirl.create(:season_piece, account: account, season: season1, piece: piece) }
-			let!(:first_inter) { FactoryGirl.create(:season_piece, account: account, season: season2, piece: piece) }
+			let!(:sp1) { FactoryGirl.create(:season_piece, account: account, piece: piece) }
+			let!(:sp2) { FactoryGirl.create(:season_piece, account: account, piece: piece) }
 	
 			it "has multiple seasons" do
 				piece.seasons.count.should == 2
@@ -229,7 +225,7 @@ describe Piece do
 	
 	context "(Uniqueness)" do
 		describe "name/choreographer" do
-			let(:piece_diff_account) { FactoryGirl.create(:piece) }
+			let(:piece_diff_account) { FactoryGirl.create(:piece, account: FactoryGirl.create(:account)) }
 			
 			it "duplicate name (no choreographer) causes error within Account" do
 	  		piece.choreographer = nil
@@ -283,7 +279,7 @@ describe Piece do
 		end
 		let!(:second_piece) { FactoryGirl.create(:piece, account: account, name: "Nutcracker") }
 		let!(:first_piece) { FactoryGirl.create(:piece, account: account, name: "Giselle") }
-		let!(:piece_wrong_acnt) { FactoryGirl.create(:piece) }
+		let!(:piece_wrong_acnt) { FactoryGirl.create(:piece, account: FactoryGirl.create(:account)) }
 		
 		describe "default_scope" do
 			it "returns the records in alphabetical order" do

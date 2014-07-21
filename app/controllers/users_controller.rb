@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 	before_filter :get_resource, :only => [:destroy]
 	
   def index
-  	@users = User.includes(:employee).paginate(page: params[:page], per_page: params[:per_page])
+  	@users = User.includes(:person).paginate(page: params[:page], per_page: params[:per_page])
 	end
 	
   def new
@@ -32,6 +32,6 @@ private
 	
 	#setup for form - dropdowns, etc
 	def form_setup
-		@employees = Employee.active.without_user.map { |employee| [employee.full_name, employee.id] }
+		@employees = Person.active.employees.map { |employee| [employee.full_name, employee.id] }
 	end
 end

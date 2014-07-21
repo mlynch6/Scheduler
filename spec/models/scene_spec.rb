@@ -16,14 +16,12 @@ require 'spec_helper'
 
 describe Scene do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:piece) { FactoryGirl.create(:piece,
-											account: account,
-											name: 'Peter Pan') }
 	let(:scene) { FactoryGirl.create(:scene,
 											account: account,
-											piece: piece,
 											name: 'Overture',
 											track: "1+2") }
+	let(:piece) { scene.piece }
+	
 	before do
 		Account.current_id = account.id
 		@scene = FactoryGirl.build(:scene)
@@ -75,9 +73,8 @@ describe Scene do
   end
   
   context "(Saving)" do
-  	let!(:p2) { FactoryGirl.create(:piece, account: account) }
-  	let!(:scene1) { FactoryGirl.create(:scene, account: account, piece: p2) }
-  	let!(:scene2) { FactoryGirl.create(:scene, account: account, piece: p2) }
+  	let!(:scene1) { FactoryGirl.create(:scene, account: account) }
+  	let!(:scene2) { FactoryGirl.create(:scene, account: account, piece: scene1.piece) }
   		
   	it "1st scene for a piece, position should be 1" do
   		scene1.position.should == 1
@@ -162,10 +159,8 @@ describe Scene do
 		end
 		
 		describe "characters" do
-			let(:character1) { FactoryGirl.create(:character, account: account, piece: piece) }
-			let(:character2) { FactoryGirl.create(:character, account: account, piece: piece) }
-			let!(:appearance2) { FactoryGirl.create(:appearance, scene: scene, character: character1) }
-			let!(:appearance1) { FactoryGirl.create(:appearance, scene: scene, character: character2) }
+			let!(:appearance2) { FactoryGirl.create(:appearance, scene: scene) }
+			let!(:appearance1) { FactoryGirl.create(:appearance, scene: scene) }
 	
 			it "has multiple characters" do
 				scene.characters.count.should == 2
@@ -193,9 +188,7 @@ describe Scene do
 		end
 		let!(:scene2) { FactoryGirl.create(:scene, account: account, position: 2) }
 		let!(:scene1) { FactoryGirl.create(:scene, account: account, position: 1) }
-		let!(:wrong_acnt) { FactoryGirl.create(:account) }
-		let!(:piece_wrong_acnt) { FactoryGirl.create(:piece, account: wrong_acnt) }
-		let!(:scene_wrong_acnt) { FactoryGirl.create(:scene, account: wrong_acnt, piece: piece) }
+		let!(:scene_wrong_acnt) { FactoryGirl.create(:scene, account: FactoryGirl.create(:account)) }
 		let!(:scene3) { FactoryGirl.create(:scene, account: account, position: 1) }
 		
 		describe "default_scope" do

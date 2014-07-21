@@ -17,39 +17,60 @@
 
 FactoryGirl.define do
 	factory :event do
-		account
 		sequence(:title)	{ |n| "Event #{n}" }
-		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"9:15AM"
 		duration					60
+		
+		after_build do |e|
+			# association :account
+			e.account = FactoryGirl.create(:account) unless e.account
+			# association :location
+			e.location = FactoryGirl.create(:location, account: e.account) unless e.location
+		end
 	end
 	
 	factory :company_class do
-		account
 		sequence(:title)	{ |n| "Company Class #{n}" }
-		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"9:15AM"
 		duration					60
+		
+		after_build do |e|
+			# association :account
+			e.account = FactoryGirl.create(:account) unless e.account
+			# association :location
+			e.location = FactoryGirl.create(:location, account: e.account) unless e.location
+		end
 	end
 	
 	factory :rehearsal do
-		account
 		sequence(:title)	{ |n| "Rehearsal #{n}" }
-		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"9:15AM"
 		duration					60
-		piece
+		
+		after_build do |e|
+			# association :account
+			e.account = FactoryGirl.create(:account) unless e.account
+			# association :location
+			e.location = FactoryGirl.create(:location, account: e.account) unless e.location
+			# association :piece
+			e.piece = FactoryGirl.create(:piece, account: e.account) unless e.piece
+		end
 	end
 	
 	factory :costume_fitting do
-		account
 		sequence(:title)	{ |n| "Costume Fitting #{n}" }
-		location
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		start_time				"8:45AM"
 		duration					30
+		
+		after_build do |e|
+			# association :account
+			e.account = FactoryGirl.create(:account) unless e.account
+			# association :location
+			e.location = FactoryGirl.create(:location, account: e.account) unless e.location
+		end
 	end
 end

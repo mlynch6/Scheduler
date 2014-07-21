@@ -113,10 +113,8 @@ describe Season do
 		end
 		
 		describe "season_pieces" do
-			let(:piece1) { FactoryGirl.create(:piece, account: account) }
-			let(:piece2) { FactoryGirl.create(:piece, account: account) }
-			let!(:second_inter) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece1) }
-			let!(:first_inter) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2) }
+			let!(:second_inter) { FactoryGirl.create(:season_piece, account: account, season: season) }
+			let!(:first_inter) { FactoryGirl.create(:season_piece, account: account, season: season) }
 	
 			it "has multiple season_pieces" do
 				season.season_pieces.count.should == 2
@@ -132,10 +130,8 @@ describe Season do
 		end
 		
 		describe "pieces" do
-			let(:piece1) { FactoryGirl.create(:piece, account: account) }
-			let(:piece2) { FactoryGirl.create(:piece, account: account) }
-			let!(:second_inter) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece1) }
-			let!(:first_inter) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2) }
+			let!(:second_inter) { FactoryGirl.create(:season_piece, account: account, season: season) }
+			let!(:first_inter) { FactoryGirl.create(:season_piece, account: account, season: season) }
 	
 			it "has multiple pieces" do
 				season.pieces.count.should == 2
@@ -163,7 +159,7 @@ describe Season do
 		end
 		let!(:second_season) { FactoryGirl.create(:season, account: account, start_dt: Date.new(2012,8,1), end_dt: Date.new(2012,10,1)) }
 		let!(:first_season) { FactoryGirl.create(:season, account: account, start_dt: Date.new(2012,3,1), end_dt: Date.new(2012,7,1)) }
-		let!(:season_wrong_acnt) { FactoryGirl.create(:season) }
+		let!(:season_wrong_acnt) { FactoryGirl.create(:season, account: FactoryGirl.create(:account)) }
 		
 		describe "default_scope" do
 			it "returns the records in start_dt order (most recent first)" do
@@ -174,12 +170,6 @@ describe Season do
 				Season.all.should_not include(season_wrong_acnt)
 			end
 		end
-		
-#		describe "with_date" do
-#			it "returns season where date is between the start and end dates" do
-#				Season.with_date(Date.new(2012,9,1)).should == [second_season]
-#			end
-#		end
 	end
 end
 

@@ -79,21 +79,6 @@ describe Address do
   end
   
   context "(Invalid)" do
-#  	it "when addressable_id is blank" do
-#  		@address.addressable_id = " "
-#  		should_not be_valid
-#  	end
-#  	
-#  	it "when addressable_type is blank" do
-#  		@address.addressable_type = " "
-#  		should_not be_valid
-#  	end
-#  	
-#  	it "when addressable_type is too long" do
-#  		@address.addressable_type = "a"*256
-#  		should_not be_valid
-#  	end
-  	
   	it "when addr_type is blank" do
   		@address.addr_type = " "
   		should_not be_valid
@@ -165,16 +150,6 @@ describe Address do
   		should_not be_valid
   	end
   end
-  
-#  context "(Associations)" do
-#  	let!(:user) { FactoryGirl.create(:user,
-#										employee: employee) }
-#		let!(:employee_with_no_user) { FactoryGirl.create(:employee) }
-#  	
-#  	it "has one account" do
-#			employee.reload.account.should == account
-#		end
-#  end
 
   context "correct value is returned for" do		
 		it "addr_type" do

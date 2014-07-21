@@ -6,7 +6,7 @@ class PasswordsController < ApplicationController
 	
   def create
 		if @password_form.submit(params[:password_form])
-			redirect_to current_user.employee, notice: "Password has been changed."
+			redirect_to current_user.person.profile, notice: "Password has been changed."
 		else
 			render :new
 		end

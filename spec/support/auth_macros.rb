@@ -1,19 +1,16 @@
 module AuthMacros
   def log_in(attributes = {})
-  	employee = FactoryGirl.create(:employee)
-    @_current_user = FactoryGirl.create(:superadmin, employee: employee, account: employee.account)
+    create_user(:superadmin)
     do_user_login
   end
   
   def log_in_employee(attributes = {})
-  	employee = FactoryGirl.create(:employee)
-    @_current_user = FactoryGirl.create(:user, employee: employee, account: employee.account)
+    create_user
     do_user_login
   end
   
   def log_in_admin(attributes = {})
-  	employee = FactoryGirl.create(:employee)
-    @_current_user = FactoryGirl.create(:admin, employee: employee, account: employee.account)
+    create_user(:admin)
     do_user_login
   end
 
@@ -38,6 +35,17 @@ module AuthMacros
 	end
   
 protected
+	def create_user(user_type = :employee)
+		if [:admin, :superadmin].include?(user_type)
+			@_current_user = FactoryGirl.build(:user, user_type)
+		else
+			@_current_user = FactoryGirl.build(:user)
+		end
+		unless @_current_user.valid?
+			@_current_user.username = "#{@_current_user.username}_unq" if u.errors.has_key?(:username)
+		end
+		@_current_user.save
+	end
 	
 	def do_user_login
     visit login_path

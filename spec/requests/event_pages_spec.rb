@@ -68,7 +68,7 @@ describe "Event (non-Repeating) Pages:" do
 				
 		it "has only active Locations in dropdown" do
 			FactoryGirl.create(:location, account: current_account, name: 'Location A')
-			FactoryGirl.create(:location_inactive, account: current_account, name: 'Location B')
+			FactoryGirl.create(:location, :inactive, account: current_account, name: 'Location B')
 			visit new_event_path
   		
 			should have_select 'Location', with_options: ['Location A']
@@ -76,12 +76,12 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "has only active Employees in dropdown" do
-			FactoryGirl.create(:employee, account: current_account, last_name: 'Parker', first_name: 'Peter')
-			FactoryGirl.create(:employee_inactive, account: current_account, last_name: 'Kent', first_name: 'Clark')
+			person = FactoryGirl.create(:person, account: current_account)
+			person_inactive = FactoryGirl.create(:person, :inactive, account: current_account)
 			visit new_event_path
   		
-			should have_selector 'option', text: 'Peter Parker', visible: false
-			should_not have_selector 'option', text: 'Clark Kent', visible: false
+			should have_selector 'option', text: person.full_name, visible: false
+			should_not have_selector 'option', text: person_inactive.full_name, visible: false
 		end
 		
 		context "with error" do
@@ -127,7 +127,7 @@ describe "Event (non-Repeating) Pages:" do
 		
 			it "creates new Event with Invitees" do
 				location = FactoryGirl.create(:location, account: current_account)
-				e1 = FactoryGirl.create(:employee, account: current_account)
+				p1 = FactoryGirl.create(:person, account: current_account)
 				visit new_event_path
 	  		
 				fill_in "Title", with: "Test Event"
@@ -135,7 +135,7 @@ describe "Event (non-Repeating) Pages:" do
 				fill_in 'Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "9:15 AM"
 				fill_in 'Duration', with: 60
-				select_from_chosen e1.full_name, from: 'Invitees'
+				select_from_chosen p1.full_name, from: 'Invitees'
 				click_button 'Create'
 		
 				should have_selector 'div.alert-success'
@@ -148,68 +148,62 @@ describe "Event (non-Repeating) Pages:" do
 				open_modal(".mash-event")
 				click_link 'Edit'
 				
-				should have_content e1.full_name
+				should have_content p1.full_name
 			end
 		end
 	
 		context "shows warning" do			
 			it "when location is double booked" do
-				location = FactoryGirl.create(:location, account: current_account)
-				
 				event = FactoryGirl.create(:event, account: current_account,
-								location: location,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 60)
 				
 				visit new_event_path
 				fill_in "Title", with: "Test Event"
-				select location.name, from: "Location"
+				select event.location.name, from: "Location"
 				fill_in 'Date', with: Time.zone.today
 				fill_in 'Start Time', with: "11AM"
 				fill_in 'Duration', with: 120
 				click_button 'Create'
 		
 				should have_selector 'div.alert-warning', text: "is double booked during this time"
-				should have_selector 'div.alert-warning', text: location.name
+				should have_selector 'div.alert-warning', text: event.location.name
 			end
 			
 			it "when employee is double booked" do
-				loc1 = FactoryGirl.create(:location, account: current_account)
-				loc2 = FactoryGirl.create(:location, account: current_account)
-				e1 = FactoryGirl.create(:employee, account: current_account)
-				e2 = FactoryGirl.create(:employee, account: current_account)
-				e3 = FactoryGirl.create(:employee, account: current_account)
+				loc = FactoryGirl.create(:location, account: current_account)
+				p1 = FactoryGirl.create(:person, account: current_account)
+				p2 = FactoryGirl.create(:person, account: current_account)
+				p3 = FactoryGirl.create(:person, account: current_account)
 				
 				event1 = FactoryGirl.create(:event, account: current_account,
-								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 60)
-				FactoryGirl.create(:invitation, event: event1, employee: e1)
-				FactoryGirl.create(:invitation, event: event1, employee: e2)
-				FactoryGirl.create(:invitation, event: event1, employee: e3)
+				FactoryGirl.create(:invitation, event: event1, person: p1)
+				FactoryGirl.create(:invitation, event: event1, person: p2)
+				FactoryGirl.create(:invitation, event: event1, person: p3)
 				
 				event2 = FactoryGirl.create(:event, account: current_account,
-								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
 								duration: 60)
-				FactoryGirl.create(:invitation, event: event2, employee: e1)
+				FactoryGirl.create(:invitation, event: event2, person: p1)
 				
 				visit new_event_path
 				fill_in "Title", with: "Test Event"
-				select loc2.name, from: "Location"
+				select loc.name, from: "Location"
 				fill_in 'Date', with: Time.zone.today
 				fill_in 'Start Time', with: "11AM"
 				fill_in 'Duration', with: 120
-				select_from_chosen e1.full_name, from: "Invitees"
+				select_from_chosen p1.full_name, from: "Invitees"
 				click_button 'Create'
 		
 				should have_selector 'div.alert-warning', text: "people are double booked"
-				should have_selector 'div.alert-warning', text: e1.full_name
-				should_not have_selector 'div.alert-warning', text: e2.full_name
-				should_not have_selector 'div.alert-warning', text: e3.full_name
+				should have_selector 'div.alert-warning', text: p1.full_name
+				should_not have_selector 'div.alert-warning', text: p2.full_name
+				should_not have_selector 'div.alert-warning', text: p3.full_name
 			end
 		end
 		
@@ -224,9 +218,7 @@ describe "Event (non-Repeating) Pages:" do
 	context "#edit", js: true do
 		before do
 			log_in
-			@location = FactoryGirl.create(:location, account: current_account)
 			@event = FactoryGirl.create(:event, account: current_account,
-					location: @location,
 					start_date: Time.zone.today)
 			click_link 'Calendar'
 			
@@ -291,13 +283,12 @@ describe "Event (non-Repeating) Pages:" do
 		context "with warning" do			
 			it "when location is double booked" do
 				event = FactoryGirl.create(:event, account: current_account,
-								location: @location,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 60)
 								
 				e2 = FactoryGirl.create(:event, account: current_account,
-								location: @location,
+								location: event.location,
 								start_date: Time.zone.today,
 								start_time: "1 PM",
 								duration: 60)
@@ -307,47 +298,44 @@ describe "Event (non-Repeating) Pages:" do
 				click_button 'Update'
 		
 				should have_selector 'div.alert-warning', text: "is double booked during this time"
-				should have_selector 'div.alert-warning', text: @location.name
+				should have_selector 'div.alert-warning', text: event.location.name
 			end
 			
 			it "shows warning when employee is double booked" do
-				loc1 = FactoryGirl.create(:location, account: current_account)
-				loc2 = FactoryGirl.create(:location, account: current_account)
-				piece = FactoryGirl.create(:piece, account: current_account)
-				e1 = FactoryGirl.create(:employee, account: current_account)
-				e2 = FactoryGirl.create(:employee, account: current_account)
-				e3 = FactoryGirl.create(:employee, account: current_account)
+				loc = FactoryGirl.create(:location, account: current_account)
+				p1 = FactoryGirl.create(:person, account: current_account)
+				p2 = FactoryGirl.create(:person, account: current_account)
+				p3 = FactoryGirl.create(:person, account: current_account)
 				
 				r1 = FactoryGirl.create(:event, account: current_account,
-								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 60)
-				FactoryGirl.create(:invitation, event: r1, employee: e1)
-				FactoryGirl.create(:invitation, event: r1, employee: e2)
-				FactoryGirl.create(:invitation, event: r1, employee: e3)
+				FactoryGirl.create(:invitation, event: r1, person: p1)
+				FactoryGirl.create(:invitation, event: r1, person: p2)
+				FactoryGirl.create(:invitation, event: r1, person: p3)
 				
 				r2 = FactoryGirl.create(:event, account: current_account,
-								location: loc1,
+								location: r1.location,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
 								duration: 60)
-				FactoryGirl.create(:invitation, event: r2, employee: e1)
+				FactoryGirl.create(:invitation, event: r2, person: p1)
 				
 				r3 = FactoryGirl.create(:event, account: current_account,
-								location: loc2,
+								location: loc,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 120)
 				
 				visit edit_event_path(r3)
-				select_from_chosen e1.full_name, from: "Invitees"
+				select_from_chosen p1.full_name, from: "Invitees"
 				click_button 'Update'
 		
 				should have_selector 'div.alert-warning', text: "people are double booked"
-				should have_selector 'div.alert-warning', text: e1.full_name
-				should_not have_selector 'div.alert-warning', text: e2.full_name
-				should_not have_selector 'div.alert-warning', text: e3.full_name
+				should have_selector 'div.alert-warning', text: p1.full_name
+				should_not have_selector 'div.alert-warning', text: p2.full_name
+				should_not have_selector 'div.alert-warning', text: p3.full_name
 			end
 		end
 		
@@ -464,14 +452,12 @@ describe "Event (non-Repeating) Pages:" do
 	context "#show", js: true do
 		before do
 			log_in
-			@location = FactoryGirl.create(:location, account: current_account)
 			click_link "Calendar"
 		end
 		
 		it "redirects back to #index if try to use show URL" do
 			@event = FactoryGirl.create(:event,
 					account: current_account,
-					location: @location,
 					start_date: Time.zone.today,
 					start_time: '10:15 AM',
 					duration: 60)
@@ -484,12 +470,11 @@ describe "Event (non-Repeating) Pages:" do
 		it "displays Event details in popup window" do
 			@event = FactoryGirl.create(:event,
 					account: current_account,
-					location: @location,
 					start_date: Time.zone.today,
 					start_time: '10:15 AM',
 					duration: 60)
-			emp = FactoryGirl.create(:employee, account: current_account)
-			FactoryGirl.create(:invitation, event: @event, employee: emp)
+			emp = FactoryGirl.create(:person, account: current_account)
+			FactoryGirl.create(:invitation, event: @event, person: emp)
 			visit events_path
 			open_modal(".mash-event")
 			
@@ -513,12 +498,11 @@ describe "Event (non-Repeating) Pages:" do
 			it "details in popup window" do
 				@event = FactoryGirl.create(:company_class,
 						account: current_account,
-						location: @location,
 						start_date: Time.zone.today,
 						start_time: '10:15 AM',
 						duration: 60)
-				emp = FactoryGirl.create(:employee, account: current_account)
-				FactoryGirl.create(:invitation, event: @event, employee: emp)
+				emp = FactoryGirl.create(:person, account: current_account)
+				FactoryGirl.create(:invitation, event: @event, person: emp)
 				visit events_path
 				open_modal(".mash-event")
 				
@@ -543,14 +527,13 @@ describe "Event (non-Repeating) Pages:" do
 				contract.class_break_min = 15
 				contract.save
 				
-				emp = FactoryGirl.create(:employee, account: current_account)
+				person = FactoryGirl.create(:person, account: current_account)
 				event = FactoryGirl.create(:company_class,
 						account: current_account,
-						location: @location,
 						start_date: Time.zone.today,
 						start_time: '10:15am',
 						duration: 60)
-				FactoryGirl.create(:invitation, event: event, employee: emp)
+				FactoryGirl.create(:invitation, event: event, person: person)
 				visit events_path
 				open_modal(".mash-event")
 				
@@ -565,7 +548,6 @@ describe "Event (non-Repeating) Pages:" do
 				
 				FactoryGirl.create(:company_class,
 						account: current_account,
-						location: @location,
 						start_date: Time.zone.today)
 				visit events_path
 				open_modal(".mash-event")
@@ -575,14 +557,13 @@ describe "Event (non-Repeating) Pages:" do
 		end
 		
 		it "displays Costume Fitting details in popup window" do
-			emp = FactoryGirl.create(:employee, account: current_account)
+			person = FactoryGirl.create(:person, account: current_account)
 			event = FactoryGirl.create(:costume_fitting,
 					account: current_account,
-					location: @location,
 					start_date: Time.zone.today,
 					start_time: '10:15am',
 					duration: 60)
-			FactoryGirl.create(:invitation, event: event, employee: emp)
+			FactoryGirl.create(:invitation, event: event, person: person)
 			visit events_path
 			open_modal(".mash-event")
 			
@@ -599,21 +580,18 @@ describe "Event (non-Repeating) Pages:" do
 			should have_content event.start_date
 			should have_content '10:15 AM to 11:15 AM'
 			should have_content event.duration
-			should have_content emp.full_name
+			should have_content person.full_name
 		end
 		
 		describe "displays Rehearsal" do
 			it "details in popup window" do
-				emp = FactoryGirl.create(:employee, account: current_account)
-				piece = FactoryGirl.create(:piece, account: current_account)
+				person = FactoryGirl.create(:person, account: current_account)
 				event = FactoryGirl.create(:rehearsal,
 						account: current_account,
-						location: @location,
 						start_date: Time.zone.today,
 						start_time: '10:15am',
-						duration: 60,
-						piece: piece)
-				FactoryGirl.create(:invitation, event: event, employee: emp)
+						duration: 60)
+				FactoryGirl.create(:invitation, event: event, person: person)
 				visit events_path
 				open_modal(".mash-event")
 				
@@ -631,25 +609,21 @@ describe "Event (non-Repeating) Pages:" do
 				should have_content '10:15 AM to 11:15 AM'
 				should have_content event.duration
 				should have_content event.piece.name
-				should have_content emp.full_name
+				should have_content person.full_name
 			end
 			
 			it "break in popup window" do
-				piece = FactoryGirl.create(:piece, account: current_account)
 				break60 = FactoryGirl.create(:rehearsal_break, 
 						agma_contract: current_account.agma_contract,
 						duration_min: 60,
 						break_min: 5)
-				
-				emp = FactoryGirl.create(:employee, account: current_account)
+				person = FactoryGirl.create(:person, account: current_account)
 				event = FactoryGirl.create(:rehearsal,
 						account: current_account,
-						location: @location,
 						start_date: Time.zone.today,
 						start_time: '10:15am',
-						duration: 60,
-						piece: piece)
-				FactoryGirl.create(:invitation, event: event, employee: emp)
+						duration: 60)
+				FactoryGirl.create(:invitation, event: event, person: person)
 				visit events_path
 				open_modal(".mash-event")
 				
@@ -658,7 +632,6 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "without break if rehearsal break is 0" do
-				piece = FactoryGirl.create(:piece, account: current_account)
 				break60 = FactoryGirl.create(:rehearsal_break, 
 						agma_contract: current_account.agma_contract,
 						duration_min: 60,
@@ -666,10 +639,8 @@ describe "Event (non-Repeating) Pages:" do
 				
 				FactoryGirl.create(:rehearsal,
 						account: current_account,
-						location: @location,
 						start_date: Time.zone.today,
-						duration: 60,
-						piece: piece)
+						duration: 60)
 				visit events_path
 				open_modal(".mash-event")
 				
@@ -677,14 +648,10 @@ describe "Event (non-Repeating) Pages:" do
 			end
 			
 			it "without break if no rehearsal breaks specified" do
-				piece = FactoryGirl.create(:piece, account: current_account)
-				
 				FactoryGirl.create(:rehearsal,
 						account: current_account,
-						location: @location,
 						start_date: Time.zone.today,
-						duration: 60,
-						piece: piece)
+						duration: 60)
 				visit events_path
 				open_modal(".mash-event")
 				
@@ -696,9 +663,7 @@ describe "Event (non-Repeating) Pages:" do
 	context "#destroy", js: true do
 		before do
 			log_in
-			@location = FactoryGirl.create(:location, account: current_account)
 			@event = FactoryGirl.create(:event, account: current_account,
-								location: @location,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 60)

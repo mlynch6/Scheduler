@@ -3,8 +3,8 @@ class PasswordResetsController < ApplicationController
   end
 	
   def create
-		employee = Employee.unscoped.find_by_email(params[:email])
-		user = User.unscoped.find_by_employee_id(employee.id) if employee
+		person = Person.unscoped.find_by_email(params[:email])
+		user = User.unscoped.find_by_person_id(person.id) if person
 		user.send_password_reset_email if user
 		redirect_to password_resets_path
   end

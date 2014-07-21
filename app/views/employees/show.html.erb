@@ -14,17 +14,19 @@
 <div class="row mash-show">
   <%= render 'employees/tabs' %>
   <div class="mash-body">
-    <%= render 'employees/detail' %>
+    <div class="row">
+      <div class="col-md-8"><%= render 'employees/detail' %></div>
+      <div class="col-md-4"><%= render 'employment_panel' %></div>
+      
+      <div class="col-md-4">
+        <%= render 'addresses/table', parent: @employee.person, addresses: @employee.addresses %>
+      </div>
+
+      <div class="col-md-4">
+        <%= render 'phones/table', parent: @employee.person, phones: @employee.phones %>
+      </div>
     
-    <div class="row" style="margin-top:15px;">
-      <div class="col-md-offset-1 col-md-5">
-        <%= render 'addresses/table', parent: @employee, addresses: @employee.addresses %>
-      </div>
-
-      <div class="col-md-5">
-        <%= render 'phones/table', parent: @employee, phones: @employee.phones %>
-      </div>
+      <div class="col-md-12"><%= render 'biography_panel' %></div>
     </div>
-
-  </div>
+  </div><!-- mash-body -->
 </div>

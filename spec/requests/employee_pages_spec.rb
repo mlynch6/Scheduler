@@ -27,7 +27,8 @@ describe "Employee Pages:" do
 		end
 		
 		it "without records" do
-			current_user.employee.inactivate
+			person = current_user.person
+			person.inactivate
 	  	visit employees_path
 	  	
 	    should have_selector 'p', text: 'To begin'
@@ -37,8 +38,8 @@ describe "Employee Pages:" do
 	  
 		it "lists records" do
 			4.times do
-				emp = FactoryGirl.create(:employee_complete, account: current_account)
-				FactoryGirl.create(:phone_employee, phoneable: emp)
+				@person = FactoryGirl.create(:person, account: current_account)
+				FactoryGirl.create(:phone_person, phoneable: @person)
 			end
 			visit employees_path(per_page: 3)
 	
@@ -59,10 +60,10 @@ describe "Employee Pages:" do
 		end
 		
 		it "has links for Super Admin" do
-			employee = FactoryGirl.create(:employee, account: current_account)
+			@person = FactoryGirl.create(:person, account: current_account)
 			visit employees_path
 	
-			should have_link employee.name
+			should have_link @person.name
 			should have_link 'Inactivate'
 			should have_link 'Delete'
 			
@@ -73,7 +74,8 @@ describe "Employee Pages:" do
 	context "#inactivate" do
 		before do
 			log_in
-			@employee = FactoryGirl.create(:employee, account: current_account, last_name: 'Inactivate Test')
+			@person = FactoryGirl.create(:person, account: current_account)
+			@employee = @person.profile
 			visit employees_path
 			click_link "inactivate_#{@employee.id}"
 		end
@@ -83,17 +85,17 @@ describe "Employee Pages:" do
 			should have_title 'Employees'
 				
 			click_link 'Employees'
-			should_not have_content @employee.name
+			should_not have_content @person.name
 				
 			click_link 'Inactive Employees'
-			should have_content @employee.name
+			should have_content @person.name
 		end
 	end
 	
 	context "#inactive" do
 		before do
 			log_in
-			@employee = FactoryGirl.create(:employee_inactive, account: current_account)
+			@person = FactoryGirl.create(:person, :inactive, account: current_account)
 			click_link 'People'
 	  	click_link 'Inactive Employees'
 		end
@@ -116,7 +118,7 @@ describe "Employee Pages:" do
 		end
 			
 		it "without records" do
-			@employee.activate
+			click_link 'Activate'
 	  	click_link 'Inactive Employees'
 			
 	    should have_selector 'p', text: 'No employees are inactive'
@@ -126,8 +128,8 @@ describe "Employee Pages:" do
 		
 		it "lists records" do
 			4.times do
-				emp = FactoryGirl.create(:employee_complete, account: current_account, active: false)
-				FactoryGirl.create(:phone_employee, phoneable: emp)
+				person = FactoryGirl.create(:person, :inactive, account: current_account)
+				FactoryGirl.create(:phone_person, phoneable: person)
 			end
 			visit inactive_employees_path(per_page: 3)
 	
@@ -149,7 +151,7 @@ describe "Employee Pages:" do
 		end
 		
 		it "has links for Super Admin" do
-			should have_link @employee.name
+			should have_link @person.name
 			should have_link 'Activate'
 			should have_link 'Delete'
 			
@@ -160,7 +162,9 @@ describe "Employee Pages:" do
 	context "#activate" do
 		before do
 			log_in
-			@employee = FactoryGirl.create(:employee_inactive, account: current_account, last_name: 'Activate Test')
+			@person = FactoryGirl.create(:person, account: current_account)
+			@employee = @person.profile
+			@person.inactivate
 			visit inactive_employees_path
 			click_link "activate_#{@employee.id}"
 		end
@@ -170,10 +174,10 @@ describe "Employee Pages:" do
 			should have_title 'Inactive Employees'
 			
 			click_link 'Employees'
-			should have_content @employee.name
+			should have_content @person.name
 			
 			click_link 'Inactive Employees'
-			should_not have_content @employee.name
+			should_not have_content @person.name
 		end
 	end
 
@@ -198,9 +202,18 @@ describe "Employee Pages:" do
 		
 		it "has correct fields on form" do
 			should have_field 'First Name'
+			should have_field 'Middle Name'
 	    should have_field 'Last Name'
+			should have_field 'Suffix'
+			should have_field 'Status'
 	    should have_select 'Role'
+			should have_field 'Gender'
+			should have_field 'Birth Date'
 	    should have_field 'Email'
+			should have_field 'Employee #'
+			should have_field 'Employment Start Date'
+			should have_field 'Employment End Date'
+			should have_field 'Biography'
 			should have_link 'Cancel', href: employees_path
 		end
 		
@@ -213,6 +226,10 @@ describe "Employee Pages:" do
 			
 			it "doesn't create Employee" do
 				expect { click_button 'Create' }.not_to change(Employee, :count)
+			end
+			
+			it "doesn't create Person" do
+				expect { click_button 'Create' }.not_to change(Person, :count)
 			end
 		end
 	
@@ -243,11 +260,12 @@ describe "Employee Pages:" do
 	context "#edit" do
 		before do
 			log_in
-			@employee = FactoryGirl.create(:employee, account: current_account)
+			@person = FactoryGirl.create(:person, account: current_account)
+			@employee = @person.profile
 			click_link 'People'
 			click_link 'Employees'
-			click_link @employee.name
-			click_link @employee.full_name
+			click_link @person.name
+			click_link @person.full_name
 		end
 		
 		it "has correct title" do	
@@ -263,17 +281,23 @@ describe "Employee Pages:" do
 		
 		it "has correct fields on form" do
 			should have_field 'First Name'
+			should have_field 'Middle Name'
 	    should have_field 'Last Name'
-	    should have_select 'Role'
-	    should have_field 'Email'
+			should have_field 'Suffix'
 			should have_field 'Status'
+	    should have_select 'Role'
+			should have_field 'Gender'
+			should have_field 'Birth Date'
+	    should have_field 'Email'
+			should have_field 'Employee #'
+			should have_field 'Employment Start Date'
+			should have_field 'Employment End Date'
+			should have_field 'Biography'
 			should have_link 'Cancel', href: employee_path(@employee)
 		end
 		
 		it "with error shows error message" do
-			invalid_email = "abc"
-
-			fill_in "Email", with: invalid_email
+			fill_in "Last Name", with: ""
 	  	click_button 'Update'
 	
 			should have_selector 'div.alert-danger'
@@ -285,7 +309,9 @@ describe "Employee Pages:" do
 	  	email = Faker::Internet.free_email("#{new_first_name} #{new_last_name}")
 			
 	  	fill_in "First Name", with: new_first_name
+			fill_in "Middle Name", with: ""
 			fill_in "Last Name", with: new_last_name
+			fill_in "Suffix", with: ""
 			select "Instructor", from: "Role"
 			fill_in "Email", with: email
 			click_button 'Update'
@@ -299,24 +325,22 @@ describe "Employee Pages:" do
 		it "has links for Super Admin" do
 			should have_link 'Add Employee'
 			should have_link 'Delete Employee'
-			should have_link 'Add Address'
-			should have_link 'Add Phone Number'
 		end
 	end
 	
 	context "#show" do
 		before do
 			log_in
-			@employee = FactoryGirl.create(:employee, account: current_account)
+			@person = FactoryGirl.create(:person, account: current_account)
 			click_link 'People'
 			click_link 'Employees'
-			click_link @employee.name
+			click_link @person.name
 		end
 		
 		it "has correct title" do	
-	  	should have_title @employee.full_name
-		  should have_selector 'h1', text: @employee.full_name
-			should have_selector 'h1 small', text: @employee.status
+	  	should have_title @person.full_name
+		  should have_selector 'h1', text: @person.full_name
+			should have_selector 'h1 small', text: @person.status
 		end
 		
 		it "has correct Navigation" do
@@ -325,15 +349,25 @@ describe "Employee Pages:" do
 		end
 		
 		it "has employee info shown" do
-			should have_content @employee.full_name
-			should have_content @employee.status
-		  should have_content @employee.role
-		  should have_content @employee.email
+			@employee = @person.profile
+			
+			should have_content @person.full_name
+			should have_content @person.gender
+			should have_content @person.birth_date
+		  should have_content @person.email
+			should have_content @person.status
+			
+			should have_content @employee.role
+			should have_content @employee.employee_num
+			should have_content @employee.employment_start_date
+			should have_content @employee.employment_end_date
+			should have_content @employee.biography
 		end
 		
 		it "has addresses shown" do
+			@employee = @person.profile
 			should have_selector 'h3', text: 'Addresses'
-			@employee.addresses.each do |address|
+			@person.addresses.each do |address|
 				should have_content "#{address.addr_type} Address"
 				should have_content address.addr
 				should have_content address.addr2 if address.addr2.present?
@@ -341,24 +375,25 @@ describe "Employee Pages:" do
 				should have_content address.state
 				should have_content address.zipcode
 				
-				should have_link 'Edit', href: edit_employee_address_path(employee, address)
-				should have_link 'Delete', href: employee_address_path(employee, address)
+				should have_link 'Edit', href: edit_employee_address_path(@employee, address)
+				should have_link 'Delete', href: employee_address_path(@employee, address)
 			end
 		end
 		
 		it "has phone numbers shown" do
+			@employee = @person.profile
 			should have_selector 'h3', text: 'Phone Numbers'
-			@employee.phones.each do |phone|
+			@person.phones.each do |phone|
 				should have_content "#{phone.phone_type}:"
 				should have_content phone.phone_num
 				
-				should have_link 'Edit', href: edit_employee_phone_path(employee, phone)
-				should have_link 'Delete', href: employee_phone_path(employee, phone)
+				should have_link 'Edit', href: edit_employee_phone_path(@employee, phone)
+				should have_link 'Delete', href: employee_phone_path(@employee, phone)
 			end
 		end
 		
 		it "has links for Super Admin" do
-			should have_link @employee.full_name
+			should have_link @person.full_name
 			
 			should have_link 'Overview'
 			
@@ -372,7 +407,8 @@ describe "Employee Pages:" do
 	context "#destroy" do
 		before do
 			log_in
-			@employee = FactoryGirl.create(:employee, account: current_account)
+			@person = FactoryGirl.create(:person, account: current_account)
+			@employee = @person.profile
 			click_link "People"
 			click_link "Employees"
 			click_link "delete_#{@employee.id}"
@@ -383,10 +419,10 @@ describe "Employee Pages:" do
 			should have_title 'Employees'
 			
 			click_link 'Employees'
-			should_not have_content @employee.name
+			should_not have_content @person.name
 			
 			click_link 'Inactive Employees'
-			should_not have_content @employee.name
+			should_not have_content @person.name
 		end
 	end
 end

@@ -4,7 +4,7 @@
 #
 #  id                     :integer          not null, primary key
 #  account_id             :integer          not null
-#  employee_id            :integer          not null
+#  person_id              :integer          not null
 #  username               :string(20)       not null
 #  password_digest        :string(255)      not null
 #  role                   :string(20)       not null
@@ -17,17 +17,14 @@
 class User < ActiveRecord::Base
   has_secure_password
 	
-  attr_accessible :employee_id, :username, :password, :password_confirmation
-  attr_accessor :new_registration
+  attr_accessible :person_id, :username, :password, :password_confirmation
   
   belongs_to :account
-  belongs_to :employee
+  belongs_to :person
   
-  validates :employee_id,	presence: true, unless: :new_account_registration?
   validates :username,	presence: true, length: { in: 6..20 }, uniqueness: { case_sensitive: false }
   validates :role,	presence: true, length: { maximum: 20 }
-	validates :password, presence: true, :on => :create
-  validates :password_confirmation, presence: true, :on => :create
+	validates :password, presence: true, confirmation: true, :on => :create
   
   before_validation(:on => :create) do
     self.role ||= "Employee"
@@ -36,10 +33,6 @@ class User < ActiveRecord::Base
   before_save { self.username.downcase! }
   
   default_scope lambda { where(:account_id => Account.current_id).order('username ASC') }
-  
-  def set_admin_role
-  	self.update_attribute(:role, "Administrator")
-	end
 	
 	def superadmin?
   	self.role == "Super Administrator"
@@ -53,10 +46,6 @@ class User < ActiveRecord::Base
 	end
 
 private
-	def new_account_registration?
-		new_registration
-	end
-	
 	def generate_token(column)
 		begin
 			self[column] = SecureRandom.urlsafe_base64(20)

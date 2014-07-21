@@ -121,7 +121,7 @@ describe Location do
 	
 	context "(Uniqueness)" do
 		describe "name" do
-			let(:location_diff_account) { FactoryGirl.create(:location) }
+			let(:location_diff_account) { FactoryGirl.create(:location, account: FactoryGirl.create(:account)) }
 			
 			it "is unique within Account" do
 	  		@location = location.dup
@@ -149,7 +149,7 @@ describe Location do
 	  describe "search" do
 	  	before do
 	  		4.times { FactoryGirl.create(:location, account: account) }
-				4.times { FactoryGirl.create(:location_inactive, account: account) }
+				4.times { FactoryGirl.create(:location, :inactive, account: account) }
 			end
 			
 	  	it "returns all records by default" do
@@ -178,13 +178,13 @@ describe Location do
 
 	describe "(Scopes)" do
 		before do
-			account.locations.delete_all
+			Location.unscoped.delete_all
 		end
 		let!(:second_location) { FactoryGirl.create(:location, account: account, name: "Studio B") }
 		let!(:first_location) { FactoryGirl.create(:location, account: account, name: "Studio A") }
-		let!(:location_inactive) { FactoryGirl.create(:location_inactive, account: account, name: "Studio Inactive") }
-		let!(:location_wrong_acnt) { FactoryGirl.create(:location) }
-		let!(:location_wrong_acnt_inactive) { FactoryGirl.create(:location_inactive) }
+		let!(:location_inactive) { FactoryGirl.create(:location, :inactive, account: account, name: "Studio Inactive") }
+		let!(:location_wrong_acnt) { FactoryGirl.create(:location, account: FactoryGirl.create(:account) ) }
+		let!(:location_wrong_acnt_inactive) { FactoryGirl.create(:location, :inactive, account: FactoryGirl.create(:account)) }
 		
 		describe "default_scope" do
 			it "returns the records in alphabetical order" do

@@ -11,23 +11,6 @@ en:
         stripe_customer_token: "Customer Id"
         current_subscription_plan: "Current Subscription"
         current_subscription_plan_id: "Subscription"
-      account/phones:
-        phone_num: "Phone #"
-      account/addresses:
-        addr_type: "Address Type"
-        addr: "Address"
-        addr2: "Address 2"
-        city: "City"
-        state: "State"
-        zipcode: "Zip Code"
-      account/employees:
-        first_name: "Director's First Name"
-        last_name: "Director's Last Name"
-        email: "Director's Email"
-      account/employees/user:
-        username: "Username"
-        password_digest: "Password"
-        password_confirmation: "Password Confirmation"
       address:
         addr_type: "Address Type"
         addr: "Address"
@@ -60,17 +43,27 @@ en:
         start_time: "Start Time"
         employee_ids: "Invitees"
       employee:
+        employee_num: "Employee #"
+        employment_start_date: "Employment Start Date"
+        employment_end_date: "Employment End Date"
         first_name: "First Name"
+        middle_name: "Middle Name"
         last_name: "Last Name"
-        active: "Status"
+        birth_date: "Birth Date"
       event:
         start_at: "Start At"
         end_at: "End At"
         start_date: "Date"
         start_time: "Start Time"
         end_date: "End Date"
-        employee_ids: "Invitees"
+        invitee_ids: "Invitees"
       location:
+        active: "Status"
+      person:
+        first_name: "First Name"
+        middle_name: "Middle Name"
+        last_name: "Last Name"
+        birth_date: "Birth Date"
         active: "Status"
       phone:
         phone_type: "Phone Type"

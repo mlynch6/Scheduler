@@ -39,6 +39,7 @@ describe Account do
 		it { should respond_to(:current_subscription_plan) }
 		it { should respond_to(:addresses) }
 		it { should respond_to(:phones) }
+		it { should respond_to(:people) }
 		it { should respond_to(:employees) }
 		it { should respond_to(:users) }
 		it { should respond_to(:locations) }
@@ -217,10 +218,28 @@ describe Account do
 			end
 		end
   	
+  	describe "people" do
+  		before { Account.current_id = account.id }
+			let!(:person1) { FactoryGirl.create(:person, account: account) }
+			let!(:person2) { FactoryGirl.create(:person, account: account) }
+	
+			it "has multiple people" do
+				account.people.count.should == 2
+			end
+			
+			it "deletes associated people" do
+				people = account.people
+				account.destroy
+				people.each do |person|
+					Person.find_by_id(person.id).should be_nil
+				end
+			end
+		end
+		
   	describe "employees" do
   		before { Account.current_id = account.id }
-			let!(:second_employee) { FactoryGirl.create(:employee, account: account, last_name: "Brown") }
-			let!(:first_employee) { FactoryGirl.create(:employee, account: account, last_name: "Anderson") }
+			let!(:second_employee) { FactoryGirl.create(:employee, account: account) }
+			let!(:first_employee) { FactoryGirl.create(:employee, account: account) }
 	
 			it "has multiple employees" do
 				account.employees.count.should == 2
@@ -237,10 +256,8 @@ describe Account do
 		
 		describe "users" do
   		before { Account.current_id = account.id }
-  		let!(:employee1) { FactoryGirl.create(:employee, account: account) }
-			let!(:employee2) { FactoryGirl.create(:employee, account: account) }
-			let!(:second_user) { FactoryGirl.create(:user, account: account, employee: employee1) }
-			let!(:first_user) { FactoryGirl.create(:user, account: account, employee: employee2) }
+			let!(:second_user) { FactoryGirl.create(:user, account: account) }
+			let!(:first_user) { FactoryGirl.create(:user, account: account) }
 	
 			it "has multiple users" do
 				account.users.count.should == 2
@@ -257,8 +274,8 @@ describe Account do
 		
 		describe "locations" do
 			before { Account.current_id = account.id }
-			let!(:second_location) { FactoryGirl.create(:location, account: account, name: "Studio B") }
-			let!(:first_location) { FactoryGirl.create(:location, account: account, name: "Studio A") }
+			let!(:second_location) { FactoryGirl.create(:location, account: account) }
+			let!(:first_location) { FactoryGirl.create(:location, account: account) }
 	
 			it "has multiple locations" do
 				account.locations.count.should == 2
@@ -293,8 +310,8 @@ describe Account do
 		
 		describe "pieces" do
 			before { Account.current_id = account.id }
-			let!(:second_piece) { FactoryGirl.create(:piece, account: account, name: "Swan Lake") }
-			let!(:first_piece) { FactoryGirl.create(:piece, account: account, name: "Nutcracker") }
+			let!(:second_piece) { FactoryGirl.create(:piece, account: account) }
+			let!(:first_piece) { FactoryGirl.create(:piece, account: account) }
 	
 			it "has multiple pieces" do
 				account.pieces.count.should == 2
@@ -311,9 +328,8 @@ describe Account do
 		
 		describe "scenes" do
 			before { Account.current_id = account.id }
-			let!(:piece) { FactoryGirl.create(:piece, account: account) }
-			let!(:scene1) { FactoryGirl.create(:scene, account: account, piece: piece) }
-			let!(:scene2) { FactoryGirl.create(:scene, account: account, piece: piece) }
+			let!(:scene1) { FactoryGirl.create(:scene, account: account) }
+			let!(:scene2) { FactoryGirl.create(:scene, account: account) }
 	
 			it "has multiple scenes" do
 				account.scenes.count.should == 2
@@ -330,9 +346,8 @@ describe Account do
 		
 		describe "characters" do
 			before { Account.current_id = account.id }
-			let!(:piece) { FactoryGirl.create(:piece, account: account) }
-			let!(:character1) { FactoryGirl.create(:character, account: account, piece: piece) }
-			let!(:character2) { FactoryGirl.create(:character, account: account, piece: piece) }
+			let!(:character1) { FactoryGirl.create(:character, account: account) }
+			let!(:character2) { FactoryGirl.create(:character, account: account) }
 	
 			it "has multiple characters" do
 				account.characters.count.should == 2
@@ -349,11 +364,8 @@ describe Account do
 		
 		describe "season_pieces" do
 			before { Account.current_id = account.id }
-			let!(:season) { FactoryGirl.create(:season, account: account) }
-			let!(:piece1) { FactoryGirl.create(:piece, account: account) }
-			let!(:piece2) { FactoryGirl.create(:piece, account: account) }
-			let!(:season_piece1) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece1) }
-			let!(:season_piece2) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece2) }
+			let!(:season_piece1) { FactoryGirl.create(:season_piece, account: account) }
+			let!(:season_piece2) { FactoryGirl.create(:season_piece, account: account) }
 	
 			it "has multiple season_pieces" do
 				account.season_pieces.count.should == 2
@@ -370,11 +382,8 @@ describe Account do
 		
 		describe "casts" do
 			before { Account.current_id = account.id }
-			let!(:season) { FactoryGirl.create(:season, account: account) }
-			let!(:piece) { FactoryGirl.create(:piece, account: account) }
-			let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
-			let!(:cast1) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
-			let!(:cast2) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
+			let!(:cast1) { FactoryGirl.create(:cast, account: account) }
+			let!(:cast2) { FactoryGirl.create(:cast, account: account) }
 	
 			it "has multiple casts" do
 				account.casts.count.should == 2
@@ -391,12 +400,8 @@ describe Account do
 		
 		describe "castings" do
 			before { Account.current_id = account.id }
-			let!(:season) { FactoryGirl.create(:season, account: account) }
-			let!(:piece) { FactoryGirl.create(:piece, account: account) }
-			let!(:character1) { FactoryGirl.create(:character, account: account, piece: piece) }
-			let!(:character2) { FactoryGirl.create(:character, account: account, piece: piece) }
-			let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
-			let!(:cast) { FactoryGirl.create(:cast, account: account, season_piece: season_piece) }
+			let!(:casting1) { FactoryGirl.create(:casting, account: account) }
+			let!(:casting2) { FactoryGirl.create(:casting, account: account) }
 	
 			it "has multiple castings" do
 				account.castings.count.should == 2
@@ -610,6 +615,7 @@ describe Account do
     	end
 	  	
 	  	it "changes subscription plan on account" do
+				subscription = FactoryGirl.create(:subscription_plan)
 	  		account.current_subscription_plan = SubscriptionPlan.find(2) #valid stripe subscription
 				account.edit_subscription_plan
 				

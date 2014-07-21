@@ -17,11 +17,11 @@ class Account < ActiveRecord::Base
 	STATUS_VALUES = ["Active", "Canceled"]
 
 	attr_accessible :name, :time_zone, :stripe_card_token, :current_subscription_plan_id
-	attr_accessible :addresses_attributes, :phones_attributes, :employees_attributes
 	attr_accessor :stripe_card_token
   
 	belongs_to :current_subscription_plan, class_name: "SubscriptionPlan"
 	has_one :agma_contract, dependent: :destroy
+	has_many :people, dependent: :destroy
 	has_many :employees, dependent: :destroy
 	has_many :users, dependent: :destroy
 	has_many :addresses, :as => :addressable, dependent: :destroy
@@ -36,10 +36,6 @@ class Account < ActiveRecord::Base
 	has_many :castings, dependent: :destroy
 	has_many :events, dependent: :destroy
 	has_many :event_series, dependent: :destroy
-  
-	accepts_nested_attributes_for :addresses
-	accepts_nested_attributes_for :phones
-	accepts_nested_attributes_for :employees
   
 	before_validation :set_defaults, :if => "self.new_record?"
 	after_create :create_contract

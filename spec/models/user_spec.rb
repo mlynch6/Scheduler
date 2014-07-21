@@ -4,7 +4,7 @@
 #
 #  id                     :integer          not null, primary key
 #  account_id             :integer          not null
-#  employee_id            :integer          not null
+#  person_id              :integer          not null
 #  username               :string(20)       not null
 #  password_digest        :string(255)      not null
 #  role                   :string(20)       not null
@@ -18,14 +18,15 @@ require 'spec_helper'
 
 describe User do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:employee) { FactoryGirl.create(:employee, account: account, email: 'testuser@example.com') }
+	let(:person) { FactoryGirl.create(:person, :complete_record, account: account) }
 	let(:user) { FactoryGirl.create(:user,
 				account: account,
-				employee: employee,
+				person: person,
 				username: 'TestUser') }
+	
   before do
-  	Account.current_id = employee.account_id
-		@user = FactoryGirl.build(:user, employee: employee)
+  	Account.current_id = account.id
+		@user = FactoryGirl.build(:user, person: person)
 	end
 	
 	subject { @user }
@@ -40,17 +41,15 @@ describe User do
 		it { should respond_to(:password_reset_sent_at) }
   	
   	it { should respond_to(:account) }
-  	it { should respond_to(:employee) }
+  	it { should respond_to(:person) }
   	
-  	it { should respond_to(:new_registration) }
   	it { should respond_to(:authenticate) }
-  	it { should respond_to(:set_admin_role) }
 		it { should respond_to(:send_password_reset_email) }
     
-    it "employee_id cannot be changed" do
-			new_employee = FactoryGirl.create(:employee)
-			user.update_attribute(:employee_id, new_employee.id)
-			user.reload.employee_id.should == employee.id
+    it "person_id cannot be changed" do
+			new_person = FactoryGirl.create(:person, account: account)
+			user.update_attribute(:person_id, new_person.id)
+			user.reload.person_id.should == person.id
 		end
 		
 		it "should not allow access to account_id" do
@@ -74,14 +73,6 @@ describe User do
   end
 	
   context "(Valid)" do
-  	describe "when registering a new account & employee_id is blank" do
-  		before do
-  			@user.new_registration = true
-  			@user.employee_id = " "
-  		end
-  		
-  		it { should be_valid }
-  	end
   	it "with minimum attributes" do
   		should be_valid
   	end
@@ -101,11 +92,6 @@ describe User do
   end
   
   context "(Invalid)" do  	
-  	describe "when employee_id is blank" do
-  		before {@user.employee_id = " " }
-  		it { should_not be_valid }
-  	end
-  	
   	describe "when username is blank" do
   		before {@user.username = " " }
   		it { should_not be_valid }
@@ -140,11 +126,6 @@ describe User do
   		it { should_not be_valid }
   	end
   	
-  	describe "when password_confirmation is nil" do
-  		before { @user.password_confirmation = nil }
-  		it { should_not be_valid }
-  	end
-  	
   	describe "when password and confirmation are not the same" do
   		before { @user.password_confirmation = "Mismatch" }
   		it { should_not be_valid }
@@ -166,8 +147,8 @@ describe User do
 	  	user.reload.account.should == account
 	  end
   	
-  	it "employee" do
-	  	user.reload.employee.should == employee
+  	it "person" do
+	  	user.reload.person.should == person
 	  end
   end
 	
@@ -204,13 +185,6 @@ describe User do
 			end
 		end
 		
-		context ".set_admin_role" do
-			describe "sets role to Administrator" do
-				before { user.set_admin_role }
-				it { user.reload.role.should == "Administrator" }
-			end
-		end
-		
 		describe ".send_password_reset_email" do
 			before do
 				# Done by a user who is not logged in
@@ -231,25 +205,24 @@ describe User do
 			
 			it "delivers email to the person" do
 				user.send_password_reset_email
-				last_email.to.should include(user.employee.email)
+				last_email.to.should include(person.email)
 			end
 		end
 	end
 	
 	describe "(Scopes)" do
 		before do
-			account.employees.delete_all
+			User.unscoped.delete_all
 		end
-		let!(:employee1) { FactoryGirl.create(:employee, account: account) }
-		let!(:user1) { FactoryGirl.create(:user, account: account, employee: employee1, username: "alpha123") }
-		let!(:employee2) { FactoryGirl.create(:employee, account: account) }
-		let!(:user2) { FactoryGirl.create(:user, account: account, employee: employee2, username: "beta1234") }
-		let!(:employee_wrong_acnt) { FactoryGirl.create(:employee) }
-		let!(:user_wrong_acnt) { FactoryGirl.create(:user, employee: employee_wrong_acnt) }
+		let!(:user1) { FactoryGirl.create(:user, account: account, username: "alpha123") }
+		let!(:user2) { FactoryGirl.create(:user, account: account, username: "beta1234") }
+		let!(:user_wrong_acnt) { FactoryGirl.create(:user, account: FactoryGirl.create(:account)) }
 		
 		describe "default_scope" do
 			it "returns the records for current account is alphabetic order by username" do
-				User.all.should == [user1, user2]
+				users = User.all
+				users.count.should == 2
+				users.should == [user1, user2]
 			end
 		end
 	end

@@ -310,12 +310,13 @@ describe EventSeries do
 		before do
 			account.event_series.delete_all
 		end
-		let!(:series1) { FactoryGirl.create(:event_series, account: account) }
-		let!(:series2) { FactoryGirl.create(:event_series, account: account) }
-		let!(:series3) { FactoryGirl.create(:event_series, account: account) }
-		let!(:series_wrong_acnt) { FactoryGirl.create(:event_series) }
 		
 		describe "default_scope" do	
+			let!(:series1) { FactoryGirl.create(:event_series, account: account) }
+			let!(:series2) { FactoryGirl.create(:event_series, account: account) }
+			let!(:series3) { FactoryGirl.create(:event_series, account: account) }
+			let!(:series_wrong_acnt) { FactoryGirl.create(:event_series, account: FactoryGirl.create(:account)) }
+			
 			it "returns the records from account only" do
 				EventSeries.all.should include(series1)
 				EventSeries.all.should include(series2)
@@ -329,8 +330,8 @@ describe EventSeries do
   context "(Methods)" do
 		context "update_event" do
   		let(:loc2) { FactoryGirl.create(:location, account: account) }
-  		let(:emp1) { FactoryGirl.create(:employee, account: account) }
-  		let(:emp2) { FactoryGirl.create(:employee, account: account) }
+  		let(:p1) { FactoryGirl.create(:person, account: account) }
+  		let(:p2) { FactoryGirl.create(:person, account: account) }
   		let(:daily_series) { FactoryGirl.create(:event_series,
 						account: account, 
 						period: 'Daily',
@@ -348,7 +349,7 @@ describe EventSeries do
 		  			start_date: '01/07/2012',
 		  			start_time: "10AM",
 		  			duration: 90,
-		  			employee_ids: [emp1.id, emp2.id] } }
+		  			invitee_ids: [p1.id, p2.id] } }
 		  	
   			describe "updating the event fields" do
 		  		it "updates the event" do
@@ -365,9 +366,9 @@ describe EventSeries do
 		  			event = daily_series.events.offset(1).first		#01/02/2012
 		  			daily_series.update_event(:single, event, attrs)
 		  			
-		  			event.employees.count.should == 2
-		  			event.employees.should include(emp1)
-		  			event.employees.should include(emp2)
+		  			event.invitees.count.should == 2
+		  			event.invitees.should include(p1)
+		  			event.invitees.should include(p2)
 		  		end
 		  		
 		  		it "removes the updated event from Series" do
@@ -441,7 +442,7 @@ describe EventSeries do
 			  			location_id: loc2.id,
 			  			start_time: "10AM",
 			  			duration: 90, 
-			  			employee_ids: [emp1.id, emp2.id] }
+			  			invitee_ids: [p1.id, p2.id] }
 						event = daily_series.events.offset(1).first		#01/02/2012
 			  		daily_series.update_event(:all, event, attrs)
 			  		daily_series.reload
@@ -455,9 +456,9 @@ describe EventSeries do
 							e.start_time.should == '10:00 AM'
 							e.duration.should == 90
 							
-							e.employees.count.should == 2
-							e.employees.should include(emp1)
-							e.employees.should include(emp2)
+							e.invitees.count.should == 2
+							e.invitees.should include(p1)
+							e.invitees.should include(p2)
 						end
 					end
 				end
@@ -587,7 +588,7 @@ describe EventSeries do
 			  			location_id: loc2.id,
 			  			start_time: "10AM",
 			  			duration: 90, 
-			  			employee_ids: [emp1.id, emp2.id] }
+			  			invitee_ids: [p1.id, p2.id] }
 			  		}
 			  
 				context "when changing event values" do
@@ -607,7 +608,7 @@ describe EventSeries do
 							e.start_time.should == '9:00 AM'
 							e.duration.should == 60
 							
-							e.employees.count.should == 0
+							e.invitees.count.should == 0
 						end
 					end
 					
@@ -630,9 +631,9 @@ describe EventSeries do
 							e.start_time.should == '10:00 AM'
 							e.duration.should == 90
 							
-							e.employees.count.should == 2
-							e.employees.should include(emp1)
-							e.employees.should include(emp2)
+							e.invitees.count.should == 2
+							e.invitees.should include(p1)
+							e.invitees.should include(p2)
 						end
 					end
 				end
@@ -654,7 +655,7 @@ describe EventSeries do
 							e.start_time.should == '9:00 AM'
 							e.duration.should == 60
 							
-							e.employees.count.should == 0
+							e.invitees.count.should == 0
 						end
 					end
 					
@@ -677,9 +678,9 @@ describe EventSeries do
 							e.start_time.should == '10:00 AM'
 							e.duration.should == 90
 							
-							e.employees.count.should == 2
-							e.employees.should include(emp1)
-							e.employees.should include(emp2)
+							e.invitees.count.should == 2
+							e.invitees.should include(p1)
+							e.invitees.should include(p2)
 						end
 					end
 				end
@@ -702,7 +703,7 @@ describe EventSeries do
 								e.start_time.should == '9:00 AM'
 								e.duration.should == 60
 								
-								e.employees.count.should == 0
+								e.invitees.count.should == 0
 							end
 						end
 						
@@ -725,9 +726,9 @@ describe EventSeries do
 								e.start_time.should == '10:00 AM'
 								e.duration.should == 90
 								
-								e.employees.count.should == 2
-								e.employees.should include(emp1)
-								e.employees.should include(emp2)
+								e.invitees.count.should == 2
+								e.invitees.should include(p1)
+								e.invitees.should include(p2)
 							end
 						end
 					end
@@ -749,7 +750,7 @@ describe EventSeries do
 								e.start_time.should == '9:00 AM'
 								e.duration.should == 60
 								
-								e.employees.count.should == 0
+								e.invitees.count.should == 0
 							end
 						end
 						
@@ -772,9 +773,9 @@ describe EventSeries do
 								e.start_time.should == '10:00 AM'
 								e.duration.should == 90
 								
-								e.employees.count.should == 2
-								e.employees.should include(emp1)
-								e.employees.should include(emp2)
+								e.invitees.count.should == 2
+								e.invitees.should include(p1)
+								e.invitees.should include(p2)
 							end
 						end
 					end
@@ -797,7 +798,7 @@ describe EventSeries do
 							e.start_time.should == '9:00 AM'
 							e.duration.should == 60
 							
-							e.employees.count.should == 0
+							e.invitees.count.should == 0
 						end
 					end
 					
@@ -823,9 +824,9 @@ describe EventSeries do
 							e.start_time.should == '10:00 AM'
 							e.duration.should == 90
 							
-							e.employees.count.should == 2
-							e.employees.should include(emp1)
-							e.employees.should include(emp2)
+							e.invitees.count.should == 2
+							e.invitees.should include(p1)
+							e.invitees.should include(p2)
 						end
 					end
 				end

@@ -56,8 +56,8 @@
 				<div class="dtl-label col-md-3">Invitees</div>
 				<div class="dtl-text col-md-9">
 					<ul class="list-unstyled">
-						<% @event.employees.each do |employee| %>
-							<li><%= employee.full_name %></li>
+						<% @event.invitees.each do |invitee| %>
+							<li><%= invitee.full_name %></li>
 						<% end %>
 					</ul>
 				</div>

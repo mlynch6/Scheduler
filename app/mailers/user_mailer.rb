@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
 
   def password_reset(user)
 		@user = user
-		@employee = Employee.unscoped.find(user.employee_id)
-    mail :to => @employee.email, :subject => 'Password Reset'
+		@person = Person.unscoped.find_by_id(user.person_id)
+    mail :to => @person.email, :subject => 'Password Reset'
   end
 end

@@ -1,5 +1,5 @@
 <% provide(:title, 'Add Phone Number') %>
-<% if @phone.phoneable_type == "Employee" %>
+<% if @phone.phoneable_type == "Person" %>
 	<% provide(:header_current, 'People') %>
 	<% provide(:sidebar_current, 'Employees') %>
 <% end %>
@@ -24,7 +24,7 @@
   	<%= f.submit_group do %>
   		<%= f.submit_primary 'Create' %>
       
-      <% if @phone.phoneable_type == "Employee" %>
+      <% if @phone.phoneable_type == "Person" %>
         <%= link_to 'Cancel', employee_path(@phoneable), class: 'btn btn-link' %>
       <% elsif @phone.phoneable_type == "Account" %>
         <%= link_to 'Cancel', account_path(@phoneable), class: 'btn btn-link' %>

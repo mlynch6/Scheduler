@@ -1,8 +1,8 @@
 <% if @user.new_record? %>
-	<%= f.select :employee_id, @employees, {}, { :include_blank => true, :class => 'chosen-select' } %>
+	<%= f.select :person_id, @employees, {}, { :include_blank => true, :class => 'chosen-select' } %>
 	<%= f.text_field :username, field_size: 'col-md-4' %>
 <% else %>
-	<%= f.static_control :employee_id do @user.employee.full_name end %>
+	<%= f.static_control :employee_id do @user.person.full_name end %>
 	<%= f.static_control :username do @user.username end %>
 <% end %>
 

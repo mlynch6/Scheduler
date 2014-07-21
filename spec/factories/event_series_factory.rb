@@ -13,7 +13,6 @@
 
 FactoryGirl.define do
 	factory :event_series do
-		account
 		period						"Weekly"
 		start_date				{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
 		end_date					{ start_date + 2.months }
@@ -23,5 +22,10 @@ FactoryGirl.define do
 		location_id				1
 		start_time				"9AM"
 		duration					60
+		
+		after_build do |series|
+			# association :account
+			series.account = FactoryGirl.create(:account) unless series.account
+		end
 	end
 end

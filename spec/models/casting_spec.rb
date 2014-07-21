@@ -15,18 +15,10 @@ require 'spec_helper'
 
 describe Casting do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:person) { FactoryGirl.create(:employee, account: account) }
-	let(:season) { FactoryGirl.create(:season, account: account) }
-	let!(:piece) { FactoryGirl.create(:piece, account: account) }
-	let!(:character) { FactoryGirl.create(:character, account: account, piece: piece) }
-	let!(:season_piece) { FactoryGirl.create(:season_piece, account: account, season: season, piece: piece) }
 	
 	before do
 		Account.current_id = account.id
 		@casting = FactoryGirl.build(:casting)
-		@cast= FactoryGirl.create(:cast, account: account, season_piece: season_piece)
-		@c = @cast.castings.first
-		@c.update_attribute(:person_id, person.id)
 	end
 	
 	subject { @casting }
@@ -42,17 +34,9 @@ describe Casting do
         Casting.new(account_id: account.id)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
-    
-		#     describe "account_id cannot be changed" do
-		# 	let(:new_account) { FactoryGirl.create(:account) }
-		# 	before { @c.update_attribute(:account_id, new_account.id) }
-		# 	
-		# 	it do
-		# 		@c.reload.account_id.should == account.id
-		# 	end
-		# end
 		
 		it "should not allow access to cast_id" do
+			@cast= FactoryGirl.create(:cast, account: account)
 			expect do
 				Casting.new(cast_id: @cast.id)
 			end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
@@ -84,13 +68,25 @@ describe Casting do
 	
 	context "(Uniqueness)" do
 		it "by Cast/Character" do
-			@casting.cast = @c.cast
-			@casting.character = @c.character
+			c = FactoryGirl.create(:casting)
+			@casting.cast = c.cast
+			@casting.character = c.character
 			should_not be_valid
 		end
 	end
 	
   context "(Associations)" do
+		before do
+			@cast = FactoryGirl.create(:cast, account: account)
+			@character = FactoryGirl.create(:character, account: account)
+			@person = FactoryGirl.create(:person, account: account)
+			@c = FactoryGirl.create(:casting, 
+					account: account, 
+					cast: @cast, 
+					character: @character, 
+					person: @person)
+		end
+		
 		it "has one account" do
 			@c.reload.account.should == account
 		end
@@ -100,42 +96,29 @@ describe Casting do
 		end
 		
 		it "has one character" do
-			@c.reload.character.should == character
+			@c.reload.character.should == @character
 		end
 		
 		it "has one person" do
-			@c.reload.person.should == person
+			@c.reload.person.should == @person
 		end
   end
 	
 	describe "(Scopes)" do
 		before do
-			account.castings.delete_all
+			Casting.unscoped.delete_all
 		end
-		let!(:piece1) { FactoryGirl.create(:piece, account: account) }
-		let!(:character1) { FactoryGirl.create(:character, account: account, piece: piece1) }
-		let!(:season_piece1) { FactoryGirl.create(:season_piece, season: season, piece: piece1) }
-		let!(:cast1) { FactoryGirl.create(:cast, season_piece: season_piece1) }
-		
-		let!(:piece2) { FactoryGirl.create(:piece, account: account) }
-		let!(:character2) { FactoryGirl.create(:character, account: account, piece: piece2) }
-		let!(:season_piece2) { FactoryGirl.create(:season_piece, season: season, piece: piece2) }
-		let!(:cast2) { FactoryGirl.create(:cast, season_piece: season_piece2) }
-		
-		let!(:wrong_acnt) { FactoryGirl.create(:account) }
-		let!(:season_wrong_acnt) { FactoryGirl.create(:season, account: wrong_acnt) }
-		let!(:piece_wrong_acnt) { FactoryGirl.create(:piece, account: wrong_acnt) }
-		let!(:character_wrong_acnt) { FactoryGirl.create(:character, account: wrong_acnt, piece: piece_wrong_acnt) }
-		let!(:season_piece_wrong_acnt) { FactoryGirl.create(:season_piece, season: season_wrong_acnt, piece: piece_wrong_acnt) }
-		let!(:cast_wrong_acnt) { FactoryGirl.create(:cast, season_piece: season_piece_wrong_acnt) }
+		let!(:casting1) { FactoryGirl.create(:casting, account: account) }
+		let!(:casting2) { FactoryGirl.create(:casting, account: account) }
+		let!(:casting_wrong_acnt) { FactoryGirl.create(:casting, account: FactoryGirl.create(:account)) }
 		
 		describe "default_scope" do
 			it "returns the records in current account" do
 				castings = Casting.all
 				castings.count.should == 2
-				castings.should include(cast1.castings.first)
-				castings.should include(cast2.castings.first)
-				castings.should_not include(cast_wrong_acnt.castings.first)
+				castings.should include(casting1)
+				castings.should include(casting2)
+				castings.should_not include(casting_wrong_acnt)
 			end
 		end
 	end

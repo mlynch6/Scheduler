@@ -452,7 +452,7 @@ describe Permission do
 	end
 	
 	context "as Administrator" do
-		let(:user) { FactoryGirl.create(:admin) }
+		let(:user) { FactoryGirl.create(:user, :admin) }
 		subject { Permission.new(user) }
 		
 		it_behaves_like "an administrator"
@@ -479,7 +479,7 @@ describe Permission do
 	end
 	
 	context "as Super Administrator" do
-		let(:user) { FactoryGirl.create(:superadmin) }
+		let(:user) { FactoryGirl.create(:user, :superadmin) }
 		subject { Permission.new(user) }
 		
 		it_behaves_like "an administrator"

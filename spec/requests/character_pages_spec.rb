@@ -45,35 +45,35 @@ describe "Character Pages:" do
 		end
 		
 		it "shows Male gender on list" do
-			FactoryGirl.create(:character_male, account: current_account, piece: @piece)
+			FactoryGirl.create(:character, :male, account: current_account, piece: @piece)
 			visit piece_characters_path(@piece)
 	
 			should have_selector 'td', text: 'M'
 		end
 		
 		it "shows Female gender on list" do
-			FactoryGirl.create(:character_female, account: current_account, piece: @piece)
+			FactoryGirl.create(:character, :female, account: current_account, piece: @piece)
 			visit piece_characters_path(@piece)
 	
 			should have_selector 'td', text: 'F'
 		end
 		
 		it "shows Animal on list" do
-			FactoryGirl.create(:character_animal, account: current_account, piece: @piece)
+			FactoryGirl.create(:character, :animal, account: current_account, piece: @piece)
 			visit piece_characters_path(@piece)
 	
 			should have_selector 'td', text: 'A'
 		end
 		
 		it "shows Child on list" do
-			FactoryGirl.create(:character_child, account: current_account, piece: @piece)
+			FactoryGirl.create(:character, :child, account: current_account, piece: @piece)
 			visit piece_characters_path(@piece)
 	
 			should have_selector 'td', text: 'K'
 		end
 		
 		it "shows Speaking Role on list" do
-			FactoryGirl.create(:character_speaking, account: current_account, piece: @piece)
+			FactoryGirl.create(:character, :speaking, account: current_account, piece: @piece)
 			visit piece_characters_path(@piece)
 	
 			should have_selector 'span.glyphicon-bullhorn'
@@ -268,8 +268,7 @@ describe "Character Pages:" do
 		
 		context "with a published cast" do
 			before do
-				@season_pub = FactoryGirl.create(:season, account: current_account)
-				@sp_pub = FactoryGirl.create(:season_piece_published, account: current_account, season: @season_pub, piece: @piece)
+				@sp_pub = FactoryGirl.create(:season_piece, :published, account: current_account, piece: @piece)
 				@cast_pub = FactoryGirl.create(:cast, account: current_account, season_piece: @sp_pub)
 				@casting_pub = FactoryGirl.create(:casting, account: current_account, cast: @cast_pub, character: @character)
 			
@@ -295,7 +294,7 @@ describe "Character Pages:" do
 			it "does NOT remove the character from the published cast" do
 				visit season_piece_casts_path(@sp_pub)
 			
-				should have_title "#{@season_pub.name} | #{@piece.name} | Casting"
+				should have_title "#{@sp_pub.season.name} | #{@piece.name} | Casting"
 				should have_content @character.name
 			end
 		end

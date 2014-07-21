@@ -2,50 +2,31 @@
 #
 # Table name: employees
 #
-#  id         :integer          not null, primary key
-#  account_id :integer          not null
-#  first_name :string(30)       not null
-#  last_name  :string(30)       not null
-#  active     :boolean          default(TRUE), not null
-#  role       :string(50)       not null
-#  email      :string(50)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id                    :integer          not null, primary key
+#  account_id            :integer          not null
+#  role                  :string(50)       not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  employee_num          :string(20)
+#  employment_start_date :date
+#  employment_end_date   :date
+#  biography             :text
 #
 
 FactoryGirl.define do
 	factory :employee do
-		account
-		sequence(:first_name)	{ |n| "#{Faker::Name.first_name}" }
-		sequence(:last_name)	{ |n| "#{Faker::Name.last_name}" }
 		role					"Employee"
 		
-		factory :employee_complete do
-			email				Faker::Internet.free_email
-		end
-	 	
-	 	factory :employee_inactive do
-			active 			false
+		after_build do |emp|
+			# association :account
+			emp.account = FactoryGirl.create(:account) unless emp.account
 		end
 		
-		factory :musician do
-			role					"Musician"
-		end
-		
-		factory :teacher do
-			role					"Instructor"
-		end
-		
-		factory :dancer do
-			role					"AGMA Dancer"
-		end
-		
-		factory :employee_w_addresses do
-			after_create { |emp| FactoryGirl.create_list(:address_employee, 3, addressable: emp)}
-		end
-		
-		factory :employee_w_phones do
-			after_create { |emp| FactoryGirl.create_list(:phone_employee, 3, phoneable: emp)}
+		trait :complete_record do
+			sequence(:employee_num)	{ |n| "EmployeeNum#{n}" }
+			employment_start_date		{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
+			employment_end_date			{ employment_start_date + 2.year }
+			biography								Faker::Lorem.paragraphs
 		end
 	end
 end

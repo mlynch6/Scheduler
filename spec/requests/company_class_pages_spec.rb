@@ -54,41 +54,39 @@ describe "CompanyClass Pages:" do
 			end
 					
 			it "when employee is double booked" do
-				loc1 = FactoryGirl.create(:location, account: current_account)
-				loc2 = FactoryGirl.create(:location, account: current_account)
-				e1 = FactoryGirl.create(:employee, account: current_account)
-				e2 = FactoryGirl.create(:employee, account: current_account)
-				e3 = FactoryGirl.create(:employee, account: current_account)
+				loc = FactoryGirl.create(:location, account: current_account)
+				p1 = FactoryGirl.create(:person, account: current_account)
+				p2 = FactoryGirl.create(:person, account: current_account)
+				p3 = FactoryGirl.create(:person, account: current_account)
 				
 				cc1 = FactoryGirl.create(:company_class, account: current_account,
-								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 60)
-				FactoryGirl.create(:invitation, event: cc1, employee: e1)
-				FactoryGirl.create(:invitation, event: cc1, employee: e2)
-				FactoryGirl.create(:invitation, event: cc1, employee: e3)
+				FactoryGirl.create(:invitation, event: cc1, person: p1)
+				FactoryGirl.create(:invitation, event: cc1, person: p2)
+				FactoryGirl.create(:invitation, event: cc1, person: p3)
 				
 				cc2 = FactoryGirl.create(:company_class, account: current_account,
-								location: loc1,
+								location: cc1.location,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
 								duration: 60)
-				FactoryGirl.create(:invitation, event: cc2, employee: e1)
+				FactoryGirl.create(:invitation, event: cc2, person: p1)
 				
 				visit new_company_class_path
 				fill_in "Title", with: "Test Class"
-				select loc2.name, from: "Location"
+				select loc.name, from: "Location"
 				fill_in 'Date', with: Time.zone.today
 				fill_in 'Start Time', with: "11AM"
 				fill_in 'Duration', with: 120
-				select e1.full_name, from: "Invitees"
+				select p1.full_name, from: "Invitees"
 				click_button 'Create'
 		
 				should have_selector 'div.alert-warning', text: "people are double booked"
-				should have_selector 'div.alert-warning', text: e1.full_name
-				should_not have_selector 'div.alert-warning', text: e2.full_name
-				should_not have_selector 'div.alert-warning', text: e3.full_name
+				should have_selector 'div.alert-warning', text: p1.full_name
+				should_not have_selector 'div.alert-warning', text: p2.full_name
+				should_not have_selector 'div.alert-warning', text: p3.full_name
 			end
 		end
 		
@@ -168,7 +166,7 @@ describe "CompanyClass Pages:" do
 			
 			it "creates new Company Class with Invitees" do
 				location = FactoryGirl.create(:location, account: current_account)
-				e1 = FactoryGirl.create(:employee, account: current_account)
+				p1 = FactoryGirl.create(:person, account: current_account)
 				visit new_company_class_path
 	  		
 				fill_in "Title", with: "Test Company Class"
@@ -176,7 +174,7 @@ describe "CompanyClass Pages:" do
 				fill_in 'Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "9:15AM"
 				fill_in 'Duration', with: 60
-				select_from_chosen e1.full_name, from: 'Invitees'
+				select_from_chosen p1.full_name, from: 'Invitees'
 				click_button 'Create'
 		
 				should have_selector 'div.alert-success'
@@ -189,7 +187,7 @@ describe "CompanyClass Pages:" do
 				open_modal(".mash-event")
 				click_link "Edit"
 				
-				should have_content e1.full_name
+				should have_content p1.full_name
 			end
 		end
 	end
@@ -197,10 +195,8 @@ describe "CompanyClass Pages:" do
 	context "#edit" do
 		before do
 			log_in
-			@location = FactoryGirl.create(:location, account: current_account)
 			@cclass = FactoryGirl.create(:company_class,
 					account: current_account,
-					location: @location,
 					start_date: Time.zone.today)
 			click_link 'Calendar'
 		end
@@ -257,42 +253,38 @@ describe "CompanyClass Pages:" do
 		
 		context "with warning" do			
 			it "shows warning when employee is double booked" do
-				loc1 = FactoryGirl.create(:location, account: current_account)
-				loc2 = FactoryGirl.create(:location, account: current_account)
-				e1 = FactoryGirl.create(:employee, account: current_account)
-				e2 = FactoryGirl.create(:employee, account: current_account)
-				e3 = FactoryGirl.create(:employee, account: current_account)
+				p1 = FactoryGirl.create(:person, account: current_account)
+				p2 = FactoryGirl.create(:person, account: current_account)
+				p3 = FactoryGirl.create(:person, account: current_account)
 				
 				cc1 = FactoryGirl.create(:company_class, account: current_account,
-								location: loc1,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 60)
-				FactoryGirl.create(:invitation, event: cc1, employee: e1)
-				FactoryGirl.create(:invitation, event: cc1, employee: e2)
-				FactoryGirl.create(:invitation, event: cc1, employee: e3)
+				FactoryGirl.create(:invitation, event: cc1, person: p1)
+				FactoryGirl.create(:invitation, event: cc1, person: p2)
+				FactoryGirl.create(:invitation, event: cc1, person: p3)
 				
 				cc2 = FactoryGirl.create(:company_class, account: current_account,
-								location: loc1,
+								location: cc1.location,
 								start_date: Time.zone.today,
 								start_time: "12 PM",
 								duration: 60)
-				FactoryGirl.create(:invitation, event: cc2, employee: e1)
+				FactoryGirl.create(:invitation, event: cc2, person: p1)
 				
 				cc3 = FactoryGirl.create(:company_class, account: current_account,
-								location: loc2,
 								start_date: Time.zone.today,
 								start_time: "11 AM",
 								duration: 120)
 				
 				visit edit_company_class_path(cc3)
-				select e1.full_name, from: "Invitees"
+				select p1.full_name, from: "Invitees"
 				click_button 'Update'
 		
 				should have_selector 'div.alert-warning', text: "people are double booked"
-				should have_selector 'div.alert-warning', text: e1.full_name
-				should_not have_selector 'div.alert-warning', text: e2.full_name
-				should_not have_selector 'div.alert-warning', text: e3.full_name
+				should have_selector 'div.alert-warning', text: p1.full_name
+				should_not have_selector 'div.alert-warning', text: p2.full_name
+				should_not have_selector 'div.alert-warning', text: p3.full_name
 			end
 		end
 		
