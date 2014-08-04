@@ -16,7 +16,7 @@
 FactoryGirl.define do
 	factory :account do
 		name				Faker::Company.name
-		time_zone		"Eastern Time (US & Canada)"
+		time_zone		"Pacific Time (US & Canada)"
 		
 		after_build do |acnt|
 			acnt.current_subscription_plan = SubscriptionPlan.first unless acnt.current_subscription_plan

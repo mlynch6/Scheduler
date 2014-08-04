@@ -79,15 +79,6 @@ describe "Payment Pages:" do
 	    	
 				should have_selector 'div.alert-danger', text: 'security code is invalid'
 	    end
-	    
-			it "with card declined error" do
-				fill_in "Credit Card #", with: "4000000000000002" #always returns card declined
-				select (Date.today.year+1).to_s, from: "card_year"
-				fill_in "Security Code", with: "213"
-				click_button "Update"
-	    	
-				should have_selector 'div.alert-danger', text: 'card was declined'
-	    end
 	  end
 	end
 end

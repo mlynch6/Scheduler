@@ -38,7 +38,7 @@ describe "Account Pages:" do
 	    should have_field 'Confirm Password'
 	    
 	    should have_field 'Credit Card #'
-	    should have_select 'card_month'
+	    should have_select 'Expiration'
 	    should have_select 'card_year'
 	    should have_field 'Security Code'
 		end

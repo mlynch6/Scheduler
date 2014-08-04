@@ -7,9 +7,8 @@
 			<h1>Create an Account</h1>
 		</div>
 
-		<%= form_for @signup_form, url: accounts_path, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-			<%= f.error_messages %>
-			
+		<%= simple_form_for @signup_form, url: accounts_path do |f| %>
+			<%= show_error_messages @signup_form %>
 			<%= render 'signup_form', :f => f %>
 					
 			<p class="offset2"><small>
@@ -17,9 +16,9 @@
 				and <a href="#">Privacy Policy</a>.
 			</small></p>
 			
-			<%= f.submit_group do %>
-				<%= f.submit 'Create Account', class: 'btn btn-success' %>
-			<% end %>
+      <%= form_actions do %>
+        <%= f.button :submit %>
+      <% end %>
 		<% end %>
 	</div>
 	

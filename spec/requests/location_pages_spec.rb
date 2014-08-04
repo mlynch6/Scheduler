@@ -183,7 +183,8 @@ describe "Location Pages:" do
 		
 		it "has correct fields on form" do
 	    should have_field 'Name'
-			should have_field 'Status'
+			should have_field 'Active'
+			should have_field 'Inactive'
 			should have_link 'Cancel', href: locations_path
 		end
 		
@@ -238,7 +239,8 @@ describe "Location Pages:" do
 		
 		it "has correct fields on form" do
 	    should have_field 'Name'
-			should have_field 'Status'
+			should have_field 'Active'
+			should have_field 'Inactive'
 			should have_link 'Cancel', href: locations_path
 		end
 		

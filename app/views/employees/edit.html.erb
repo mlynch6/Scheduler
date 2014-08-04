@@ -12,13 +12,13 @@
 </div>
 
 <div class="row">
-  <%= form_for @employee_form, url: @employee, :method => :put, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-  	<%= f.error_messages %>
+  <%= simple_form_for @employee_form, url: employee_path(@employee), method: :put do |f| %>
+  	<%= show_error_messages @employee_form %>
   	<%= render 'form', :f => f %>
 	
-  	<%= f.submit_group do %>
-  		<%= f.submit_primary 'Update' %>
+    <%= form_actions do %>
+      <%= f.submit 'Update Employee', class: 'btn btn-primary' %>
       <%= link_to 'Cancel', employee_path(@employee), class: 'btn btn-link' %>
-  	<% end %>
+    <% end %>
   <% end %>
 </div>

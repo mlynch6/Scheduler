@@ -10,7 +10,7 @@
 </div>
 
 <div class="row">
-	<%= content_tag "div", nil, id: "calendar", data: { year: params[:year], month: params[:month], day: params[:day] } %>
+	<%= content_tag "div", nil, id: "calendar", data: { year: params[:year], month: params[:month], day: params[:day], time_zone: current_user.account.time_zone } %>
 </div>
 
 <div id="eventDialog"></div>

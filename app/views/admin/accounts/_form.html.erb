@@ -1,6 +1,7 @@
-<%= f.text_field :name %>
-<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, { :class => 'input-xlarge' } %>
-
-<%= f.select :status, Account::STATUS_VALUES %>
-<%= f.text_field :stripe_customer_token %>
-<%= f.select :current_subscription_plan_id, @plans %>
+<%= f.input :name %>
+<%= f.input :time_zone, wrapper: :horizontal_large %>
+<%= f.input :status, wrapper: :horizontal_small,
+      collection: Account::STATUS_VALUES %>
+<%= f.input :stripe_customer_token %>
+<%= f.input :current_subscription_plan_id,
+      collection: @plans %>

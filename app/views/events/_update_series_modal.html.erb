@@ -19,12 +19,12 @@
 		&nbsp;
 		
 		<% if event == event.event_series.events.first %>
-			<%= f.submit_primary 'All' %>
+			<%= f.submit 'All', class: 'btn btn-primary' %>
 		<% else %>
-			<%= f.submit_primary 'All Future Events' %>
+      <%= f.submit 'All Future Events', class: 'btn btn-primary' %>
 		<% end %>
 		
-		<%= f.submit_primary 'Only This Event' %>
+    <%= f.submit 'Only This Event', class: 'btn btn-primary' %>
 	</div>
 	
 </div> <!-- modal-content -->

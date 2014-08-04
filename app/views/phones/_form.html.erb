@@ -1,2 +1,3 @@
-<%= f.select :phone_type, Phone::TYPES %>
-<%= f.phone_field :phone_num %>
+<%= f.input :phone_type, wrapper: :horizontal_medium,
+      collection:Phone::TYPES %>
+<%= f.input :phone_num, as: :phone_prepend %>

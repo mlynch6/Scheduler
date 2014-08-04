@@ -15,12 +15,12 @@
 	<%= render 'accounts/tabs' %>
 	
 	<div class="mash-body">
-    <%= form_for @account, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-    	<%= f.error_messages %>
+    <%= simple_form_for @account do |f| %>
+    	<%= show_error_messages @account %>
     	<%= render 'form', :f => f %>
 	
-    	<%= f.submit_group do %>
-    		<%= f.submit_primary 'Update' %>
+      <%= form_actions do %>
+        <%= f.button :submit %>
         <%= link_to 'Cancel', account_path(current_user.account_id), class: 'btn btn-link' %>
     	<% end %>
     <% end %>

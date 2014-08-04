@@ -24,6 +24,7 @@ en:
         first_name: "First Name"
         middle_name: "Middle Name"
         last_name: "Last Name"
+        active: "Status"
         birth_date: "Birth Date"
         employee_num: "Employee #"
         employment_start_date: "Employment Start Date"

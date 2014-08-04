@@ -1,2 +1,5 @@
-<%= f.static_control :character_id do @casting.character.name end %>
-<%= f.select :person_id, @employees, include_blank: true %>
+<%= f.input :character_id, as: :static_control,
+      text: @casting.character.name %>
+<%= f.association :person, 
+      collection: @employees, 
+      include_blank: true %>

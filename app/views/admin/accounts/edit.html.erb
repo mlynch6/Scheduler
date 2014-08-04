@@ -3,8 +3,7 @@
 <% provide(:sidebar_current, 'Accounts') %>
 
 <div class="page-header">
-	<h1>
-    Accounts
+	<h1>Accounts
     <small>Edit</small>
   </h1>
 </div>
@@ -15,13 +14,13 @@
   	Update Stripe if you make changes to the Status, Customer Id, or Subscription.
   </div>
 
-  <%= form_for @account, url: admin_account_path(@account), :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-  	<%= f.error_messages %>
+  <%= simple_form_for @account, url: admin_account_path(@account) do |f| %>
+  	<%= show_error_messages @account %>
   	<%= render 'form', :f => f %>
 
-  	<%= f.submit_group do %>
-  		<%= f.submit_primary 'Update' %>
+    <%= form_actions do %>
+      <%= f.button :submit %>
       <%= link_to 'Cancel', admin_accounts_path, class: 'btn btn-link' %>
-  	<% end %>
+    <% end %>
   <% end %>
 </div>

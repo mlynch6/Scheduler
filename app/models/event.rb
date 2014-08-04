@@ -39,23 +39,32 @@ class Event < ActiveRecord::Base
 
 	default_scope lambda { order('start_at ASC').where(:account_id => Account.current_id) }
 	scope :between, lambda { |stime, etime| where(start_at: stime..etime) }
-	scope :for_daily_calendar, lambda { |date| between(date.to_time.beginning_of_day, date.to_time.end_of_day).joins(:location) }
+	scope :for_daily_calendar, ( lambda do |date|
+			timezone = Account.find(Account.current_id).time_zone
+			date_in_time_zone = ActiveSupport::TimeZone[timezone].parse(date.to_s(:db))
+			between(date_in_time_zone.beginning_of_day, date_in_time_zone.end_of_day).joins(:location)
+		end )
 	# Week starts on Monday
-	scope :for_week, lambda { |date| between(date.beginning_of_week.to_time.beginning_of_day, date.end_of_week.to_time.end_of_day) }
-	
+	scope :for_week, ( lambda do |date|
+			timezone = Account.find(Account.current_id).time_zone
+			date_in_time_zone = ActiveSupport::TimeZone[timezone].parse(date.to_s(:db))
+			between(date_in_time_zone.beginning_of_week, date_in_time_zone.end_of_week)
+		end )
 		
 	def start_date
-		sd = @start_date || start_at.try(:to_date).try(:to_s, :default)
+		sd = @start_date || start_at.try(:in_time_zone, timezone).try(:to_date).try(:to_s, :default)
+		#Return a string
 		(sd.kind_of? Date) ? sd.to_s(:default) : sd
 	end
 	
 	def start_time
-		st = @start_time || start_at.try(:in_time_zone, account.time_zone).try(:to_s, :hr12)
+		st = @start_time || start_at.try(:in_time_zone, timezone).try(:to_s, :hr12)
+		#Return a string
 		(st.kind_of? Time) ? st.to_s(:hr12) : st
 	end
 	
 	def end_time
-		end_at.try(:in_time_zone, account.time_zone).try(:to_s, :hr12)
+		end_at.try(:in_time_zone, timezone).try(:to_s, :hr12)
 	end
 	
 	def duration
@@ -97,7 +106,7 @@ protected
 	def save_start_at
 		sdt = (@start_date.kind_of? String) ? Date.strptime(@start_date, '%m/%d/%Y') : @start_date
 		stm = (@start_time.kind_of? String) ? @start_time : @start_time.to_s(:db)
-		self.start_at = Time.parse(sdt.to_s(:db) +" "+ stm).in_time_zone(account.time_zone)
+		self.start_at = ActiveSupport::TimeZone[timezone].parse(sdt.to_s(:db) +" "+ stm)
 	rescue ArgumentError
 		errors.add :start_at, "cannot be parsed"
 	end
@@ -107,6 +116,11 @@ protected
 		self.end_at = self.start_at + dur.minutes
 	rescue ArgumentError
 		errors.add :end_at, "cannot be parsed"
+	end
+	
+	def timezone
+		@timezone ||= Account.find(Account.current_id).time_zone if Account.current_id
+		@timezone ||= account.time_zone if account
 	end
 	
 	def contract

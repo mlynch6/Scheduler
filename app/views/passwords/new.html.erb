@@ -8,15 +8,18 @@
 </div>
 
 <div class="row">
-  <%= form_for @password_form, :url => passwords_path, method: :post, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-    <%= f.error_messages %>
+  <%= simple_form_for @password_form, :url => passwords_path, method: :post do |f| %>
+    <%= show_error_messages @password_form %>
       
-    <%= f.password_field :current_password, label: 'Current Password', field_size: 'col-md-4' %>
-    <%= f.password_field :new_password, label: 'New Password', field_size: 'col-md-4' %>
-    <%= f.password_field :new_password_confirmation, label: 'Confirm Password', field_size: 'col-md-4' %>
+    <%= f.input :current_password, as: :password_prepend,
+          label: 'Current Password' %>
+    <%= f.input :new_password, as: :password_prepend,
+          label: 'New Password' %>
+    <%= f.input :new_password_confirmation, as: :password_prepend,
+          label: 'Confirm Password' %>
 	
-    <%= f.submit_group do %>
-    	<%= f.submit_primary 'Update Password' %>
+     <%= form_actions do %>
+    	<%= f.submit 'Update Password', class: 'btn btn-primary' %>
       <%= link_to 'Cancel', dashboard_path, class: 'btn btn-link' %>
     <% end %>
   <% end %>

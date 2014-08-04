@@ -12,12 +12,12 @@
 </div>
 
 <div class="row">
-  <%= form_for [@agma_contract, @rehearsal_break], :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-  	<%= f.error_messages %>
+  <%= simple_form_for [@agma_contract, @rehearsal_break] do |f| %>
+  	<%= show_error_messages @rehearsal_break %>
   	<%= render 'form', :f => f %>
 
-  	<%= f.submit_group do %>
-  		<%= f.submit_primary 'Create' %>
+    <%= form_actions do %>
+      <%= f.button :submit %>
       <%= link_to 'Cancel', agma_contract_path(AgmaContract.first), class: 'btn btn-link' %>
   	<% end %>
   <% end %>

@@ -17,7 +17,6 @@ subscription =
 	
 	processCard: ->
 		card =
-			name: $('#cardholder_name').val()
 			number: $('#card_number').val()
 			exp_month: $('#card_month').val()
 			exp_year: $('#card_year').val()
@@ -26,7 +25,7 @@ subscription =
 	
 	handleStripeResponse: (status, response) ->
 		if status == 200
-			$('#account_stripe_card_token').val(response.id)
+			$('#payment_stripe_card_token').val(response.id)
 			$('#edit_payment')[0].submit()
 		else
 			$('#stripe_error').text(response.error.message)

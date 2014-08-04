@@ -1,3 +1,5 @@
-<%= f.text_field :name %>
-<%= f.text_field :track, field_size: 'col-md-1' %>
-<%= f.select :character_ids, @characters, {}, { :multiple => true, :class => 'chosen-select input-xxlarge' } %>
+<%= f.input :name %>
+<%= f.input :track, wrapper: :horizontal_xsmall %>
+<%= f.association :characters, as: :chosen_select,
+        collection: @characters,
+        input_html: { multiple: true} %>

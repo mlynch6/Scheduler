@@ -17,12 +17,12 @@
 	<div class="mash-body">
     <p class="muted">Fill out the form below to change your subscription credit card.</p>
 
-    <%= form_for @account, :url => payments_update_path, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal', :id => 'edit_payment' } do |f| %>
-    	<%= f.error_messages %>
+    <%= simple_form_for @account, :url => payments_update_path, :as => 'payment', :html => { :id => 'edit_payment' } do |f| %>
+    	<%= show_error_messages @account %>
     	<%= render 'form', :f => f, account: @account %>
 		
-    	<%= f.submit_group do %>
-    		<%= f.submit_primary 'Update' %>
+      <%= form_actions do %>
+        <%= f.submit 'Update Payment', class: 'btn btn-primary' %>
         <%= link_to 'Cancel', subscriptions_current_path, class: 'btn btn-link' %>
     	<% end %>
     <% end %>

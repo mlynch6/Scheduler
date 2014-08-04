@@ -15,14 +15,14 @@
 	<%= render 'agma_contracts/tabs' %>
   
   <div class="mash-body">
-    <%= form_for @agma_contract, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-    	<%= f.error_messages %>
-    		<%= render 'form', :f => f %>
+    <%= simple_form_for @agma_contract do |f| %>
+    	<%= show_error_messages @agma_contract %>
+    	<%= render 'form', :f => f %>
 	
-    	<%= f.submit_group do %>
-    		<%= f.submit_primary 'Update' %>
+      <%= form_actions do %>
+        <%= f.submit 'Update Contract', class: 'btn btn-primary' %>
         <%= link_to 'Cancel', agma_contract_path(AgmaContract.first), class: 'btn btn-link' %>
-    	<% end %>
-    <% end %>
+      <% end %>
+   <% end %>
   </div>
 </div>
