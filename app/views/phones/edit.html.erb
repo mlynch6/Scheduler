@@ -17,12 +17,12 @@
 </div>
 
 <div class="row">
-  <%= form_for [@phoneable, @phone], builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-  	<%= f.error_messages %>
+  <%= simple_form_for [@phoneable, @phone] do |f| %>
+  	<%= show_error_messages @phone %>
   	<%= render 'form', :f => f %>
 	
-  	<%= f.submit_group do %>
-  		<%= f.submit_primary 'Update' %>
+    <%= form_actions do %>
+      <%= f.button :submit %>
       
       <% if @phone.phoneable_type == "Person" %>
         <%= link_to 'Cancel', employee_path(@phoneable), class: 'btn btn-link' %>

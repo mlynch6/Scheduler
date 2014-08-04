@@ -16,14 +16,14 @@
 	<%= render 'events/tabs' %>
 	
 	<div class="mash-body">
-    <%= form_for @event, as: :event, builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-    	<%= f.error_messages %>
+    <%= simple_form_for @event, as: :event do |f| %>
+    	<%= show_error_messages @event %>
     	<%= render 'form', :f => f %>
 	
-    	<%= f.submit_group do %>
-    		<%= f.submit_primary 'Create' %>
+      <%= form_actions do %>
+        <%= f.button :submit %>
         <%= link_to 'Cancel', events_path, class: 'btn btn-link' %>
-    	<% end %>
+      <% end %>
     <% end %>
   </div>
 </div>

@@ -4,8 +4,7 @@
 
 <div class="row">
   <div class="page-header col-md-11">
-  	 <h1>
-      Seasons
+  	 <h1>Seasons
       <small>Add</small>
     </h1>
   </div>
@@ -13,13 +12,13 @@
 </div>
 
 <div class="row">
-  <%= form_for @season, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-  	<%= f.error_messages %>
+  <%= simple_form_for @season do |f| %>
+  	<%= show_error_messages @season %>
   	<%= render 'form', :f => f %>
-	
-  	<%= f.submit_group do %>
-  		<%= f.submit_primary 'Create' %>
+	  
+    <%= form_actions do %>
+      <%= f.button :submit %>
       <%= link_to 'Cancel', seasons_path, class: 'btn btn-link' %>
-  	<% end %>
+    <% end %>
   <% end %>
 </div>

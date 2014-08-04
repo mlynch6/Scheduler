@@ -473,6 +473,7 @@ describe "Event (non-Repeating) Pages:" do
 					start_date: Time.zone.today,
 					start_time: '10:15 AM',
 					duration: 60)
+			
 			emp = FactoryGirl.create(:person, account: current_account)
 			FactoryGirl.create(:invitation, event: @event, person: emp)
 			visit events_path

@@ -1,30 +1,22 @@
-<%= f.text_field :first_name, required: true %>
-<%= f.text_field :middle_name %>
-<%= f.text_field :last_name, required: true %>
-<%= f.text_field :suffix %>
-
-<div class="form-group">
-  <label class="col-md-3 control-label required" for="employee_active_true">Status</label>
-  <div class="col-md-9">
-    <%= f.radio_button :active, true, label: "Active", inline: true %>
-    <%= f.radio_button :active, false, label: "Inactive", inline: true %>
-  </div>
-</div>
-
-<%= f.select :role, Employee::ROLES, {}, required: true %>
-
-<div class="form-group">
-  <label class="col-md-3 control-label" for="employee_gender_female">Gender</label>
-  <div class="col-md-9">
-    <%= f.radio_button :gender, 'Female', label: 'Female', inline: true %>
-    <%= f.radio_button :gender, 'Male', label: 'Male', inline: true %>
-  </div>
-</div>
-
-<%= f.date_field :birth_date %>
-<%= f.email_field :email %>
-
-<%= f.text_field :employee_num %>
-<%= f.date_field :employment_start_date %>
-<%= f.date_field :employment_end_date %>
-<%= f.text_area :biography, rows: 5 %>
+<%= f.input :first_name,
+      required: true %>
+<%= f.input :middle_name %>
+<%= f.input :last_name,
+      required: true %>
+<%= f.input :suffix, wrapper: :horizontal_small %>
+<%= f.input :active, as: :radio_buttons,
+      collection: [['Active', true], ['Inactive', false]],
+      label_html: { for: 'employee_active_true'} %>
+<%= f.input :role, 
+      collection: Employee::ROLES,
+      required: true %>
+<%= f.input :gender, as: :radio_buttons,
+      collection: Person::GENDERS,
+      label_html: { for: 'employee_gender_female'} %>
+<%= f.input :birth_date, as: :date_picker %>
+<%= f.input :email, as: :email_prepend %>
+<%= f.input :employee_num, wrapper: :horizontal_small %>
+<%= f.input :employment_start_date, as: :date_picker %>
+<%= f.input :employment_end_date, as: :date_picker %>
+<%= f.input :biography, as: :text,
+      input_html: { rows: 5 } %>

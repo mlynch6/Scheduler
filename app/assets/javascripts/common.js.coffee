@@ -3,9 +3,9 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 jQuery ->
-	$('.chosen-select').chosen()
-	$('.date-select').datepicker
+	$('input.date_picker').datepicker
 		dateFormat: 'mm/dd/yy'
+  $('select.chosen_select').chosen()
 	$('.position-sort').sortable
 		axis: 'y'
 		handle: '.handle'

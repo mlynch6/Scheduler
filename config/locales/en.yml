@@ -25,7 +25,7 @@ en:
         class_break_min: "Class Break"
         costume_increment_min: "Costume Fitting Increments"
       casting:
-        person_id: "Artist"
+        person: "Artist"
       character:
         name: "Character"
         is_child: "Child"

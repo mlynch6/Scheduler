@@ -1,6 +1,8 @@
-<%= f.select :addr_type, Address::TYPES, {}, field_size: 'col-md-3' %>
-<%= f.text_field :addr %>
-<%= f.text_field :addr2 %>
-<%= f.text_field :city %>
-<%= f.select :state, Address::STATES, {}, field_size: 'col-md-3' %>
-<%= f.text_field :zipcode, field_size: 'col-md-2' %>
+<%= f.input :addr_type, wrapper: :horizontal_small,
+      collection: Address::TYPES %>
+<%= f.input :addr %>
+<%= f.input :addr2 %>
+<%= f.input :city %>
+<%= f.input :state, wrapper: :horizontal_medium,
+      collection: Address::STATES %>
+<%= f.input :zipcode, wrapper: :horizontal_small %>

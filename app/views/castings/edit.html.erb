@@ -11,13 +11,13 @@
 </div>
 
 <div class="row">
-  <%= form_for @casting, :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-  	<%= f.error_messages %>
+  <%= simple_form_for @casting do |f| %>
+  	<%= show_error_messages @casting %>
   	<%= render 'form', :f => f %>
-	
-  	<%= f.submit_group do %>
-  		<%= f.submit_primary 'Update' %>
+	  
+    <%= form_actions do %>
+      <%= f.button :submit %>
       <%= link_to 'Cancel', season_piece_cast_path(@cast.season_piece, @cast), class: 'btn btn-link' %>
-  	<% end %>
+    <% end %>
   <% end %>
 </div>

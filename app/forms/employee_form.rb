@@ -41,7 +41,7 @@ class EmployeeForm
 	
 	def submit(params)
 		employee.attributes = params.slice(:role, :employee_num, :employment_start_date, :employment_end_date, :biography)
-		person.attributes = params.slice(:first_name, :middle_name, :last_name, :suffix, :gender, :birth_date, :email)
+		person.attributes = params.slice(:first_name, :middle_name, :last_name, :suffix, :gender, :birth_date, :email, :active)
 		# phone.attributes = params.slice(:phone_type, :phone_num)
 		# address.attributes = params.slice(:addr_type, :addr, :addr2, :city, :state, :zipcode)
 		

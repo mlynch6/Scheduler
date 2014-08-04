@@ -1,6 +1,4 @@
-<%= f.text_field :duration_min,
-			:field_size => 'col-md-3',
-			:append => 'min' %>
-<%= f.text_field :break_min,
-			:field_size => 'col-md-3',
-			:append => 'min' %>
+<%= f.input :duration_min, as: :append,
+			:append_text => 'min' %>
+<%= f.input :break_min, as: :append,
+			:append_text => 'min' %>

@@ -1,5 +1,7 @@
-<%= f.text_field :name %>
-<%= f.text_field :choreographer %>
-<%= f.text_field :music %>
-<%= f.text_field :composer %>
-<%= f.number_field :avg_length, field_size: 'col-md-3', append: 'min' %>
+<%= f.input :name %>
+<%= f.input :choreographer %>
+<%= f.input :music %>
+<%= f.input :composer %>
+<%= f.input :avg_length, as: :append, 
+    append_text: 'min', 
+    field_size: '3' %>

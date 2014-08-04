@@ -1,36 +1,40 @@
 <fieldset>
 	<legend>1. Company Information</legend>
-  <%= f.text_field :name, required: true %>
-  <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, { :class => 'input-xlarge', required: true } %>
-  <%= f.telephone_field :phone_num, required: true %>
+  <%= f.input :name %>
+  <%= f.input :time_zone %>
+  <%= f.input :phone_num, as: :phone_prepend %>
 </fieldset>
 
 <fieldset>
 	<legend>2. Business Address</legend>
-  <%= f.text_field :addr, label: 'Address', required: true %>
-  <%= f.text_field :addr2, label: 'Address 2' %>
-  <%= f.text_field :city, required: true %>
-  <%= f.select :state, Address::STATES, {}, field_size: 'col-md-3', required: true %>
-  <%= f.text_field :zipcode, field_size: 'col-md-2', required: true %>
+  <%= f.input :addr %>
+  <%= f.input :addr2 %>
+  <%= f.input :city %>
+  <%= f.input :state, wrapper: :horizontal_medium,
+        collection: Address::STATES %>
+  <%= f.input :zipcode, wrapper: :horizontal_small %>
 </fieldset>
 
 <fieldset>
   <legend>3. Director</legend>
-  <%= f.text_field :first_name, required: true %>
-  <%= f.text_field :last_name, required: true %>
-  <%= f.select :role, Employee::ROLES, {}, required: true %>
-  <%= f.email_field :email %>
+  <%= f.input :first_name %>
+  <%= f.input :last_name %>
+  <%= f.input :role, 
+        collection: Employee::ROLES %>
+  <%= f.input :email, as: :email_prepend %>
 </fieldset>
 
 <fieldset>
 	<legend>4. Select a Username</legend>
-  <%= f.text_field :username, field_size: 'col-md-4', help: 'Must be between 6 and 20 characters', required: true %>
-  <%= f.password_field :password, field_size: 'col-md-4', required: true %>
-  <%= f.password_field :password_confirmation, field_size: 'col-md-4' %>
+  <%= f.input :username, wrapper: :horizontal_medium,
+        hint: 'Must be between 6 and 20 characters' %>
+  <%= f.input :password, as: :password_prepend %>
+  <%= f.input :password_confirmation, as: :password_prepend %>
 </fieldset>
 
 <fieldset>
   <legend>5. Payment Information</legend>
-  <%= f.hidden_field :current_subscription_plan_id, value: (params[:plan] || params[:account][:current_subscription_plan_id]) %>
+  <%= f.hidden_field :current_subscription_plan_id,
+        value: (params[:plan] || params[:account][:current_subscription_plan_id]) %>
   <%= render 'payments/form', :f => f, :account => @signup_form %>
 </fieldset>

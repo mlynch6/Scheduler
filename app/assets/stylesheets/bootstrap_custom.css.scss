@@ -23,12 +23,17 @@ h1, h2, h3 {
 thead { background: $panel-default-border; }
 .pagination { margin: 0px; padding-left: 20px;}
 
+/*** Label - required asterisk ***/
 label:after { content: " :"; }
 .radio label:after { content: ""; }
 .btn-group label:after { content: ""; }
 .checkbox label:after, label.checkbox-inline:after { content: none }
 .radio label:after, label.radio-inline:after { content: none }
-.required:before { color: red; font-size: 1.2em; content: "* "; }
+.required:before { color: $state-danger-text; content: "* "; }
+
+/*** SIMPLE_FORM w/ BOOTSTRAP ***/
+input.append, input.currency, input.date_picker, input.email_prepend, input.password_prepend, 
+input.phone_prepend, input.time_prepend, select.time_zone { @extend .form-control}
 
 /*** SIGN IN ***/
 .form-signin {
@@ -64,7 +69,7 @@ footer {
 	@extend .form-control;
 	box-shadow: none;
 }
-.chosen-container { font-size: $font-size-base; }
+.chosen-container { font-size: $font-size-base; padding-top: 6px; }
 .chosen-container-multi .chosen-choices li.search-field input[type="text"] { height: 25px;}
 
 /*** CUSTOM CLASSES ***/

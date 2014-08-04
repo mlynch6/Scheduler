@@ -6,9 +6,7 @@ class PaymentsController < ApplicationController
 	end
 	
 	def update
-		@account.stripe_card_token = params[:account][:stripe_card_token]
-		
-		if @account.edit_subscription_payment
+		if @account.save_with_payment
 			redirect_to subscriptions_current_path, :notice => "Successfully updated your Payment Method"
 		else
 			form_setup

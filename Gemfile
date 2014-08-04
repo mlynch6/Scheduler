@@ -9,6 +9,7 @@ gem 'therubyracer'
 gem 'prawn'
 gem 'faker', '1.2.0'
 gem 'fullcalendar-rails', '~>1.6.4'
+gem 'simple_form', '~> 2.1.1'
 
 # Subscription payment processing
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'

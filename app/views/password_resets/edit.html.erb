@@ -7,14 +7,14 @@
 </div>
 
 <div class="row">
-  <%= form_for @user, :url => password_reset_path(params[:id]), :builder => BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-    <%= f.error_messages %>
+  <%= simple_form_for @user, :url => password_reset_path(params[:id]) do |f| %>
+    <%= show_error_messages @user %>
       
-    <%= f.password_field :password, field_size: 'col-md-4' %>
-    <%= f.password_field :password_confirmation, field_size: 'col-md-4' %>
+    <%= f.input :password, as: :password_prepend %>
+    <%= f.input :password_confirmation, as: :password_prepend %>
 	
-    <%= f.submit_group do %>
-    	<%= f.submit_primary 'Update Password' %>
+    <%= form_actions do %>
+    	<%= f.submit 'Update Password', class: 'btn btn-primary' %>
       <%= link_to 'Cancel', login_path, class: 'btn btn-link' %>
     <% end %>
   <% end %>

@@ -19,18 +19,17 @@
 </div>
 
 <div class="row">
-  <%= form_for [@addressable, @address], builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-  	<%= f.error_messages %>
+  <%= simple_form_for [@addressable, @address] do |f| %>
+  	<%= show_error_messages @address %>
   	<%= render 'form', :f => f %>
 	
-  	<%= f.submit_group do %>
-  		<%= f.submit_primary 'Create' %>
-      
+    <%= form_actions do %>
+      <%= f.button :submit %>
       <% if @address.addressable_type == "Person" %>
         <%= link_to 'Cancel', employee_path(@addressable.profile), class: 'btn btn-link' %>
       <% elsif @address.addressable_type == "Account" %>
         <%= link_to 'Cancel', account_path(@addressable), class: 'btn btn-link' %>
       <% end %>
-  	<% end %>
+    <% end %>
   <% end %>
 </div>

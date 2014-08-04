@@ -16,16 +16,16 @@
 	<%= render 'events/tabs' %>
 	
 	<div class="mash-body">
-    <%= form_for @event, as: :event, builder: BootstrapFormBuilder, :html => { :class => 'form-horizontal' } do |f| %>
-    	<%= f.error_messages %>
+    <%= simple_form_for @event, as: :event do |f| %>
+    	<%= show_error_messages @event %>
     	<%= render 'form', :f => f %>
-	
-    	<%= f.submit_group do %>
+      
+    	<%= form_actions do %>
     		<% if @event.event_series %>
     				<button class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update</button>
     				<%= render 'update_series_modal', :f => f, :event => @event %>
     			<% else %>
-    				<%= f.submit_primary 'Update' %>
+    				<%= f.button :submit %>
     			<% end %>
 		
     		<% if allow? @event.type.underscore.pluralize, "destroy" %>

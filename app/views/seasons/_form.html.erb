@@ -1,4 +1,5 @@
-<%= f.text_field :name %>
-<%= f.date_field :start_dt, :label => 'From' %>
-<%= f.date_field :end_dt, :label => 'To' %>
-<%= f.select :piece_ids, @pieces, {}, {:multiple => true, :class => 'chosen-select' } %>
+<%= f.input :name %>
+<%= f.input :start_dt, as: :date_picker, :label => 'From' %>
+<%= f.input :end_dt, as: :date_picker, :label => 'To' %>
+<%= f.association :pieces, as: :chosen_select, 
+      collection: @pieces %>

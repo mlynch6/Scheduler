@@ -35,9 +35,9 @@ jQuery ->
 		timeFormat: 
 			month:				'h(:mm) TT'
 			agenda:			'h(:mm) TT{ - h(:mm) TT}'
-		ignoreTimezone: false
+		timezone:     $('#calendar').data('time_zone')
 		year:					$('#calendar').data('year')
-		month:					$('#calendar').data('month')-1
+		month:				$('#calendar').data('month')-1
 		date:					$('#calendar').data('day')
 		titleFormat:
 			month: 		'MMMM yyyy'

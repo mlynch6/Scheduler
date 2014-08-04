@@ -7,7 +7,7 @@ class SignupForm
 	attr_accessor :first_name, :last_name, :email, :role
 	attr_accessor :username, :password, :password_confirmation
 	attr_accessor :current_subscription_plan_id
-	attr_accessor :stripe_card_token
+	attr_accessor :stripe_card_token, :card_number, :card_month, :card_year, :card_code
 	
 	delegate :name, :time_zone, :current_subscription_plan_id, :stripe_card_token, to: :account
 	delegate :phone_num, to: :phone
