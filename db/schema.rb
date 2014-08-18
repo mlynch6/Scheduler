@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140718192045) do
+ActiveRecord::Schema.define(:version => 20140804202537) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -109,15 +109,29 @@ ActiveRecord::Schema.define(:version => 20140718192045) do
   add_index "characters", ["account_id"], :name => "index_characters_on_account_id"
   add_index "characters", ["piece_id"], :name => "index_characters_on_piece_id"
 
+  create_table "dropdowns", :force => true do |t|
+    t.string   "dropdown_type", :limit => 30,                   :null => false
+    t.string   "name",          :limit => 30,                   :null => false
+    t.text     "comment"
+    t.integer  "position",                                      :null => false
+    t.boolean  "active",                      :default => true, :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
+  end
+
+  add_index "dropdowns", ["dropdown_type", "name"], :name => "index_dropdowns_on_dropdown_type_and_name", :unique => true
+  add_index "dropdowns", ["dropdown_type"], :name => "index_dropdowns_on_dropdown_type"
+
   create_table "employees", :force => true do |t|
-    t.integer  "account_id",                          :null => false
-    t.string   "role",                  :limit => 50, :null => false
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.integer  "account_id",                                             :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
     t.string   "employee_num",          :limit => 20
     t.date     "employment_start_date"
     t.date     "employment_end_date"
     t.text     "biography"
+    t.string   "job_title",             :limit => 30
+    t.boolean  "agma_artist",                         :default => false, :null => false
   end
 
   add_index "employees", ["account_id"], :name => "index_employees_on_account_id"

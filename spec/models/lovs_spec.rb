@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Lovs do
 	context "ACTIVE" do
 		it "contains correct values" do
-			Lovs::ACTIVE['Active'].should == 1
-			Lovs::ACTIVE['Inactive'].should == 0
+			Lovs::ACTIVE[0].should == ["Active", true]
+			Lovs::ACTIVE[1].should == ["Inactive", false]
 		end
 	end	
 

@@ -35,10 +35,10 @@ module LinkHelper
 	
 # BUTTONS
 	def new_button(name, *args)
-	  args << add_class('btn btn-success', *args)
+	  args << add_class('btn btn-default', *args)
 	  args << default_title('Add', *args)
 	  
-		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus mash-green")
 		create_link(name, icon, *args)
 	end
 	
@@ -78,7 +78,7 @@ module LinkHelper
 		html << content_tag(:ul, class: "dropdown-menu", role: "menu") do
 			yield
 		end
-		content_tag(:div, class: "btn-group pull-right", style: "margin-top: 10px;") do
+		content_tag(:div, class: "btn-group pull-right", style: "margin-top: 5px;") do
 			html
 		end
 	end

@@ -1,0 +1,29 @@
+<div class="search-row hidden-print">
+  <%= form_tag admin_dropdowns_path, method: 'get', class: 'form-inline', id: 'dropdown_search' do %>
+  	<div class="form-group">
+      <%= label :type, 'Type', class: 'sr-only' %>
+      <%= select_tag :type,
+          options_for_select(Dropdown::TYPES, params[:type]),
+          class: 'form-control submit-on-change'
+        %>
+    </div>
+		<div class="form-group">
+      <%= label :status, 'Status', class: 'sr-only' %>
+      <%= select_tag :status,
+          options_for_select(Lovs::SEARCH_ACTIVE, params[:status]),
+          prompt: 'All',
+          class: 'form-control submit-on-change'
+        %>
+    </div>
+		<div class="form-group">
+      <%= label :query, 'Query', class: 'sr-only' %>
+      <%= text_field_tag :query, 
+            params[:query], 
+            class: 'form-control' %>
+    </div>
+    <%= content_tag :button, content_tag(:span, nil, class: 'glyphicon glyphicon-search'), 
+          name: nil, 
+          class: 'btn btn-info',
+          title: 'Search' %>
+  <% end %>
+</div>

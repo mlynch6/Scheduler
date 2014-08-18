@@ -38,4 +38,18 @@ describe ApplicationHelper do
 			min_to_formatted_time(900).should == "3:00 PM"
 		end
 	end
+	
+	context 'readable_klass' do
+		it "returns a readable value" do
+  		values = ['UserRole', 'user_role', 'user role']
+  		values.each do |val|
+  			readable_klass(val).should == 'User Role'
+  		end
+		end
+		
+		it "returns a blank if input is empty" do
+			readable_klass('').should == ''
+			readable_klass(nil).should == ''
+		end
+	end
 end

@@ -56,6 +56,12 @@ input.phone_prepend, input.time_prepend, select.time_zone { @extend .form-contro
 }
 .form-signin input[type="submit"] { margin-top: 15px; }
 
+/*** SEARCH ***/
+.search-row {
+  @extend .row;
+  margin-bottom: 10px;
+}
+
 /*** FOOTER ***/
 footer {
   margin-top: 30px;

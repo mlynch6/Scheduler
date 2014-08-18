@@ -1,0 +1,6 @@
+<%= f.input :dropdown_type, as: :hidden %>
+<%= f.input :name %>
+<%= f.input :comment,
+       input_html: { rows: 5 } %>
+<%= f.input :active, as: :radio_buttons,
+      collection: Lovs::ACTIVE %>

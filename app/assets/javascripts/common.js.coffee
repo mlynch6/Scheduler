@@ -11,3 +11,5 @@ jQuery ->
 		handle: '.handle'
 		update: ->
 			$.post($(this).data('update-url'), $(this).sortable('serialize'))
+	$('.submit-on-change').on "change", ->
+    $(this).parents("form").submit()
