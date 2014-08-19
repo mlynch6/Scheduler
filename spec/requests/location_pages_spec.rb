@@ -30,24 +30,20 @@ describe "Location Pages:" do
 		end
 		
 		it "has correct Active/Inactive/All filter highlighting" do
-			should have_selector 'li.active', text: 'Active'
-			should have_selector 'h1', text: 'Active'
+			select "Inactive", from: 'status'
+			click_button 'Search'
+			should have_selector 'h1 small', text: 'Inactive'
 			
-			click_link "Inactive"
-			should have_selector 'li.active', text: 'Inactive'
-			should have_selector 'h1', text: 'Inactive'
+			select "Active", from: 'status'
+			click_button 'Search'
+			should have_selector 'h1 small', text: 'Active'
 			
-			click_link "All"
-			should have_selector 'li.active', text: 'All'
-			should have_selector 'h1', text: 'All'
-			
-			click_link "Active"
-			should have_selector 'li.active', text: 'Active'
-			should have_selector 'h1', text: 'Active'
+			select "All", from: 'status'
+			click_button 'Search'
+			should have_selector 'h1 small', text: 'All'
 			
 			visit locations_path(status: "invalid")
-			should have_selector 'li.active', text: 'All'
-			should have_selector 'h1', text: 'All'
+			should have_selector 'h1 small', text: 'All'
 		end
 		
 		it "without records" do
@@ -72,47 +68,56 @@ describe "Location Pages:" do
 	    end
 		end
 		
-		it "can filter for inactive records" do
-			4.times { FactoryGirl.create(:location, account: current_account) }
-			4.times { FactoryGirl.create(:location, :inactive, account: current_account) }
-			visit locations_path
-			click_link "Inactive"
+		describe "can search" do
+			before do
+				4.times { FactoryGirl.create(:location, account: current_account) }
+				4.times { FactoryGirl.create(:location, :inactive, account: current_account) }
+				@rhino = FactoryGirl.create(:location, account: current_account, name: 'My Rhino Studio')
+				visit locations_path
+			end
 			
-			Location.inactive.each do |location|
-				should have_selector 'td', text: location.name
-				should_not have_selector 'td', text: 'Active'
-				should have_selector 'td', text: 'Inactive'
+			it "for inactive records" do	
+				select "Inactive", from: 'status'
+				click_button 'Search'
+			
+				Location.inactive.each do |location|
+					should have_selector 'td', text: location.name
+					should_not have_selector 'td', text: 'Active'
+					should have_selector 'td', text: 'Inactive'
 				
-				should have_link location.name, href: edit_location_path(location)
-				should have_link 'Inactivate', href: inactivate_location_path(location)
-				should have_link 'Delete', href: location_path(location)
-	    end
-		end
+					should have_link location.name, href: edit_location_path(location)
+					should have_link 'Inactivate', href: inactivate_location_path(location)
+					should have_link 'Delete', href: location_path(location)
+		    end
+			end
 		
-		it "can filter for all records" do
-			4.times { FactoryGirl.create(:location, account: current_account) }
-			4.times { FactoryGirl.create(:location, :inactive, account: current_account) }
-			visit locations_path
-			click_link "All"
+			it "for all records" do
+				select "All", from: 'status'
+				click_button 'Search'
 			
-			Location.all.each do |location|
-				should have_selector 'td', text: location.name
-				should have_selector 'td', text: 'Active'
-				should have_selector 'td', text: 'Inactive'
+				Location.all.each do |location|
+					should have_selector 'td', text: location.name
+					should have_selector 'td', text: 'Active'
+					should have_selector 'td', text: 'Inactive'
 				
-				should have_link location.name, href: edit_location_path(location)
-				should have_link 'Inactivate', href: inactivate_location_path(location)
-				should have_link 'Delete', href: location_path(location)
-	    end
+					should have_link location.name, href: edit_location_path(location)
+					should have_link 'Inactivate', href: inactivate_location_path(location)
+					should have_link 'Delete', href: location_path(location)
+		    end
+			end
+			
+			it "on Name" do
+				fill_in "query", with: 'Rhino'
+				click_button 'Search'
+			
+				should have_selector 'tr', count: 2
+				should have_selector 'td', text: @rhino.name
+			end
 		end
 		
 		it "has links for Super Admin" do
 			location = FactoryGirl.create(:location, account: current_account)
 			visit locations_path
-	
-			should have_link 'Active'
-			should have_link 'Inactive'
-			should have_link 'All'
 	
 			should have_link 'Add Location'
 			should have_link location.name
@@ -133,10 +138,12 @@ describe "Location Pages:" do
 			should have_selector 'div.alert-success'
 			should have_title 'Locations'
 				
-			click_link 'Active'
+			select "Active", from: 'status'
+			click_button 'Search'
 			should_not have_content @location.name
 				
-			click_link 'Inactive'
+			select "Inactive", from: 'status'
+			click_button 'Search'
 			should have_content @location.name
 		end
 	end
@@ -146,7 +153,8 @@ describe "Location Pages:" do
 			log_in
 			@location = FactoryGirl.create(:location, :inactive, account: current_account)
 			visit locations_path
-			click_link 'Inactive'
+			select "Inactive", from: 'status'
+			click_button 'Search'
 			click_link "activate_#{@location.id}"
 		end
 		
@@ -154,10 +162,12 @@ describe "Location Pages:" do
 			should have_selector 'div.alert-success'
 			should have_title 'Locations'
 			
-			click_link 'Inactive'
+			select "Inactive", from: 'status'
+			click_button 'Search'
 			should_not have_content @location.name
 			
-			click_link 'Active'
+			select "Active", from: 'status'
+			click_button 'Search'
 			should have_content @location.name
 		end
 	end
@@ -260,11 +270,6 @@ describe "Location Pages:" do
 			should have_title 'Locations'
 			should have_content new_name
 		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Location'
-			should have_link 'Delete Location'
-		end
 	end
 	
 	context "#destroy" do
@@ -279,7 +284,8 @@ describe "Location Pages:" do
 			should have_selector 'div.alert-success'
 			should have_title 'Locations'
 			
-			click_link 'All'
+			select "All", from: 'status'
+			click_button 'Search'
 			should_not have_content @location.name
 		end
 	end

@@ -1,11 +1,5 @@
-<div class="col-md-1">
-  <%= gear_dropdown do %>
-  	<% if allow? "locations", "new" %>
-  		<li><%= new_link "Add Location", new_location_path %></li>
-  	<% end %>
-    
-  	<% if params['id'].present? && allow?("locations", "destroy") %>
-  		<li><%= delete_link 'Delete Location', @location %></li>
-  	<% end %>
-  <% end %>
-</div>
+ <div class="pull-right">
+   	<% if allow? "locations", "new" %>
+   		<%= new_button "Add Location", new_location_path %>
+   	<% end %>
+ </div>
