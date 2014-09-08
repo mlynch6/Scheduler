@@ -39,6 +39,10 @@ class Location < ActiveRecord::Base
 		#Default show all
 		locations = Location.order('name ASC')
 		
+		if query.include?(:query)
+			locations = locations.where('name LIKE :q', q: "%#{query[:query]}%")
+		end
+		
 		if query.include?(:status) && query[:status] == "active"
 			locations = locations.active
 		elsif query.include?(:status) && query[:status] == "inactive"

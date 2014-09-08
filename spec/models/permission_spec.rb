@@ -303,6 +303,16 @@ shared_examples "a NON-administrator" do
 		it { should_not allow(:admin_accounts, :destroy) }
 	end
 	
+	context "dropdowns" do
+		it { should_not allow(:dropdowns, :index) }
+		it { should_not allow(:dropdowns, :new) }
+		it { should_not allow(:dropdowns, :create) }
+		it { should_not allow(:dropdowns, :edit) }
+		it { should_not allow(:dropdowns, :update) }
+		it { should_not allow(:dropdowns, :destroy) }
+		it { should_not allow(:dropdowns, :sort) }
+	end
+	
 	context "payments" do
 		it { should_not allow(:payments, :edit) }
 		it { should_not allow(:payments, :update) }
@@ -504,6 +514,16 @@ describe Permission do
 			it { should allow(:admin_accounts, :edit) }
 			it { should allow(:admin_accounts, :update) }
 			it { should allow(:admin_accounts, :destroy) }
+		end
+		
+		context "dropdowns" do
+			it { should allow(:dropdowns, :index) }
+			it { should allow(:dropdowns, :new) }
+			it { should allow(:dropdowns, :create) }
+			it { should allow(:dropdowns, :edit) }
+			it { should allow(:dropdowns, :update) }
+			it { should allow(:dropdowns, :destroy) }
+			it { should allow(:dropdowns, :sort) }
 		end
 	end
 end

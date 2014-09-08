@@ -150,6 +150,7 @@ describe Location do
 	  	before do
 	  		4.times { FactoryGirl.create(:location, account: account) }
 				4.times { FactoryGirl.create(:location, :inactive, account: account) }
+				@rhino = FactoryGirl.create(:location, account: account, name: 'Rhino Theatre')
 			end
 			
 	  	it "returns all records by default" do
@@ -171,6 +172,15 @@ describe Location do
 			  it "that is invalid returns all records" do
 			  	query = { status: "invalid" }
 					Location.search(query).should == Location.all
+			  end
+			end
+			
+		  describe "on text" do
+			  it "returns records with query text in name" do
+			  	query = { query: "Rhino" }
+					records = Location.search(query)
+					records.count.should == 1
+					records.should include(@rhino)
 			  end
 			end
 	  end

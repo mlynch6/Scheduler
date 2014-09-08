@@ -42,10 +42,14 @@ en:
         start_date: "Date"
         start_time: "Start Time"
         employee_ids: "Invitees"
+      dropdown:
+        comment: "Description"
+        active: "Status"
       employee:
         employee_num: "Employee #"
         employment_start_date: "Employment Start Date"
         employment_end_date: "Employment End Date"
+        job_title: "Job Title"
         first_name: "First Name"
         middle_name: "Middle Name"
         last_name: "Last Name"

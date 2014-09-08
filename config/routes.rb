@@ -77,5 +77,8 @@ Scheduler::Application.routes.draw do
 	namespace :admin do
 		resources :accounts,						:only => [:index, :edit, :update, :destroy]
 		resources :subscription_plans,	:except => [:show]
+		resources :dropdowns,						:except => [:show] do
+			collection { post :sort }
+		end
 	end
 end

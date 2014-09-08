@@ -24,4 +24,22 @@ module ApplicationHelper
 	def min_to_formatted_time(mnt)
 		(Time.now.midnight + mnt.minutes).to_s(:hr12)
 	end
+	
+	#Input: n/a
+	#Output: h1 small text for All/Active/Inactive
+	def header_status_text
+		if params[:status] == "active"
+			'Active'
+		elsif params[:status] == "inactive"
+			'Inactive'
+		else
+			'All'
+		end
+	end
+	
+	#Input: String Ex: user_role
+	#Output: Titleized text: User Role
+	def readable_klass(klass_name)
+		klass_name.blank? ? '' : klass_name.underscore.humanize.titleize
+	end
 end

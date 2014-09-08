@@ -1,0 +1,59 @@
+<% @dropdown_type = readable_klass(params[:type]) %>
+<% provide(:title, "Dropdowns | #{@dropdown_type.pluralize}") %>
+<% provide(:header_current, 'Administration') %>
+<% provide(:sidebar_current, 'Dropdowns') %>
+
+<div class="page-header">
+  <h1><%= @dropdown_type.pluralize %>
+    <small><%= header_status_text %></small>
+    <%= render 'admin/dropdowns/tools_menu' %>
+  </h1>
+</div>
+
+<%= render 'admin/dropdowns/search_form' %>
+
+<div class="row">
+  <table class="table table-striped">
+  	<thead>
+    	<tr>
+        <th class="mash-col-1-btn">&nbsp;</th>
+    		<th>Name</th>
+    		<th>Description</th>
+        <th>Status</th>
+    		<th class="mash-col-1-btn">&nbsp;</th>
+    	</tr>
+    </thead>
+    <tbody id="dropdowns" class="position-sort" data-update-url="<%= sort_admin_dropdowns_url %>">
+    	<% @dropdowns.each do |dropdown| %>
+  			<tr id="dropdown_<%= dropdown.id %>">
+  				<td class="mash-col-1-btn">
+            <% if allow?("dropdowns", "sort") &&
+                  params[:status] != "active" && 
+                  params[:status] != "inactive" %>
+  						<%= content_tag :i, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' %>
+            <% end %>
+          </td>
+  				<td>
+  					<% if allow? "dropdowns", "edit" %>
+  						<%= link_to dropdown.name, edit_admin_dropdown_path(dropdown), :id => "edit_#{dropdown.id}" %>
+  					<% else %>
+              <%= dropdown.name %>
+            <% end %>
+          </td>
+  				<td><%= dropdown.comment.gsub(/\n/, '<br/>').html_safe if dropdown.comment.present? %></td>
+          <td><%= dropdown.status %></td>
+  				<td class="mash-col-1-btn">
+  					<% if allow? "dropdowns", "destroy" %>
+  						<%= delete_button nil, admin_dropdown_path(dropdown), :class => 'btn-xs', :id => "delete_#{dropdown.id}" %>
+  					<% end %>
+  				</td>
+        </tr>
+  		<% end %>
+      <% if @dropdowns.empty? %>
+        <tr>
+          <td colspan="5">No records found</td>
+        </tr>
+      <% end %>
+  	</tbody>
+  </table>
+</div>
