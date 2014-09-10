@@ -47,6 +47,7 @@ describe "Employee Pages:" do
 			
 			Employee.active.paginate(page: 1, per_page: 3).each do |employee|
 				should have_selector 'td', text: employee.name
+				should have_selector 'td', text: employee.job_title
 				should have_selector 'td', text: employee.email
 				
 				employee.phones.each do |phone|
@@ -137,8 +138,7 @@ describe "Employee Pages:" do
 			
 			Employee.inactive.paginate(page: 1, per_page: 3).each do |employee|
 				should have_selector 'td', text: employee.name
-				should have_selector 'td', text: employee.name
-				should have_selector 'td', text: employee.name
+				should have_selector 'td', text: employee.job_title
 				
 				employee.phones.each do |phone|
 					should have_selector 'td', text: "H: #{phone.phone_num}"
@@ -206,7 +206,7 @@ describe "Employee Pages:" do
 	    should have_field 'Last Name'
 			should have_field 'Suffix'
 			should have_field 'Status'
-	    should have_select 'Role'
+	    should have_field 'Job Title'
 			should have_field 'Gender'
 			should have_field 'Birth Date'
 	    should have_field 'Email'
@@ -241,13 +241,14 @@ describe "Employee Pages:" do
 				
 		  	fill_in "First Name", with: new_first_name
 				fill_in "Last Name", with: new_last_name
-				select "Instructor", from: "Role"
+				fill_in "Job Title", with: "Instructor"
 				fill_in "Email", with: email
 				click_button 'Create'
 		
 				should have_selector 'div.alert-success'
 				should have_title 'Employees'
 				should have_content "#{new_last_name}, #{new_first_name}"
+				should have_content "Instructor"
 				should have_content email
 			end
 		end
@@ -285,7 +286,7 @@ describe "Employee Pages:" do
 	    should have_field 'Last Name'
 			should have_field 'Suffix'
 			should have_field 'Status'
-	    should have_select 'Role'
+	    should have_field 'Job Title'
 			should have_field 'Gender'
 			should have_field 'Birth Date'
 	    should have_field 'Email'
@@ -312,7 +313,7 @@ describe "Employee Pages:" do
 			fill_in "Middle Name", with: ""
 			fill_in "Last Name", with: new_last_name
 			fill_in "Suffix", with: ""
-			select "Instructor", from: "Role"
+			fill_in "Job Title", with:  ""
 			fill_in "Email", with: email
 			click_button 'Update'
 	
@@ -357,7 +358,7 @@ describe "Employee Pages:" do
 		  should have_content @person.email
 			should have_content @person.status
 			
-			should have_content @employee.role
+			should have_content @employee.job_title
 			should have_content @employee.employee_num
 			should have_content @employee.employment_start_date
 			should have_content @employee.employment_end_date

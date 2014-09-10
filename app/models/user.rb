@@ -7,11 +7,11 @@
 #  person_id              :integer          not null
 #  username               :string(20)       not null
 #  password_digest        :string(255)      not null
-#  role                   :string(20)       not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  password_reset_token   :string(50)
 #  password_reset_sent_at :datetime
+#  superadmin             :boolean          default(FALSE), not null
 #
 
 class User < ActiveRecord::Base
@@ -21,22 +21,15 @@ class User < ActiveRecord::Base
   
   belongs_to :account
   belongs_to :person
+	has_many :permissions, dependent: :destroy
   
   validates :username,	presence: true, length: { in: 6..20 }, uniqueness: { case_sensitive: false }
-  validates :role,	presence: true, length: { maximum: 20 }
 	validates :password, presence: true, confirmation: true, :on => :create
-  
-  before_validation(:on => :create) do
-    self.role ||= "Employee"
-  end
+	validates :superadmin,	:inclusion => { :in => [true, false] }
   
   before_save { self.username.downcase! }
   
   default_scope lambda { where(:account_id => Account.current_id).order('username ASC') }
-	
-	def superadmin?
-  	self.role == "Super Administrator"
-	end
 	
 	def send_password_reset_email
 		generate_token(:password_reset_token)

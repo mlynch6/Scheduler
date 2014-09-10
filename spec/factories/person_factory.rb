@@ -49,7 +49,7 @@ FactoryGirl.define do
 		
 		trait :agma do
 			after_create do |p| 
-				p.profile.role = 'AGMA Dancer'
+				p.profile.agma_artist = true
 				p.profile.save
 			end
 		end

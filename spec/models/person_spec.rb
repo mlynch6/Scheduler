@@ -60,6 +60,7 @@ describe Person do
   	
   	it { should respond_to(:name) }
   	it { should respond_to(:full_name) }
+		it { should respond_to(:age) }
 		it { should respond_to(:activate) }
 		it { should respond_to(:inactivate) }
   	
@@ -399,6 +400,18 @@ describe Person do
 		  	person.reload.full_name.should == 'Michael James Pink Jr'
 		  end
 	  end
+		
+		describe "age" do
+			it "with birth_date" do
+				person.birth_date = 9.years.ago.to_date
+		  	person.age.should == 9
+			end
+			
+			it "without birth_date" do
+				person.birth_date = nil
+		  	person.age.should == nil
+			end
+	  end
 	end
 	
 	context "(Methods)" do		
@@ -452,7 +465,7 @@ describe Person do
 		end
 		
 		describe "agma_members" do
-			it "returns records with type='Employee' & role = 'AGMA Dancer'" do
+			it "returns records with type='Employee' & agma_artist = true" do
 				dancer = FactoryGirl.create(:person, :agma, account: account)
 
 				people = Person.agma_members

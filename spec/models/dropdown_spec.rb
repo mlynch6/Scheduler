@@ -32,6 +32,8 @@ describe Dropdown do
 		it { should respond_to(:position) }
 		it { should respond_to(:active) }
 		it { should respond_to(:status) }
+		
+		it { should respond_to(:permissions) }
     
   	it "should not allow access to dropdown_type" do
       expect do
@@ -137,7 +139,26 @@ describe Dropdown do
   end
   
   context "(Associations)" do
-  	pending
+		describe "permissions (for UserRole)" do
+			let!(:dropdown) { FactoryGirl.create(:dropdown, :user_role) }
+			let!(:account) { FactoryGirl.create(:account) }
+			let!(:permission1) { FactoryGirl.create(:permission, account: account, role: dropdown) }
+			let!(:permission2) { FactoryGirl.create(:permission, account: account, role: dropdown) }
+	
+			before { Account.current_id = permission1.account.id }
+			
+			it "has multiple permissions" do
+				dropdown.permissions.count.should == 2
+			end
+			
+			it "deletes associated permissions" do
+				permissions = dropdown.permissions
+				dropdown.destroy
+				permissions.each do |permission|
+					Permission.find_by_id(permission.id).should be_nil
+				end
+			end
+		end
   end
   
   context "correct value is returned for" do		

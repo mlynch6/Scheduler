@@ -7,11 +7,11 @@
 #  person_id              :integer          not null
 #  username               :string(20)       not null
 #  password_digest        :string(255)      not null
-#  role                   :string(20)       not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  password_reset_token   :string(50)
 #  password_reset_sent_at :datetime
+#  superadmin             :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'
@@ -36,12 +36,13 @@ describe User do
 		it { should respond_to(:password_digest) }
   	it { should respond_to(:password) }
   	it { should respond_to(:password_confirmation) }
-  	it { should respond_to(:role) }
 		it { should respond_to(:password_reset_token) }
 		it { should respond_to(:password_reset_sent_at) }
+		it { should respond_to(:superadmin) }
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:person) }
+		it { should respond_to(:permissions) }
   	
   	it { should respond_to(:authenticate) }
 		it { should respond_to(:send_password_reset_email) }
@@ -65,9 +66,9 @@ describe User do
 			it { user.reload.account_id.should == account.id }
 		end
     
-    it "should not allow access to role" do
+    it "should not allow access to superadmin" do
       expect do
-        User.new(role: 'Role')
+        User.new(superadmin: true)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
   end
@@ -86,59 +87,58 @@ describe User do
 			user.reload.username.should == 'testuser'
 		end
   	
-  	describe "when created with role of Employee" do
-  		it { user.reload.role.should == 'Employee' }
+  	describe "when created as non-superadmin" do
+  		it { user.reload.superadmin.should be_false }
 		end
   end
   
   context "(Invalid)" do  	
-  	describe "when username is blank" do
-  		before {@user.username = " " }
-  		it { should_not be_valid }
-  	end
+  	describe "when username" do
+			it "is blank" do
+	  		@user.username = " "
+	  		should_not be_valid
+	  	end
   	
-  	describe "when username is too long" do
-  		before { @user.username = "a"*21 }
-  		it { should_not be_valid }
-  	end
+	  	it "is too long" do
+				@user.username = "a"*21
+				should_not be_valid
+	  	end
   	
-  	describe "when username is too short" do
-  		before { @user.username = "a"*5 }
-  		it { should_not be_valid }
-  	end
+	  	it "too short" do
+				@user.username = "a"*5
+				should_not be_valid
+	  	end
   	
-  	describe "when username is not unique" do
-  		let(:user2) { FactoryGirl.create(:user, :username => 'myUsername') }
+	  	describe "is not unique" do
+	  		let(:user2) { FactoryGirl.create(:user, :username => 'myUsername') }
 										
-  		describe "with exact username match" do
-	  		before { @user.username = user2.username }
-	  		it { should_not be_valid }
-	  	end
+	  		it "with exact username match" do
+					@user.username = user2.username
+					should_not be_valid
+		  	end
 	  	
-	  	describe "with mixed case username match" do
-	  		before { @user.username = user2.username.upcase }
-	  		it { should_not be_valid }
+		  	it "with mixed case username match" do
+					@user.username = user2.username.upcase
+					should_not be_valid
+		  	end
 	  	end
-  	end
+		end
   	
-  	describe "when password is blank" do
-  		before { @user.password = @user.password_confirmation = "" }
-  		it { should_not be_valid }
-  	end
+  	describe "when password " do
+			it "is blank" do
+				@user.password = @user.password_confirmation = ""
+				should_not be_valid
+	  	end
   	
-  	describe "when password and confirmation are not the same" do
-  		before { @user.password_confirmation = "Mismatch" }
-  		it { should_not be_valid }
-  	end
-  	
-  	describe "when role is blank" do
-			before { user.role = "" }
-			it { user.should_not be_valid }
+	  	it "and confirmation are not the same" do
+				@user.password_confirmation = "Mismatch"
+				should_not be_valid
+	  	end
 		end
 		
-		describe "when role is too long" do
-  		before { user.role = "a"*21 }
-  		it { user.should_not be_valid }
+		it "when superadmin is blank" do
+			@user.superadmin = " "
+			should_not be_valid
   	end
   end
   
@@ -150,6 +150,23 @@ describe User do
   	it "person" do
 	  	user.reload.person.should == person
 	  end
+		
+		describe "permissions" do
+			let!(:permission1) { FactoryGirl.create(:permission, account: account, user: user) }
+			let!(:permission2) { FactoryGirl.create(:permission, account: account, user: user) }
+	
+			it "has multiple permissions" do
+				user.permissions.count.should == 2
+			end
+			
+			it "deletes associated permissions" do
+				permissions = user.permissions
+				user.destroy
+				permissions.each do |permission|
+					Permission.find_by_id(permission.id).should be_nil
+				end
+			end
+		end
   end
 	
 	context "correct value is returned for" do
@@ -157,14 +174,10 @@ describe User do
 	  	user.reload.username.should == "TestUser".downcase
 	  end
 	  
-	  it "role" do
-	  	user.reload.role.should == 'Employee'
-	  end
-	  
 	  it "superadmin?" do
 	  	@user.superadmin?.should be_false
 	  	
-	  	@user.role = "Super Administrator"
+	  	@user.superadmin = true
 	  	@user.superadmin?.should be_true
 	  end
 	end

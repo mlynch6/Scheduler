@@ -30,7 +30,7 @@ describe "Account Pages:" do
 	    
 	    should have_field 'First Name'
 	    should have_field 'Last Name'
-	    should have_select 'Role'
+	    should have_field 'Job Title'
 	    should have_field 'Email'
 	    
 	    should have_field 'Username'
@@ -91,7 +91,7 @@ describe "Account Pages:" do
     		
     		fill_in "First Name", with: "Peter"
     		fill_in "Last Name", with: "Martin"
-    		select  "Artistic Director", from: "Role"
+    		fill_in "Job Title", with:  "Artistic Director"
     		fill_in "Email", with: "peter.martin@nycb.org"
     		
     		fill_in "Username", with: username
@@ -143,10 +143,10 @@ describe "Account Pages:" do
 				account.employees.count.should == 1
     	end
     	
-    	it "creates a User" do
+    	it "creates a User as Administrator" do
     		user = User.unscoped.find_by_username(username)
 		  	user.should_not be_nil
-    		user.role.should == "Administrator"
+    		#user.has_role(:administrator).should be_true
     	end
     	
     	it "redirects to Sign In page" do

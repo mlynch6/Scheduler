@@ -16,6 +16,8 @@ class Dropdown < ActiveRecord::Base
 	TYPES = ['PhoneType', 'UserRole']
   attr_accessible :name, :comment, :position, :active
 	
+	has_many :permissions, foreign_key: 'role_id', dependent: :destroy
+	
 	validates :dropdown_type, presence: true, length: { maximum: 30 }, :inclusion => { :in => TYPES }
 	validates :name, presence: true, length: { maximum: 30 }, uniqueness: { scope: :dropdown_type }
 	validates :position, :numericality => {:only_integer => true, :greater_than => 0 }, allow_blank: true

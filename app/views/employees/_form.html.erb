@@ -7,9 +7,7 @@
 <%= f.input :active, as: :radio_buttons,
       collection: [['Active', true], ['Inactive', false]],
       label_html: { for: 'employee_active_true'} %>
-<%= f.input :role, 
-      collection: Employee::ROLES,
-      required: true %>
+<%= f.input :job_title %>
 <%= f.input :gender, as: :radio_buttons,
       collection: Person::GENDERS,
       label_html: { for: 'employee_gender_female'} %>

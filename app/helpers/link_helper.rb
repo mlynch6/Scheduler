@@ -6,7 +6,7 @@ module LinkHelper
 
 	def new_link(name, *args)
 		args << default_title('Add', *args)
-		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus-sign mash-green")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus mash-green")
 		create_link(name, icon, *args)
 	end
 	

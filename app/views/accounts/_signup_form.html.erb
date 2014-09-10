@@ -1,34 +1,45 @@
 <fieldset>
 	<legend>1. Company Information</legend>
-  <%= f.input :name %>
-  <%= f.input :time_zone %>
-  <%= f.input :phone_num, as: :phone_prepend %>
+  <%= f.input :name,
+      required: true %>
+  <%= f.input :time_zone,
+      required: true %>
+  <%= f.input :phone_num, as: :phone_prepend,
+      required: true %>
 </fieldset>
 
 <fieldset>
 	<legend>2. Business Address</legend>
-  <%= f.input :addr %>
+  <%= f.input :addr,
+      required: true %>
   <%= f.input :addr2 %>
-  <%= f.input :city %>
+  <%= f.input :city,
+      required: true %>
   <%= f.input :state, wrapper: :horizontal_medium,
-        collection: Address::STATES %>
-  <%= f.input :zipcode, wrapper: :horizontal_small %>
+      collection: Address::STATES,
+      required: true %>
+  <%= f.input :zipcode, wrapper: :horizontal_small,
+      required: true %>
 </fieldset>
 
 <fieldset>
   <legend>3. Director</legend>
-  <%= f.input :first_name %>
-  <%= f.input :last_name %>
-  <%= f.input :role, 
-        collection: Employee::ROLES %>
-  <%= f.input :email, as: :email_prepend %>
+  <%= f.input :first_name,
+      required: true %>
+  <%= f.input :last_name,
+      required: true %>
+  <%= f.input :job_title %>
+  <%= f.input :email, as: :email_prepend,
+      required: true %>
 </fieldset>
 
 <fieldset>
 	<legend>4. Select a Username</legend>
   <%= f.input :username, wrapper: :horizontal_medium,
-        hint: 'Must be between 6 and 20 characters' %>
-  <%= f.input :password, as: :password_prepend %>
+      hint: 'Must be between 6 and 20 characters',
+      required: true %>
+  <%= f.input :password, as: :password_prepend,
+      required: true %>
   <%= f.input :password_confirmation, as: :password_prepend %>
 </fieldset>
 

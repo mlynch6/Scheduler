@@ -4,7 +4,7 @@ class SignupForm
 	include ActiveModel::Validations
 	
 	attr_accessor :name, :time_zone, :phone_num, :addr, :addr2, :city, :state, :zipcode
-	attr_accessor :first_name, :last_name, :email, :role
+	attr_accessor :first_name, :last_name, :email, :job_title
 	attr_accessor :username, :password, :password_confirmation
 	attr_accessor :current_subscription_plan_id
 	attr_accessor :stripe_card_token, :card_number, :card_month, :card_year, :card_code
@@ -13,7 +13,7 @@ class SignupForm
 	delegate :phone_num, to: :phone
 	delegate :addr, :addr2, :city, :state, :zipcode, to: :address
 	delegate :first_name, :last_name, :email, to: :person
-	delegate :role, to: :employee
+	delegate :job_title, to: :employee
 	delegate :username, :password, :password_confirmation, to: :user
 	
 	validate :validate_account
@@ -41,13 +41,13 @@ class SignupForm
 	end
 	
 	def employee
-		@employee ||= Employee.new(role: 'Artistic Director') { |e| e.account = account}
+		@employee ||= Employee.new(job_title: 'Artistic Director') { |e| e.account = account}
 	end
 	
 	def user
-		@user ||= account.users.build do |e|
-			e.person = person
-			e.role = 'Administrator'
+		@user ||= account.users.build do |user|
+			user.person = person
+			#role = Dropdown.of_type('UserRole').find_by_name('Administrator')
 		end
 	end
 	
@@ -56,7 +56,7 @@ class SignupForm
 		phone.attributes = params.slice(:phone_num)
 		address.attributes = params.slice(:addr, :addr2, :city, :state, :zipcode)
 		person.attributes = params.slice(:first_name, :last_name, :email)
-		employee.attributes = params.slice(:role)
+		employee.attributes = params.slice(:job_title)
 		user.attributes = params.slice(:username, :password, :password_confirmation)
 		
 		if valid?
