@@ -2,12 +2,16 @@
 <% provide(:header_current, 'People') %>
 <% provide(:sidebar_current, 'Employees') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= yield(:title) %></h1>
-  </div>
-  <%= render 'employees/tools_menu' %>
+<div class="page-header">
+  <h1><%= yield(:title) %>
+    <small><%= header_status_text %></small>
+    <div class="pull-right">
+      <%= new_button "Add Employee", new_employee_path if can? :create, Employee %>
+    </div>
+  </h1>
 </div>
+
+<%= render 'employees/search_form' %>
 
 <div class="row">
   <% if @employees.length > 0 %>
@@ -17,6 +21,7 @@
   	  		<th>Name</th>
   	  		<th>Phone</th>
           <th>Email</th>
+          <th>Status</th>
   	  		<th class="mash-col-2-btn">&nbsp;</th>
   	  	</tr>
   	  </thead>
@@ -24,8 +29,8 @@
   	  	<% @employees.each do |employee| %>
   				<tr>
   					<td>
-  						<% if allow? "employees", "show" %>
-  							<%= link_to employee.name, employee_path(employee), :id => "show_#{employee.id}" %>
+  						<% if can? :read, employee %>
+  							<%= link_to employee.name, employee, :id => "show_#{employee.id}" %>
               <% else %>
                 <%= employee.name %>
   						<% end %>
@@ -39,13 +44,11 @@
               </ul>
             </td>
   					<td><%= employee.email %></td>
+            <td><%= employee.status %></td>
   					<td class="mash-col-2-btn">
-  						<% if allow? "employees", "inactivate" %>
-  							<%= inactivate_button nil, inactivate_employee_path(employee), :class => 'btn-xs', :id => "inactivate_#{employee.id}" %>
-  						<% end %>
-  						<% if allow? "employees", "destroy" %>
-  							<%= delete_button nil, employee, :class => 'btn-xs', :id => "delete_#{employee.id}" %>
-  						<% end %>
+  						<%= activate_button nil, activate_employee_path(employee), :class => 'btn-xs', :id => "activate_#{employee.id}" if !employee.active && can?(:activate, employee) %>
+              <%= inactivate_button nil, inactivate_employee_path(employee), :class => 'btn-xs', :id => "inactivate_#{employee.id}" if employee.active && can?(:inactivate, employee) %>
+  						<%= delete_button nil, employee, :class => 'btn-xs', :id => "delete_#{employee.id}" if can? :destroy, employee %>
   					</td>
   				</tr>
   			<% end %>

@@ -43,6 +43,7 @@ describe User do
   	it { should respond_to(:account) }
   	it { should respond_to(:person) }
 		it { should respond_to(:permissions) }
+		it { should respond_to(:roles) }
   	
   	it { should respond_to(:authenticate) }
 		it { should respond_to(:send_password_reset_email) }
@@ -167,6 +168,15 @@ describe User do
 				end
 			end
 		end
+		
+		describe "roles" do
+			let!(:permission1) { FactoryGirl.create(:permission, account: account, user: user) }
+			let!(:permission2) { FactoryGirl.create(:permission, account: account, user: user) }
+	
+			it "has multiple roles" do
+				user.roles.count.should == 2
+			end
+		end
   end
 	
 	context "correct value is returned for" do
@@ -219,6 +229,20 @@ describe User do
 			it "delivers email to the person" do
 				user.send_password_reset_email
 				last_email.to.should include(person.email)
+			end
+		end
+		
+		describe "has_role?" do
+			before { Rails.application.load_seed }
+			let!(:role) { Dropdown.of_type('UserRole').find_by_name('Manage Employees') }
+			let!(:permission) { FactoryGirl.create(:permission, account: account, user: user, role: role) }
+			
+			it "returns true if user has permission" do
+				user.has_role?(:manage_employees).should be_true
+			end
+			
+			it "returns false if user does not have permission" do
+				user.has_role?(:administrator).should be_false
 			end
 		end
 	end

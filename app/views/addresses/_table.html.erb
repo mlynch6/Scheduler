@@ -1,21 +1,23 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Addresses
-      <% if allow? "addresses", "new" %>
-        <span class="pull-right"><%= icon_link nil, 'plus', [:new, parent, :address], class: 'mash-green', title: 'Add Address' %></span>
-      <% end %>
+      <span class="pull-right">
+        <%= new_link nil, [:new, parent, :address], title: 'Add Address' if can? :create, parent.addresses.build %>
+      </span>
     </h3>
   </div>
-<% if addresses.length > 0 %>
+<% if addresses.reload.length > 0 %>
   <table class="table table-striped">
   	<% addresses.each do |addr| %>
   		<tr><td>
   			<strong><%= addr.addr_type %> Address</strong>
-  			&nbsp;<%= edit_link(nil, [:edit, parent, addr], :id => "edit_address_#{addr.id}") if allow? "addresses", "edit" %>
-  			&nbsp;<%= delete_link(nil, [parent, addr], :id => "delete_address_#{addr.id}") if allow? "addresses", "destroy" %>
+  			&nbsp;<%= edit_link nil, [:edit, parent, addr], :id => "edit_address_#{addr.id}" if can? :update, addr %>
+  			&nbsp;<%= delete_link nil, [parent, addr], :id => "delete_address_#{addr.id}" if can? :destroy, addr %>
   			<br />
   			<%= addr.addr %><br />
-  			<%= addr.addr2+tag(:br) if addr.addr2.present? %>
+  			<% if addr.addr2.present? %>
+          <%= addr.addr2 %><br />
+        <% end %>
   			<%= "#{addr.city}, #{addr.state} #{addr.zipcode}" %>
   		</td></tr>
   	<% end %>

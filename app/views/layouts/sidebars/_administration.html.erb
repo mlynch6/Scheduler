@@ -1,19 +1,19 @@
 <% klass = ' class="active"'.html_safe %>
 <nav class="navbar navbar-default mash-sub-navbar" role="navigation">
   <ul class="nav navbar-nav">
-		<% if allow? "admin_accounts", "index" %>
+		<% if can? :read, Account && current_user.superadmin? %>
 			<li<%= klass if yield(:sidebar_current) == "Accounts" %>>
         <%= link_to "Accounts", admin_accounts_path %>
       </li>
 		<% end %>
     
-		<% if allow? "subscription_plans", "index" %>
+		<% if can? :read, SubscriptionPlan && current_user.superadmin? %>
 			<li<%= klass if yield(:sidebar_current) == "Subscription Plans" %>>
         <%= link_to "Subscription Plans", admin_subscription_plans_path %>
       </li>
 		<% end %>
     
-		<% if allow? "dropdowns", "index" %>
+		<% if can? :read, Dropdown && current_user.superadmin? %>
 			<li<%= klass if yield(:sidebar_current) == "Dropdowns" %>>
         <%= link_to "Dropdowns", admin_dropdowns_path %>
       </li>

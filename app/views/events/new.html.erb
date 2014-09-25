@@ -3,13 +3,10 @@
 <% provide(:header_current, 'Calendar') %>
 <% provide(:sidebar_current, type.pluralize) %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= type.pluralize %>
-      <small>Add</small>
-    </h1>
-  </div>
-  <%= render 'events/tools_menu' %>
+<div class="page-header">
+  <h1><%= type.pluralize %>
+    <small>Add</small>
+  </h1>
 </div>
 
 <div class="row mash-show">
@@ -22,7 +19,7 @@
 	
       <%= form_actions do %>
         <%= f.button :submit %>
-        <%= link_to 'Cancel', events_path, class: 'btn btn-link' %>
+        <%= link_to 'Cancel', events_path, class: 'btn btn-link' if can? :read, @event %>
       <% end %>
     <% end %>
   </div>

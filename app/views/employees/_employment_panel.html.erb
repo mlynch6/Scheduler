@@ -5,18 +5,24 @@
 
   <div class="panel-body dtl-form">
   	<div class="row">
-  		<div class="dtl-label col-md-5"><%= Employee.human_attribute_name(:employee_num) %></div>
-  		<div class="dtl-text col-md-7"><%= @employee.employee_num %></div>
+  		<div class="dtl-label col-sm-5 col-md-5"><%= Employee.human_attribute_name(:employee_num) %></div>
+  		<div class="dtl-text col-sm-7 col-md-7"><%= @employee.employee_num %></div>
   	</div>
     
   	<div class="row">
-  		<div class="dtl-label col-md-5">Start Date</div>
-  		<div class="dtl-text col-md-7"><%= @employee.employment_start_date %></div>
+  		<div class="dtl-label col-sm-5 col-md-5">Start Date</div>
+  		<div class="dtl-text col-sm-7 col-md-7"><%= @employee.employment_start_date %></div>
   	</div>
   
   	<div class="row">
-  		<div class="dtl-label col-md-5">End Date</div>
-  		<div class="dtl-text col-md-7"><%= @employee.employment_end_date %></div>
+  		<div class="dtl-label col-sm-5 col-md-5">End Date</div>
+  		<div class="dtl-text col-sm-7 col-md-7"><%= @employee.employment_end_date %></div>
   	</div>
+    
+    <% if @employee.agma_artist? %>
+  	<div class="row">
+  		<div class="dtl-text col-sm-offset-5 col-md-offset-5 col-sm-7 col-md-7">AGMA Artist</div>
+  	</div>
+    <% end %>
   </div><!-- panel-body -->
 </div>

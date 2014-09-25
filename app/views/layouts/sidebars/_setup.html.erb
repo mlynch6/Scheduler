@@ -1,25 +1,25 @@
 <% klass = ' class="active"'.html_safe %>
 <nav class="navbar navbar-default mash-sub-navbar" role="navigation">
   <ul class="nav navbar-nav">
-		<% if allow? "locations", "index" %>
+		<% if can? :read, Location %>
 			<li<%= klass if yield(:sidebar_current) == "Locations" %>>
 				<%= link_to "Locations", locations_path(status: "active") %>
 			</li>
 		<% end %>
     
-		<% if allow? "agma_contracts", "show" %>
+		<% if can? :read, AgmaContract %>
 			<li<%= klass if yield(:sidebar_current) == "Contract" %>>
 				<%= link_to "Contract Settings", agma_contract_path(AgmaContract.first) %>
 			</li>
 		<% end %>
 				
-		<% if allow? "seasons", "index" %>
+		<% if can? :read, Season %>
 			<li<%= klass if yield(:sidebar_current) == "Seasons" %>>
 				<%= link_to "Seasons", seasons_path %>
 			</li>
 		<% end %>
 		
-		<% if allow? "pieces", "index" %>
+		<% if can? :read, Piece %>
 			<li<%= klass if yield(:sidebar_current) == "Pieces" %>>
 				<%= link_to "Pieces", pieces_path %>
 			</li>

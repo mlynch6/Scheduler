@@ -20,7 +20,7 @@
 
     <%= form_actions do %>
       <%= f.button :submit %>
-      <%= link_to 'Cancel', admin_accounts_path, class: 'btn btn-link' %>
+      <%= link_to 'Cancel', admin_accounts_path, class: 'btn btn-link' if can? :read, Account && current_user.superadmin? %>
     <% end %>
   <% end %>
 </div>

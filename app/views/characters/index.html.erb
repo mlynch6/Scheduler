@@ -2,14 +2,13 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Pieces') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>
-      <%= @piece.name %>
-      <small>Characters</small>
-    </h1>
-  </div>
-  <%= render 'pieces/tools_menu' %>
+<div class="page-header">
+  <h1><%= @piece.name %>
+    <small>Characters</small>
+    <div class="pull-right">
+      <%= new_button "Add Character", new_piece_character_path(@piece) if can? :create, @piece.characters.build %>
+    </div>
+  </h1>
 </div>
 
 <div class="row mash-show">
@@ -30,12 +29,10 @@
 			  	<% @characters.each do |character| %>
 						<%= content_tag_for :tr, character do %>
 							<td class="mash-col-1-btn">
-								<% if allow? "characters", "sort" %>
-									<%= content_tag :i, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' %>
-								<% end %>
+								<%= content_tag :i, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' if can? :sort, character %>
               </td>
               <td>
-								<% if allow? "characters", "edit" %>
+								<% if can? :update, character %>
 									<%= link_to character.name, edit_character_path(character), :id => "edit_#{character.id}" %>
                 <% else %>
                   <%= character.name %>
@@ -48,9 +45,7 @@
                 <%= content_tag :span, nil, class: 'glyphicon glyphicon-bullhorn', title: 'Speaking Role' if character.speaking? %>
               </td>
 							<td class="mash-col-1-btn">
-								<% if allow? "characters", "destroy" %>
-									<%= delete_button nil, character, :class => 'btn-xs', :id => "delete_#{character.id}" %>
-								<% end %>
+								<%= delete_button nil, character, :class => 'btn-xs', :id => "delete_#{character.id}" if can? :destroy, character %>
 							</td>
 						<% end %>
 					<% end %>

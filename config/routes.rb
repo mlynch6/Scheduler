@@ -1,6 +1,4 @@
 Scheduler::Application.routes.draw do
-  
-
   root :to => 'static_pages#home'
 	match 'login' => 'sessions#new'
 	match 'logout' =>'sessions#destroy'
@@ -17,11 +15,9 @@ Scheduler::Application.routes.draw do
 	end
 	resources :rehearsal_breaks, 	:only => [:destroy]
   resources :sessions
-  resources :users, 						:only => [:index, :new, :create, :destroy]
 	resources :passwords,					:only => [:new, :create]
   
   resources :employees do
-  	get 'inactive', on: :collection
   	member do
   		get 'activate'
   		get 'inactivate'
@@ -30,7 +26,10 @@ Scheduler::Application.routes.draw do
 	resources :people, 						:only => [] do
 		resources :addresses, 			:except => [:index, :show]
 		resources :phones, 					:except => [:index, :show]
+		resources :users, 					:only => [:new, :create]
 	end
+	resources :users, 						:only => [:index, :edit, :update, :destroy]
+	match 'users/:id/permissions', 	to: 'users#edit', :via => :get, :as => :edit_permissions
   
   resources :locations, 				:except => [:show] do
   	member do

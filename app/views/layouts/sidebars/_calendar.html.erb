@@ -1,31 +1,31 @@
 <% klass = ' class="active"'.html_safe %>
 <nav class="navbar navbar-default mash-sub-navbar" role="navigation">
   <ul class="nav navbar-nav">
-		<% if allow? "events", "index" %>
+		<% if can? :read, Event %>
 			<li<%= klass if yield(:sidebar_current) == "Calendar" %>>
 				<%= link_to "Today", events_path %>
 			</li>
 		<% end %>
     
-    <% if allow? "company_classes", "new" %>
+    <% if can? :create, CompanyClass %>
 		  <li<%= klass if yield(:sidebar_current) == "Company Classes" %>>
         <%= link_to "Company Classes", new_company_class_path %>
       </li>
 		<% end %>
     
-		<% if allow? "rehearsals", "new" %>
+		<% if can? :create, Rehearsal %>
 			<li<%= klass if yield(:sidebar_current) == "Rehearsals" %>>
         <%= link_to "Rehearsals", new_rehearsal_path %>
       </li>
 		<% end %>
 		
-		<% if allow? "costume_fittings", "new" %>
+		<% if can? :create, CostumeFitting %>
 			<li<%= klass if yield(:sidebar_current) == "Costume Fittings" %>>
         <%= link_to "Costume Fittings", new_costume_fitting_path %>
       </li>
 		<% end %>
 		
-		<% if allow? "events", "new" %>
+		<% if can? :create, Event %>
 			<li<%= klass if yield(:sidebar_current) == "Events" %>>
         <%= link_to "Events", new_event_path %>
       </li>

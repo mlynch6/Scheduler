@@ -1,13 +1,13 @@
 <% klass = ' class="active"'.html_safe %>
 <nav class="navbar navbar-default mash-sub-navbar" role="navigation">
   <ul class="nav navbar-nav">
-    <% if allow? "dashboards", "index" %>
+    <% if can? :read, :dashboard %>
       <li<%= klass if yield(:sidebar_current) == "Dashboard" %>>
         <%= icon_link 'Dashboard', 'dashboard', dashboard_path %>
       </li>
     <% end %>
     
-		<% if allow? "accounts", "show" %>
+		<% if can? :show, current_user.account %>
 			<li<%= klass if yield(:sidebar_current) == "Account" %>>
 				<%= link_to "My Account", account_path(current_user.account_id) %>
 			</li>

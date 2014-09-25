@@ -2,13 +2,10 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Locations') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Locations
-      <small>Add</small>
-    </h1>
-  </div>
-  <%= render 'locations/tools_menu' %>
+<div class="page-header">
+  <h1>Locations
+    <small>Add</small>
+  </h1>
 </div>
 
 <div class="row">
@@ -18,7 +15,7 @@
 
     <%= form_actions do %>
       <%= f.button :submit %>
-      <%= link_to 'Cancel', locations_path, class: 'btn btn-link' %>
+      <%= link_to 'Cancel', locations_path, class: 'btn btn-link' if can? :read, Location %>
     <% end %>
   <% end %>
 </div>

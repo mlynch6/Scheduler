@@ -1,19 +1,22 @@
-<% provide(:title, "#{@sp.season.name} | #{@sp.piece.name} | Casting".html_safe) %>
+<% provide(:title, "#{@season_piece.season.name} | #{@season_piece.piece.name} | Casting".html_safe) %>
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Seasons') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Casting for <%= @sp.piece.name %>
-      <small><%= @sp.season.name %></small>
-    </h1>
-  </div>
-  <%= render 'casts/tools_menu' %>
+<div class="page-header">
+  <h1>Casting for <%= @season_piece.piece.name %>
+    <small><%= @season_piece.season.name %></small>
+    <div class="pull-right">
+      <%= new_button "Add Cast", new_season_piece_cast_path(@season_piece) if can? :create, @season_piece.casts.build %>
+      <%= render 'casts/tools_menu'%>
+    </div>
+  </h1>
 </div>
 
 <div class="row">
-  <% if @sp.published? %>
-    <small class="pull-right"><%= content_tag(:span, nil, class: 'glyphicon glyphicon-lock') %> <%= @sp.published_at.to_s(:full) %> </small>
+  <% if @season_piece.published? %>
+    <small class="pull-right">
+      <%= content_tag(:span, nil, class: 'glyphicon glyphicon-lock') %> <%= @season_piece.published_at.to_s(:full) %>
+    </small>
   <% end %>
   
 <% if @casts.length > 0 %>
@@ -24,13 +27,13 @@
         <th>&nbsp;</th>
         <% @casts.each do |cast| %>
         <th>
-          <% if allow? "casts", "show" %>
-            <%= link_to cast.name, season_piece_cast_path(@sp, cast), :id => "view_#{cast.id}" %>
+          <% if can? :read, cast %>
+            <%= link_to cast.name, season_piece_cast_path(@season_piece, cast), :id => "view_#{cast.id}" %>
           <% else %>
             <%= cast.name %>
           <% end %>
           &nbsp;
-					<%= delete_link nil, cast, :id => "delete_#{cast.id}" if allow? "casts", "destroy" %>
+					<%= delete_link nil, cast, :id => "delete_#{cast.id}" if can? :destroy, cast %>
         </th>
         <% end %>
       </tr>
@@ -46,7 +49,7 @@
           <%= content_tag :span, nil, class: 'glyphicon glyphicon-bullhorn', title: 'Speaking Role' if char.speaking? %>
         </td>
         <td>
-          <% if allow? "characters", "edit" %>
+          <% if can? :update, char %>
 						<%= link_to char.name, edit_character_path(char), :id => "edit_#{char.id}" %>
           <% else %>
             <%= character_name %>
@@ -54,8 +57,8 @@
         </td>
         <% casting_by_cast = casting_per_char.group_by(&:cast_name) %>
         <% @casts.each do |cast| %>
-        <% c = casting_by_cast[cast.name].first if casting_by_cast.has_key?(cast.name) %>
-        <td><%= if c && c.person then c.person.full_name else '' end  %></td>
+          <% c = casting_by_cast[cast.name].first if casting_by_cast.has_key?(cast.name) %>
+          <td><%= if c && c.person then c.person.full_name else '' end  %></td>
         <% end %>
       </tr>
       <% end %>

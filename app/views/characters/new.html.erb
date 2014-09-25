@@ -2,13 +2,10 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Pieces') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= @piece.name %>
-      <small>Add Character</small>
-    </h1>
-  </div>
-  <%= render 'pieces/tools_menu' %>
+<div class="page-header">
+  <h1><%= @piece.name %>
+    <small>Add Character</small>
+  </h1>
 </div>
 
 <div class="row mash-show">
@@ -21,7 +18,7 @@
 	     
       <%= form_actions do %>
         <%= f.button :submit %>
-        <%= link_to 'Cancel', piece_characters_path(@piece), class: 'btn btn-link' %>
+        <%= link_to 'Cancel', piece_characters_path(@piece), class: 'btn btn-link' if can? :read, @piece => Character %>
       <% end %>
     <% end %>
   </div>

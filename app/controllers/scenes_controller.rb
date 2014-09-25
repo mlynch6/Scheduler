@@ -1,9 +1,9 @@
 class ScenesController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	load_and_authorize_resource :piece, only: [:index, :new, :create]
+	load_and_authorize_resource :scene, :through => :piece, :shallow => true
 	
 	def index
-		@piece = Piece.find(params[:piece_id])
-		@scenes = @piece.scenes.includes(:characters)
+		@scenes = @scenes.includes(:characters)
 		respond_to do |format|
 			format.html
 			format.pdf do
@@ -14,35 +14,29 @@ class ScenesController < ApplicationController
 	end
 	
 	def new
-		@piece = Piece.find(params[:piece_id])
-		@scene = @piece.scenes.build
-		form_setup(@piece)
+		form_setup
 	end
 	
 	def create
-		@piece = Piece.find(params[:piece_id])
-		@scene = @piece.scenes.build(params[:scene])
-		
 		if @scene.save
 			redirect_to piece_scenes_path(@piece), :notice => "Successfully created the scene."
 		else
-			form_setup(@piece)
+			form_setup
 			render 'new'
 		end
 	end
 	
 	def edit
 		@piece = @scene.piece
-		form_setup(@piece)
+		form_setup
 	end
 	
 	def update
 		@piece = @scene.piece
-		
 		if @scene.update_attributes(params[:scene])
 			redirect_to piece_scenes_path(@piece), :notice => "Successfully updated the scene."
 		else
-			form_setup(@piece)
+			form_setup
 			render 'edit'
 		end
 	end
@@ -60,12 +54,8 @@ class ScenesController < ApplicationController
 	end
 	
 private
-	def get_resource
-		@scene = Scene.find(params[:id])
-	end
-
 	#setup for form - dropdowns, etc
-	def form_setup(piece)
-		@characters = piece.characters.map { |character| [character.name, character.id] }
+	def form_setup
+		@characters = @piece.characters.map { |character| [character.name, character.id] }
 	end
 end

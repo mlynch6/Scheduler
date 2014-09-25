@@ -2,10 +2,8 @@
 <% provide(:header_current, 'Administration') %>
 <% provide(:sidebar_current, 'Accounts') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= yield(:title) %></h1>
-  </div>
+<div class="page-header">
+  <h1><%= yield(:title) %></h1>
 </div>
 
 <div class="row">
@@ -26,7 +24,7 @@
   				<tr>
   					<td class="mash-col-id"><%= account.id %></td>
   					<td>
-  						<% if allow? "admin_accounts", "edit" %>
+  						<% if can? :update, :admin_account %>
   							<%= link_to account.name, edit_admin_account_path(account), :id => "edit_#{account.id}" %>
               <% else %>
                 <%= account.name %>
@@ -41,9 +39,7 @@
   					<td><%= account.stripe_customer_token %></td>
   					<td><%= account.current_subscription_plan.name %></td>
   					<td class="mash-col-1-btn">
-  						<% if allow? "admin_accounts", "destroy" %>
-  							<%= delete_button nil, admin_account_path(account), :class => 'btn-xs', :id => "delete_#{account.id}" %>
-  						<% end %>
+  						<%= delete_button nil, admin_account_path(account), :class => 'btn-xs', :id => "delete_#{account.id}" if can? :destroy, :admin_account %>
   					</td>
   				</tr>
   			<% end %>

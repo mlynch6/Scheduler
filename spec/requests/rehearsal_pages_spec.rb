@@ -144,13 +144,6 @@ describe "Rehearsal Pages:" do
 				should have_selector 'div.alert-warning', text: p1.full_name
 			end
 		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Company Class'
-			should have_link 'Add Rehearsal'
-			should have_link 'Add Costume Fitting'
-			should have_link 'Add Event'
-		end
 	end
 	
   context "#new", js: true do
@@ -366,13 +359,6 @@ describe "Rehearsal Pages:" do
 				should have_selector 'div.alert-warning', text: "hrs/week"
 				should have_selector 'div.alert-warning', text: p1.full_name
 			end
-		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Company Class'
-			should have_link 'Add Rehearsal'
-			should have_link 'Add Costume Fitting'
-			should have_link 'Add Event'
 		end
 	end
 	

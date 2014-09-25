@@ -1,7 +1,0 @@
-<div class="col-md-1">
-  <%= gear_dropdown do %>
-  	<% if allow? "subscription_plans", "new" %>
-  		<li><%= new_link "Add Subscription Plan", new_admin_subscription_plan_path %></li>
-  	<% end %>
-  <% end %>
-</div>

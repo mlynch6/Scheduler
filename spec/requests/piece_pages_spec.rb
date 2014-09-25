@@ -48,12 +48,7 @@ describe "Piece Pages:" do
 		end
 	
 		it "has links for Super Admin" do
-			piece = FactoryGirl.create(:piece, account: current_account)
-			visit pieces_path
-		
 			should have_link 'Add Piece'
-			should have_link piece.name
-			should have_link 'Delete'
 		end
 	end
 	
@@ -119,10 +114,6 @@ describe "Piece Pages:" do
 				should have_content new_composer
 				should have_content '82 min'
 			end
-		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Piece'
 		end
 	end
 
@@ -190,11 +181,7 @@ describe "Piece Pages:" do
 	  	should have_link 'Scenes'
 	  	should have_link 'Characters'
 			
-			should have_link 'Add Piece'
-			should have_link 'Delete Piece'
-			should have_link 'Add Character'
-			should have_link 'Add Scene'
-			should have_link 'Download Scenes PDF'
+			should have_link 'Delete'
 		end
 	end
 
@@ -248,12 +235,6 @@ describe "Piece Pages:" do
 	  	should have_link 'Overview'
 	  	should have_link 'Scenes'
 	  	should have_link 'Characters'
-			
-			should have_link 'Add Piece'
-			should have_link 'Delete Piece'
-			should have_link 'Add Character'
-			should have_link 'Add Scene'
-			should have_link 'Download Scenes PDF'
 		end
 	end
 end

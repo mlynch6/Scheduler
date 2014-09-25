@@ -1,14 +1,14 @@
-<% provide(:title, "#{@sp.season.name} | #{@sp.piece.name} | #{@cast.name}".html_safe) %>
+<% provide(:title, "#{@season_piece.season.name} | #{@season_piece.piece.name} | #{@cast.name}".html_safe) %>
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Seasons') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= "#{@cast.name} for #{@sp.piece.name}" %>
-      <small><%= @sp.season.name %></small>
-    </h1>
-  </div>
-  <%= render 'casts/tools_menu' %>
+<div class="page-header">
+  <h1><%= "#{@cast.name} for #{@season_piece.piece.name}" %>
+    <small><%= @season_piece.season.name %></small>
+    <div class="pull-right">
+      <%= delete_button 'Delete', @cast, title: 'Delete Cast', class: 'btn-btn-danger' if can? :destroy, @cast %>
+    </div>
+  </h1>
 </div>
 
 <div class="row">
@@ -26,9 +26,7 @@
   				<td><%= casting.character.name %></td>
   				<td>
             <%= casting.person ? casting.person.full_name : 'TBD'  %>
-  					<% if allow? "castings", "edit" %>
-  						<%= edit_link nil, edit_casting_path(casting), :id => "edit_#{casting.id}" %>
-  					<% end %>
+  					<%= edit_link nil, edit_casting_path(casting), :id => "edit_#{casting.id}" if can? :update, casting %>
           </td>
   			</tr>
   			<% end %>
@@ -38,6 +36,6 @@
   <% else %>
   	<p>This piece currently has no characters to cast.
   	</p>
-  	<p>To begin, click the <em class="text-info">Add Character</em> link.</p>
+  	<p>To begin, goto the Piece and click the <em class="text-info">Add Character</em> link.</p>
   <% end %>
 </div>

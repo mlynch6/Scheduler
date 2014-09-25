@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
 	before_filter :get_resource, :only => [:edit, :update, :destroy, :show]
+	load_and_authorize_resource
 
 	def index
 		params[:year] ||= Time.zone.today.year

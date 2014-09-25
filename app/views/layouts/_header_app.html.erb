@@ -1,28 +1,42 @@
 <% class_active = ' class=active' %>
 <ul class="nav navbar-nav">
-	<li<%= class_active if yield(:header_current) == "Home" %>>
-		<%= icon_link('Home', 'home', dashboard_path) %>
-	</li>
+  <% if can? :read, :dashboard %>
+  	<li<%= class_active if yield(:header_current) == "Home" %>>
+  		<%= icon_link('Home', 'home', dashboard_path) %>
+  	</li>
+  <% end %>
 	
-	<% if allow? "events", "index" %>
+	<% if can? :read, Event %>
 		<li<%= class_active if yield(:header_current) == "Calendar" %>>
 			<%= icon_link 'Calendar', 'calendar', events_path %>
 		</li>
 	<% end %>
 	
-	<% if allow? "employees", "index" %>
+	<% if can? :index, Employee %>
 		<li<%= class_active if yield(:header_current) == "People" %>>
 			<%= icon_link 'People', 'user', employees_path %>
 		</li>
 	<% end %>
 	
-	<% if allow? "locations", "index" %>
+	<% if can? :read, Location %>
 		<li<%= class_active if yield(:header_current) == "Setup" %>>
 			<%= icon_link 'Setup', 'wrench', locations_path(status: 'active') %>
 		</li>
+	<% elsif can? :read, AgmaContract %>
+		<li<%= class_active if yield(:header_current) == "Setup" %>>
+			<%= icon_link 'Setup', 'wrench', agma_contract_path(AgmaContract.first) %>
+		</li>
+	<% elsif can? :read, Season %>
+		<li<%= class_active if yield(:header_current) == "Setup" %>>
+			<%= icon_link 'Setup', 'wrench', seasons_path %>
+		</li>
+	<% elsif can? :read, Piece %>
+		<li<%= class_active if yield(:header_current) == "Setup" %>>
+			<%= icon_link 'Setup', 'wrench', pieces_path %>
+		</li>
 	<% end %>
 	
-	<% if allow? "admin_accounts", "index" %>
+	<% if current_user.superadmin? %>
 		<li<%= class_active if yield(:header_current) == "Administration" %>>
 			<%= icon_link 'Administration', 'cog', admin_accounts_path %>
 		</li>
@@ -31,13 +45,19 @@
 
 <ul class="nav navbar-nav navbar-right">
 	<li class="divider-vertical"></li>
-	<% if allow? "users", "edit" %>
 		<li class="dropdown">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.username %> <b class="caret"></b></a>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.username %>
+      <b class="caret"></b></a>
       <ul class="dropdown-menu">
-        <li><%= link_to 'Change Password', new_password_path %></li>
+        <% if can? :show, current_user.person.profile %>
+          <li><%= link_to 'My Profile', employee_path(current_user.person.profile) %></li>
+        <% end %>
+        <% if can? :create, :password %>
+          <li><%= link_to 'Change Password', new_password_path %></li>
+        <% end %>
       </ul>
     </li>
-	<% end %>
-	<li><%= link_to "Sign Out", logout_path %></li>
+  <% if can? :destroy, :session %>
+	  <li><%= link_to "Sign Out", logout_path %></li>
+  <% end %>
 </ul>

@@ -1,15 +1,3 @@
-<% if @user.new_record? %>
-	<%= f.input :person_id, as: :chosen_select,
-        collection: @employees,
-        include_blank: true,
-        required: true %>
-	<%= f.input :username %>
-<% else %>
-	<%= f.input :employee_id, as: :static_control,
-        text: @user.person.full_name %>
-	<%= f.input :username, as: :static_control, wrapper: :horizontal_medium,
-        text: @user.username %>
-<% end %>
-
-<%= f.input :password, as: :password %>
-<%= f.input :password_confirmation, as: :password %>
+<%= f.input :username %>
+<%= f.input :password, as: :password_prepend %>
+<%= f.input :password_confirmation, as: :password_prepend %>

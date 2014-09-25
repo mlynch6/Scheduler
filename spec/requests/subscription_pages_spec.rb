@@ -101,8 +101,6 @@ describe "Subscription Pages:" do
 			
 	  	should have_link 'Overview'
 			should have_link 'Subscription'
-			
-			should have_link 'Change Payment Method'
 		end
 		
 		it "should change the subscription" do

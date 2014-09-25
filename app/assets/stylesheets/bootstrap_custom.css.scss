@@ -15,7 +15,9 @@ h1, h2, h3 {
 
 .navbar-right { padding-right: 20px; }
 .page-header {
-	margin: 10px 0 10px;
+  @extend .row;
+	margin-top: 10px;
+  margin-bottom: 10px;
 	padding-bottom: 0px;
 }
 .nav-tabs > li > a { border: 1px solid #DDDDDD; }
@@ -64,6 +66,7 @@ input.phone_prepend, input.time_prepend, select.time_zone { @extend .form-contro
 
 /*** FOOTER ***/
 footer {
+  @extend .row;
   margin-top: 30px;
   padding-top: 5px;
   border-top: 1px solid $input-border;
@@ -118,7 +121,8 @@ footer {
 	}
 }
 
-.mash-green { color: $btn-success-bg; }
-.mash-red { color: $btn-danger-bg; }
-.mash-yellow { color: $btn-warning-bg; }
-.mash-blue { color: $btn-primary-bg; }
+.mash-green { color: $brand-success; }
+.mash-red { color: $brand-danger; }
+.mash-yellow { color: $brand-warning; }
+.mash-blue { color: $brand-primary; }
+.mash-grey { color: $gray; }

@@ -31,4 +31,25 @@ class Employee < ActiveRecord::Base
   default_scope lambda { where(:account_id => Account.current_id) }
   scope :active, joins(:person).where(people: { active: true })
 	scope :inactive, joins(:person).where(people: { active: false })
+	
+	def self.search(query)
+		#Default show all
+		employees = Employee.joins(:person)
+		
+		if query.include?(:fname)
+			employees = employees.where('first_name LIKE :q', q: "%#{query[:fname]}%")
+		end
+		
+		if query.include?(:lname)
+			employees = employees.where('last_name LIKE :q', q: "%#{query[:lname]}%")
+		end
+		
+		if query.include?(:status) && query[:status] == "active"
+			employees = employees.active
+		elsif query.include?(:status) && query[:status] == "inactive"
+			employees = employees.inactive
+		end
+		
+		employees
+	end
 end

@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="dtl-label col-md-3"><%= Account.human_attribute_name(:name) %></div>
 		<div class="dtl-text col-md-9">
-    	<% if allow? "accounts", "edit" %>
+    	<% if can? :update, @account %>
     		<%= link_to @account.name, edit_account_path(@account) %>
       <% else %>
         <%= @account.name %>

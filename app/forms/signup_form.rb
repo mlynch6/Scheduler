@@ -45,10 +45,7 @@ class SignupForm
 	end
 	
 	def user
-		@user ||= account.users.build do |user|
-			user.person = person
-			#role = Dropdown.of_type('UserRole').find_by_name('Administrator')
-		end
+		@user ||= account.users.build { |u| u.person = person }
 	end
 	
 	def submit(params)
@@ -61,6 +58,9 @@ class SignupForm
 		
 		if valid?
 			account.save_with_payment
+			role = Dropdown.of_type('UserRole').find_by_name('Administrator')
+			Account.current_id = account.id
+			user.permissions.create(role: role)
 			true
 		else
 			errors.delete(:phones)

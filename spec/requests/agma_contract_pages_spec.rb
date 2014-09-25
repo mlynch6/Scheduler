@@ -55,9 +55,6 @@ describe "Agma Contract Pages:" do
 	  	should have_link 'Rehearsal Week'
 			should have_link 'Company Class'
 	  	should have_link 'Costume Fittings'
-			
-			should have_link 'Edit Contract Settings'
-	  	should have_link 'Add Rehearsal Break'
 		end
 	end
 	

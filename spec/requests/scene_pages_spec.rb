@@ -66,12 +66,9 @@ describe "Scene Pages:" do
 	  	should have_link 'Overview'
 	  	should have_link 'Scenes'
 	  	should have_link 'Characters'
-		
-			should have_link 'Add Piece'
-			should have_link 'Delete Piece'
-			should have_link 'Add Character'
+			
 			should have_link 'Add Scene'
-			should have_link 'Download Scenes PDF'
+			should have_link 'Download PDF'
 		end
 		
 		it "allows download to PDF" do
@@ -85,7 +82,7 @@ describe "Scene Pages:" do
 				}
 			}
 			visit piece_scenes_path(piece)
-			click_link "Download Scenes PDF"
+			click_link "Download PDF"
 
 # HOW TO TEST CONTENTS ??
 #			piece.scenes.each do |scene|
@@ -178,12 +175,6 @@ describe "Scene Pages:" do
 	  	should have_link 'Overview'
 	  	should have_link 'Scenes'
 	  	should have_link 'Characters'
-		
-			should have_link 'Add Piece'
-			should have_link 'Delete Piece'
-			should have_link 'Add Character'
-			should have_link 'Add Scene'
-			should have_link 'Download Scenes PDF'
 		end
 	end
 	
@@ -243,12 +234,7 @@ describe "Scene Pages:" do
 	  	should have_link 'Scenes'
 	  	should have_link 'Characters'
 		
-			should have_link 'Add Piece'
-			should have_link 'Delete Piece'
-			should have_link 'Add Character'
-			should have_link 'Add Scene'
 			should have_link 'Delete Scene'
-			should have_link 'Download Scenes PDF'
 		end
 	end
   

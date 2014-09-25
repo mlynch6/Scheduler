@@ -2,11 +2,8 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Seasons') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= @season.name %></h1>
-  </div>
-  <%= render 'seasons/tools_menu' %>
+<div class="page-header">
+  <h1><%= @season.name %></h1>
 </div>
 
 <div class="row mash-show">

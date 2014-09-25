@@ -6,7 +6,9 @@
 <div class="page-header">
   <h1><%= @dropdown_type.pluralize %>
     <small><%= header_status_text %></small>
-    <%= render 'admin/dropdowns/tools_menu' %>
+    <div class="pull-right">
+      <%= new_button "Add #{@dropdown_type}", new_admin_dropdown_path(type: params[:type]) if can? :create, Dropdown %>
+    </div>
   </h1>
 </div>
 
@@ -27,14 +29,14 @@
     	<% @dropdowns.each do |dropdown| %>
   			<tr id="dropdown_<%= dropdown.id %>">
   				<td class="mash-col-1-btn">
-            <% if allow?("dropdowns", "sort") &&
+            <% if can?(:sort, dropdown) &&
                   params[:status] != "active" && 
                   params[:status] != "inactive" %>
   						<%= content_tag :i, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' %>
             <% end %>
           </td>
   				<td>
-  					<% if allow? "dropdowns", "edit" %>
+  					<% if can? :update, dropdown %>
   						<%= link_to dropdown.name, edit_admin_dropdown_path(dropdown), :id => "edit_#{dropdown.id}" %>
   					<% else %>
               <%= dropdown.name %>
@@ -43,9 +45,7 @@
   				<td><%= dropdown.comment.gsub(/\n/, '<br/>').html_safe if dropdown.comment.present? %></td>
           <td><%= dropdown.status %></td>
   				<td class="mash-col-1-btn">
-  					<% if allow? "dropdowns", "destroy" %>
-  						<%= delete_button nil, admin_dropdown_path(dropdown), :class => 'btn-xs', :id => "delete_#{dropdown.id}" %>
-  					<% end %>
+  					<%= delete_button nil, admin_dropdown_path(dropdown), :class => 'btn-xs', :id => "delete_#{dropdown.id}" if can? :destroy, dropdown %>
   				</td>
         </tr>
   		<% end %>

@@ -2,13 +2,13 @@
 <% provide(:header_current, 'People') %>
 <% provide(:sidebar_current, 'Employees') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Employees
-       <small>Edit</small>
-     </h1>
-  </div>
-  <%= render 'employees/tools_menu' %>
+<div class="page-header">
+  <h1>Employees
+    <small>Edit</small>
+    <div class="pull-right">
+      <%= delete_button 'Delete', @employee, class: 'btn btn-danger', title: 'Delete Employee' if can? :destroy, @employee %>
+    </div>
+  </h1>
 </div>
 
 <div class="row">

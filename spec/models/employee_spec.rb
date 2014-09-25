@@ -202,6 +202,54 @@ describe Employee do
 		end
 	end
 	
+	context "(Methods)" do		
+	  describe "search" do
+	  	before do
+	  		4.times { FactoryGirl.create(:person, account: account) }
+				4.times { FactoryGirl.create(:person, :inactive, account: account) }
+				@rhino = FactoryGirl.create(:person, account: account, first_name: 'Richard', last_name: 'Rhinoceros')
+			end
+			
+	  	it "returns all records by default" do
+	  		query = {}
+				Employee.search(query).should == Employee.all
+		  end
+		  
+		  describe "on status" do
+			  it "=active returns active records" do
+			  	query = { status: "active" }
+					Employee.search(query).should == Employee.active
+			  end
+			  
+			  it "=inactive returns inactive records" do
+			  	query = { status: "inactive" }
+					Employee.search(query).should == Employee.inactive
+			  end
+			  
+			  it "that is invalid returns all records" do
+			  	query = { status: "invalid" }
+					Employee.search(query).should == Employee.all
+			  end
+			end
+			
+		  describe "on text" do
+			  it "returns records with query text in last_name" do
+			  	query = { lname: "Rhino" }
+					records = Employee.search(query)
+					records.count.should == 1
+					records.should include(@rhino.profile)
+			  end
+				
+			  it "returns records with query text in first_name" do
+			  	query = { fname: "Rich" }
+					records = Employee.search(query)
+					records.count.should == 1
+					records.should include(@rhino.profile)
+			  end
+			end
+	  end
+	end
+	
 	describe "(Scopes)" do
 		before do
 			Person.delete_all

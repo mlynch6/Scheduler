@@ -1,18 +1,18 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Phone Numbers
-      <% if allow? "phones", "new" %>
-        <span class="pull-right"><%= icon_link nil, 'plus', [:new, parent, :phone], class: 'mash-green', title: 'Add Phone Number' %></span>
-      <% end %>
+      <span class="pull-right">
+        <%= new_link nil, [:new, parent, :phone], title: 'Add Phone Number' if can? :create, parent => Phone %>
+      </span>
     </h3>
   </div>
-<% if phones.length > 0 %>
+<% if phones.reload.length > 0 %>
   <table class="table table-striped">
   	<% phones.each do |phone| %>
   		<tr><td>
   			<strong><%= phone.phone_type %>: </strong><%= phone.phone_num %>
-        &nbsp;<%= edit_link(nil, [:edit, parent, phone], :id => "edit_phone_#{phone.id}") if allow? "phones", "edit" %>
-  			&nbsp;<%= delete_link(nil, [parent, phone], :id => "delete_phone_#{phone.id}") if allow? "phones", "destroy" %>
+        &nbsp;<%= edit_link nil, [:edit, parent, phone], :id => "edit_phone_#{phone.id}" if can? :update, phone %>
+  			&nbsp;<%= delete_link nil, [parent, phone], :id => "delete_phone_#{phone.id}" if can? :destroy, phone %>
   		</td></tr>
   	<% end %>
   </table>

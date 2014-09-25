@@ -63,7 +63,7 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = edit_link("Text", '#')
-			html.should =~ /<span class="glyphicon glyphicon-pencil">/
+			html.should =~ /<span class="glyphicon glyphicon-pencil mash-grey">/
 			html.should =~ /<\/span>/
 		end
 		
@@ -213,7 +213,7 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = edit_button("Text", '#')
-			html.should =~ /<span class="glyphicon glyphicon-pencil">/
+			html.should =~ /<span class="glyphicon glyphicon-pencil mash-grey">/
 			html.should =~ /<\/span>/
 		end
 		

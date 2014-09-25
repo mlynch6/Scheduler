@@ -1,14 +1,12 @@
 class AddressesController < ApplicationController
-	before_filter :load_addressable
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	before_filter :load_and_authorize_parent
+	load_and_authorize_resource :address, :through => :addressable
 	
   def new
   	form_setup
-  	@address = @addressable.addresses.new
   end
   
   def create
-  	@address = @addressable.addresses.new(params[:address])
   	if @address.save
 			flash[:notice] = "Successfully created the address."
 			if @addressable.class.name == 'Person'
@@ -51,16 +49,13 @@ class AddressesController < ApplicationController
 	end
 
 private
-	def get_resource
-		@address = Address.find(params[:id])
-	end
-	
 	#setup for form - dropdowns, etc
 	def form_setup
 	end
 
-	def load_addressable
+	def load_and_authorize_parent
 		resource, id = request.path.split('/')[1, 2]
 		@addressable = resource.singularize.classify.constantize.find(id)
+		authorize! :read, @addressable
 	end
 end

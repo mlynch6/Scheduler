@@ -2,11 +2,12 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Pieces') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= yield(:title) %></h1>
-  </div>
-  <%= render 'pieces/tools_menu' %>
+<div class="page-header">
+  <h1><%= yield(:title) %>
+    <div class="pull-right">
+      <%= new_button "Add Piece", new_piece_path if can? :create, Piece %>
+    </div>
+  </h1>
 </div>
 
 <div class="row">
@@ -24,7 +25,7 @@
   	  	<% @pieces.each do |piece| %>
   				<tr>
   					<td>
-  						<% if allow? "pieces", "show" %>
+  						<% if can? :read, piece %>
   							<%= link_to piece.name, piece_path(piece), :id => "view_#{piece.id}" %>
               <% else %>
                 <%= piece.name %>
@@ -37,9 +38,7 @@
   					</td>
   					<td><%= "#{piece.avg_length} min" if piece.avg_length.present? %></td>
   					<td class="mash-col-1-btn">
-  						<% if allow? "pieces", "destroy" %>
-  							<%= delete_button nil, piece, :class => 'btn-xs', :id => "delete_#{piece.id}" %>
-  						<% end %>
+  						<%= delete_button nil, piece, :class => 'btn-xs', :id => "delete_#{piece.id}" if can? :destroy, piece %>
   					</td>
   				</tr>
   			<% end %>

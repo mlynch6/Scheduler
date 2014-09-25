@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+	authorize_resource :class => false
+	
 	def new
 	end
 	

@@ -43,12 +43,7 @@ describe "Season Pages:" do
 		end
 		
 		it "has links for Super Admin" do
-			@season = FactoryGirl.create(:season, account: current_account)
-			visit seasons_path
-	
 			should have_link 'Add Season'
-			should have_link @season.name
-			should have_link 'Delete'
 		end
 	end
 
@@ -122,10 +117,6 @@ describe "Season Pages:" do
 				should have_content '12/31/2011'
 			end
 		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Season'
-		end
 	end
 
 	context "#edit" do
@@ -177,7 +168,6 @@ describe "Season Pages:" do
 		end
 		
 		it "has links for Super Admin" do
-			should have_link 'Add Season'
 			should have_link 'Delete Season'
 		end
 	end
@@ -251,9 +241,6 @@ describe "Season Pages:" do
 			
 			should have_link 'Overview'
 			should have_link 'Pieces'
-			
-			should have_link 'Add Season'
-			should have_link 'Delete Season'
 		end
 	end
 end

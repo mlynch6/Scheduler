@@ -1,0 +1,36 @@
+<% user = @employee.person.user %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">User Information
+      <span class="pull-right">
+        <% unless user %>
+          <%= new_link nil, [:new, @employee.person, :user], title: 'Add User' if can? :create, User %>
+        <% end %>
+      </span>
+    </h3>
+  </div><!-- panel-heading -->
+
+  <div class="panel-body dtl-form">
+    <% if @employee.person.user %>
+    	<div class="row">
+    		<div class="dtl-label col-sm-5 col-md-5"><%= User.human_attribute_name(:username) %></div>
+    		<div class="dtl-text col-sm-7 col-md-7"><%= user.username %></div>
+    	</div>
+    
+    	<div class="row">
+    		<div class="dtl-label col-sm-5 col-md-5">Permissions</div>
+        <div class="dtl-text col-sm-7 col-md-7">
+          <ul class="list-unstyled">
+        		<li>
+              <%= user.superadmin? ? 'Super Administrator' : 'Basic User' %>
+              <%= edit_link nil, edit_permissions_path(user), title: 'Edit Permissions', class: 'pull-right' if can? :update, user %>
+            </li>
+            <% user.roles.each do |role| %>
+              <li><%= role.name %></li>
+            <% end %>
+          </ul>
+        </div>
+    	</div>
+    <% end %>
+  </div><!-- panel-body -->
+</div>

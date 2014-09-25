@@ -89,13 +89,6 @@ describe "CompanyClass Pages:" do
 				should_not have_selector 'div.alert-warning', text: p3.full_name
 			end
 		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Company Class'
-			should have_link 'Add Rehearsal'
-			should have_link 'Add Costume Fitting'
-			should have_link 'Add Event'
-		end
 	end
 	
 	context "#new", js: true do
@@ -286,13 +279,6 @@ describe "CompanyClass Pages:" do
 				should_not have_selector 'div.alert-warning', text: p2.full_name
 				should_not have_selector 'div.alert-warning', text: p3.full_name
 			end
-		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Company Class'
-			should have_link 'Add Rehearsal'
-			should have_link 'Add Costume Fitting'
-			should have_link 'Add Event'
 		end
 	end
 end

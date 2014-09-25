@@ -2,13 +2,13 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Seasons') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Seasons
-      <small>Edit</small>
-    </h1>
-  </div>
-  <%= render 'seasons/tools_menu' %>
+<div class="page-header">
+  <h1>Seasons
+    <small>Edit</small>
+    <div class="pull-right">
+      <%= delete_button 'Delete', @season, title: 'Delete Season', class: 'btn btn-danger' if can? :destroy, @season %>
+    </div>
+  </h1>
 </div>
 
 <div class="row">
@@ -18,7 +18,7 @@
 	  
     <%= form_actions do %>
       <%= f.button :submit %>
-      <%= link_to 'Cancel', season_path(@season), class: 'btn btn-link' %>
+      <%= link_to 'Cancel', season_path(@season), class: 'btn btn-link' if can? :read, @season %>
     <% end %>
   <% end %>
 </div>

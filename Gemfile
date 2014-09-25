@@ -7,9 +7,9 @@ gem 'jquery-rails'
 gem 'less-rails'
 gem 'therubyracer'
 gem 'prawn'
-gem 'faker', '1.2.0'
 gem 'fullcalendar-rails', '~>1.6.4'
 gem 'simple_form', '~> 2.1.1'
+gem 'cancan'
 
 # Subscription payment processing
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
@@ -46,6 +46,7 @@ group :test do
   gem 'guard-spork', '0.3.2'
   gem 'spork', '0.9.0'
   gem 'factory_girl_rails', '1.4.0'
+	gem 'faker'
 	gem 'timecop'
 	gem 'launchy'
 end
