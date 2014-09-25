@@ -8,20 +8,33 @@
   </h1>
 </div>
 
-<div class="row">  
-  <%= form_for @user do |f| %>
-    <%= show_error_messages @user %>
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+    <%= simple_form_for @user do |f| %>
+      <%= show_error_messages @user %>
+    
+      <% if current_user.superadmin? %>
+        <%= f.input :superadmin %>
+      <% end %>
+    
+      <%= f.association :roles, as: :check_boxes %>
+      <%= form_actions do %>
+        <%= f.submit 'Update Permissions', class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', employee_path(@user.person.profile), class: 'btn btn-link' if can? :read, @user.person.profile %>
+      <% end %>
+    <% end %>
+  </div>
+  
+  <div class="col-sm-6 col-md-6">
     <table class="table">
       <thead>
         <tr>
-          <th class="mash-col-1-btn">&nbsp;</th>
           <th>Permission</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="mash-col-1-btn"></td>
           <td>Basic User</td>
           <td><p>
             All users have the this permission.<br />
@@ -34,19 +47,11 @@
         
         <% @roles.each do |role| %>
           <tr>
-            <td class="mash-col-1-btn">
-              <%= check_box_tag "user[role_ids][]", role.id, params[:user][:role_ids].include?(role.id), id: "role_#{role.id}" %>
-            </td>
             <td><%= role.name %></td>
             <td><%= simple_format(role.comment) %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
-    
-    <%= form_actions do %>
-      <%= f.submit 'Update Permissions', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', employee_path(@user.person.profile), class: 'btn btn-link' if can? :read, @user.person.profile %>
-    <% end %>
-  <% end %>
+  </div>
 </div>

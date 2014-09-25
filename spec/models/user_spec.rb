@@ -66,12 +66,6 @@ describe User do
 			
 			it { user.reload.account_id.should == account.id }
 		end
-    
-    it "should not allow access to superadmin" do
-      expect do
-        User.new(superadmin: true)
-      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end
   end
 	
   context "(Valid)" do

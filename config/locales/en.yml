@@ -94,4 +94,5 @@ en:
       user:
         password_digest: "Password"
         password_confirmation: "Confirm Password"
+        superadmin: "Super Administrator"
         
