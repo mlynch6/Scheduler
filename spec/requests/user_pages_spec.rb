@@ -69,7 +69,16 @@ describe "User Pages:" do
 			should have_field 'Username'
 	    should have_field 'Password'
 	    should have_field 'Confirm Password'
+			should have_field "Super Administrator", :type => 'checkbox'
 			should have_link 'Cancel', href: employee_path(@person.profile)
+		end
+		
+		it "does not have Superadmin field when not a Super Administrator" do
+			log_in_employee(user_role: 'Administrator')
+			@person = FactoryGirl.create(:person, account: current_account)
+			visit new_person_user_path(@person)
+			
+			should_not have_field "Super Administrator", :type => 'checkbox'
 		end
 		
 		context "with error" do
@@ -124,12 +133,21 @@ describe "User Pages:" do
 		end
 		
 		it "has correct fields on form" do
+			should have_field "Super Administrator", :type => 'checkbox'
 			Dropdown.of_type('UserRole').active.each do |role|
-				should have_content role.name
-				should have_field "role_#{role.id}", :type => 'checkbox'
+				should have_field role.name, :type => 'checkbox'
 			end
 			
 			should have_link 'Cancel', href: employee_path(@person.profile)
+		end
+		
+		it "does not have Superadmin field when not a Super Administrator" do
+			log_in_employee(user_role: 'Administrator')
+			@person = FactoryGirl.create(:person, account: current_account)
+			@user = FactoryGirl.create(:user, account: current_account, person: @person)
+			visit edit_permissions_path(@user)
+			
+			should_not have_field "Super Administrator", :type => 'checkbox'
 		end
 	
 		it "has existing permissions checked" do
@@ -137,15 +155,13 @@ describe "User Pages:" do
 			FactoryGirl.create(:permission, account: current_account, user: @user, role: role)
 			visit edit_permissions_path(@user)
 			
-	  	should have_checked_field "role_#{role.id}"
+	  	should have_checked_field 'Manage Logins'
 		end
 		
 		it "updates permissions when adding a permission" do
-	  	role = Dropdown.of_type('UserRole').find_by_name('Manage Logins')
+	  	should_not have_checked_field 'Manage Logins'
 			
-			should_not have_checked_field "role_#{role.id}"
-			
-			check "role_#{role.id}"
+			check 'Manage Logins'
 			click_button 'Update'
 	
 			should have_title @person.full_name
@@ -157,9 +173,9 @@ describe "User Pages:" do
 			FactoryGirl.create(:permission, account: current_account, user: @user, role: role)
 			visit edit_permissions_path(@user)
 			
-			should have_checked_field "role_#{role.id}"
+			should have_checked_field 'Manage Logins'
 			
-			uncheck "role_#{role.id}"
+			uncheck 'Manage Logins'
 			click_button 'Update'
 	
 			should have_title @person.full_name

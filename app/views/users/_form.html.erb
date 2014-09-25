@@ -1,3 +1,6 @@
 <%= f.input :username %>
 <%= f.input :password, as: :password_prepend %>
 <%= f.input :password_confirmation, as: :password_prepend %>
+<% if current_user.superadmin? %>
+  <%= f.input :superadmin %>
+<% end %>

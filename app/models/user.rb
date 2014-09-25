@@ -17,12 +17,12 @@
 class User < ActiveRecord::Base
   has_secure_password
 	
-  attr_accessible :username, :password, :password_confirmation, :role_ids
+  attr_accessible :username, :password, :password_confirmation, :role_ids, :superadmin
   
   belongs_to :account
   belongs_to :person
 	has_many :permissions, dependent: :destroy
-	has_many :roles, :through => :permissions
+	has_many :roles, :through => :permissions, :conditions => { dropdown_type: 'UserRole'}
   
   validates :username,	presence: true, length: { in: 6..20 }, uniqueness: { case_sensitive: false }
 	validates :password, presence: true, confirmation: true, :on => :create

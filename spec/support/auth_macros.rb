@@ -5,7 +5,7 @@ module AuthMacros
   end
   
   def log_in_employee(attributes = {})
-    create_user
+    create_user(attributes)
     do_user_login
   end
 
@@ -30,9 +30,11 @@ module AuthMacros
 	end
   
 protected
-	def create_user(user_type = :employee)
-		if user_type == :superadmin
+	def create_user(user_role = nil)
+		if user_role == :superadmin
 			@_current_user = FactoryGirl.build(:user, :superadmin)
+		elsif user_role.present?
+			@_current_user = FactoryGirl.build(:user, :with_role, role_name: user_role)
 		else
 			@_current_user = FactoryGirl.build(:user)
 		end

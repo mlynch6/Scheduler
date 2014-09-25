@@ -19,14 +19,10 @@ class UsersController < ApplicationController
   end
 	
 	def edit
-		params[:user] ||= { }
-		params[:user][:role_ids] ||= @user.role_ids
 		form_setup
 	end
 	
 	def update
-		params[:user] ||= { }
-		params[:user][:role_ids] ||= []
 		if @user.update_attributes(params[:user])
 			redirect_to employee_path(@user.person.profile), :notice => "Successfully updated the permissions."
 		else
