@@ -1,8 +1,0 @@
-<div class="col-md-1">
-  <%= gear_dropdown do %>
-    <% if allow? "payments", "edit" %>
-      <% icon = content_tag(:span, nil, class: "glyphicon glyphicon-credit-card") %>
-  		<li><%= link_to icon+' Change Payment Method', payments_edit_path %></li>
-  	<% end %>
-  <% end %>
-</div>

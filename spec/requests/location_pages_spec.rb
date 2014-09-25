@@ -221,10 +221,6 @@ describe "Location Pages:" do
 				should have_content new_name
 			end
 		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Location'
-		end
 	end
 
 	context "#edit" do

@@ -6,13 +6,14 @@ module LinkHelper
 
 	def new_link(name, *args)
 		args << default_title('Add', *args)
-		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus-sign mash-green")
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-plus mash-green")
 		create_link(name, icon, *args)
 	end
 	
 	def edit_link(name, *args)
 		args << default_title('Edit', *args)
-		icon_link(name, 'pencil', *args)
+		icon = content_tag(:span, nil, class: "glyphicon glyphicon-pencil mash-grey")
+		create_link(name, icon, *args)
 	end
 	
 	def delete_link(name, *args)
@@ -78,7 +79,7 @@ module LinkHelper
 		html << content_tag(:ul, class: "dropdown-menu", role: "menu") do
 			yield
 		end
-		content_tag(:div, class: "btn-group pull-right", style: "margin-top: 5px;") do
+		content_tag(:div, class: "btn-group pull-right mash-gear") do
 			html
 		end
 	end

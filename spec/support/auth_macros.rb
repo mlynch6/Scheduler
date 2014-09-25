@@ -8,11 +8,6 @@ module AuthMacros
     create_user
     do_user_login
   end
-  
-  def log_in_admin(attributes = {})
-    create_user(:admin)
-    do_user_login
-  end
 
   def current_user
     @_current_user
@@ -36,12 +31,14 @@ module AuthMacros
   
 protected
 	def create_user(user_type = :employee)
-		if [:admin, :superadmin].include?(user_type)
-			@_current_user = FactoryGirl.build(:user, user_type)
+		if user_type == :superadmin
+			@_current_user = FactoryGirl.build(:user, :superadmin)
 		else
 			@_current_user = FactoryGirl.build(:user)
 		end
+		
 		unless @_current_user.valid?
+			#Make unique username if duplicated
 			@_current_user.username = "#{@_current_user.username}_unq" if u.errors.has_key?(:username)
 		end
 		@_current_user.save

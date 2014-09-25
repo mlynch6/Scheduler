@@ -55,6 +55,7 @@ GEM
     bootstrap-sass (3.0.3.0)
       sass (~> 3.2)
     builder (3.0.4)
+    cancan (1.6.10)
     capistrano (3.0.1)
       i18n
       rake (>= 10.0.0)
@@ -283,6 +284,7 @@ DEPENDENCIES
   bcrypt-ruby (~> 3.0.1)
   bootstrap-sass (~> 3.0.3.0)
   bootstrap-will_paginate!
+  cancan
   capistrano (~> 3.0.1)
   capistrano-bundler
   capistrano-rails (~> 1.1.0)
@@ -291,7 +293,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   database_cleaner (~> 1.2.0)
   factory_girl_rails (= 1.4.0)
-  faker (= 1.2.0)
+  faker
   fullcalendar-rails (~> 1.6.4)
   growl (= 1.0.3)
   guard-rspec (= 0.5.5)

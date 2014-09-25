@@ -2,13 +2,13 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Pieces') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= @piece.name %>
-      <small>Edit Scene</small>
-    </h1>
-  </div>
-  <%= render 'pieces/tools_menu' %>
+<div class="page-header">
+  <h1><%= @piece.name %>
+    <small>Edit Scene</small>
+    <div class="pull-right">
+      <%= delete_button 'Delete', @scene, title: 'Delete Scene', class: 'btn btn-danger' if can? :destroy, @scene %>
+    </div>
+  </h1>
 </div>
 
 <div class="row mash-show">
@@ -21,7 +21,7 @@
 	    
       <%= form_actions do %>
         <%= f.button :submit %>
-        <%= link_to 'Cancel', piece_scenes_path(@piece), class: 'btn btn-link' %>
+        <%= link_to 'Cancel', piece_scenes_path(@piece), class: 'btn btn-link' if can? :read, @piece => Scene %>
       <% end %>
     <% end %>
   </div>

@@ -1,8 +1,8 @@
 class Admin::AccountsController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	load_and_authorize_resource
 
 	def index
-		@accounts = Account.paginate(page: params[:page], per_page: params[:per_page])
+		@accounts = @accounts.paginate(page: params[:page], per_page: params[:per_page])
 	end
 
 	def edit
@@ -29,10 +29,6 @@ class Admin::AccountsController < ApplicationController
 	end
 
 private
-	def get_resource
-		@account = Account.find(params[:id])
-	end
-	
 	#setup for form - dropdowns, etc
 	def form_setup
 		@plans = SubscriptionPlan.all.map { |plan| [plan.name_and_amount, plan.id] }

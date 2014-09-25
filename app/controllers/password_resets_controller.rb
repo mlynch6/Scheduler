@@ -1,5 +1,7 @@
 class PasswordResetsController < ApplicationController
-  def new
+  authorize_resource :class => false
+	
+	def new
   end
 	
   def create

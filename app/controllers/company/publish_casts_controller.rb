@@ -1,4 +1,6 @@
 class Company::PublishCastsController < ApplicationController
+	authorize_resource :class => false
+	
 	# This method should be an "update method" but some people will want to copy and paste the link.
 	def update
 		@sp = SeasonPiece.find(params[:id])

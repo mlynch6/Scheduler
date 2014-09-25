@@ -1,14 +1,12 @@
 class PhonesController < ApplicationController
-	before_filter :load_phoneable
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	before_filter :load_and_authorize_parent
+	load_and_authorize_resource :phone, :through => :phoneable
 
   def new
   	form_setup
-  	@phone = @phoneable.phones.new
   end
   
   def create
-  	@phone = @phoneable.phones.new(params[:phone])
   	if @phone.save
 			flash[:notice] = "Successfully created the phone number."
 			if @phoneable.class.name == 'Person'
@@ -51,16 +49,13 @@ class PhonesController < ApplicationController
 	end
 
 private
-	def get_resource
-		@phone = Phone.find(params[:id])
-	end
-	
 	#setup for form - dropdowns, etc
 	def form_setup
 	end
-
-	def load_phoneable
+	
+	def load_and_authorize_parent
 		resource, id = request.path.split('/')[1, 2]
 		@phoneable = resource.singularize.classify.constantize.find(id)
+		authorize! :read, @phoneable
 	end
 end

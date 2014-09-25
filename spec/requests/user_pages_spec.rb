@@ -37,13 +37,10 @@ describe "User Pages:" do
 			User.paginate(page: 1, per_page: 3).each do |user|
 				should have_selector 'td', text: user.person.name
 				should have_selector 'td', text: user.username
+				
+				should have_link user.person.name, href: employee_path(user.person.profile)
 				should have_link 'Delete', href: user_path(user)
 	    end
-		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add User'
-			should have_link 'Delete'
 		end
   end
   
@@ -52,7 +49,8 @@ describe "User Pages:" do
 			log_in
 			@person = FactoryGirl.create(:person, account: current_account)
 			click_link 'People'
-	  	click_link 'Users'
+	  	click_link 'Employees'
+			click_link @person.name
 	  	click_link 'Add User'
 		end
 		
@@ -68,11 +66,10 @@ describe "User Pages:" do
 		end
 		
 		it "has correct fields on form" do
-	  	should have_content 'Person' 	#Using Chosen
 			should have_field 'Username'
 	    should have_field 'Password'
 	    should have_field 'Confirm Password'
-			should have_link 'Cancel', href: users_path
+			should have_link 'Cancel', href: employee_path(@person.profile)
 		end
 		
 		context "with error" do
@@ -91,17 +88,82 @@ describe "User Pages:" do
 			it "creates new User" do
 		  	new_username = "New_Username"
 				
-		  	select @person.full_name, from: "Person"
 				fill_in "Username", with: new_username
 				fill_in "Password", with: "password"
 				fill_in "Confirm Password", with: "password"
 				click_button 'Create'
 		
 				should have_selector 'div.alert-success'
-				should have_title 'Users'
-				should have_content @person.name
+				should have_title @person.full_name
 				should have_content new_username.downcase
 			end
+		end
+  end
+	
+  context "#edit" do
+		before do
+			Rails.application.load_seed
+			log_in
+			@person = FactoryGirl.create(:person, account: current_account)
+			@user = FactoryGirl.create(:user, account: current_account, person: @person)
+			click_link 'People'
+	  	click_link 'Employees'
+			click_link @person.name
+	  	click_link 'Edit Permissions'
+		end
+		
+  	it "has correct title" do
+			should have_title 'Edit Permissions'
+			should have_selector 'h1', text: @person.full_name
+			should have_selector 'h1 small', text: 'Permissions'
+		end
+		
+		it "has correct Navigation" do
+			should have_selector 'li.active', text: 'People'
+			should have_selector 'li.active', text: 'Employees'
+		end
+		
+		it "has correct fields on form" do
+			Dropdown.of_type('UserRole').active.each do |role|
+				should have_content role.name
+				should have_field "role_#{role.id}", :type => 'checkbox'
+			end
+			
+			should have_link 'Cancel', href: employee_path(@person.profile)
+		end
+	
+		it "has existing permissions checked" do
+			role = Dropdown.of_type('UserRole').find_by_name('Manage Logins')
+			FactoryGirl.create(:permission, account: current_account, user: @user, role: role)
+			visit edit_permissions_path(@user)
+			
+	  	should have_checked_field "role_#{role.id}"
+		end
+		
+		it "updates permissions when adding a permission" do
+	  	role = Dropdown.of_type('UserRole').find_by_name('Manage Logins')
+			
+			should_not have_checked_field "role_#{role.id}"
+			
+			check "role_#{role.id}"
+			click_button 'Update'
+	
+			should have_title @person.full_name
+			should have_content 'Manage Logins'
+		end
+		
+		it "removes all permissions when unchecking all permissions" do
+			role = Dropdown.of_type('UserRole').find_by_name('Manage Logins')
+			FactoryGirl.create(:permission, account: current_account, user: @user, role: role)
+			visit edit_permissions_path(@user)
+			
+			should have_checked_field "role_#{role.id}"
+			
+			uncheck "role_#{role.id}"
+			click_button 'Update'
+	
+			should have_title @person.full_name
+			should_not have_content 'Manage Logins'
 		end
   end
   

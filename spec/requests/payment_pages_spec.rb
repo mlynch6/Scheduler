@@ -35,8 +35,6 @@ describe "Payment Pages:" do
 		it "has links for Super Admin" do
 	  	should have_link 'Overview'
 			should have_link 'Subscription'
-			
-			should have_link 'Change Payment Method'
 		end
 	end
 	

@@ -8,6 +8,6 @@
 		<%= password_field_tag :password, nil, { class: 'form-control', placeholder: 'Password'} %>
 	
 		<%= submit_tag "Sign In", :class => 'form-control btn btn-large btn-primary btn-block' %>
-    <%= link_to 'Forgot password?', new_password_reset_path, :class => 'btn btn-link btn-block' %>
+    <%= link_to 'Forgot password?', new_password_reset_path, :class => 'btn btn-link btn-block' if can? :create, :password_reset %>
 <% end %>
 </div>

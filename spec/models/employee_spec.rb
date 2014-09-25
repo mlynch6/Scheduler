@@ -4,13 +4,14 @@
 #
 #  id                    :integer          not null, primary key
 #  account_id            :integer          not null
-#  role                  :string(50)       not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  employee_num          :string(20)
 #  employment_start_date :date
 #  employment_end_date   :date
 #  biography             :text
+#  job_title             :string(50)
+#  agma_artist           :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'
@@ -19,7 +20,7 @@ describe Employee do
 	let(:account) { FactoryGirl.create(:account) }
 	let!(:employee) { FactoryGirl.create(:employee,
 										account: account,
-										role: 'Artistic Director',
+										job_title: 'Artistic Director',
 										employee_num: '123',
 										employment_start_date: Date.new(2010,8,1),
 										employment_end_date: Date.new(2012,5,31),
@@ -34,11 +35,12 @@ describe Employee do
 	subject { @employee }
 	
 	context "accessible attributes" do
-  	it { should respond_to(:role) }
 		it { should respond_to(:employee_num) }
 		it { should respond_to(:employment_start_date) }
 		it { should respond_to(:employment_end_date) }
 		it { should respond_to(:biography) }
+		it { should respond_to(:job_title) }
+		it { should respond_to(:agma_artist) }
   	
   	it { should respond_to(:account) }
   	
@@ -61,36 +63,12 @@ describe Employee do
   		should be_valid
   	end
   	
-  	it "when role is a valid value" do
-  		roles = ["Artistic Director", "Ballet Master", "Choreographer", "Instructor", "Guest Instructor", "Musician", "Dancer", "Employee"]
-  		roles.each do |valid_role|
-  			@employee.role = valid_role
-  			should be_valid
-  		end
+  	it "when created as non- AGMA artist" do
+			employee.reload.agma_artist.should be_false
   	end
   end
   
   context "(Invalid)" do
-  	describe "when role" do
-			it "is blank" do
-	  		@employee.role = ""
-	  		should_not be_valid
-	  	end
-  	
-	  	it "is too long" do
-	  		@employee.role = "a"*51
-	  		should_not be_valid
-	  	end
-  	
-	  	it "is an invalid value" do
-	  		roles = ["test", "freeform text"]
-	  		roles.each do |invalid_role|
-	  			@employee.role = invalid_role
-	  			should_not be_valid
-	  		end
-	  	end
-		end
-		
   	it "when employee_num is too long" do
   		@employee.employee_num = "a"*21
   		should_not be_valid
@@ -111,6 +89,16 @@ describe Employee do
   			should_not be_valid
   		end
 		end
+		
+  	it "job_title is too long" do
+			@employee.job_title = "a"*31
+			should_not be_valid
+		end
+		
+  	it "agma_artist is blank" do
+			@employee.agma_artist = " "
+			should_not be_valid
+		end
   end
   
   context "(Associations)" do
@@ -124,10 +112,6 @@ describe Employee do
   end
   
   context "correct value is returned for" do		
-		it "role" do
-	  	employee.role.should == 'Artistic Director'
-	  end
-		
 	  it "employee_num" do
 	  	employee.reload.employee_num.should == '123'
 	  end
@@ -143,43 +127,18 @@ describe Employee do
 	  it "biography" do
 	  	employee.reload.biography.should == 'My bio'
 	  end
-	  
-	  describe "Employee::ROLES" do
-	  	it "has AGMA Dancer as a value" do
-		  	Employee::ROLES.should include("AGMA Dancer")
-		  end
-		  
-		  it "has Artistic Director as a value" do
-		  	Employee::ROLES.should include("Artistic Director")
-		  end
-		  
-		  it "has Ballet Master as a value" do
-		  	Employee::ROLES.should include("Ballet Master")
-		  end
-		  
-		  it "has Choreographer as a value" do
-		  	Employee::ROLES.should include("Choreographer")
-		  end
-		  
-		  it "has Dancer as a value" do
-		  	Employee::ROLES.should include("Dancer")
-		  end
-		  
-		  it "has Employee as a value" do
-		  	Employee::ROLES.should include("Employee")
-		  end
-		  
-		  it "has Guest Instructor as a value" do
-		  	Employee::ROLES.should include("Guest Instructor")
-		  end
-		  
-		  it "has Instructor as a value" do
-		  	Employee::ROLES.should include("Instructor")
-		  end
-		  
-		  it "has Musician as a value" do
-		  	Employee::ROLES.should include("Musician")
-		  end
+		
+		it "job_title" do
+	  	employee.job_title.should == 'Artistic Director'
+	  end
+		
+		it "agma_artist" do
+	  	employee.agma_artist.should be_false
+			
+			employee.agma_artist = true
+			employee.save
+			
+			employee.agma_artist.should be_true
 	  end
 		
 		context "delegated" do
@@ -205,6 +164,10 @@ describe Employee do
 		
 		  it "birth_date" do
 		  	employee.birth_date.should == person.birth_date
+		  end
+			
+		  it "age" do
+		  	employee.age.should == person.age
 		  end
 		
 		  it "email" do
@@ -237,6 +200,54 @@ describe Employee do
 		  	employee.phones.should == person.phones
 		  end
 		end
+	end
+	
+	context "(Methods)" do		
+	  describe "search" do
+	  	before do
+	  		4.times { FactoryGirl.create(:person, account: account) }
+				4.times { FactoryGirl.create(:person, :inactive, account: account) }
+				@rhino = FactoryGirl.create(:person, account: account, first_name: 'Richard', last_name: 'Rhinoceros')
+			end
+			
+	  	it "returns all records by default" do
+	  		query = {}
+				Employee.search(query).should == Employee.all
+		  end
+		  
+		  describe "on status" do
+			  it "=active returns active records" do
+			  	query = { status: "active" }
+					Employee.search(query).should == Employee.active
+			  end
+			  
+			  it "=inactive returns inactive records" do
+			  	query = { status: "inactive" }
+					Employee.search(query).should == Employee.inactive
+			  end
+			  
+			  it "that is invalid returns all records" do
+			  	query = { status: "invalid" }
+					Employee.search(query).should == Employee.all
+			  end
+			end
+			
+		  describe "on text" do
+			  it "returns records with query text in last_name" do
+			  	query = { lname: "Rhino" }
+					records = Employee.search(query)
+					records.count.should == 1
+					records.should include(@rhino.profile)
+			  end
+				
+			  it "returns records with query text in first_name" do
+			  	query = { fname: "Rich" }
+					records = Employee.search(query)
+					records.count.should == 1
+					records.should include(@rhino.profile)
+			  end
+			end
+	  end
 	end
 	
 	describe "(Scopes)" do

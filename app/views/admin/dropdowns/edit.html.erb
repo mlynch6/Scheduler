@@ -3,12 +3,10 @@
 <% provide(:header_current, 'Administration') %>
 <% provide(:sidebar_current, 'Dropdowns') %>
 
-<div class="row">
-  <div class="page-header">
-  	 <h1><%= dropdown_type.pluralize %>
-      <small>Edit</small>
-    </h1>
-  </div>
+<div class="page-header">
+  <h1><%= dropdown_type.pluralize %>
+    <small>Edit</small>
+  </h1>
 </div>
 
 <div class="row">
@@ -18,7 +16,7 @@
 
     <%= form_actions do %>
       <%= f.button :submit %>
-      <%= link_to 'Cancel', admin_dropdowns_path(type: @dropdown.dropdown_type), class: 'btn btn-link' %>
+      <%= link_to 'Cancel', admin_dropdowns_path(type: @dropdown.dropdown_type), class: 'btn btn-link' if can? :read, @dropdown %>
     <% end %>
   <% end %>
 </div>

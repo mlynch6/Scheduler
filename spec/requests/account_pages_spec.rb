@@ -30,7 +30,7 @@ describe "Account Pages:" do
 	    
 	    should have_field 'First Name'
 	    should have_field 'Last Name'
-	    should have_select 'Role'
+	    should have_field 'Job Title'
 	    should have_field 'Email'
 	    
 	    should have_field 'Username'
@@ -79,6 +79,8 @@ describe "Account Pages:" do
     	let(:company_name) { "New York City Ballet #{Time.now}" }
     	let(:username) { "pmartin#{DateTime.now.seconds_since_midnight}" }
     	before do
+				Rails.application.load_seed
+				
     		fill_in "Company", with: company_name
     		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
     		fill_in "Phone #", with: "414-543-1000"
@@ -91,7 +93,7 @@ describe "Account Pages:" do
     		
     		fill_in "First Name", with: "Peter"
     		fill_in "Last Name", with: "Martin"
-    		select  "Artistic Director", from: "Role"
+    		fill_in "Job Title", with:  "Artistic Director"
     		fill_in "Email", with: "peter.martin@nycb.org"
     		
     		fill_in "Username", with: username
@@ -143,10 +145,12 @@ describe "Account Pages:" do
 				account.employees.count.should == 1
     	end
     	
-    	it "creates a User" do
+    	it "creates a User as Administrator" do
     		user = User.unscoped.find_by_username(username)
-		  	user.should_not be_nil
-    		user.role.should == "Administrator"
+				user.should_not be_nil
+				
+				Account.current_id = user.account_id
+    		user.roles.should include(Dropdown.of_type('UserRole').find_by_name('Administrator'))
     	end
     	
     	it "redirects to Sign In page" do
@@ -228,7 +232,6 @@ describe "Account Pages:" do
 			
 	  	should have_link 'Add Address'
 	  	should have_link 'Add Phone Number'
-			should have_link 'Change Payment Method'
 		end
 	end
 	
@@ -280,8 +283,6 @@ describe "Account Pages:" do
 		it "has links for Super Admin" do
 	  	should have_link 'Overview'
 			should have_link 'Subscription'
-			
-			should have_link 'Change Payment Method'
 		end
 	end
 end

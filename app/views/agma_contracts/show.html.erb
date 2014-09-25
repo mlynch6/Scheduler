@@ -2,11 +2,12 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Contract') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= yield(:title) %></h1>
-  </div>
-  <%= render 'agma_contracts/tools_menu' %>
+<div class="page-header">
+  <h1><%= yield(:title) %>
+    <div class="pull-right">
+      <%= edit_button 'Edit Contract Settings', edit_agma_contract_path(@agma_contract) if can? :update, @agma_contract %>
+    </div>
+  </h1>
 </div>
 
 <div class="row mash-show">

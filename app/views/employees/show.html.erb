@@ -2,13 +2,10 @@
 <% provide(:header_current, 'People') %>
 <% provide(:sidebar_current, 'Employees') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= yield(:title) %>
-       <small><%= @employee.status %></small>
-     </h1>
-  </div>
-  <%= render 'employees/tools_menu' %>
+<div class="page-header">
+  <h1><%= yield(:title) %>
+    <small><%= @employee.status %></small>
+  </h1>
 </div>
 
 <div class="row mash-show">
@@ -25,8 +22,14 @@
       <div class="col-md-4">
         <%= render 'phones/table', parent: @employee.person, phones: @employee.phones %>
       </div>
+      
+      <div class="col-md-4">
+        <%= render 'employees/user_panel' %>
+      </div>
     
-      <div class="col-md-12"><%= render 'biography_panel' %></div>
+      <div class="col-md-12">
+        <%= render 'employees/biography_panel' %>
+      </div>
     </div>
   </div><!-- mash-body -->
 </div>

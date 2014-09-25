@@ -3,13 +3,10 @@
 <% provide(:header_current, 'Calendar') %>
 <% provide(:sidebar_current, type.pluralize) %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= type.pluralize %>
-      <small>Edit</small>
-    </h1>
-  </div>
-  <%= render 'events/tools_menu' %>
+<div class="page-header">
+  <h1><%= type.pluralize %>
+    <small>Edit</small>
+  </h1>
 </div>
 
 <div class="row mash-show">
@@ -28,7 +25,7 @@
     				<%= f.button :submit %>
     			<% end %>
 		
-    		<% if allow? @event.type.underscore.pluralize, "destroy" %>
+    		<% if can? :destroy, @event %>
     			<% if @event.event_series %>
     				<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"><%= content_tag(:span, nil, class: "glyphicon glyphicon-trash") %> Delete</button>
     				<%= render 'delete_series_modal', :event => @event %>
@@ -37,7 +34,7 @@
     			<% end %>
     		<% end %>
         
-        <%= link_to 'Cancel', events_path+'/'+@event.start_at.strftime('%Y/%-m/%-d'), class: 'btn btn-link' %>
+        <%= link_to 'Cancel', events_path+'/'+@event.start_at.strftime('%Y/%-m/%-d'), class: 'btn btn-link' if can? :read, @event %>
     	<% end %>
     <% end %>
   </div>

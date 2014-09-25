@@ -1,12 +1,12 @@
 <% provide(:title, 'Create Account') %>
 <% provide(:header_current, 'Pricing') %>
 
+<div class="page-header">
+  <h1>Create an Account</h1>
+</div>
+
 <div class="row">
 	<div class="col-md-9">
-		<div class="page-header">
-			<h1>Create an Account</h1>
-		</div>
-
 		<%= simple_form_for @signup_form, url: accounts_path do |f| %>
 			<%= show_error_messages @signup_form %>
 			<%= render 'signup_form', :f => f %>

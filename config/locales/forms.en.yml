@@ -18,6 +18,7 @@ en:
         zipcode: "Zip Code"
         first_name: "First Name"
         last_name: "Last Name"
+        job_title: "Job Title"
         password_digest: "Password"
         password_confirmation: "Confirm Password"
       employee:
@@ -29,3 +30,4 @@ en:
         employee_num: "Employee #"
         employment_start_date: "Employment Start Date"
         employment_end_date: "Employment End Date"
+        job_title: "Job Title"

@@ -34,7 +34,7 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = new_link("Text", '#')
-			html.should =~ /<span class="glyphicon glyphicon-plus-sign mash-green">/
+			html.should =~ /<span class="glyphicon glyphicon-plus mash-green">/
 			html.should =~ /<\/span>/
 		end
 		
@@ -63,7 +63,7 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = edit_link("Text", '#')
-			html.should =~ /<span class="glyphicon glyphicon-pencil">/
+			html.should =~ /<span class="glyphicon glyphicon-pencil mash-grey">/
 			html.should =~ /<\/span>/
 		end
 		
@@ -171,9 +171,9 @@ describe LinkHelper do
 	end
 	
 	context 'new_button' do
-		it "is a green button" do
+		it "is a normal button" do
 			html = new_button("Text", '#')
-			html.should =~ /btn btn-success/
+			html.should =~ /btn btn-default/
 		end
 		
 		it "displays correct link" do
@@ -184,7 +184,7 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = new_button("Text", '#')
-			html.should =~ /<span class="glyphicon glyphicon-plus">/
+			html.should =~ /<span class="glyphicon glyphicon-plus mash-green">/
 			html.should =~ /<\/span>/
 		end
 		
@@ -213,7 +213,7 @@ describe LinkHelper do
 		
 		it "displays correct icon" do
 			html = edit_button("Text", '#')
-			html.should =~ /<span class="glyphicon glyphicon-pencil">/
+			html.should =~ /<span class="glyphicon glyphicon-pencil mash-grey">/
 			html.should =~ /<\/span>/
 		end
 		

@@ -206,13 +206,6 @@ describe "Event (non-Repeating) Pages:" do
 				should_not have_selector 'div.alert-warning', text: p3.full_name
 			end
 		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Company Class', :visible => false
-			should have_link 'Add Rehearsal', :visible => false
-			should have_link 'Add Costume Fitting', :visible => false
-			should have_link 'Add Event', :visible => false
-		end
 	end
 	
 	context "#edit", js: true do
@@ -337,13 +330,6 @@ describe "Event (non-Repeating) Pages:" do
 				should_not have_selector 'div.alert-warning', text: p2.full_name
 				should_not have_selector 'div.alert-warning', text: p3.full_name
 			end
-		end
-		
-		it "has links for Super Admin" do
-			should have_link 'Add Company Class', :visible => false
-			should have_link 'Add Rehearsal', :visible => false
-			should have_link 'Add Costume Fitting', :visible => false
-			should have_link 'Add Event', :visible => false
 		end
 	end
   

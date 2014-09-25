@@ -24,6 +24,7 @@ class Account < ActiveRecord::Base
 	has_many :people, dependent: :destroy
 	has_many :employees, dependent: :destroy
 	has_many :users, dependent: :destroy
+	has_many :permissions, dependent: :destroy
 	has_many :addresses, :as => :addressable, dependent: :destroy
 	has_many :phones, :as => :phoneable, dependent: :destroy
 	has_many :locations, dependent: :destroy

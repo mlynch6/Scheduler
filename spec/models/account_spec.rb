@@ -42,6 +42,7 @@ describe Account do
 		it { should respond_to(:people) }
 		it { should respond_to(:employees) }
 		it { should respond_to(:users) }
+		it { should respond_to(:permissions) }
 		it { should respond_to(:locations) }
 		it { should respond_to(:seasons) }
 		it { should respond_to(:pieces) }
@@ -268,6 +269,24 @@ describe Account do
 				account.destroy
 				users.each do |user|
 					User.find_by_id(user.id).should be_nil
+				end
+			end
+		end
+		
+		describe "permissions" do
+  		before { Account.current_id = account.id }
+			let!(:permission1) { FactoryGirl.create(:permission, account: account) }
+			let!(:permission2) { FactoryGirl.create(:permission, account: account) }
+	
+			it "has multiple permissions" do
+				account.permissions.count.should == 2
+			end
+			
+			it "deletes associated permissions" do
+				permissions = account.permissions
+				account.destroy
+				permissions.each do |permission|
+					Permission.find_by_id(permission.id).should be_nil
 				end
 			end
 		end

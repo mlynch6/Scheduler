@@ -2,11 +2,12 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Seasons') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= yield(:title) %></h1>
-  </div>
-  <%= render 'seasons/tools_menu' %>
+<div class="page-header">
+  <h1><%= yield(:title) %>
+    <div class="pull-right">
+      <%= new_button "Add Season", new_season_path if can? :create, Season %>
+    </div>
+  </h1>
 </div>
 
 <div class="row">
@@ -24,7 +25,7 @@
   	  	<% @seasons.each do |season| %>
   				<tr>
   					<td>
-  						<% if allow? "seasons", "show" %>
+  						<% if can? :read, season %>
   							<%= link_to season.name, season_path(season), :id => "view_#{season.id}" %>
               <% else %>
                 <%= season.name %>
@@ -33,9 +34,7 @@
   					<td><%= season.start_dt %></td>
   					<td><%= season.end_dt %></td>
   					<td class="mash-col-1-btn">
-  						<% if allow? "seasons", "destroy" %>
-  							<%= delete_button nil, season_path(season), :class => 'btn-xs', :id => "delete_#{season.id}" %>
-  						<% end %>
+  						<%= delete_button nil, season_path(season), :class => 'btn-xs', :id => "delete_#{season.id}" if can? :destroy, season %>
   					</td>
   				</tr>
   			<% end %>

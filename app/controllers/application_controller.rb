@@ -1,15 +1,17 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+	check_authorization
   helper :link
   
 	before_filter :https_redirect
-  before_filter :authorize
   around_filter :scope_current_account
   around_filter :account_time_zone, if: :current_user
   
-  delegate :allow?, to: :current_permission
-  helper_method :allow?
-  
+	rescue_from CanCan::AccessDenied do |exception|
+		flash[:error] = exception.message
+		redirect_to root_url
+	end
+		
 private
 
 	def current_user
@@ -26,17 +28,6 @@ private
 	
 	def account_time_zone(&block)
 		Time.use_zone(current_user.account.time_zone, &block)
-	end
-	
-	def current_permission
-		@current_permission ||= Permission.new(current_user)
-	end
-	
-	def authorize
-		if !current_permission.allow?(params[:controller], params[:action])
-			flash[:error] = "Not authorized"
-			redirect_to root_url
-		end
 	end
 	
 	def https_redirect

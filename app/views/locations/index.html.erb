@@ -5,7 +5,9 @@
 <div class="page-header">
 	 <h1><%= yield(:title) %>
      <small><%= header_status_text %></small>
-     <%= render 'locations/tools_menu' %>
+     <div class="pull-right">
+       <%= new_button "Add Location", new_location_path if can? :create, Location %>
+     </div>
    </h1>
 </div>
 
@@ -25,7 +27,7 @@
   	  	<% @locations.each do |location| %>
   				<tr>
   					<td>
-  						<% if allow? "locations", "edit" %>
+  						<% if can? :update, location %>
   							<%= link_to location.name, edit_location_path(location), :id => "edit_#{location.id}" %>
               <% else %>
                 <%= location.name %>
@@ -33,15 +35,9 @@
             </td>
   					<td><%= location.status %></td>
   					<td class="mash-col-2-btn">
-  						<% if !location.active && allow?("locations", "activate") %>
-  							<%= activate_button nil, activate_location_path(location), :class => 'btn-xs', :id => "activate_#{location.id}" %>
-  						<% end %>
-  						<% if location.active && allow?("locations", "inactivate") %>
-  							<%= inactivate_button nil, inactivate_location_path(location), :class => 'btn-xs', :id => "inactivate_#{location.id}" %>
-  						<% end %>
-  						<% if allow? "locations", "destroy" %>
-  							<%= delete_button nil, location, :class => 'btn-xs', :id => "delete_#{location.id}" %>
-  						<% end %>
+  						<%= activate_button nil, activate_location_path(location), :class => 'btn-xs', :id => "activate_#{location.id}" if !location.active && can?(:activate, location) %>
+  						<%= inactivate_button nil, inactivate_location_path(location), :class => 'btn-xs', :id => "inactivate_#{location.id}" if location.active && can?(:inactivate, location) %>
+  						<%= delete_button nil, location, :class => 'btn-xs', :id => "delete_#{location.id}" if can? :destroy, location %>
   					</td>
   				</tr>
   			<% end %>

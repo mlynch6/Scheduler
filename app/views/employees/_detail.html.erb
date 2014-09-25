@@ -1,8 +1,8 @@
 <div class="dtl-form" style="margin-bottom:15px;">
   <div class="row">
-		<div class="dtl-label col-md-3">Name</div>
-		<div class="dtl-text col-md-9">
-    	<% if allow? "employees", "edit" %>
+		<div class="dtl-label col-sm-3 col-md-3">Name</div>
+		<div class="dtl-text col-sm-9 col-md-9">
+    	<% if can? :update, @employees %>
     		<%= link_to @employee.full_name, edit_employee_path(@employee) %>
       <% else %>
         <%= @employee.full_name %>
@@ -11,20 +11,20 @@
 	</div>
   
 	<div class="row">
-		<div class="dtl-label col-md-3"><%= Employee.human_attribute_name(:role) %></div>
-		<div class="dtl-text col-md-9"><%= @employee.role %></div>
+		<div class="dtl-label col-sm-3 col-md-3"><%= Employee.human_attribute_name(:job_title) %></div>
+		<div class="dtl-text col-sm-9 col-md-9"><%= @employee.job_title %></div>
 	</div>
   
 	<div class="row">
-		<div class="dtl-label col-md-3"><%= Person.human_attribute_name(:gender) %></div>
-		<div class="dtl-text col-md-3"><%= @employee.gender %></div>
+		<div class="dtl-label col-sm-3 col-md-3"><%= Person.human_attribute_name(:gender) %></div>
+		<div class="dtl-text col-sm-3 col-md-3"><%= @employee.gender %></div>
     
-		<div class="dtl-label col-md-3"><%= Person.human_attribute_name(:birth_date) %></div>
-		<div class="dtl-text col-md-3"><%= @employee.birth_date %></div>
+		<div class="dtl-label col-sm-3 col-md-3"><%= Person.human_attribute_name(:birth_date) %></div>
+		<div class="dtl-text col-sm-3 col-md-3"><%= @employee.birth_date %></div>
 	</div>
   
 	<div class="row">
-		<div class="dtl-label col-md-3"><%= Employee.human_attribute_name(:email) %></div>
-		<div class="dtl-text col-md-9"><%= @employee.email %></div>
+		<div class="dtl-label col-sm-3 col-md-3"><%= Employee.human_attribute_name(:email) %></div>
+		<div class="dtl-text col-sm-9 col-md-9"><%= @employee.email %></div>
 	</div>
 </div>

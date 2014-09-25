@@ -1,8 +1,8 @@
 class AgmaContractsController < ApplicationController 
-	before_filter :get_resource, :only => [:edit, :update]
+	before_filter :get_resource
+	load_and_authorize_resource
 	
   def show
-		@agma_contract = AgmaContract.find(params[:id])
 	end
   
   def edit

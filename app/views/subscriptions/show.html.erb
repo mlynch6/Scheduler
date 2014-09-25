@@ -2,13 +2,13 @@
 <% provide(:header_current, 'Home') %>
 <% provide(:sidebar_current, 'Account') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>My Account
-       <small>Subscription</small>
-     </h1>
-  </div>
-  <%= render 'accounts/tools_menu' %>
+<div class="page-header">
+  <h1>My Account
+    <small>Subscription</small>
+    <div class="pull-right">
+      <%= icon_link 'Change Payment Method', 'credit-card', payments_edit_path, class: 'btn btn-default' if can? :update, :payment %>
+    </div>
+  </h1>
 </div>
 
 <div class="row mash-show">

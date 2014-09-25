@@ -1,9 +1,7 @@
 <% provide(:title, 'Reset Your Password') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= yield(:title) %></h1>
-  </div>
+<div class="page-header">
+  <h1><%= yield(:title) %></h1>
 </div>
 
 <div class="row">
@@ -15,7 +13,7 @@
 	
     <%= form_actions do %>
     	<%= f.submit 'Update Password', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', login_path, class: 'btn btn-link' %>
+      <%= link_to 'Cancel', login_path, class: 'btn btn-link' if can? :create, :session %>
     <% end %>
   <% end %>
 </div>

@@ -2,13 +2,10 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Contract') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Contract Settings
-       <small>Add Rehearsal Breaks</small>
-     </h1>
-  </div>
-  <%= render 'agma_contracts/tools_menu' %>
+<div class="page-header">
+  <h1>Contract Settings
+    <small>Add Rehearsal Breaks</small>
+  </h1>
 </div>
 
 <div class="row">
@@ -17,8 +14,8 @@
   	<%= render 'form', :f => f %>
 
     <%= form_actions do %>
-      <%= f.button :submit %>
-      <%= link_to 'Cancel', agma_contract_path(AgmaContract.first), class: 'btn btn-link' %>
+      <%= f.submit 'Create Rehearsal Break', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', agma_contract_path(AgmaContract.first), class: 'btn btn-link' if can? :read, @agma_contract %>
   	<% end %>
   <% end %>
 </div>

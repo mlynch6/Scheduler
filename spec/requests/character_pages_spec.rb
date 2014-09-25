@@ -90,11 +90,7 @@ describe "Character Pages:" do
 	  	should have_link 'Scenes'
 	  	should have_link 'Characters'
 		
-			should have_link 'Add Piece'
-			should have_link 'Delete Piece'
 			should have_link 'Add Character'
-			should have_link 'Add Scene'
-			should have_link 'Download Scenes PDF'
 		end
 	end
 	
@@ -159,12 +155,6 @@ describe "Character Pages:" do
 	  	should have_link 'Overview'
 	  	should have_link 'Scenes'
 	  	should have_link 'Characters'
-			
-			should have_link 'Add Piece'
-			should have_link 'Delete Piece'
-			should have_link 'Add Character'
-			should have_link 'Add Scene'
-			should have_link 'Download Scenes PDF'
 		end
 	end
 	
@@ -224,12 +214,7 @@ describe "Character Pages:" do
 	  	should have_link 'Scenes'
 	  	should have_link 'Characters'
 			
-			should have_link 'Add Piece'
-			should have_link 'Delete Piece'
-			should have_link 'Add Character'
 			should have_link 'Delete Character'
-			should have_link 'Add Scene'
-			should have_link 'Download Scenes PDF'
 		end
 	end
   

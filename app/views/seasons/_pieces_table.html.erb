@@ -10,7 +10,7 @@
 					Casts <%= content_tag :span, season_piece.casts.count, class: 'badge' %>
 				</td>
 				<td class="text-right">
-					<% if allow? "casts", "index" %>
+					<% if can? :read, Cast %>
 						<%= link_to "View Casts", season_piece_casts_path(season_piece), :id => "viewCast_#{season_piece.id}" %>
 					<% end %>
 				</td>

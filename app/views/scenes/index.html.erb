@@ -2,14 +2,14 @@
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Pieces') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>
-      <%= @piece.name %>
-      <small>Scenes</small>
-    </h1>
-  </div>
-  <%= render 'pieces/tools_menu' %>
+<div class="page-header">
+  <h1><%= @piece.name %>
+    <small>Scenes</small>
+    <div class="pull-right">
+      <%= new_button "Add Scene", new_piece_scene_path(@piece) if can? :create, @piece.scenes.build %>
+      <%= pdf_link "Download PDF", piece_scenes_path(@piece, format: "pdf"), class: 'btn btn-default' if can? :read, Scene %>
+    </div>
+  </h1>
 </div>
 
 <div class="row mash-show">
@@ -31,12 +31,10 @@
 			  	<% @scenes.each do |scene| %>
 						<%= content_tag_for :tr, scene do %>
 							<td class="mash-col-1-btn">
-								<% if allow? "scenes", "sort" %>
-									<%= content_tag :span, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' %>
-								<% end %>
+								<%= content_tag :span, nil, class: 'handle glyphicon glyphicon-resize-vertical', title: 'Drag to reorder' if can? :sort, scene %>
 							</td>
               <td>
-								<% if allow? "scenes", "edit" %>
+								<% if can? :update, scene %>
 									<%= link_to scene.name, edit_scene_path(scene), :id => "edit_#{scene.id}" %>
                 <% else %>
                   <%= scene.name %>
@@ -45,9 +43,7 @@
 							<td><%= scene.characters.map { |char| char.name }.join(", ") %></td>
 							<td><%= scene.track %></td>
 							<td class="mash-col-1-btn">
-								<% if allow? "scenes", "destroy" %>
-									<%= delete_button nil, scene, :class => 'btn-xs', :id => "delete_#{scene.id}" %>
-								<% end %>
+								<%= delete_button nil, scene, :class => 'btn-xs', :id => "delete_#{scene.id}" if can? :destroy, scene %>
 							</td>
 						<% end %>
 					<% end %>

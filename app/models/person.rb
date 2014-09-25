@@ -46,7 +46,7 @@ class Person < ActiveRecord::Base
   scope :active, where(:active => true)
 	scope :inactive, where(:active => false)
 	scope :employees, joins("INNER JOIN employees ON people.profile_id = employees.id").where(:profile_type => 'Employee')
-	scope :agma_members, employees.where(:employees => { role: 'AGMA Dancer' })
+	scope :agma_members, employees.where(:employees => { agma_artist: true })
 	
 	def name
 		if suffix.present? && middle_name.present?
@@ -74,6 +74,10 @@ class Person < ActiveRecord::Base
 	
 	def status
 		self.active? ? "Active" : "Inactive"
+	end
+	
+	def age
+	  (Time.now.to_s(:number).to_i - birth_date.to_time.to_s(:number).to_i)/10e9.to_i unless birth_date.blank?
 	end
 	
 	def activate

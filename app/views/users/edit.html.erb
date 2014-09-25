@@ -1,0 +1,52 @@
+<% content_for :title , 'Edit Permissions' %>
+<% provide :header_current, 'People' %>
+<% provide :sidebar_current, 'Employees' %>
+
+<div class="page-header">
+  <h1><%= @user.person.full_name %>
+    <small>Permissions</small>
+  </h1>
+</div>
+
+<div class="row">  
+  <%= form_for @user do |f| %>
+    <%= show_error_messages @user %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="mash-col-1-btn">&nbsp;</th>
+          <th>Permission</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mash-col-1-btn"></td>
+          <td>Basic User</td>
+          <td><p>
+            All users have the this permission.<br />
+            Allows the user to view the Dashboard.<br />
+            Allows the user to view their own Employee Profile.<br />
+            Allows the user to change their Password.<br />
+            Allows the view, add, edit, or delete their Addresses and Phone Numbers.
+          </p></td>
+        </tr>
+        
+        <% @roles.each do |role| %>
+          <tr>
+            <td class="mash-col-1-btn">
+              <%= check_box_tag "user[role_ids][]", role.id, params[:user][:role_ids].include?(role.id), id: "role_#{role.id}" %>
+            </td>
+            <td><%= role.name %></td>
+            <td><%= simple_format(role.comment) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    
+    <%= form_actions do %>
+      <%= f.submit 'Update Permissions', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', employee_path(@user.person.profile), class: 'btn btn-link' if can? :read, @user.person.profile %>
+    <% end %>
+  <% end %>
+</div>

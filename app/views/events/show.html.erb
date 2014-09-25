@@ -74,9 +74,7 @@
 	</div>
 	
 	<div class="modal-footer">
-		<% if allow? @event.type.underscore.pluralize, "edit" %>
-			<%= edit_button "Edit", eval("edit_#{@event.type.underscore}_path(@event)") %>
-		<% end %>
+		<%= edit_button "Edit", eval("edit_#{@event.type.underscore}_path(@event)") if can? :update, @event %>
 		
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	</div>

@@ -185,10 +185,7 @@ describe "Cast Pages:" do
 				should have_link "edit_#{casting.id}"
 			end
 			
-			should have_link 'Add Cast'
 			should have_link 'Delete Cast'
-			should have_link 'Publish Casting'
-			should have_link 'Download PDF'
 		end
 	end
 end

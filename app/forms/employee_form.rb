@@ -4,12 +4,12 @@ class EmployeeForm
 	include ActiveModel::Validations
 	
 	attr_accessor :first_name, :middle_name, :last_name, :suffix, :gender, :birth_date, :email
-	attr_accessor :role, :employee_num, :employment_start_date, :employment_end_date, :biography
+	attr_accessor :job_title, :employee_num, :employment_start_date, :employment_end_date, :biography
 	# attr_accessor :phone_type, :phone_num
 	# attr_accessor :addr_type, :addr, :addr2, :city, :state, :zipcode
 	
 	delegate :first_name, :middle_name, :last_name, :suffix, :gender, :birth_date, :email, :active, to: :person
-	delegate :role, :employee_num, :employment_start_date, :employment_end_date, :biography, to: :employee
+	delegate :job_title, :employee_num, :employment_start_date, :employment_end_date, :biography, to: :employee
 	# delegate :phone_type, :phone_num, to: :phone
 	# delegate :addr_type, :addr, :addr2, :city, :state, :zipcode, to: :address
 	
@@ -40,7 +40,7 @@ class EmployeeForm
 	# end
 	
 	def submit(params)
-		employee.attributes = params.slice(:role, :employee_num, :employment_start_date, :employment_end_date, :biography)
+		employee.attributes = params.slice(:job_title, :employee_num, :employment_start_date, :employment_end_date, :biography)
 		person.attributes = params.slice(:first_name, :middle_name, :last_name, :suffix, :gender, :birth_date, :email, :active)
 		# phone.attributes = params.slice(:phone_type, :phone_num)
 		# address.attributes = params.slice(:addr_type, :addr, :addr2, :city, :state, :zipcode)

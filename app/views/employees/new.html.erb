@@ -2,23 +2,20 @@
 <% provide(:header_current, 'People') %>
 <% provide(:sidebar_current, 'Employees') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Employees
-       <small>Add</small>
-     </h1>
-  </div>
-  <%= render 'employees/tools_menu' %>
+<div class="page-header">
+  <h1>Employees
+    <small>Add</small>
+  </h1>
 </div>
 
 <div class="row">
   <%= simple_form_for @employee_form, url: employees_path do |f| %>
-  	<%= show_error_messages @employee_form %>
+    <%= show_error_messages @employee_form %>
   	<%= render 'form', :f => f %>
-	  
+	
     <%= form_actions do %>
       <%= f.button :submit %>
-      <%= link_to 'Cancel', employees_path, class: 'btn btn-link' %>
+      <%= link_to 'Cancel', employees_path, class: 'btn btn-link' if can? :read, @employee %>
     <% end %>
   <% end %>
 </div>

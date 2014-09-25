@@ -1,4 +1,5 @@
 class SubscriptionsController < ApplicationController
+	authorize_resource :class => false
 	before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
 
 	def show

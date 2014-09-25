@@ -2,13 +2,10 @@
 <% provide(:header_current, 'Administration') %>
 <% provide(:sidebar_current, 'Subscription Plans') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Subscription Plans
-       <small>New</small>
-     </h1>
-  </div>
-  <%= render 'admin/subscription_plans/tools_menu' %>
+<div class="page-header">
+  <h1>Subscription Plans
+    <small>New</small>
+  </h1>
 </div>
 
 <div class="row">
@@ -17,13 +14,13 @@
     Create the Subscription Plan in the Stripe dashboard.
   </div>
   
-  <%= simple_form_for @plan, :url => admin_subscription_plans_path do |f| %>
-    <%= show_error_messages @plan %>
+  <%= simple_form_for @subscription_plan, :url => admin_subscription_plans_path do |f| %>
+    <%= show_error_messages @subscription_plan %>
     <%= render 'form', :f => f %>
 	
     <%= form_actions do %>
       <%= f.button :submit %>
-      <%= link_to 'Cancel', admin_subscription_plans_path, class: 'btn btn-link' %>
+      <%= link_to 'Cancel', admin_subscription_plans_path, class: 'btn btn-link' if can? :read, @subscription_plan %>
     <% end %>
   <% end %>
 </div>

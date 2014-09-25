@@ -1,4 +1,5 @@
 class PasswordsController < ApplicationController
+	authorize_resource :class => false
 	before_filter :get_resource, :only => [:new, :create]
 		
   def new

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140804202537) do
+ActiveRecord::Schema.define(:version => 20140910190235) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -130,7 +130,7 @@ ActiveRecord::Schema.define(:version => 20140804202537) do
     t.date     "employment_start_date"
     t.date     "employment_end_date"
     t.text     "biography"
-    t.string   "job_title",             :limit => 30
+    t.string   "job_title",             :limit => 50
     t.boolean  "agma_artist",                         :default => false, :null => false
   end
 
@@ -205,6 +205,19 @@ ActiveRecord::Schema.define(:version => 20140804202537) do
 
   add_index "people", ["account_id"], :name => "index_people_on_account_id"
   add_index "people", ["profile_id", "profile_type"], :name => "index_people_on_profile_id_and_profile_type"
+
+  create_table "permissions", :force => true do |t|
+    t.integer  "account_id", :null => false
+    t.integer  "user_id",    :null => false
+    t.integer  "role_id",    :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "permissions", ["account_id", "user_id", "role_id"], :name => "index_permissions_on_account_id_and_user_id_and_role_id", :unique => true
+  add_index "permissions", ["account_id"], :name => "index_permissions_on_account_id"
+  add_index "permissions", ["role_id"], :name => "index_permissions_on_role_id"
+  add_index "permissions", ["user_id"], :name => "index_permissions_on_user_id"
 
   create_table "phones", :force => true do |t|
     t.integer  "phoneable_id",                                    :null => false
@@ -290,15 +303,15 @@ ActiveRecord::Schema.define(:version => 20140804202537) do
   end
 
   create_table "users", :force => true do |t|
-    t.integer  "account_id",                           :null => false
-    t.integer  "person_id",                            :null => false
-    t.string   "username",               :limit => 20, :null => false
-    t.string   "password_digest",                      :null => false
-    t.string   "role",                   :limit => 20, :null => false
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.integer  "account_id",                                              :null => false
+    t.integer  "person_id",                                               :null => false
+    t.string   "username",               :limit => 20,                    :null => false
+    t.string   "password_digest",                                         :null => false
+    t.datetime "created_at",                                              :null => false
+    t.datetime "updated_at",                                              :null => false
     t.string   "password_reset_token",   :limit => 50
     t.datetime "password_reset_sent_at"
+    t.boolean  "superadmin",                           :default => false, :null => false
   end
 
   add_index "users", ["account_id"], :name => "index_users_on_account_id"

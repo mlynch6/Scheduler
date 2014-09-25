@@ -1,18 +1,18 @@
-<div class="col-md-1">
+<div class="pull-right">
   <%= gear_dropdown do %>
-		<% if allow? "company_classes", "new" %>
+		<% if can? :create, CompanyClass %>
 			<li><%= new_link "Add Company Class", new_company_class_path(date: @date) %></li>
 		<% end %>
     
-		<% if allow? "rehearsals", "new" %>
+		<% if can? :create, Rehearsal %>
 			<li><%= new_link "Add Rehearsal", new_rehearsal_path(date: @date) %></li>
 		<% end %>
 		
-		<% if allow? "costume_fittings", "new" %>
+		<% if can? :create, CostumeFitting %>
 			<li><%= new_link "Add Costume Fitting", new_costume_fitting_path(date: @date) %></li>
 		<% end %>
 		
-		<% if allow? "events", "new" %>
+		<% if can? :create, Event %>
 			<li><%= new_link "Add Event", new_event_path(date: @date) %></li>
 		<% end %>
   <% end %>

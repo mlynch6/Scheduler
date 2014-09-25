@@ -1,4 +1,5 @@
 class CastingsController < ApplicationController
+	load_and_authorize_resource
 	before_filter :get_resource, :only => [:edit, :update]
 	
 	def edit
@@ -16,12 +17,11 @@ class CastingsController < ApplicationController
 	
 private
 	def get_resource
-		@casting = Casting.find(params[:id])
 		@cast = @casting.cast
 	end
 	
 	#setup for form - dropdowns, etc
 	def form_setup
-		@employees = Employee.active.map { |employee| [employee.full_name, employee.id] }
+		@employees = Person.active.map { |person| [person.full_name, person.id] }
 	end
 end

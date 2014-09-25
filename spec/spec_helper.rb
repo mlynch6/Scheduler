@@ -43,6 +43,7 @@ Spork.prefork do
 		config.before(:suite) do
 			FactoryGirl.reload
 			DatabaseCleaner.clean_with(:truncation)
+			Rails.application.load_seed
 		end
 		
 		config.before(:each) do

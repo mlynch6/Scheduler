@@ -7,11 +7,11 @@
 #  person_id              :integer          not null
 #  username               :string(20)       not null
 #  password_digest        :string(255)      not null
-#  role                   :string(20)       not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  password_reset_token   :string(50)
 #  password_reset_sent_at :datetime
+#  superadmin             :boolean          default(FALSE), not null
 #
 
 FactoryGirl.define do
@@ -28,12 +28,20 @@ FactoryGirl.define do
 			u.person = FactoryGirl.create(:person, account: u.account) unless u.person
 		end
 		
-		trait :admin do
-			role	"Administrator"
+		trait :superadmin do
+			superadmin		true
 		end
 		
-		trait :superadmin do
-			role	"Super Administrator"
+		trait :with_role do
+			ignore do
+			  role_name 		'Administrator'
+			end
+			
+			after_create do |u, evaluator|
+				# Add Permission
+				role = Dropdown.of_type('UserRole').find_by_name(evaluator.role_name)
+				FactoryGirl.create(:permission, account: u.account, user: u, role: role)
+			end
 		end
 	end
 end

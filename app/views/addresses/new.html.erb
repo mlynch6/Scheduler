@@ -10,12 +10,10 @@
 	<% provide(:sidebar_current, 'Account') %>
 <% end %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Address
-      <small>Add</small>
-    </h1>
-  </div>
+<div class="page-header">
+  <h1>Address
+    <small>Add</small>
+  </h1>
 </div>
 
 <div class="row">
@@ -26,9 +24,9 @@
     <%= form_actions do %>
       <%= f.button :submit %>
       <% if @address.addressable_type == "Person" %>
-        <%= link_to 'Cancel', employee_path(@addressable.profile), class: 'btn btn-link' %>
+        <%= link_to 'Cancel', employee_path(@addressable.profile), class: 'btn btn-link' if can? :read, @addressable.profile %>
       <% elsif @address.addressable_type == "Account" %>
-        <%= link_to 'Cancel', account_path(@addressable), class: 'btn btn-link' %>
+        <%= link_to 'Cancel', account_path(@addressable), class: 'btn btn-link' if can? :read, @addressable %>
       <% end %>
     <% end %>
   <% end %>

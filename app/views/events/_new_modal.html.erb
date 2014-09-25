@@ -13,7 +13,7 @@
 		<div class="modal-body">
 			<div class="form-group">
 				<div class="col-md-offset-2 col-md-10">
-					<% if allow? "company_classes", "new" %>
+					<% if can? :create, CompanyClass %>
 						<div class="radio">
 				  		<label>
 				  			<%= radio_button_tag 'event_type', 'CompanyClass' %>
@@ -21,7 +21,7 @@
 				  		</label>
 						</div>
 					<% end %>
-					<% if allow? "rehearsals", "new" %>
+					<% if can? :create, Rehearsal %>
 						<div class="radio">
 				  		<label>
 				    		<%= radio_button_tag 'event_type', 'Rehearsal' %>
@@ -29,7 +29,7 @@
 				  		</label>
 						</div>
 					<% end %>
-					<% if allow? "costume_fittings", "new" %>
+					<% if can? :create, CostumeFitting %>
 						<div class="radio">
 				  		<label>
 				    		<%= radio_button_tag 'event_type', 'CostumeFitting' %>
@@ -37,7 +37,7 @@
 				  		</label>
 						</div>
 					<% end %>
-					<% if allow? "events", "new" %>
+					<% if can? :create, Event %>
 						<div class="radio">
 				  		<label>
 				    		<%= radio_button_tag 'event_type', 'Event' %>

@@ -1,9 +1,7 @@
 <% klass = ' class="active"'.html_safe %>
 <ul class="nav nav-tabs">
-	<% if allow? "seasons", "show" %>
-		<li id="overview-tab" class="active">
-      <%= icon_link 'Overview', 'asterisk', season_path(@season, :anchor => "overview"), data: { toggle: 'tab'} %>
-    </li>
-		<li id="pieces-tab"><%= icon_link 'Pieces', 'th-list', season_path(@season, :anchor => "pieces"), data: { toggle: 'tab'}, id: 'pieces-tab-link' %></li>
-	<% end %>
+  <li id="overview-tab" class="active">
+    <%= icon_link 'Overview', 'asterisk', season_path(@season, :anchor => "overview"), data: { toggle: 'tab'} %>
+  </li>
+  <li id="pieces-tab"><%= icon_link 'Pieces', 'th-list', season_path(@season, :anchor => "pieces"), data: { toggle: 'tab'}, id: 'pieces-tab-link' %></li>
 </ul>

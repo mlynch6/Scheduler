@@ -2,11 +2,8 @@
 <% provide(:header_current, 'People') %>
 <% provide(:sidebar_current, 'Users') %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1><%= yield(:title) %></h1>
-  </div>
-  <%= render 'users/tools_menu' %>
+<div class="page-header">
+  <h1><%= yield(:title) %></h1>
 </div>
 
 <div class="row">
@@ -22,12 +19,16 @@
     <tbody>
     	<% @users.each do |user| %>
   			<tr>
-  				<td><%= user.person.name %></td>
+  				<td>
+            <% if can? :read, user.person.profile %>
+              <%= link_to user.person.name, user.person.profile %>
+            <% else %>
+              <%= user.person.name %>
+            <% end %>
+          </td>
   				<td><%= user.username %></td>
   				<td class="mash-col-1-btn">
-  					<% if allow? "users", "destroy" %>
-  						<%= delete_button nil, user, :class => 'btn-xs', :id => "delete_#{user.id}" %>
-  					<% end %>
+  					<%= delete_button nil, user, :class => 'btn-xs', :id => "delete_#{user.id}" if can? :destroy, user %>
   				</td>
   			</tr>
   		<% end %>

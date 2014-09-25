@@ -1,23 +1,9 @@
-<div class="col-md-1">
-  <%= gear_dropdown do %>
-    <% if allow? "casts", "new" %>
-      <li><%= new_link "Add Cast", new_season_piece_cast_path(@sp) %></li>
-    <% end %>
-    
-  	<% if params['id'].present?  %>
-      <% if allow? "casts", "destroy" %>
-        <li><%= delete_link 'Delete Cast', @cast %></li>
-  	  <% end %>
-    <% end %>
-    
-    <li class="divider"></li>
-    
-    <% if allow? "publish_casts", "update" %>
-      <li><%= icon_link 'Publish Casting', 'book', company_publish_cast_path(@sp), method: :put %></li>
-    <% end %>
-    
-    <% if allow? "casts", "index" %>
-      <li><%= pdf_link "Download PDF", season_piece_casts_path(@sp, format: "pdf") %></li>
-    <% end %>
+<%= gear_dropdown do %>
+  <% if !@season_piece.published? && can?(:update, :publish_cast) %>
+    <li><%= icon_link 'Publish Casting', 'book', company_publish_cast_path(@season_piece), method: :put %></li>
   <% end %>
-</div>
+
+  <% if can? :read, Cast %>
+    <li><%= pdf_link "Download PDF", season_piece_casts_path(@season_piece, format: "pdf") %></li>
+  <% end %>
+<% end %>

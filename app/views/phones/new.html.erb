@@ -8,12 +8,10 @@
 	<% provide(:sidebar_current, 'Account') %>
 <% end %>
 
-<div class="row">
-  <div class="page-header col-md-11">
-  	 <h1>Phone Number
-      <small>Add</small>
-    </h1>
-  </div>
+<div class="page-header">
+  <h1>Phone Number
+    <small>Add</small>
+  </h1>
 </div>
 
 <div class="row">
@@ -25,9 +23,9 @@
       <%= f.button :submit %>
       
       <% if @phone.phoneable_type == "Person" %>
-        <%= link_to 'Cancel', employee_path(@phoneable), class: 'btn btn-link' %>
+        <%= link_to 'Cancel', employee_path(@phoneable.profile), class: 'btn btn-link' if can? :read, @phoneable.profile %>
       <% elsif @phone.phoneable_type == "Account" %>
-        <%= link_to 'Cancel', account_path(@phoneable), class: 'btn btn-link' %>
+        <%= link_to 'Cancel', account_path(@phoneable), class: 'btn btn-link' if can? :read, @phoneable %>
       <% end %>
   	<% end %>
   <% end %>

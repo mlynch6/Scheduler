@@ -1,5 +1,6 @@
 class Admin::DropdownsController < ApplicationController
-	before_filter :get_resource, :only => [:edit, :update, :destroy]
+	before_filter :build_dropdown_with_type, only: [:new, :create]
+	load_and_authorize_resource
 	
 	def index
 		params[:type] ||= Dropdown::TYPES.first
@@ -8,13 +9,9 @@ class Admin::DropdownsController < ApplicationController
 	end
 	
 	def new
-		@dropdown = Dropdown.of_type(params[:type]).new
 	end
 	
 	def create
-		params[:type] ||= params[:dropdown].delete(:dropdown_type)
-		@dropdown = Dropdown.of_type(params[:type]).new(params[:dropdown])
-		
 		if @dropdown.save
 			redirect_to admin_dropdowns_path(type: @dropdown.dropdown_type), :notice => "Successfully created the dropdown."
 		else
@@ -45,9 +42,10 @@ class Admin::DropdownsController < ApplicationController
 		end
 		render nothing: true
 	end
-	
+
 private
-	def get_resource
-		@dropdown = Dropdown.find(params[:id])
+	def build_dropdown_with_type
+		params[:type] ||= params[:dropdown].delete(:dropdown_type)
+		@dropdown = Dropdown.of_type(params[:type]).new(params[:dropdown])
 	end
 end
