@@ -232,6 +232,7 @@ describe "Employee Pages:" do
 			should have_field 'Employee #'
 			should have_field 'Employment Start Date'
 			should have_field 'Employment End Date'
+			should have_field 'AGMA Artist'
 			should have_field 'Biography'
 			should have_link 'Cancel', href: employees_path
 		end
@@ -308,6 +309,7 @@ describe "Employee Pages:" do
 			should have_field 'Employee #'
 			should have_field 'Employment Start Date'
 			should have_field 'Employment End Date'
+			should have_field 'AGMA Artist'
 			should have_field 'Biography'
 			should have_link 'Cancel', href: employee_path(@employee)
 		end

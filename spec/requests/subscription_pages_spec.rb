@@ -68,7 +68,7 @@ describe "Subscription Pages:" do
 	
 	context "#edit" do
 		before do
-			FactoryGirl.create(:subscription_plan, name: 'Dance Company')
+			Rails.application.load_seed
 			log_in
 			create_stripe_account(current_account)
 			visit subscriptions_current_path

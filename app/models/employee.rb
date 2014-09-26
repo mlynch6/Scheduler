@@ -15,7 +15,7 @@
 #
 
 class Employee < ActiveRecord::Base
-  attr_accessible :job_title, :employee_num, :employment_start_date, :employment_end_date, :biography
+  attr_accessible :job_title, :employee_num, :employment_start_date, :employment_end_date, :biography, :agma_artist
   
   belongs_to :account
 	has_one :person, :as => :profile, dependent: :destroy
