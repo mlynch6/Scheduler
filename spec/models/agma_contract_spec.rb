@@ -13,6 +13,8 @@
 #  costume_increment_min      :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
+#  demo_max_duration          :integer
+#  demo_max_num_per_day       :integer
 #
 
 require 'spec_helper'
@@ -35,6 +37,8 @@ describe AgmaContract do
 		it { should respond_to(:rehearsal_increment_min) }
 		it { should respond_to(:class_break_min) }
 		it { should respond_to(:costume_increment_min) }
+		it { should respond_to(:demo_max_duration) }
+		it { should respond_to(:demo_max_num_per_day) }
   	
 		it { should respond_to(:account) }
 		it { should respond_to(:rehearsal_breaks) }
@@ -251,6 +255,41 @@ describe AgmaContract do
 	  	
 			it "> 144 (6 hrs)" do
 				@contract.costume_increment_min = 145
+				should_not be_valid
+			end
+		end
+		
+		context "when demo_max_duration" do
+			it "not an integer" do
+				vals = ["abc", 8.6]
+				vals.each do |invalid_integer|
+					@contract.demo_max_duration = invalid_integer
+					should_not be_valid
+				end
+			end
+	  	
+			it "< 0" do
+				@contract.demo_max_duration = -1
+				should_not be_valid
+			end
+	  	
+			it "> 1439 (max min in a day)" do
+				@contract.demo_max_duration = 1440
+				should_not be_valid
+			end
+		end
+		
+		context "when demo_max_num_per_day" do
+			it "not an integer" do
+				vals = ["abc", 8.6]
+				vals.each do |invalid_integer|
+					@contract.demo_max_num_per_day = invalid_integer
+					should_not be_valid
+				end
+			end
+	  	
+			it "< 0" do
+				@contract.demo_max_num_per_day = -1
 				should_not be_valid
 			end
 		end

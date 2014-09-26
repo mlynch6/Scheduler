@@ -18,6 +18,7 @@ class Season < ActiveRecord::Base
   belongs_to :account
   has_many :season_pieces, dependent: :destroy
 	has_many :pieces, through: :season_pieces
+	has_many :lecture_demos, dependent: :destroy
   
   validates :name, presence: true, length: { maximum: 30 }
   validates_date :start_dt

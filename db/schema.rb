@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140910190235) do
+ActiveRecord::Schema.define(:version => 20140926194516) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -50,6 +50,8 @@ ActiveRecord::Schema.define(:version => 20140910190235) do
     t.integer  "costume_increment_min",      :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+    t.integer  "demo_max_duration"
+    t.integer  "demo_max_num_per_day"
   end
 
   add_index "agma_contracts", ["account_id"], :name => "index_agma_contracts_on_account_id", :unique => true
@@ -175,6 +177,18 @@ ActiveRecord::Schema.define(:version => 20140910190235) do
   add_index "invitations", ["event_id", "person_id"], :name => "index_invitations_on_event_id_and_employee_id", :unique => true
   add_index "invitations", ["event_id"], :name => "index_invitations_on_event_id"
   add_index "invitations", ["person_id"], :name => "index_invitations_on_employee_id"
+
+  create_table "lecture_demos", :force => true do |t|
+    t.integer  "account_id",               :null => false
+    t.integer  "season_id",                :null => false
+    t.string   "name",       :limit => 50, :null => false
+    t.text     "comment"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "lecture_demos", ["account_id"], :name => "index_lecture_demos_on_account_id"
+  add_index "lecture_demos", ["season_id"], :name => "index_lecture_demos_on_season_id"
 
   create_table "locations", :force => true do |t|
     t.integer  "account_id",                                 :null => false

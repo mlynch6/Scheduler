@@ -37,6 +37,7 @@ class Account < ActiveRecord::Base
 	has_many :castings, dependent: :destroy
 	has_many :events, dependent: :destroy
 	has_many :event_series, dependent: :destroy
+	has_many :lecture_demos, dependent: :destroy
   
 	before_validation :set_defaults, :if => "self.new_record?"
 	after_create :create_contract

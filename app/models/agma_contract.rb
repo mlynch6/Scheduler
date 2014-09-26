@@ -13,13 +13,15 @@
 #  costume_increment_min      :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
+#  demo_max_duration          :integer
+#  demo_max_num_per_day       :integer
 #
 
 class AgmaContract < ActiveRecord::Base
 	include ApplicationHelper
 	
   attr_accessible :rehearsal_start_min, :rehearsal_end_min, :rehearsal_max_hrs_per_week, :rehearsal_max_hrs_per_day, :rehearsal_increment_min
-  attr_accessible :class_break_min, :costume_increment_min
+  attr_accessible :class_break_min, :costume_increment_min, :demo_max_duration, :demo_max_num_per_day
   attr_accessible :rehearsal_breaks_attributes
   
   belongs_to :account
@@ -37,6 +39,8 @@ class AgmaContract < ActiveRecord::Base
   validates :rehearsal_increment_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
   validates :class_break_min,	presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 144 }
   validates :costume_increment_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
+	validates :demo_max_duration, allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than => 1440 }
+	validates :demo_max_num_per_day, allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0 }
   
   default_scope lambda { where(:account_id => Account.current_id) }
   

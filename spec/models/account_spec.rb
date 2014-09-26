@@ -53,6 +53,7 @@ describe Account do
 		it { should respond_to(:castings) }
 		it { should respond_to(:events) }
 		it { should respond_to(:event_series) }
+		it { should respond_to(:lecture_demos) }
   	
 		it { should respond_to(:save_with_payment) }
 		it { should respond_to(:list_invoices) }
@@ -467,6 +468,24 @@ describe Account do
 				account.destroy
 				series.each do |s|
 					EventSeries.find_by_id(s.id).should be_nil
+				end
+			end
+		end
+		
+		describe "lecture_demos" do
+  		before { Account.current_id = account.id }
+			let!(:demo1) { FactoryGirl.create(:lecture_demo, account: account) }
+			let!(:demo2) { FactoryGirl.create(:lecture_demo, account: account) }
+	
+			it "has multiple lecture_demos" do
+				account.lecture_demos.count.should == 2
+			end
+			
+			it "deletes associated lecture_demos" do
+				demos = account.lecture_demos
+				account.destroy
+				demos.each do |demo|
+					LectureDemo.find_by_id(demo.id).should be_nil
 				end
 			end
 		end

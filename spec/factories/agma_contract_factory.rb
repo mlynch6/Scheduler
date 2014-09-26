@@ -13,6 +13,8 @@
 #  costume_increment_min      :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
+#  demo_max_duration          :integer
+#  demo_max_num_per_day       :integer
 #
 
 FactoryGirl.define do
