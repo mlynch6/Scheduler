@@ -1,0 +1,22 @@
+<% provide(:title, 'Contract Settings | Edit Costume Fittings') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Contract') %>
+
+<% content_for :page_header do %>
+  Contract Settings
+  <small>Edit</small>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'company/contract/tabs' %>
+<% end %>
+
+<%= simple_form_for @agma_contract, url: company_contract_costume_fitting_path do |f| %>
+	<%= show_error_messages @agma_contract %>
+	<%= render 'form', :f => f %>
+
+  <%= form_actions do %>
+    <%= f.submit 'Update Costume Fitting Settings', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', company_contract_costume_fitting_path, class: 'btn btn-link' if can? :read, :contract_costume_fitting %>
+  <% end %>
+<% end %>

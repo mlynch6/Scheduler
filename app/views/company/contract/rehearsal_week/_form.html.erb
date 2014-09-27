@@ -1,0 +1,18 @@
+<%= f.input :rehearsal_start_min, wrapper: :horizontal_small,
+      collection: @times,
+			hint: 'Class & Rehearsals will start no earlier than this' %>
+<%= f.input :rehearsal_end_min, wrapper: :horizontal_small,
+      collection: @times,
+			hint: 'Class & Rehearsals will end no later than this' %>
+<%= f.input :rehearsal_max_hrs_per_week, as: :append,
+			append_text: 'hours/week',
+      field_size: '4',
+			hint: 'Maximum hours an Artist may be called upon to rehearse in a week' %>
+<%= f.input :rehearsal_max_hrs_per_day, as: :append,
+			append_text: 'hours/day',
+      field_size: '4',
+			hint: 'Maximum hours an Artist may be called upon to rehearse in a day' %>
+<%= f.input :rehearsal_increment_min, as: :append,
+			append_text: 'min',
+      field_size: '3',
+			hint: 'Increment in which a Rehearsal can be called and counted' %>

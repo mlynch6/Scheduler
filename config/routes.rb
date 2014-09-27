@@ -10,10 +10,6 @@ Scheduler::Application.routes.draw do
 		resources :addresses, 			:except => [:index, :show]
 		resources :phones, 					:except => [:index, :show]
 	end
-	resources :agma_contracts, 		:only => [:show, :edit, :update] do
-		resources :rehearsal_breaks, :only => [:new, :create]
-	end
-	resources :rehearsal_breaks, 	:only => [:destroy]
   resources :sessions
 	resources :passwords,					:only => [:new, :create]
   
@@ -70,6 +66,23 @@ Scheduler::Application.routes.draw do
 	match 'payments/update' => 'payments#update'
 	
 	namespace :company do
+		namespace :contract do
+			match 'rehearsal_week', 		to: 'rehearsal_week#show', 	:via => :get
+			match 'company_class', 			to: 'company_class#show', 	:via => :get
+			match 'costume_fitting', 		to: 'costume_fitting#show',	:via => :get
+			match 'lecture_demo', 			to: 'lecture_demo#show', 		:via => :get
+			
+			match 'rehearsal_week/edit', 	to: 'rehearsal_week#edit', 			:via => :get
+			match 'rehearsal_week', 			to: 'rehearsal_week#update', 		:via => :put
+			match 'company_class/edit', 	to: 'company_class#edit', 			:via => :get
+			match 'company_class', 				to: 'company_class#update', 		:via => :put
+			match 'costume_fitting/edit', to: 'costume_fitting#edit', 		:via => :get
+			match 'costume_fitting', 			to: 'costume_fitting#update', 	:via => :put
+			match 'lecture_demo/edit', 		to: 'lecture_demo#edit', 				:via => :get
+			match 'lecture_demo', 				to: 'lecture_demo#update', 			:via => :put
+			
+			resources :rehearsal_breaks, 	:only => [:new, :create, :destroy]
+		end
 		resources :publish_casts,				:only => [:update]
 	end
 	

@@ -33,7 +33,7 @@ describe "Rehearsal Break Pages:" do
 		it "has correct fields on form" do
 			should have_field 'Rehearsal Length'
 			should have_field 'Break Length'
-			should have_link 'Cancel', href: agma_contract_path(current_account.agma_contract)
+			should have_link 'Cancel', href: company_contract_rehearsal_week_path
 		end
 
 		context "with error" do

@@ -24,6 +24,8 @@ en:
         rehearsal_increment_min: "Rehearsal Increments"
         class_break_min: "Class Break"
         costume_increment_min: "Costume Fitting Increments"
+        demo_max_duration: "Max Duration"
+        demo_max_num_per_day: "Max Demos/Day"
       casting:
         person: "Artist"
       character:

@@ -9,13 +9,13 @@
 </div>
 
 <div class="row">
-  <%= simple_form_for [@agma_contract, @rehearsal_break] do |f| %>
+  <%= simple_form_for @rehearsal_break, url: company_contract_rehearsal_breaks_path do |f| %>
   	<%= show_error_messages @rehearsal_break %>
   	<%= render 'form', :f => f %>
 
     <%= form_actions do %>
       <%= f.submit 'Create Rehearsal Break', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', agma_contract_path(AgmaContract.first), class: 'btn btn-link' if can? :read, @agma_contract %>
+      <%= link_to 'Cancel', company_contract_rehearsal_week_path, class: 'btn btn-link' if can? :read, :contract_rehearsal_week %>
   	<% end %>
   <% end %>
 </div>

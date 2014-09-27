@@ -64,6 +64,10 @@ private
 	
 	def manage_agma_contract
 		can [:read, :update], 	AgmaContract
+		can [:read, :update],		:contract_rehearsal_week
+		can [:read, :update],		:contract_company_class
+		can [:read, :update],		:contract_costume_fitting
+		can [:read, :update],		:contract_lecture_demo
 		can :manage, 		RehearsalBreak
 	end
 	

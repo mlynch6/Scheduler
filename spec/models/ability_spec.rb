@@ -226,6 +226,26 @@ describe Ability do
 			should be_able_to :update, AgmaContract
 		end
 		
+		it "should be able to read/update AGMA Contract's Rehearsal Week" do
+			should be_able_to :read, :contract_rehearsal_week
+			should be_able_to :update, :contract_rehearsal_week
+		end
+		
+		it "should be able to read/update AGMA Contract's Company Class" do
+			should be_able_to :read, :contract_company_class
+			should be_able_to :update, :contract_company_class
+		end
+		
+		it "should be able to read/update AGMA Contract's Costume Fittings" do
+			should be_able_to :read, :contract_costume_fitting
+			should be_able_to :update, :contract_costume_fitting
+		end
+		
+		it "should be able to read/update AGMA Contract's Lecture Demos" do
+			should be_able_to :read, :contract_lecture_demo
+			should be_able_to :update, :contract_lecture_demo
+		end
+		
 		it "should be able to manage Rehearsal Breaks" do
 			should be_able_to :manage, RehearsalBreak
 		end
