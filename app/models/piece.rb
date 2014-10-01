@@ -17,7 +17,6 @@ class Piece < ActiveRecord::Base
 	attr_accessible :name, :choreographer, :music, :composer, :avg_length
 
 	belongs_to :account
-	has_many :events, dependent: :destroy
 	has_many :scenes, dependent: :destroy
 	has_many :characters, dependent: :destroy
 	has_many :season_pieces, dependent: :destroy

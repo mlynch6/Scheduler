@@ -52,7 +52,6 @@ describe Account do
 		it { should respond_to(:casts) }
 		it { should respond_to(:castings) }
 		it { should respond_to(:events) }
-		it { should respond_to(:event_series) }
 		it { should respond_to(:lecture_demos) }
   	
 		it { should respond_to(:save_with_payment) }
@@ -438,8 +437,8 @@ describe Account do
 		
 		describe "events" do
 			before { Account.current_id = account.id }
-			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, start_at: 1.hour.ago) }
-			let!(:first_event) { FactoryGirl.create(:rehearsal, account: account, start_at: 1.day.ago) }
+			let!(:second_event) { FactoryGirl.create(:event, account: account, start_at: 1.hour.ago) }
+			let!(:first_event) { FactoryGirl.create(:event, account: account, start_at: 1.day.ago) }
 	
 			it "has multiple events" do
 				account.events.count.should == 2
@@ -450,24 +449,6 @@ describe Account do
 				account.destroy
 				events.each do |event|
 					Event.find_by_id(event.id).should be_nil
-				end
-			end
-		end
-		
-		describe "event_series" do
-			before { Account.current_id = account.id }
-			let!(:second_series) { FactoryGirl.create(:event_series, account: account) }
-			let!(:first_series) { FactoryGirl.create(:event_series, account: account) }
-	
-			it "has multiple event series" do
-				account.event_series.count.should == 2
-			end
-			
-			it "deletes associated event series" do
-				series = account.event_series
-				account.destroy
-				series.each do |s|
-					EventSeries.find_by_id(s.id).should be_nil
 				end
 			end
 		end

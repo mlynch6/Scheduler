@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140926194516) do
+ActiveRecord::Schema.define(:version => 20140927165046) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -138,34 +138,22 @@ ActiveRecord::Schema.define(:version => 20140926194516) do
 
   add_index "employees", ["account_id"], :name => "index_employees_on_account_id"
 
-  create_table "event_series", :force => true do |t|
-    t.integer  "account_id",               :null => false
-    t.string   "period",     :limit => 20, :null => false
-    t.date     "start_date",               :null => false
-    t.date     "end_date",                 :null => false
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
-  end
-
-  add_index "event_series", ["account_id"], :name => "index_event_series_on_account_id"
-
   create_table "events", :force => true do |t|
-    t.integer  "account_id",                                         :null => false
-    t.string   "title",           :limit => 30,                      :null => false
-    t.string   "type",            :limit => 20, :default => "Event", :null => false
-    t.integer  "location_id",                                        :null => false
-    t.datetime "start_at",                                           :null => false
-    t.datetime "end_at",                                             :null => false
-    t.integer  "piece_id"
-    t.integer  "event_series_id"
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.integer  "account_id",                     :null => false
+    t.integer  "schedulable_id",                 :null => false
+    t.string   "schedulable_type",               :null => false
+    t.string   "title",            :limit => 30, :null => false
+    t.integer  "location_id"
+    t.datetime "start_at",                       :null => false
+    t.datetime "end_at",                         :null => false
+    t.text     "comment"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   add_index "events", ["account_id"], :name => "index_events_on_account_id"
-  add_index "events", ["event_series_id"], :name => "index_events_on_event_series_id"
   add_index "events", ["location_id"], :name => "index_events_on_location_id"
-  add_index "events", ["piece_id"], :name => "index_events_on_piece_id"
+  add_index "events", ["schedulable_id", "schedulable_type"], :name => "index_events_on_schedulable_id_and_schedulable_type"
 
   create_table "invitations", :force => true do |t|
     t.integer  "event_id",   :null => false
@@ -181,7 +169,7 @@ ActiveRecord::Schema.define(:version => 20140926194516) do
   create_table "lecture_demos", :force => true do |t|
     t.integer  "account_id",               :null => false
     t.integer  "season_id",                :null => false
-    t.string   "name",       :limit => 50, :null => false
+    t.string   "title",      :limit => 30, :null => false
     t.text     "comment"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false

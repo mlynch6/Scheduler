@@ -42,7 +42,6 @@ describe Piece do
   	it { should respond_to(:account) }
   	it { should respond_to(:scenes) }
   	it { should respond_to(:characters) }
-  	it { should respond_to(:events) }
   	it { should respond_to(:season_pieces) }
   	it { should respond_to(:seasons) }
   	
@@ -152,24 +151,6 @@ describe Piece do
 				piece.destroy
 				characters.each do |character|
 					Character.find_by_id(character.id).should be_nil
-				end
-			end
-		end
-		
-		describe "events" do
-			before { Account.current_id = account.id }
-			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }
-			let!(:first_event) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }
-	
-			it "has multiple events" do
-				account.events.count.should == 2
-			end
-			
-			it "deletes associated events" do
-				events = piece.events
-				piece.destroy
-				events.each do |event|
-					Event.find_by_id(event.id).should be_nil
 				end
 			end
 		end
