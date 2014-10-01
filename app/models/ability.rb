@@ -77,7 +77,7 @@ private
 	end
 	
 	def schedule_costume_fittings
-		can :manage,		Event, type: 'CostumeFitting'
+		can :manage,		Event, schedulable_type: 'CostumeFitting'
 		can :manage, 		CostumeFitting
 	end
 	

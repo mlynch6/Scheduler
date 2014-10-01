@@ -4,6 +4,9 @@
 en:
   helpers:
     submit:
+      costume_fitting:
+        create: "Schedule"
+        update: "Update Costume Fitting"
       lecture_demo:
         create: "Schedule"
         update: "Update Lecture Demo"
@@ -26,6 +29,10 @@ en:
         job_title: "Job Title"
         password_digest: "Password"
         password_confirmation: "Confirm Password"
+      costume_fitting:
+        start_date: "Date"
+        start_time: "Start Time"
+        comment: "Description"
       employee:
         first_name: "First Name"
         middle_name: "Middle Name"

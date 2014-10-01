@@ -9,7 +9,11 @@
 		<% end %>
 		
 		<% if can? :create, CostumeFitting %>
-			<li><%= new_link "Add Costume Fitting", new_costume_fitting_path(date: @date) %></li>
+			<li><%= new_link "Add Costume Fitting", new_schedule_costume_fitting_path(date: @date) %></li>
+		<% end %>
+    
+		<% if can? :create, LectureDemo %>
+			<li><%= new_link "Add Lecture Demo", new_schedule_lecture_demo_path(date: @date) %></li>
 		<% end %>
 		
 		<% if can? :create, Event %>

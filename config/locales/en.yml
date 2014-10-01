@@ -39,11 +39,7 @@ en:
         start_time: "Start Time"
         employee_ids: "Invitees"
       costume_fitting:
-        start_at: "Start At"
-        end_at: "End At"
-        start_date: "Date"
-        start_time: "Start Time"
-        employee_ids: "Invitees"
+        comment: "Description"
       dropdown:
         comment: "Description"
         active: "Status"
@@ -64,7 +60,6 @@ en:
         end_date: "End Date"
         invitee_ids: "Invitees"
       lecture_demo:
-        name: "Title"
         comment: "Description"
       location:
         active: "Status"

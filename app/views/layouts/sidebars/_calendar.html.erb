@@ -21,7 +21,7 @@
 		
 		<% if can? :create, CostumeFitting %>
 			<li<%= klass if yield(:sidebar_current) == "Costume Fittings" %>>
-        <%= link_to "Costume Fittings", new_costume_fitting_path %>
+        <%= link_to "Costume Fittings", schedule_costume_fittings_path %>
       </li>
 		<% end %>
 		

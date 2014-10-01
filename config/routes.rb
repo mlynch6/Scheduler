@@ -49,7 +49,6 @@ Scheduler::Application.routes.draw do
 	
   resources :events
   resources :company_classes,		:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
-  resources :costume_fittings,	:except => [:index, :show], :controller => :events, :event_type => 'CostumeFitting'
   resources :rehearsals,				:except => [:index, :show], :controller => :events, :event_type => 'Rehearsal'
   get 'events/:year/:month/:day', to: 'events#index'
 	
@@ -87,6 +86,7 @@ Scheduler::Application.routes.draw do
 	end
 	
 	namespace :schedule do
+		resources :costume_fittings,	:except => [:show]
 		resources :lecture_demos,			:except => [:show]
 	end
 	
