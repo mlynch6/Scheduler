@@ -1,36 +1,33 @@
 # == Schema Information
 #
-# Table name: events
+# Table name: rehearsals
 #
-#  id              :integer          not null, primary key
-#  account_id      :integer          not null
-#  title           :string(30)       not null
-#  type            :string(20)       default("Event"), not null
-#  location_id     :integer          not null
-#  start_at        :datetime         not null
-#  end_at          :datetime         not null
-#  piece_id        :integer
-#  event_series_id :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id         :integer          not null, primary key
+#  account_id :integer          not null
+#  season_id  :integer          not null
+#  title      :string(30)       not null
+#  piece_id   :integer          not null
+#  scene_id   :integer
+#  comment    :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 require 'spec_helper'
-require 'application_helper'
 
-describe Rehearsal do
+describe Rehearsal, focus: true do
 	let(:account) { FactoryGirl.create(:account) }
-	let(:contract) { account.agma_contract }
-	#let(:location) { FactoryGirl.create(:location, account: account) }
+	let(:season) { FactoryGirl.create(:season, account: account) }
+	let(:location) { FactoryGirl.create(:location, account: account) }
+	let(:piece) { FactoryGirl.create(:piece, account: account) }
+	let(:scene) { FactoryGirl.create(:scene, piece: piece, account: account) }
 	let(:rehearsal) { FactoryGirl.create(:rehearsal,
 											account: account,
-											#location: location,
-											title: 'Test Rehearsal',
-											start_date: Date.new(2012,1,1),
-											start_time: "9AM",
-											duration: 60,
-											) }
-	let(:piece) { rehearsal.piece }
+											season: season,
+											title: 'Rehearsal 1',
+											piece: piece,
+											comment: 'My Description') }
+	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: rehearsal) }
 	
 	before do
 		Account.current_id = account.id
@@ -38,274 +35,222 @@ describe Rehearsal do
 	end
 	
 	subject { @rehearsal }
-
-	context "accessible attributes" do
-		it { should respond_to(:piece) }
-		it { should respond_to(:break_time) }
-		it { should respond_to(:break_duration) }
-  	
-    it "should allow access to piece_id" do
-			expect do
-				Rehearsal.new(piece_id: piece.id)
-			end.not_to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-		end
-	end
 	
-	context "(Valid)" do
-		it "with minimum attributes" do
-			should be_valid
-			rehearsal.warnings.count.should == 0
+	context "accessible attributes" do
+		it { should respond_to(:title) }
+		it { should respond_to(:comment) }
+		it { should respond_to(:start_date) }
+		it { should respond_to(:start_time) }
+		it { should respond_to(:duration) }
+		it { should respond_to(:time_range) }
+  	
+  	it { should respond_to(:account) }
+  	it { should respond_to(:season) }
+		it { should respond_to(:piece) }
+		it { should respond_to(:scene) }
+		it { should respond_to(:event) }
+		it { should respond_to(:location) }
+  	
+  	it "should not allow access to account_id" do
+      expect do
+        Rehearsal.new(account_id: account.id)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+    
+    describe "account_id cannot be changed" do
+			let(:new_account) { FactoryGirl.create(:account) }
+			before { rehearsal.update_attribute(:account_id, new_account.id) }
+			
+			it { rehearsal.reload.account_id.should == account.id }
 		end
-	  	
-		it "when start_time is the same as rehearsal_start" do
-			@rehearsal.start_time = contract.rehearsal_start_time
-			@rehearsal.duration = 60
-			should be_valid
-		end
-	  	
-		it "when end_time is the same as rehearsal_end" do
-			@rehearsal.start_time = min_to_formatted_time(contract.rehearsal_end_min - 60)
-			@rehearsal.duration = 60
-			should be_valid
-		end
-	  	
-		it "when duration is a multiple of rehearsal_increment_min" do
-			@rehearsal.start_time = contract.rehearsal_start_time
-			@rehearsal.duration = contract.rehearsal_increment_min
-			should be_valid
-		end
-	  	
-		it "when start_time is at the end of the Company Class break" do
-			FactoryGirl.create(:company_class,
-						account: account,
-						start_date: Time.zone.today,
-						start_time: contract.rehearsal_start_time,
-						duration: 60)
-						
-			@rehearsal.start_date = Time.zone.today
-			@rehearsal.start_time = min_to_formatted_time(contract.rehearsal_start_min + 60 + contract.class_break_min)
-			@rehearsal.duration = contract.rehearsal_increment_min
-			should be_valid
-		end
-	end
+  end
+	
+  context "(Valid)" do  	
+  	it "with minimum attributes" do
+  		should be_valid
+  	end
+  end
   
   context "(Invalid)" do
-		it "when piece is blank" do
-			@rehearsal.piece_id = " "
-			should_not be_valid
-		end
-	  	
-		it "when duration is NOT multiple of rehearsal_increment_min" do
-			@rehearsal.start_time = min_to_formatted_time(contract.rehearsal_start_min)
-			@rehearsal.duration = contract.rehearsal_increment_min - 5
-			should_not be_valid
-		end
-	  	
-		it "when start_time is before rehearsal_start" do
-			@rehearsal.start_time = min_to_formatted_time(contract.rehearsal_start_min - 15)
-			@rehearsal.duration = contract.rehearsal_increment_min
-			should_not be_valid
-		end
-	  	
-		it "when end_time is after AgmaContract rehearsal_end" do
-			@rehearsal.start_time = min_to_formatted_time(contract.rehearsal_end_min - 5)
-			@rehearsal.duration = contract.rehearsal_increment_min
-			should_not be_valid
-		end
+  	it "when account_id is blank" do
+  		@rehearsal.account_id = " "
+  		should_not be_valid
+  	end
+		
+  	it "when season_id is blank" do
+  		@rehearsal.season_id = " "
+  		should_not be_valid
+  	end
+		
+		it "when title is blank" do
+  		@rehearsal.title = " "
+  		should_not be_valid
+  	end
   	
-		describe "when start_time" do
-			let!(:company_class) { FactoryGirl.create(:company_class,
-						account: account,
-						start_date: Time.zone.today,
-						start_time: min_to_formatted_time(contract.rehearsal_start_min),
-						duration: contract.rehearsal_increment_min
-						) }
-				
-			it "is at the beginning of the Company Class break" do
-				@rehearsal.start_date = Time.zone.today
-				@rehearsal.start_time = company_class.end_time
-				should_not be_valid
+  	it "when title is too long" do
+  		@rehearsal.title = "a"*31
+  		should_not be_valid
+  	end
+		
+  	it "when piece_id is blank" do
+  		@rehearsal.piece_id = " "
+  		should_not be_valid
+  	end
+  end
+  
+	context "(Associations)" do
+  	it "has one account" do
+			rehearsal.reload.account.should == account
+		end
+		
+  	it "has one season" do
+			rehearsal.reload.season.should == season
+		end
+		
+  	it "has one piece" do
+			rehearsal.reload.piece.should == piece
+		end
+		
+		it "has no scene" do
+			rehearsal.reload.scene.should be_nil
+		end
+		
+		it "has one scene" do
+			rehearsal.scene = scene
+			rehearsal.save
+			rehearsal.reload.scene.should == scene
+		end
+		
+  	describe "event" do
+			it "has one" do
+				rehearsal.event.should == event
 			end
-	  		
-			it "is during the Company Class break" do
-				@rehearsal.start_date = Time.zone.today
-				@rehearsal.start_time = min_to_formatted_time(contract.rehearsal_start_min + contract.rehearsal_increment_min + 5)
-				should_not be_valid
+			
+			it "deletes associated event" do
+				e = rehearsal.event
+				rehearsal.destroy
+				Event.find_by_id(e.id).should be_nil
 			end
 		end
-  end
-	
-  context "(Associations)" do
-		it "has one piece" do
-			rehearsal.reload.piece.should == piece
+		
+		describe "location" do
+	  	it "has one location" do
+				event.location = location
+				event.save
+				
+				rehearsal.reload.location.should == location
+			end
 		end
   end
   
-  context "correct value is returned for" do  
-	  it "type" do
-			rehearsal.reload.type.should == 'Rehearsal'
+	context "correct value is returned for" do
+		it "title" do
+	  	rehearsal.reload.title.should == 'Rehearsal 1'
 	  end
 	  
-	  it "break?" do
-			rehearsal.break?.should be_true
+	  it "comment" do
+	  	rehearsal.reload.comment.should == 'My Description'
 	  end
 	end
 	
-	context "(Methods)" do
-		describe "relating to breaks:" do
-			describe "when no agma_contract record exists" do
-				before do
-					contract.destroy
-				end
-				
-				it "has break_duration = 0" do
-					rehearsal.break_duration.should == 0
-				end
-				
-				it "has break_time of nil" do
-					rehearsal.break_time.should be_nil
-				end
-			end
-			
-			describe "when no break records exist" do
-				before do
-					contract.rehearsal_breaks.destroy_all
-				end
-				
-				it "has break_duration = 0" do
-					rehearsal.break_duration.should == 0
-				end
-				
-				it "has break_time of nil" do
-					rehearsal.break_time.should be_nil
-				end
-			end
-			
-			describe "with break records" do
-				let!(:break60) { FactoryGirl.create(:rehearsal_break, agma_contract: contract, 
-						break_min: 5,
-						duration_min: 60 )}
-				let!(:break90) { FactoryGirl.create(:rehearsal_break, agma_contract: contract, 
-						break_min: 10,
-						duration_min: 90 )}
-				
-				it "break_duration returns correct break_min" do
-					rehearsal.break_duration.should == 5
-				end
-				
-				it "break_time returns correct text" do
-					rehearsal.break_time.should == "9:55 AM to 10:00 AM"
-				end
-			
-				it "break_duration for 90 min rehearsal" do
-					rehearsal.duration = 90
-					rehearsal.save
-					
-					rehearsal.break_duration.should == 10
-				end
-			end
-		end
+	context "delegated" do
+		let(:e) { rehearsal.event }
+	  it "start_date" do
+	  	rehearsal.start_date.should == e.start_date
+	  end
+		
+	  it "start_time" do
+	  	rehearsal.start_time.should == e.start_time
+	  end
+		
+	  it "duration" do
+	  	rehearsal.duration.should == e.duration
+	  end
+		
+	  it "time_range" do
+	  	rehearsal.time_range.should == e.time_range
+	  end
 	end
 	
-	context "(Warnings)" do
-		let(:p1) { FactoryGirl.create(:person, :agma, account: account) }
-		let(:p2) { FactoryGirl.create(:person, :agma, account: account) }
-		let(:p3) { FactoryGirl.create(:person, :agma, account: account) }
-		
-		context "when employee is double booked" do
-			let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account, 
-													start_date: Time.zone.today,
-													start_time: "9AM",
-													duration: 30,
-													invitee_ids: [p1.id, p2.id, p3.id]) }
-			
-			let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account, 
-													location: rehearsal1.location,
-													start_date: Time.zone.today,
-													start_time: "10AM",
-													duration: 30,
-													invitee_ids: [p1.id]) }
-			
-			it "gives warning message" do
-				rehearsal.start_date = Time.zone.today
-				rehearsal.start_time = "9AM"
-				rehearsal.duration = 90
-				rehearsal.invitee_ids = [p1.id]
-				rehearsal.save
-				
-				rehearsal.warnings.count.should == 1
-				rehearsal.warnings[:emp_double_booked].should == "The following people are double booked during this time: #{p1.full_name}"
+	context "(Methods)" do		
+	  describe "search" do
+	  	before do
+	  		4.times do
+					rehearsal = FactoryGirl.create(:rehearsal, account: account)
+					event = FactoryGirl.create(:event, account: account, schedulable: rehearsal)
+				end
+				@season = FactoryGirl.create(:season, account: account)
+				@piece = FactoryGirl.create(:piece, account: account)
+				@location = FactoryGirl.create(:location, account: account)
+				@rhino = FactoryGirl.create(:rehearsal, 
+									account: account, 
+									season: @season,
+									piece: @piece,
+									title: 'My Rhino Rehearsal')
+				event = FactoryGirl.create(:event, 
+									account: account, 
+									location: @location,
+									schedulable: @rhino)
 			end
-		end
-		
-		context "when AGMA Dancer has reached maximum rehearsal hours in day" do
-			let!(:r_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: rehearsal.location,
-													start_date: Time.zone.today,
-													start_time: "10AM",
-													duration: 360,
-													invitee_ids: [p1.id, p2.id, p3.id]) }
-													
-			it "gives warning message" do
-				contract.rehearsal_max_hrs_per_day = 6
-				contract.save
-				
-				rehearsal.start_date = Time.zone.today
-				rehearsal.start_time = "4PM"
-				rehearsal.duration = 30
-				rehearsal.invitee_ids = [p1.id]
-				rehearsal.save
-				
-				rehearsal.warnings.count.should == 1
-				rehearsal.warnings[:emp_max_hr_per_day].should == "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_day} hrs/day: #{p1.full_name}"
-			end
-		end
-		
-		context "when AGMA Dancer has reached maximum rehearsal hours in a week" do
-			let!(:mon_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: rehearsal.location,
-													start_date: Date.new(2014,1,6),
-													start_time: "10AM",
-													duration: 360,
-													invitee_ids: [p1.id, p2.id, p3.id]) }
-			let!(:tues_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: rehearsal.location,
-													start_date: Date.new(2014,1,7),
-													start_time: "10AM",
-													duration: 360,
-													invitee_ids: [p1.id, p2.id, p3.id]) }
-			let!(:wed_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: rehearsal.location,
-													start_date: Date.new(2014,1,8),
-													start_time: "10AM",
-													duration: 360,
-													invitee_ids: [p1.id, p2.id, p3.id]) }
-			let!(:thurs_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: rehearsal.location,
-													start_date: Date.new(2014,1,9),
-													start_time: "10AM",
-													duration: 360,
-													invitee_ids: [p1.id, p2.id, p3.id]) }
-			let!(:fri_6hr) { FactoryGirl.create(:rehearsal, account: account, 
-													location: rehearsal.location,
-													start_date: Date.new(2014,1,10),
-													start_time: "10AM",
-													duration: 360,
-													invitee_ids: [p1.id, p3.id]) }
 			
-			it "gives warning message" do
-				contract.rehearsal_max_hrs_per_day = 6
-				contract.rehearsal_max_hrs_per_week = 30
-				contract.save
+	  	it "returns all records by default" do
+	  		query = {}
+				Rehearsal.search(query).should == Rehearsal.all
+		  end
+			
+		  describe "on title" do
+			  it "returns records with query text in title" do
+			  	query = { title: "Rhino" }
+					records = Rehearsal.search(query)
+					records.count.should == 1
+					records.should include(@rhino)
+			  end
+			end
+		  
+		  describe "on season" do
+			  it "returns records with selected season" do
+			  	query = { season: @season.id }
+					records = Rehearsal.search(query)
+					records.count.should == 1
+					records.should include(@rhino)
+			  end
+			end
+			
+		  describe "on location" do
+			  it "returns records with selected location" do
+			  	query = { loc: @location.id }
+					records = Rehearsal.search(query)
+					records.count.should == 1
+					records.should include(@rhino)
+			  end
+			end
+			
+		  describe "on piece" do
+			  it "returns records with selected piece" do
+			  	query = { piece: @piece.id }
+					records = Rehearsal.search(query)
+					records.count.should == 1
+					records.should include(@rhino)
+			  end
+			end
+	  end
+	end
+
+	describe "(Scopes)" do
+		before do
+			Rehearsal.unscoped.delete_all
+		end
+		let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account) }
+		let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account) }
+		let!(:rehearsal_wrong_acnt) { FactoryGirl.create(:rehearsal, account: FactoryGirl.create(:account) ) }
+		
+		describe "default_scope" do
+			it "returns the records in account by start_date" do
+				rehearsals = Rehearsal.all
 				
-				rehearsal.start_date = Date.new(2014,1,11)
-				rehearsal.start_time = "10AM"
-				rehearsal.duration = 30
-				rehearsal.invitee_ids = [p1.id, p2.id]
-				rehearsal.save
-				
-				rehearsal.warnings.count.should == 1
-				rehearsal.warnings[:emp_max_hr_per_week].should == "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_week} hrs/week: #{p1.full_name}"
+				rehearsals.count.should == 2
+				rehearsals.should include(rehearsal1)
+				rehearsals.should include(rehearsal2)
 			end
 		end
 	end
