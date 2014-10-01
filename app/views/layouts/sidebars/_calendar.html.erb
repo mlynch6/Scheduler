@@ -30,5 +30,11 @@
         <%= link_to "Events", new_event_path %>
       </li>
 		<% end %>
+    
+		<% if can? :create, LectureDemo %>
+			<li<%= klass if yield(:sidebar_current) == "Lecture Demos" %>>
+        <%= link_to "Lecture Demos", schedule_lecture_demos_path %>
+      </li>
+		<% end %>
   </ul>
 </nav>

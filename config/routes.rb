@@ -86,6 +86,10 @@ Scheduler::Application.routes.draw do
 		resources :publish_casts,				:only => [:update]
 	end
 	
+	namespace :schedule do
+		resources :lecture_demos,			:except => [:show]
+	end
+	
 	namespace :admin do
 		resources :accounts,						:only => [:index, :edit, :update, :destroy]
 		resources :subscription_plans,	:except => [:show]

@@ -86,6 +86,11 @@ private
 		can :manage, 		Rehearsal
 	end
 	
+	def schedule_lecture_demos
+		can :read,			Event, schedulable_type: 'LectureDemo'
+		can :manage, 		LectureDemo
+	end
+	
 	def manage_casts
 		can :read, 			Season
 		can :read, 			SeasonPiece
@@ -115,6 +120,7 @@ private
 		schedule_company_classes
 		schedule_costume_fittings
 		schedule_rehearsals
+		schedule_lecture_demos
 		manage_casts
 	end
 end

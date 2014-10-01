@@ -2,6 +2,11 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  helpers:
+    submit:
+      lecture_demo:
+        create: "Schedule"
+        update: "Update Lecture Demo"
   activemodel:
     attributes:
       account:
@@ -32,3 +37,6 @@ en:
         employment_end_date: "Employment End Date"
         job_title: "Job Title"
         agma_artist: "AGMA Artist"
+      lecture_demo:
+        start_date: "Date"
+        start_time: "Start Time"

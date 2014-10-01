@@ -1,0 +1,56 @@
+<% provide(:title, 'Lecture Demonstrations') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Lecture Demos') %>
+
+<div class="page-header">
+	 <h1><%= yield(:title) %>
+     <div class="pull-right">
+       <%= new_button "Add Lecture Demo", new_schedule_lecture_demo_path if can? :create, LectureDemo %>
+     </div>
+   </h1>
+</div>
+
+<div class="row">
+  <div class="well well-sm">
+    <%= content_tag :span, nil, class: 'glyphicon glyphicon-info-sign text-info' %>
+    A Lecture Demonstration is an event for the purpose of conveying the art form to a 
+    new audience consisting of students, teachers, patrons, or other interested persons.
+  </div>
+</div>
+
+<%= render 'schedule/lecture_demos/search_form' %>
+
+<div class="row">
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Title</th>
+	  		<th>Date</th>
+        <th>Location</th>
+	  		<th class="mash-col-1-btn">&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @lecture_demos.each do |demo| %>
+				<tr>
+					<td>
+						<% if can? :update, demo %>
+							<%= link_to demo.title, edit_schedule_lecture_demo_path(demo), :id => "edit_#{demo.id}" %>
+            <% else %>
+              <%= demo.title %>
+						<% end %>
+          </td>
+          <td><%= demo.start_date %><br /><%= demo.time_range %></td>
+					<td><%= demo.location ? demo.location.name : 'TBD' %></td>
+					<td class="mash-col-1-btn">
+						<%= delete_button nil, schedule_lecture_demo_path(demo), :class => 'btn-xs', :id => "delete_#{demo.id}" if can? :destroy, demo %>
+					</td>
+				</tr>
+			<% end %>
+      <% if @lecture_demos.size == 0 %>
+        <tr><td colspan="4">None found</td></tr>
+      <% end %>
+		</tbody>
+	</table>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+</div>

@@ -314,6 +314,27 @@ describe Ability do
 		end
 	end
 	
+	context "Schedule Lecture Demos:" do
+		before do
+			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Lecture Demos')
+			Account.current_id = @user.account_id
+			@demo = FactoryGirl.create(:lecture_demo, account: @user.account)
+		end
+		
+		it "should be able to read Lecture Demo Events" do
+			should be_able_to :read, @demo.event
+		end
+		
+		it "should NOT be able to read other types of Events" do
+			@event = FactoryGirl.create(:event, account: @user.account)
+			should_not be_able_to :read, @event
+		end
+		
+		it "should be able to manage Lecture Demos" do
+			should be_able_to :manage, LectureDemos
+		end
+	end
+	
 	context "Manage Casts:" do
 		before do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Manage Casts')
