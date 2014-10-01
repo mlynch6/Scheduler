@@ -146,7 +146,7 @@ describe LectureDemo do
 	  end
 	end
 	
-	context "(Methods)", focus: true do		
+	context "(Methods)" do		
 	  describe "search" do
 	  	before do
 	  		4.times do

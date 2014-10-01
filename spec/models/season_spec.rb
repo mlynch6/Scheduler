@@ -37,6 +37,7 @@ describe Season do
   	it { should respond_to(:season_pieces) }
   	it { should respond_to(:pieces) }
 		it { should respond_to(:lecture_demos) }
+		it { should respond_to(:costume_fittings) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -152,6 +153,23 @@ describe Season do
 				season.destroy
 				demos.each do |demo|
 					LectureDemo.find_by_id(demo.id).should be_nil
+				end
+			end
+		end
+		
+		describe "costume_fittings" do
+			let!(:fitting1) { FactoryGirl.create(:costume_fitting, account: account, season: season) }
+			let!(:fitting2) { FactoryGirl.create(:costume_fitting, account: account, season: season) }
+	
+			it "has multiple costume_fittings" do
+				season.costume_fittings.count.should == 2
+			end
+			
+			it "deletes associated costume_fittings" do
+				fittings = season.costume_fittings
+				season.destroy
+				fittings.each do |fitting|
+					CostumeFitting.find_by_id(fitting.id).should be_nil
 				end
 			end
 		end

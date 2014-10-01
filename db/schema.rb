@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140927165046) do
+ActiveRecord::Schema.define(:version => 20141001184212) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -110,6 +110,18 @@ ActiveRecord::Schema.define(:version => 20140927165046) do
 
   add_index "characters", ["account_id"], :name => "index_characters_on_account_id"
   add_index "characters", ["piece_id"], :name => "index_characters_on_piece_id"
+
+  create_table "costume_fittings", :force => true do |t|
+    t.integer  "account_id",               :null => false
+    t.integer  "season_id",                :null => false
+    t.string   "title",      :limit => 30, :null => false
+    t.text     "comment"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "costume_fittings", ["account_id"], :name => "index_costume_fittings_on_account_id"
+  add_index "costume_fittings", ["season_id"], :name => "index_costume_fittings_on_season_id"
 
   create_table "dropdowns", :force => true do |t|
     t.string   "dropdown_type", :limit => 30,                   :null => false
