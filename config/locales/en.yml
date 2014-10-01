@@ -63,6 +63,9 @@ en:
         start_time: "Start Time"
         end_date: "End Date"
         invitee_ids: "Invitees"
+      lecture_demo:
+        name: "Title"
+        comment: "Description"
       location:
         active: "Status"
       person:
