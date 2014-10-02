@@ -54,6 +54,7 @@ describe Account do
 		it { should respond_to(:events) }
 		it { should respond_to(:lecture_demos) }
 		it { should respond_to(:costume_fittings) }
+		it { should respond_to(:rehearsals) }
   	
 		it { should respond_to(:save_with_payment) }
 		it { should respond_to(:list_invoices) }
@@ -486,6 +487,24 @@ describe Account do
 				account.destroy
 				fittings.each do |fitting|
 					CostumeFitting.find_by_id(fitting.id).should be_nil
+				end
+			end
+		end
+		
+		describe "rehearsals" do
+  		before { Account.current_id = account.id }
+			let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account) }
+			let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account) }
+
+			it "has multiple rehearsals" do
+				account.rehearsals.count.should == 2
+			end
+		
+			it "deletes associated rehearsals" do
+				rehearsals = account.rehearsals
+				account.destroy
+				rehearsals.each do |rehearsal|
+					Rehearsal.find_by_id(rehearsal.id).should be_nil
 				end
 			end
 		end

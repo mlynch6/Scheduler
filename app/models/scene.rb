@@ -20,6 +20,7 @@ class Scene < ActiveRecord::Base
   belongs_to :piece
   has_many :appearances, dependent: :destroy
   has_many :characters, through: :appearances
+	has_many :rehearsals, dependent: :destroy
   
   validates :account_id, presence: true
   validates :piece_id, presence: true

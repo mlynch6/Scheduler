@@ -20,6 +20,7 @@ class Season < ActiveRecord::Base
 	has_many :pieces, through: :season_pieces
 	has_many :lecture_demos, dependent: :destroy
 	has_many :costume_fittings, dependent: :destroy
+	has_many :rehearsals, dependent: :destroy
   
   validates :name, presence: true, length: { maximum: 30 }
   validates_date :start_dt

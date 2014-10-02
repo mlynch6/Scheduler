@@ -38,6 +38,7 @@ describe Scene do
   	it { should respond_to(:piece) }
   	it { should respond_to(:appearances) }
   	it { should respond_to(:characters) }
+		it { should respond_to(:rehearsals) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -164,6 +165,24 @@ describe Scene do
 	
 			it "has multiple characters" do
 				scene.characters.count.should == 2
+			end
+		end
+		
+		describe "rehearsals" do
+  		before { Account.current_id = account.id }
+			let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account, piece: piece, scene: scene) }
+			let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account, piece: piece, scene: scene) }
+
+			it "has multiple rehearsals" do
+				scene.rehearsals.count.should == 2
+			end
+		
+			it "deletes associated rehearsals" do
+				rehearsals = scene.rehearsals
+				scene.destroy
+				rehearsals.each do |rehearsal|
+					Rehearsal.find_by_id(rehearsal.id).should be_nil
+				end
 			end
 		end
   end
