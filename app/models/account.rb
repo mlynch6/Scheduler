@@ -39,6 +39,7 @@ class Account < ActiveRecord::Base
 	has_many :lecture_demos, dependent: :destroy
 	has_many :costume_fittings, dependent: :destroy
 	has_many :rehearsals, dependent: :destroy
+	has_many :company_classes, dependent: :destroy
   
 	before_validation :set_defaults, :if => "self.new_record?"
 	after_create :create_contract

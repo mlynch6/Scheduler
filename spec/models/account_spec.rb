@@ -55,6 +55,7 @@ describe Account do
 		it { should respond_to(:lecture_demos) }
 		it { should respond_to(:costume_fittings) }
 		it { should respond_to(:rehearsals) }
+		it { should respond_to(:company_classes) }
   	
 		it { should respond_to(:save_with_payment) }
 		it { should respond_to(:list_invoices) }
@@ -505,6 +506,24 @@ describe Account do
 				account.destroy
 				rehearsals.each do |rehearsal|
 					Rehearsal.find_by_id(rehearsal.id).should be_nil
+				end
+			end
+		end
+		
+		describe "company_classes" do
+  		before { Account.current_id = account.id }
+			let!(:company_class1) { FactoryGirl.create(:company_class, account: account) }
+			let!(:company_class2) { FactoryGirl.create(:company_class, account: account) }
+
+			it "has multiple company_classes" do
+				account.company_classes.count.should == 2
+			end
+		
+			it "deletes associated company_classes" do
+				company_classes = account.company_classes
+				account.destroy
+				company_classes.each do |company_class|
+					CompanyClass.find_by_id(company_class.id).should be_nil
 				end
 			end
 		end

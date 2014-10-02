@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141001211916) do
+ActiveRecord::Schema.define(:version => 20141002163953) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -110,6 +110,30 @@ ActiveRecord::Schema.define(:version => 20141001211916) do
 
   add_index "characters", ["account_id"], :name => "index_characters_on_account_id"
   add_index "characters", ["piece_id"], :name => "index_characters_on_piece_id"
+
+  create_table "company_classes", :force => true do |t|
+    t.integer  "account_id",                                   :null => false
+    t.integer  "season_id"
+    t.string   "title",       :limit => 30,                    :null => false
+    t.text     "comment"
+    t.datetime "start_at",                                     :null => false
+    t.integer  "duration",                                     :null => false
+    t.date     "end_date",                                     :null => false
+    t.integer  "location_id",                                  :null => false
+    t.boolean  "monday",                    :default => false, :null => false
+    t.boolean  "tuesday",                   :default => false, :null => false
+    t.boolean  "wednesday",                 :default => false, :null => false
+    t.boolean  "thursday",                  :default => false, :null => false
+    t.boolean  "friday",                    :default => false, :null => false
+    t.boolean  "saturday",                  :default => false, :null => false
+    t.boolean  "sunday",                    :default => false, :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
+  end
+
+  add_index "company_classes", ["account_id"], :name => "index_company_classes_on_account_id"
+  add_index "company_classes", ["location_id"], :name => "index_company_classes_on_location_id"
+  add_index "company_classes", ["season_id"], :name => "index_company_classes_on_season_id"
 
   create_table "costume_fittings", :force => true do |t|
     t.integer  "account_id",               :null => false
