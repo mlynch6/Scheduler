@@ -125,6 +125,7 @@ describe "Lecture Demo Pages:" do
 			should have_field 'Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'
+			should have_field 'Description'
 			should have_link 'Cancel', href: schedule_lecture_demos_path
 		end
 		
@@ -209,6 +210,7 @@ describe "Lecture Demo Pages:" do
 			should have_field 'Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'
+			should have_field 'Description'
 			should have_link 'Cancel', href: schedule_lecture_demos_path
 		end
 		

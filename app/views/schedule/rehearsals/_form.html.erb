@@ -1,0 +1,26 @@
+<%= f.input :title,
+      required: true %>
+<%= f.input :piece_id, as: :chosen_select,
+      collection: Piece.all, 
+      include_blank: true,
+      required: true,
+      input_html: {data: { rel: '/schedule/rehearsals/scenes_by_piece' }} %>
+<%= f.input :scene_id, 
+      collection: [], 
+      include_blank: true %>
+<%= f.input :location_id, 
+      collection: Location.active, 
+      include_blank: true %>
+<%= f.input :season_id, 
+      collection: Season.all, 
+      include_blank: true,
+      required: true %>
+<%= f.input :start_date, as: :date_picker,
+      required: true %>
+<%= f.input :start_time, as: :time_prepend,
+      required: true  %>      
+<%= f.input :duration, as: :append,
+      append_text:'min',
+      required: true  %>
+<%= f.input :comment, as: :text,
+      input_html: { rows: 5 } %>

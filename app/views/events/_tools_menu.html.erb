@@ -5,7 +5,7 @@
 		<% end %>
     
 		<% if can? :create, Rehearsal %>
-			<li><%= new_link "Add Rehearsal", new_rehearsal_path(date: @date) %></li>
+			<li><%= new_link "Add Rehearsal", new_schedule_rehearsal_path(date: @date) %></li>
 		<% end %>
 		
 		<% if can? :create, CostumeFitting %>

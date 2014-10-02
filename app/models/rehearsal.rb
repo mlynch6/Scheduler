@@ -24,7 +24,7 @@ class Rehearsal < ActiveRecord::Base
 	has_one :event, :as => :schedulable, dependent: :destroy
 	has_one :location, :through => :event
 	
-	delegate :start_date, :start_time, :duration, :time_range, to: :event
+	delegate :start_date, :start_time, :duration, to: :event
 	
 	validates :account_id,	presence: true
 	validates :season_id,	presence: true
@@ -60,23 +60,29 @@ class Rehearsal < ActiveRecord::Base
 # 	validate :check_contracted_end, :if => "start_time.present? && duration.present?"
 # 	validate :check_duration_increments, :if => "start_at.present? && end_at.present?"
 # 	validate :check_company_class_break, :if => "start_date.present? && start_time.present?"
-#
-# 	def break_duration
-# 		break_record = get_break_record
-# 		break_record.present? ? break_record.break_min : 0
-# 	end
-#
-# 	def break_time
-# 		break_record = get_break_record
-#
-# 		if break_record.present?
-# 			break_start = end_at - break_record.break_min*60
-# 			return "#{break_start.in_time_zone(account.time_zone).to_s(:hr12)} to #{end_time}"
-# 		else
-# 			return nil
-# 		end
-# 	end
-#
+
+  def time_range
+		end_at = event.end_at - break_duration*60
+		end_time = end_at.try(:in_time_zone, timezone).try(:to_s, :hr12)
+		"#{start_time} to #{end_time}"
+	end
+
+	def break_duration
+		@break_record ||= get_break_record
+		@break_record.present? ? @break_record.break_min : 0
+	end
+
+	# def break_time_range
+	# 	@break_record ||= get_break_record
+	#
+	# 	if @break_record.present?
+	# 		break_start = event.end_at - @break_record.break_min*60
+	# 		return "#{break_start.in_time_zone(account.time_zone).to_s(:hr12)} to #{event.end_time}"
+	# 	else
+	# 		return nil
+	# 	end
+	# end
+
 # 	# Warnings
 # 	def warnings
 # 		w = super
@@ -90,8 +96,23 @@ class Rehearsal < ActiveRecord::Base
 # 		return w
 # 	end
 #
-# protected
-#
+private
+
+	def get_break_record
+		contract = self.account.agma_contract
+		if contract.present?
+			rehearsal_break = contract.rehearsal_breaks.where(duration_min: duration).select('break_min').first
+			rehearsal_break if rehearsal_break.present?
+		else
+			return nil
+		end
+	end
+	
+	def timezone
+		@timezone ||= Account.find(Account.current_id).time_zone if Account.current_id
+		@timezone ||= account.time_zone if account
+	end
+
 # 	def check_duration_increments
 # 		if contract.present? && duration.remainder(contract.rehearsal_increment_min) != 0
 # 			errors.add(:duration, "must be in increments of #{contract.rehearsal_increment_min} minutes")
@@ -153,17 +174,6 @@ class Rehearsal < ActiveRecord::Base
 # 				overtime_list = dancers_above_max.map { |emp| emp.full_name }.join(", ")
 # 				return "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_week} hrs/week: "+overtime_list
 # 			end
-# 		end
-# 	end
-#
-# 	def get_break_record
-# 		if contract.present?
-# 			rb = contract.rehearsal_breaks.where(duration_min: duration).select('break_min').first
-# 			if rb.present?
-# 				rb
-# 			end
-# 		else
-# 			return nil
 # 		end
 # 	end
 end

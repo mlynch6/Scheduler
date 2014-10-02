@@ -1,0 +1,21 @@
+<% provide(:title, 'Edit Rehearsal') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Rehearsals') %>
+
+<div class="page-header">
+  <h1>Rehearsals
+    <small>Edit</small>
+  </h1>
+</div>
+
+<div class="row">
+  <%= simple_form_for @rehearsal_form, url: schedule_rehearsal_path(@rehearsal), method: :put do |f| %>
+  	<%= show_error_messages @rehearsal_form %>
+    <%= render 'form', :f => f %>
+
+    <%= form_actions do %>
+      <%= f.submit 'Update Rehearsal', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', schedule_rehearsals_path, class: 'btn btn-link' if can? :read, Rehearsal %>
+    <% end %>
+  <% end %>
+</div>

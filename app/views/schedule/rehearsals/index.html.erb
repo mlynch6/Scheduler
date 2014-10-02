@@ -1,0 +1,53 @@
+<% provide(:title, 'Rehearsals') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Rehearsals') %>
+
+<div class="page-header">
+	 <h1><%= yield(:title) %>
+     <div class="pull-right">
+       <%= new_button "Add Rehearsal", new_schedule_rehearsal_path if can? :create, Rehearsal %>
+     </div>
+   </h1>
+</div>
+
+<%= render 'schedule/rehearsals/search_form' %>
+
+<div class="row">
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Title</th>
+        <th>Piece</th>
+	  		<th>Date</th>
+        <th>Location</th>
+	  		<th class="mash-col-1-btn">&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @rehearsals.each do |rehearsal| %>
+				<tr>
+					<td>
+						<% if can? :update, rehearsal %>
+							<%= link_to rehearsal.title, edit_schedule_rehearsal_path(rehearsal), :id => "edit_#{rehearsal.id}" %>
+            <% else %>
+              <%= rehearsal.title %>
+						<% end %>
+          </td>
+          <td><%= rehearsal.piece.name %></td>
+          <td>
+            <%= rehearsal.start_date %><br />
+            <%= rehearsal.time_range %>
+          </td>
+					<td><%= rehearsal.location ? rehearsal.location.name : 'TBD' %></td>
+					<td class="mash-col-1-btn">
+						<%= delete_button nil, schedule_rehearsal_path(rehearsal), :class => 'btn-xs', :id => "delete_#{rehearsal.id}" if can? :destroy, rehearsal %>
+					</td>
+				</tr>
+			<% end %>
+      <% if @rehearsals.size == 0 %>
+        <tr><td colspan="5">None found</td></tr>
+      <% end %>
+		</tbody>
+	</table>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+</div>

@@ -27,7 +27,7 @@ describe Rehearsal, focus: true do
 											title: 'Rehearsal 1',
 											piece: piece,
 											comment: 'My Description') }
-	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: rehearsal) }
+	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: rehearsal, start_time: '10:15am', duration: 60) }
 	
 	before do
 		Account.current_id = account.id
@@ -151,6 +151,21 @@ describe Rehearsal, focus: true do
 	  it "comment" do
 	  	rehearsal.reload.comment.should == 'My Description'
 	  end
+		
+	  describe "time_range" do
+			it "without Rehearsal Break" do
+		  	rehearsal.time_range.should == "10:15 AM to 11:15 AM"
+			end
+			
+			it "with Rehearsal Break" do
+				contract = FactoryGirl.create(:rehearsal_break, 
+						agma_contract: account.agma_contract, 
+						break_min: 5,
+						duration_min: event.duration)
+				e = Event.find(event.id)
+		  	rehearsal.time_range.should == "10:15 AM to 11:10 AM"
+			end
+	  end
 	end
 	
 	context "delegated" do
@@ -165,10 +180,6 @@ describe Rehearsal, focus: true do
 		
 	  it "duration" do
 	  	rehearsal.duration.should == e.duration
-	  end
-		
-	  it "time_range" do
-	  	rehearsal.time_range.should == e.time_range
 	  end
 	end
 	

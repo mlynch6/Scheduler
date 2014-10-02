@@ -15,7 +15,7 @@
     
 		<% if can? :create, Rehearsal %>
 			<li<%= klass if yield(:sidebar_current) == "Rehearsals" %>>
-        <%= link_to "Rehearsals", new_rehearsal_path %>
+        <%= link_to "Rehearsals", schedule_rehearsals_path %>
       </li>
 		<% end %>
 		

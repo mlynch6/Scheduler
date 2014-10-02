@@ -10,6 +10,9 @@ en:
       lecture_demo:
         create: "Schedule"
         update: "Update Lecture Demo"
+      rehearsal:
+        create: "Schedule"
+        update: "Update Rehearsal"
   activemodel:
     attributes:
       account:
@@ -47,3 +50,8 @@ en:
       lecture_demo:
         start_date: "Date"
         start_time: "Start Time"
+        comment: "Description"
+      rehearsal:
+        start_date: "Date"
+        start_time: "Start Time"
+        comment: "Description"

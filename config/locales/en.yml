@@ -75,11 +75,7 @@ en:
       piece:
         avg_length: "Average Length"
       rehearsal:
-        start_at: "Start At"
-        end_at: "End At"
-        start_date: "Date"
-        start_time: "Start Time"
-        employee_ids: "Invitees"
+        comment: "Description"
       rehearsal_break:
         break_min: "Break Length"
         duration_min: "Rehearsal Length"
