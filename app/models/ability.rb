@@ -72,7 +72,7 @@ private
 	end
 	
 	def schedule_company_classes
-		can :manage,		Event, type: 'CompanyClass'
+		can :manage,		Event, schedulable_type: 'CompanyClass'
 		can :manage, 		CompanyClass
 	end
 	
@@ -82,7 +82,7 @@ private
 	end
 	
 	def schedule_rehearsals
-		can :manage,		Event, type: 'Rehearsal'
+		can :manage,		Event, schedulable_type: 'Rehearsal'
 		can :manage, 		Rehearsal
 	end
 	

@@ -1,0 +1,62 @@
+<%= f.input :title, 
+      required: true %>
+<%= f.input :location_id, 
+      collection: Location.active, 
+      include_blank: true, 
+      required: true %>
+<%= f.input :season_id, 
+      collection: Season.all, 
+      include_blank: true, 
+      required: true  %>
+
+<%= f.input :start_date, required: true do %>
+  <div class="col-sm-4 col-md-4">
+    <%= f.input_field :start_date, as: :date_picker %>
+  </div>
+  
+  <%= f.label :end_date, required: true  %>
+  <div class="col-sm-4 col-md-4">
+    <%= f.input_field :end_date, as: :date_picker %>
+  </div>
+<% end %>
+
+<%= f.input :start_time, required: true do %>
+  <div class="col-sm-4 col-md-4">
+    <%= f.input_field :start_time, as: :time_prepend  %>
+  </div>
+  
+  <%= f.label :duration, required: true  %>
+  <div class="col-sm-3 col-md-3">
+    <%= f.input_field :duration, as: :append,
+        append_text:'min' %>
+  </div>
+<% end %>
+
+<%= f.input :monday, label: 'Day(s) of Week', required: true, wrapper: :horizontal_form do %>
+  <div class="btn-group" data-toggle="buttons">
+    <label class="btn btn-default<%= ' active' if params[:company_class].present? && params[:company_class][:sunday] == '1' %>">
+      <%= f.input_field :sunday, as: :boolean  %> Sun
+    </label>
+    <label class="btn btn-default<%= ' active' if params[:company_class].present? && params[:company_class][:monday] == '1' %>">
+      <%= f.input_field :monday, as: :boolean  %> Mon
+    </label>
+    <label class="btn btn-default<%= ' active' if params[:company_class].present? && params[:company_class][:tuesday] == '1' %>">
+      <%= f.input_field :tuesday, as: :boolean  %> Tues
+    </label>
+    <label class="btn btn-default<%= ' active' if params[:company_class].present? && params[:company_class][:wednesday] == '1' %>">
+      <%= f.input_field :wednesday, as: :boolean  %> Wed
+    </label>
+    <label class="btn btn-default<%= ' active' if params[:company_class].present? && params[:company_class][:thursday] == '1' %>">
+      <%= f.input_field :thursday, as: :boolean  %> Thur
+    </label>
+    <label class="btn btn-default<%= ' active' if params[:company_class].present? && params[:company_class][:friday] == '1' %>">
+      <%= f.input_field :friday, as: :boolean  %> Fri
+    </label>
+    <label class="btn btn-default<%= ' active' if params[:company_class].present? && params[:company_class][:saturday] == '1' %>">
+      <%= f.input_field :saturday, as: :boolean  %> Sat
+    </label>
+  </div>
+<% end %>
+
+<%= f.input :comment, as: :text,
+      input_html: { rows: 5 } %>

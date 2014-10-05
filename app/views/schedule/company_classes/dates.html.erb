@@ -1,0 +1,62 @@
+<% provide :title, @company_class.title %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, 'Company Classes' %>
+
+<% content_for :page_header do %>
+  <%= @company_class.title %>
+  <small>Dates</small>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/company_classes/tabs' %>
+<% end %>
+
+<div class="row">
+  
+  <div class="well well-sm">
+    <%= content_tag :span, nil, class: 'glyphicon glyphicon-info-sign text-info' %>
+    Changes will be highlighted
+  </div>
+  
+	<table class="table table-hover">
+		<thead>
+	  	<tr>
+	  		<th>Date</th>
+	  		<th>Time</th>
+        <th>Duration</th>
+        <th>Location</th>
+	  		<th class="mash-col-1-btn">&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @events.each do |event| %>
+				<tr>
+          <td>
+            <% if can? :update, event %>
+              <%= link_to event.start_date(:date_words), edit_schedule_event_path(event), :id => "edit_#{event.id}" %>
+            <% else %>
+              <%= event.start_date(:date_words) %>
+            <% end %>
+            <br />
+            <span class="text-muted"><%= event.start_date(:dayofweek) %></span>
+          </td>
+          <td<%= ' class="warning"'.html_safe if event.time_range != @company_class.time_range %>>
+            <%= event.time_range %>
+          </td>
+          <td<%= ' class="warning"'.html_safe if event.duration != @company_class.duration %>>
+            <%= event.duration %> minutes
+          </td>
+					<td<%= ' class="warning"'.html_safe if event.location_id != @company_class.location_id %>>
+            <%= event.location.name %>
+          </td>
+					<td class="mash-col-1-btn">
+						<%= delete_button nil, schedule_event_path(event), :class => 'btn-xs', :id => "delete_#{event.id}" if can? :destroy, event %>
+					</td>
+				</tr>
+			<% end %>
+      <% if @events.size == 0 %>
+        <tr><td colspan="4">None found</td></tr>
+      <% end %>
+		</tbody>
+	</table>
+</div>

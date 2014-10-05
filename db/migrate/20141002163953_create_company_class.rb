@@ -2,7 +2,7 @@ class CreateCompanyClass < ActiveRecord::Migration
   def change
     create_table :company_classes do |t|
       t.integer :account_id, 	:null => false
-      t.integer :season_id
+      t.integer :season_id, 	:null => false
       t.string :title, 				:null => false, :limit => 30
       t.text :comment
       t.datetime :start_at, 	:null => false

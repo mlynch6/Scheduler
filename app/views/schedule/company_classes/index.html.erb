@@ -1,0 +1,53 @@
+<% provide(:title, 'Company Classes') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Company Classes') %>
+
+<div class="page-header">
+	 <h1><%= yield(:title) %>
+     <div class="pull-right">
+       <%= new_button "Add Company Class", new_schedule_company_class_path if can? :create, CompanyClass %>
+     </div>
+   </h1>
+</div>
+
+<%= render 'schedule/company_classes/search_form' %>
+
+<div class="row">
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Title</th>
+	  		<th>Date/Time</th>
+        <th>Days of Week</th>
+        <th>Location</th>
+	  		<th class="mash-col-1-btn">&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @company_classes.each do |company_class| %>
+				<tr>
+					<td>
+						<% if can? :update, company_class %>
+							<%= link_to company_class.title, schedule_company_class_path(company_class), :id => "edit_#{company_class.id}" %>
+            <% else %>
+              <%= company_class.title %>
+						<% end %>
+          </td>
+          <td>
+            <%= company_class.date_range %><br />
+            <%= company_class.time_range %>
+          </td>
+          <td><%= company_class.days_of_week %></td>
+					<td><%= company_class.location.name %></td>
+					<td class="mash-col-1-btn">
+						<%= delete_button nil, schedule_company_class_path(company_class), :class => 'btn-xs', :id => "delete_#{company_class.id}" if can? :destroy, company_class %>
+					</td>
+				</tr>
+			<% end %>
+      <% if @company_classes.size == 0 %>
+        <tr><td colspan="5">None found</td></tr>
+      <% end %>
+		</tbody>
+	</table>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+</div>

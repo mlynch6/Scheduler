@@ -33,11 +33,10 @@ en:
         is_child: "Child"
         speaking: "Speaking Role"
       company_class:
-        start_at: "Start At"
-        end_at: "End At"
-        start_date: "Date"
+        start_date: "Start Date"
         start_time: "Start Time"
-        employee_ids: "Invitees"
+        end_date: "End Date"
+        comment: "Description"
       costume_fitting:
         comment: "Description"
       dropdown:

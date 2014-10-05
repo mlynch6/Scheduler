@@ -4,7 +4,7 @@
 #
 #  id          :integer          not null, primary key
 #  account_id  :integer          not null
-#  season_id   :integer
+#  season_id   :integer          not null
 #  title       :string(30)       not null
 #  comment     :text
 #  start_at    :datetime         not null
@@ -33,10 +33,10 @@ describe CompanyClass do
 											season: season,
 											title: 'Company Class 1',
 											comment: 'My Description',
-											start_date: Date.new(2014,1,1),
+											start_date: '01/01/2014',
 											start_time: '9:15 AM',
 											duration: 60,
-											end_date: Date.new(2014,1,15),
+											end_date: '01/15/2014',
 											location: location,
 											monday: true,
 											tuesday: false,
@@ -45,7 +45,6 @@ describe CompanyClass do
 											friday: true,
 											saturday: false,
 											sunday: false ) }
-	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: company_class) }
 	
 	before do
 		Account.current_id = account.id
@@ -74,7 +73,7 @@ describe CompanyClass do
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:season) }
-		it { should respond_to(:event) }
+		it { should respond_to(:events) }
 		it { should respond_to(:location) }
   	
   	it "should not allow access to account_id" do
@@ -106,6 +105,11 @@ describe CompanyClass do
   context "(Invalid)" do
   	it "when account_id is blank" do
   		@company_class.account_id = " "
+  		should_not be_valid
+  	end
+		
+  	it "when season_id is blank" do
+  		@company_class.season_id = " "
   		should_not be_valid
   	end
 		
@@ -204,17 +208,22 @@ describe CompanyClass do
   		@company_class.sunday = ""
   		should_not be_valid
   	end
+		
+  	it "when no Day of Week is selected" do
+  		@company_class.sunday = false
+			@company_class.monday = false
+			@company_class.tuesday = false
+			@company_class.wednesday = false
+			@company_class.thursday = false
+			@company_class.friday = false
+			@company_class.saturday = false
+  		should_not be_valid
+  	end
   end
   
 	context "(Associations)" do
   	it "has one account" do
 			company_class.reload.account.should == account
-		end
-		
-  	it "has no season" do
-			company_class.season = nil
-			company_class.save
-			company_class.reload.season.should be_nil
 		end
 		
   	it "has one season" do
@@ -228,14 +237,16 @@ describe CompanyClass do
 		end
 		
   	describe "event" do
-			it "has one" do
-				company_class.event.should == event
+			it "has multiple events" do
+				company_class.events.count.should == 7
 			end
 			
-			it "deletes associated event" do
-				e = company_class.event
+			it "deletes associated events" do
+				events = company_class.events
 				company_class.destroy
-				Event.find_by_id(e.id).should be_nil
+				events.each do |event|
+					Event.find_by_id(event.id).should be_nil
+				end
 			end
 		end
   end
@@ -304,6 +315,17 @@ describe CompanyClass do
 	  it "time_range" do
 	  	company_class.time_range.should == '9:15 AM to 10:15 AM'
 	  end
+		
+	  it "days_of_week" do
+	  	company_class.days_of_week.should == 'M W F'
+			
+			company_class.tuesday = true
+			company_class.thursday = true
+			company_class.saturday = true
+			company_class.sunday = true
+			company_class.save
+			company_class.days_of_week.should == 'Su M T W Th F Sa'
+	  end
 	end
 	
 	context "(Methods)" do		
@@ -311,7 +333,6 @@ describe CompanyClass do
 	  	before do
 	  		4.times do
 					company_class = FactoryGirl.create(:company_class, account: account)
-					event = FactoryGirl.create(:event, account: account, schedulable: company_class)
 				end
 				@season = FactoryGirl.create(:season, account: account)
 				@location = FactoryGirl.create(:location, account: account)
@@ -320,9 +341,6 @@ describe CompanyClass do
 									season: @season,
 									location: @location,
 									title: 'My Rhino Demo')
-				event = FactoryGirl.create(:event, 
-									account: account,
-									schedulable: @rhino)
 			end
 			
 	  	it "returns all records by default" do
@@ -339,7 +357,7 @@ describe CompanyClass do
 			  end
 			end
 		  
-		  describe "on season", focus: true do
+		  describe "on season" do
 			  it "returns records with selected season" do
 			  	query = { season: @season.id }
 					records = CompanyClass.search(query)

@@ -48,20 +48,20 @@ class Event < ActiveRecord::Base
 			between(date_in_time_zone.beginning_of_week, date_in_time_zone.end_of_week)
 		end )
 		
-	def start_date
-		sd = @start_date || start_at.try(:in_time_zone, timezone).try(:to_date).try(:to_s, :default)
+	def start_date(format = :default)
+		sd = @start_date || start_at.try(:in_time_zone, timezone).try(:to_date).try(:to_s, format)
 		#Return a string
-		(sd.kind_of? Date) ? sd.to_s(:default) : sd
+		(sd.kind_of? Date) ? sd.to_s(format) : sd
 	end
 	
-	def start_time
-		st = @start_time || start_at.try(:in_time_zone, timezone).try(:to_s, :hr12)
+	def start_time(format = :hr12)
+		st = @start_time || start_at.try(:in_time_zone, timezone).try(:to_s, format)
 		#Return a string
-		(st.kind_of? Time) ? st.to_s(:hr12) : st
+		(st.kind_of? Time) ? st.to_s(format) : st
 	end
 	
-	def end_time
-		end_at.try(:in_time_zone, timezone).try(:to_s, :hr12)
+	def end_time(format = :hr12)
+		end_at.try(:in_time_zone, timezone).try(:to_s, format)
 	end
 	
 	def duration
@@ -70,15 +70,14 @@ class Event < ActiveRecord::Base
 		tmp
 	end
 	
-	def time_range
-		"#{start_time} to #{end_time}"
+	def time_range(format = :hr12)
+		"#{start_time(format)} to #{end_time(format)}"
 	end
 	
 protected
 	def save_start_at
-		sdt = (@start_date.kind_of? String) ? Date.strptime(@start_date, '%m/%d/%Y') : @start_date
-		stm = (@start_time.kind_of? String) ? @start_time : @start_time.to_s(:db)
-		self.start_at = ActiveSupport::TimeZone[timezone].parse(sdt.to_s(:db) +" "+ stm)
+		date_time_text = Date.strptime(start_date, '%m/%d/%Y').to_s(:db) + " " + start_time
+		self.start_at = ActiveSupport::TimeZone[timezone].parse(date_time_text)
 	rescue ArgumentError
 		errors.add :start_at, "cannot be parsed"
 	end

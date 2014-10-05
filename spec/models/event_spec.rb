@@ -200,29 +200,53 @@ describe Event do
 			e2.title.should == 'Test Event'
 	  end
 	  
-	  it "start_date" do
-			e2.start_date.should == '01/01/2012'
-	  end
+		context "start_date" do
+		  it "in default format" do
+				e2.start_date.should == '01/01/2012'
+		  end
+		
+		  it "in specified format" do
+				e2.start_date(:date_words).should == 'January 1, 2012'
+		  end
+		end
 	  
-	  it "start_time" do
-			e2.start_time.should == "9:00 AM"
-	  end
+		context "start_time" do
+		  it "in default format" do
+				e2.start_time.should == "9:00 AM"
+		  end
+		
+		  it "in specified format" do
+				e2.start_time(:hr24).should == "09:00"
+		  end
+		end
 	  
 	  it "duration" do
 			e2.duration.should == 60
 	  end
 	  
-	  it "end_time" do
-			e2.end_time.should == "10:00 AM"
-	  end
+		context "end_time" do
+		  it "in default format" do
+				e2.end_time.should == "10:00 AM"
+		  end
+		
+		  it "in specified format" do
+				e2.end_time(:hr24).should == "10:00"
+		  end
+		end
 	  
 	  it "comment" do
 			e2.comment.should == 'My Comment'
 	  end
 		
-	  it "time_range" do
-			e2.time_range.should == '9:00 AM to 10:00 AM'
-	  end
+		context "time_range" do
+		  it "in default format" do
+				e2.time_range.should == '9:00 AM to 10:00 AM'
+		  end
+		
+		  it "in specified format" do
+				e2.time_range(:hr24).should == '09:00 to 10:00'
+		  end
+		end
   end
 
 	describe "(Scopes)" do

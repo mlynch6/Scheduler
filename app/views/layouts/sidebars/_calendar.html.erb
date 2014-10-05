@@ -3,13 +3,13 @@
   <ul class="nav navbar-nav">
 		<% if can? :read, Event %>
 			<li<%= klass if yield(:sidebar_current) == "Calendar" %>>
-				<%= link_to "Today", events_path %>
+				<%= link_to "Today", schedule_events_path %>
 			</li>
 		<% end %>
     
     <% if can? :create, CompanyClass %>
 		  <li<%= klass if yield(:sidebar_current) == "Company Classes" %>>
-        <%= link_to "Company Classes", new_company_class_path %>
+        <%= link_to "Company Classes", schedule_company_classes_path %>
       </li>
 		<% end %>
     
@@ -22,12 +22,6 @@
 		<% if can? :create, CostumeFitting %>
 			<li<%= klass if yield(:sidebar_current) == "Costume Fittings" %>>
         <%= link_to "Costume Fittings", schedule_costume_fittings_path %>
-      </li>
-		<% end %>
-		
-		<% if can? :create, Event %>
-			<li<%= klass if yield(:sidebar_current) == "Events" %>>
-        <%= link_to "Events", new_event_path %>
       </li>
 		<% end %>
     

@@ -8,7 +8,7 @@
 	
 	<% if can? :read, Event %>
 		<li<%= class_active if yield(:header_current) == "Calendar" %>>
-			<%= icon_link 'Calendar', 'calendar', events_path %>
+			<%= icon_link 'Calendar', 'calendar', schedule_events_path %>
 		</li>
 	<% end %>
 	

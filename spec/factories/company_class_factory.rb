@@ -4,7 +4,7 @@
 #
 #  id          :integer          not null, primary key
 #  account_id  :integer          not null
-#  season_id   :integer
+#  season_id   :integer          not null
 #  title       :string(30)       not null
 #  comment     :text
 #  start_at    :datetime         not null
@@ -25,10 +25,10 @@
 FactoryGirl.define do
 	factory :company_class do
 		sequence(:title)	{ |n| "Company Class #{n}" }
-		start_date	{ Date.new(Random.rand(2000..2013), Random.rand(12)+1, Random.rand(28)+1) }
+		start_date	{ "#{Random.rand(12)+1}/#{Random.rand(28)+1}/#{Random.rand(2000..2013)}" }
 		start_time	"9:15AM"
 		duration		60
-		end_date		{ start_date + 2.months }
+		end_date		{ Date.strptime(start_date, '%m/%d/%Y') + 3.weeks }
 		monday			false
 		tuesday			true
 		wednesday		false

@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(:version => 20141002163953) do
 
   create_table "company_classes", :force => true do |t|
     t.integer  "account_id",                                   :null => false
-    t.integer  "season_id"
+    t.integer  "season_id",                                    :null => false
     t.string   "title",       :limit => 30,                    :null => false
     t.text     "comment"
     t.datetime "start_at",                                     :null => false

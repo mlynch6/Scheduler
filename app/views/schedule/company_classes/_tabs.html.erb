@@ -1,0 +1,12 @@
+<% klass = ' class="active"'.html_safe %>
+<ul class="nav nav-tabs">
+  <% if can? :read, @company_class %>
+  	<li<%= klass if params[:action] == 'show' %>>
+      <%= icon_link 'Overview', 'asterisk', schedule_company_class_path(@company_class) %>
+    </li>
+    
+  	<li<%= klass if params[:action] == 'dates' %>>
+      <%= icon_link 'Dates', 'calendar', dates_schedule_company_class_path(@company_class) %>
+    </li>
+  <% end %>
+</ul>

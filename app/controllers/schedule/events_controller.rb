@@ -1,4 +1,4 @@
-class EventsController < ApplicationController
+class Schedule::EventsController < ApplicationController
 	before_filter :get_resource, :only => [:edit, :update, :destroy, :show]
 	load_and_authorize_resource
 
@@ -15,48 +15,9 @@ class EventsController < ApplicationController
 			format.js { render :layout => false }
 		end
 	end
-	
-	def new
-		form_setup
-
-		attrib = Hash.new
-		attrib[:event_type] = params[:event_type] || 'Event'
-		attrib[:start_date] = Date.strptime(params[:dt], '%m-%d-%Y') if params[:dt] && params[:dt].present?
-		attrib[:start_time] = Time.strptime(params[:tm], '%H%M').to_s(:hr12) if params[:tm] && params[:tm].present?
-		attrib[:period] = 'Never'
-  	
-		@event = Event.new_with_subclass(attrib[:event_type], attrib)
-	end
-
-  def create
-		@event = Event.new_with_subclass(params[:event][:event_type], params[:event])
-  	
-		if @event.valid?
-			if params[:event][:period] == "Never"
-				save_success = @event.save
-			else
-				@series = EventSeries.new(params[:event])
-				save_success = @series.save
-				add_series_errors_to_event(@series)
-			end
-			
-			if save_success
-				flash[:success] = "Successfully created the #{readable_type}."
-				show_warnings
-				redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d')
-			else
-				form_setup
-				render 'new'
-			end
-		else
-			form_setup
-			render 'new'
-		end
-	end
-	
+		
 	def edit
 		form_setup
-		@event.event_type = @event.type
 	end
 
 	def update
@@ -69,7 +30,7 @@ class EventsController < ApplicationController
 		end
 		
 		if save_success
-			flash[:success] = "Successfully updated the #{readable_type}."
+			flash[:success] = "Successfully updated the event."
 			show_warnings
 			redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d')
 		else
@@ -79,15 +40,8 @@ class EventsController < ApplicationController
 	end
 	
 	def destroy
-		if @series
-			params[:mode] ||= 'single'
-			@event.event_series.destroy_event(params[:mode], @event)
-		else
-			@event.destroy
-		end
-		
-		flash[:success] = "Successfully deleted the #{readable_type}."
-		redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d')
+		@event.destroy
+		redirect_to events_path+"/"+@event.start_at.strftime('%Y/%m/%d'), :notice => "Successfully deleted the event."
 	end
 
 private
@@ -117,11 +71,6 @@ private
 		series.errors.each do |attrib, msg|
 			@event.errors.add(attrib, msg)
 		end
-	end
-	
-	def readable_type
-		type = @event.type || params[:event][:event_type]
-		type.underscore.humanize.titleize
 	end
 	
 	def get_update_mode(commit_text)

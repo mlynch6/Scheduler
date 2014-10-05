@@ -1,7 +1,7 @@
 <div class="pull-right">
   <%= gear_dropdown do %>
 		<% if can? :create, CompanyClass %>
-			<li><%= new_link "Add Company Class", new_company_class_path(date: @date) %></li>
+			<li><%= new_link "Add Company Class", new_schedule_company_class_path(date: @date) %></li>
 		<% end %>
     
 		<% if can? :create, Rehearsal %>
@@ -17,7 +17,7 @@
 		<% end %>
 		
 		<% if can? :create, Event %>
-			<li><%= new_link "Add Event", new_event_path(date: @date) %></li>
+			<li><%= new_link "Add Event", new_schedule_event_path(date: @date) %></li>
 		<% end %>
   <% end %>
 </div>

@@ -4,6 +4,9 @@
 en:
   helpers:
     submit:
+      company_class:
+        create: "Schedule"
+        update: "Update Company Class"
       costume_fitting:
         create: "Schedule"
         update: "Update Costume Fitting"
@@ -32,6 +35,11 @@ en:
         job_title: "Job Title"
         password_digest: "Password"
         password_confirmation: "Confirm Password"
+      company_class:
+        start_date: "Start Date"
+        start_time: "Start Time"
+        end_date: "End Date"
+        comment: "Description"
       costume_fitting:
         start_date: "Date"
         start_time: "Start Time"

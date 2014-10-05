@@ -15,7 +15,7 @@
 
 require 'spec_helper'
 
-describe Rehearsal, focus: true do
+describe Rehearsal do
 	let(:account) { FactoryGirl.create(:account) }
 	let(:season) { FactoryGirl.create(:season, account: account) }
 	let(:location) { FactoryGirl.create(:location, account: account) }

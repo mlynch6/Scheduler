@@ -47,10 +47,6 @@ Scheduler::Application.routes.draw do
   resources :casts,						:only => [:destroy]
 	resources :castings,				:only => [:edit, :update]
 	
-  resources :events
-  resources :company_classes,		:except => [:index, :show], 	:controller => :events, :event_type => 'CompanyClass'
-  get 'events/:year/:month/:day', to: 'events#index'
-	
 	match 'features' => 'static_pages#features'
 	match 'pricing' => 'static_pages#pricing'
 	match 'contact' => 'static_pages#contact'
@@ -85,10 +81,16 @@ Scheduler::Application.routes.draw do
 	end
 	
 	namespace :schedule do
-		resources :rehearsals,				:except => [:show]
-		match 'rehearsals/scenes_by_piece' => 'rehearsals#scenes_by_piece',	:via => :post
+		resources :company_classes do
+			get :dates, :on => :member
+		end
+		resources :rehearsals,				:except => [:show] do
+			post :scenes_by_piece, :on => :collection
+		end
 		resources :costume_fittings,	:except => [:show]
 		resources :lecture_demos,			:except => [:show]
+	  resources :events
+	  get 'events/:year/:month/:day', to: 'events#index'
 	end
 	
 	namespace :admin do
