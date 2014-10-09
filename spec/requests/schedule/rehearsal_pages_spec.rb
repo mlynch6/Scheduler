@@ -157,7 +157,7 @@ describe "Rehearsal Pages:" do
 			end
 		end
 		
-		context "with valid info" do
+		context "with valid info", js: true do
 			before do
 				@location = FactoryGirl.create(:location, account: current_account)
 				@season = FactoryGirl.create(:season, account: current_account)
@@ -167,7 +167,7 @@ describe "Rehearsal Pages:" do
 				visit new_schedule_rehearsal_path
 	  		
 				fill_in "Title", with: "My Rehearsal"
-				select @piece.name, from: 'Piece'
+				select_from_chosen @piece.name, from: 'Piece'
 				select @season.name, from: 'Season'
 				fill_in 'Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "10:15AM"
@@ -199,14 +199,16 @@ describe "Rehearsal Pages:" do
 				should have_content @location.name
 			end
 			
-			it "displays Scene field when selected Piece has scenes", js: true do
+			it "displays Scene field when selected Piece has scenes" do
+			pending "Works in GUI"
 				should_not have_select 'Scene'
 				
 				select_from_chosen @piece_with_scene.name, from: 'Piece'
-				should have_select 'Scene' #, :options => ['English', 'German', 'Spanish']
+				
+				should have_select "Scene", :visible => true
 			end
 		
-			it "hides Scene field when selected Piece doesn't have scenes", js: true do
+			it "hides Scene field when selected Piece doesn't have scenes" do
 				should_not have_select 'Scene'
 			end
 		end

@@ -10,13 +10,10 @@
    </h1>
 </div>
 
-<div class="row">
-  <div class="well well-sm">
-    <%= content_tag :span, nil, class: 'glyphicon glyphicon-info-sign text-info' %>
-    A Lecture Demonstration is an event for the purpose of conveying the art form to a 
-    new audience consisting of students, teachers, patrons, or other interested persons.
-  </div>
-</div>
+<%= render :layout => 'layouts/shared/info-block' do %>
+  A Lecture Demonstration is an event for the purpose of conveying the art form to a 
+  new audience consisting of students, teachers, patrons, or other interested persons.
+<% end %>
 
 <%= render 'schedule/lecture_demos/search_form' %>
 

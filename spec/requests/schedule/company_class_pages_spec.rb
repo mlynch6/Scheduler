@@ -331,7 +331,6 @@ describe "Company Class Pages:" do
 				should have_selector 'td', text: event.duration
 				should have_selector 'td', text: event.location.name
 				
-				should have_link event.start_at.strftime('%B %-d, %Y'), href: edit_schedule_event_path(event)
 				should have_link 'Delete', href: schedule_event_path(event)
 	    end
 		end

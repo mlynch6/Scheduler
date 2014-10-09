@@ -247,7 +247,68 @@ describe Event do
 				e2.time_range(:hr24).should == '09:00 to 10:00'
 		  end
 		end
+		
+		context "event_type" do
+		  it "is 'Company Class' when event is a CompanyClass" do
+				company_class = FactoryGirl.create(:company_class, account: account)
+				e = company_class.events.first
+				e.event_type.should == 'Company Class'
+		  end
+			
+		  it "is 'Costume Fitting' when event is a CostumeFitting" do
+				costume_fitting = FactoryGirl.create(:costume_fitting, account: account)
+				e = FactoryGirl.create(:event, account: account, schedulable: costume_fitting)
+				e.event_type.should == 'Costume Fitting'
+		  end
+			
+		  it "is 'Lecture Demo' when event is a LectureDemo" do
+				lecture_demo = FactoryGirl.create(:lecture_demo, account: account)
+				e = FactoryGirl.create(:event, account: account, schedulable: lecture_demo)
+				e.event_type.should == 'Lecture Demo'
+		  end
+			
+		  it "is 'Rehearsal' when event is a Rehearsal" do
+				rehearsal = FactoryGirl.create(:rehearsal, account: account)
+				e = FactoryGirl.create(:event, account: account, schedulable: rehearsal)
+				e.event_type.should == 'Rehearsal'
+		  end
+		end
   end
+	
+	context "(Methods)" do
+	  describe "search" do
+	  	before do
+				@date = Date.new(2014,4,10)
+				company_class = FactoryGirl.create(:company_class, account: account,
+														start_date: (@date-6.days).to_s,
+														end_date: @date+5.days,
+														monday: true, tuesday: true, wednesday: true, thursday: true,
+														friday: true, saturday: true, sunday: true )
+			end
+			
+	  	it "returns all records by default" do
+	  		query = {}
+				Event.search(query).should == Event.all
+		  end
+		  
+		  describe "on range" do
+			  it "=week returns records for the week" do
+			  	query = { range: "week", date: @date }
+					Event.search(query).should == Event.for_week(@date)
+			  end
+			  
+			  it "=day returns records for the day" do
+			  	query = { range: "day", date: @date }
+					Event.search(query).should == Event.for_day(@date)
+			  end
+			  
+			  it "that is invalid returns records for the day" do
+			  	query = { date: @date }
+					Event.search(query).should == Event.for_day(@date)
+			  end
+			end
+	  end
+	end
 
 	describe "(Scopes)" do
 		before do

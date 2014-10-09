@@ -89,8 +89,8 @@ Scheduler::Application.routes.draw do
 		end
 		resources :costume_fittings,	:except => [:show]
 		resources :lecture_demos,			:except => [:show]
-	  resources :events
-	  get 'events/:year/:month/:day', to: 'events#index'
+	  resources :events,						:only => [:index, :destroy]
+	  match 'events/:year/:month/:day', to: 'events#index', :via => :get
 	end
 	
 	namespace :admin do

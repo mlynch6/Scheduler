@@ -254,12 +254,12 @@ describe Ability do
 	context "Schedule Company Classes:" do
 		before do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Company Classes')
-			Account.current_id = @user.account_id
 			@class = FactoryGirl.create(:company_class, account: @user.account)
 		end
 		
-		it "should be able to read Company Class Events" do
-			should be_able_to :read, @class
+		it "should be able to read/destroy Company Class Events" do
+			should be_able_to :read, @class.events.first
+			should be_able_to :destroy, @class.events.first
 		end
 		
 		it "should NOT be able to manage other types of Events" do
@@ -277,10 +277,11 @@ describe Ability do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Costume Fittings')
 			Account.current_id = @user.account_id
 			@fitting = FactoryGirl.create(:costume_fitting, account: @user.account)
+			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @fitting)
 		end
 		
 		it "should be able to manage Costume Fitting Events" do
-			should be_able_to :manage, @fitting
+			should be_able_to :read, @fitting.event
 		end
 		
 		it "should NOT be able to read other types of Events" do
@@ -298,10 +299,11 @@ describe Ability do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Rehearsals')
 			Account.current_id = @user.account_id
 			@rehearsal = FactoryGirl.create(:rehearsal, account: @user.account)
+			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @rehearsal)
 		end
 		
 		it "should be able to manage Rehearsal Events" do
-			should be_able_to :manage, @rehearsal
+			should be_able_to :read, @rehearsal.event
 		end
 		
 		it "should NOT be able to read other types of Events" do
@@ -319,6 +321,7 @@ describe Ability do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Lecture Demos')
 			Account.current_id = @user.account_id
 			@demo = FactoryGirl.create(:lecture_demo, account: @user.account)
+			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @demo)
 		end
 		
 		it "should be able to read Lecture Demo Events" do
@@ -326,12 +329,13 @@ describe Ability do
 		end
 		
 		it "should NOT be able to read other types of Events" do
-			@event = FactoryGirl.create(:event, account: @user.account)
+			@other_type = FactoryGirl.create(:costume_fitting, account: @user.account)
+			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @other_type)
 			should_not be_able_to :read, @event
 		end
 		
 		it "should be able to manage Lecture Demos" do
-			should be_able_to :manage, LectureDemos
+			should be_able_to :manage, LectureDemo
 		end
 	end
 	

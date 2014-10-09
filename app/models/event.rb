@@ -74,6 +74,25 @@ class Event < ActiveRecord::Base
 		"#{start_time(format)} to #{end_time(format)}"
 	end
 	
+	def event_type
+		schedulable_type.underscore.titleize
+	end
+	
+	def self.search(query)
+		#Default show all
+		events = Event.order('start_at ASC')
+		
+		if query.include?(:date)
+			if query.include?(:range) && query[:range] == "week"
+				events = events.for_week(query[:date])
+			else
+				events = events.for_day(query[:date])
+			end
+		end
+		
+		events
+	end
+	
 protected
 	def save_start_at
 		date_time_text = Date.strptime(start_date, '%m/%d/%Y').to_s(:db) + " " + start_time

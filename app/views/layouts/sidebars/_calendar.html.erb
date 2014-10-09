@@ -2,8 +2,8 @@
 <nav class="navbar navbar-default mash-sub-navbar" role="navigation">
   <ul class="nav navbar-nav">
 		<% if can? :read, Event %>
-			<li<%= klass if yield(:sidebar_current) == "Calendar" %>>
-				<%= link_to "Today", schedule_events_path %>
+			<li<%= klass if yield(:sidebar_current) == "Events" %>>
+				<%= link_to "Events", schedule_events_path %>
 			</li>
 		<% end %>
     

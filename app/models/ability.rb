@@ -72,22 +72,22 @@ private
 	end
 	
 	def schedule_company_classes
-		can :manage,		Event, schedulable_type: 'CompanyClass'
+		can [:read, :destroy],		Event, schedulable_type: 'CompanyClass'
 		can :manage, 		CompanyClass
 	end
 	
 	def schedule_costume_fittings
-		can :manage,		Event, schedulable_type: 'CostumeFitting'
+		can :read,		Event, schedulable_type: 'CostumeFitting'
 		can :manage, 		CostumeFitting
 	end
 	
 	def schedule_rehearsals
-		can :manage,		Event, schedulable_type: 'Rehearsal'
+		can :read,		Event, schedulable_type: 'Rehearsal'
 		can :manage, 		Rehearsal
 	end
 	
 	def schedule_lecture_demos
-		can :read,			Event, schedulable_type: 'LectureDemo'
+		can :read,		Event, schedulable_type: 'LectureDemo'
 		can :manage, 		LectureDemo
 	end
 	

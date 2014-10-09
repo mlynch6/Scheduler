@@ -11,13 +11,11 @@
 	<%= render 'schedule/company_classes/tabs' %>
 <% end %>
 
+<%= render :layout => 'layouts/shared/info-block' do %>
+  Changes will be highlighted
+<% end %>
+
 <div class="row">
-  
-  <div class="well well-sm">
-    <%= content_tag :span, nil, class: 'glyphicon glyphicon-info-sign text-info' %>
-    Changes will be highlighted
-  </div>
-  
 	<table class="table table-hover">
 		<thead>
 	  	<tr>
@@ -32,12 +30,7 @@
 	  	<% @events.each do |event| %>
 				<tr>
           <td>
-            <% if can? :update, event %>
-              <%= link_to event.start_date(:date_words), edit_schedule_event_path(event), :id => "edit_#{event.id}" %>
-            <% else %>
-              <%= event.start_date(:date_words) %>
-            <% end %>
-            <br />
+            <%= event.start_date(:date_words) %><br />
             <span class="text-muted"><%= event.start_date(:dayofweek) %></span>
           </td>
           <td<%= ' class="warning"'.html_safe if event.time_range != @company_class.time_range %>>
