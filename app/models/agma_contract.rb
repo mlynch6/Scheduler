@@ -10,7 +10,7 @@
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
-#  costume_increment_min      :integer          not null
+#  costume_increment_min      :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  demo_max_duration          :integer
@@ -38,7 +38,7 @@ class AgmaContract < ActiveRecord::Base
   validates :rehearsal_max_hrs_per_day,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 24 }
   validates :rehearsal_increment_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
   validates :class_break_min,	presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 144 }
-  validates :costume_increment_min,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
+  validates :costume_increment_min,	allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
 	validates :demo_max_duration, allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than => 1440 }
 	validates :demo_max_num_per_day, allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0 }
   
@@ -61,7 +61,6 @@ private
 		self.rehearsal_max_hrs_per_day = 6 if rehearsal_max_hrs_per_day.blank?
 		self.rehearsal_increment_min = 30 if rehearsal_increment_min.blank?
 		self.class_break_min = 15 if class_break_min.blank?
-		self.costume_increment_min = 15 if costume_increment_min.blank?
 	end
 	
 	def rehearsal_end_cannot_be_before_rehearsal_start

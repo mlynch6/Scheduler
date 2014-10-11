@@ -62,6 +62,27 @@ describe CostumeFitting do
   	it "with minimum attributes" do
   		should be_valid
   	end
+		
+		it "has no contract" do
+			account.agma_contract.destroy
+			should be_valid
+		end
+		
+		it "when 'Increment' is blank on contract" do
+			account.agma_contract.costume_increment_min = " "
+			account.agma_contract.save
+			@costume_fitting.event.duration = 18
+			
+			should be_valid
+		end
+		
+		it "when duration is a multiple of contract's 'Increment'" do
+			account.agma_contract.costume_increment_min = 15
+			account.agma_contract.save
+			@costume_fitting.event.duration = 30
+			
+			should be_valid
+		end
   end
   
   context "(Invalid)" do
@@ -84,6 +105,14 @@ describe CostumeFitting do
   		@costume_fitting.title = "a"*31
   		should_not be_valid
   	end
+		
+		it "when duration not a multiple of contract's 'Increment'" do
+			account.agma_contract.costume_increment_min = 15
+			account.agma_contract.save
+			@costume_fitting.event.duration = 18
+			
+			should_not be_valid
+		end
   end
   
 	context "(Associations)" do
@@ -97,7 +126,7 @@ describe CostumeFitting do
 		
   	describe "event" do
 			it "has one" do
-				costume_fitting.event.should == event
+				costume_fitting.reload.event.should == event
 			end
 			
 			it "deletes associated event" do

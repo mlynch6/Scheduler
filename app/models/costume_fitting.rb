@@ -12,19 +12,21 @@
 #
 
 class CostumeFitting < ActiveRecord::Base
+	include ActionView::Helpers::TextHelper
+	
   attr_accessible :title, :comment, :season_id
-	attr_accessible :location_id, :start_date, :start_time, :duration
 
-	belongs_to :account
-	belongs_to :season
+	belongs_to :account, 	inverse_of: :costume_fittings
+	belongs_to :season, 	inverse_of: :costume_fittings
 	has_one :event, :as => :schedulable, dependent: :destroy
 	has_one :location, :through => :event
 	
 	delegate :start_date, :start_time, :duration, :time_range, to: :event
 	
-	validates :account_id,	presence: true
-	validates :season_id,	presence: true
+	validates :account,	presence: true
+	validates :season,	presence: true
 	validates :title, presence: true, length: { maximum: 30 }
+	validate :check_contract_duration
 	
 	default_scope lambda { where(:account_id => Account.current_id) }
 	
@@ -45,5 +47,23 @@ class CostumeFitting < ActiveRecord::Base
 		end
 		
 		costume_fittings
+	end
+	
+	def event
+		super || build_event(title: title)
+	end
+
+private
+	def check_contract_duration
+		if duration.present? && contract && contract.costume_increment_min.present? 
+			increment = contract.costume_increment_min
+			if (duration % increment) != 0
+				errors.add(:duration, "must be in increments of #{pluralize(increment, 'minute')}")
+			end
+		end
+	end
+	
+	def contract
+		@contract ||= AgmaContract.first
 	end
 end

@@ -10,7 +10,7 @@
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
-#  costume_increment_min      :integer          not null
+#  costume_increment_min      :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  demo_max_duration          :integer
@@ -230,11 +230,6 @@ describe AgmaContract do
 		end
 	  
 		context "when costume_increment_min" do
-			it "is blank" do
-				@contract.costume_increment_min = " "
-				should_not be_valid
-			end
-	  	
 			it "not an integer" do
 				vals = ["abc", 8.6]
 				vals.each do |invalid_integer|
@@ -398,10 +393,6 @@ describe AgmaContract do
 	  
 		it "defaults the class_break_min to '15'" do
 			account_defaults.agma_contract.class_break_min.should == 15
-		end
-	  
-		it "defaults the costume_increment_min to '15'" do
-			account_defaults.agma_contract.costume_increment_min.should == 15
 		end
 	end
 	

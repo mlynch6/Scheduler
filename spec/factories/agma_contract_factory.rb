@@ -10,7 +10,7 @@
 #  rehearsal_max_hrs_per_day  :integer          not null
 #  rehearsal_increment_min    :integer          not null
 #  class_break_min            :integer          not null
-#  costume_increment_min      :integer          not null
+#  costume_increment_min      :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  demo_max_duration          :integer
