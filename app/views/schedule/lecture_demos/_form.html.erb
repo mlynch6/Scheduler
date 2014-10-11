@@ -9,10 +9,18 @@
       required: true  %>
 <%= f.input :start_date, as: :date_picker,
       required: true  %>
-<%= f.input :start_time, as: :time_prepend,
-      required: true  %>      
-<%= f.input :duration, as: :append,
-      append_text:'min',
-      required: true  %>
+      
+<%= f.input :start_time, required: true do %>
+  <div class="col-sm-4 col-md-4">
+    <%= f.input_field :start_time, as: :time_prepend  %>
+  </div>
+  
+  <%= f.label :duration, required: true  %>
+  <div class="col-sm-3 col-md-3">
+    <%= f.input_field :duration, as: :append,
+        append_text:'min' %>
+  </div>
+<% end %>
+
 <%= f.input :comment, as: :text,
       input_html: { rows: 5 } %>

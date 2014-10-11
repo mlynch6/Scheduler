@@ -18,7 +18,7 @@ class Season < ActiveRecord::Base
   belongs_to :account
   has_many :season_pieces, dependent: :destroy
 	has_many :pieces, through: :season_pieces
-	has_many :lecture_demos, dependent: :destroy
+	has_many :lecture_demos, dependent: :destroy, inverse_of: :season
 	has_many :costume_fittings, dependent: :destroy
 	has_many :rehearsals, dependent: :destroy
 	has_many :company_classes, dependent: :destroy

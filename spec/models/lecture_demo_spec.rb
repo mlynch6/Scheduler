@@ -62,6 +62,31 @@ describe LectureDemo do
   	it "with minimum attributes" do
   		should be_valid
   	end
+		
+		it "has no contract" do
+			account.agma_contract.destroy
+			should be_valid
+		end
+		
+		it "when 'Max Duration' is blank on contract" do
+			account.agma_contract.demo_max_duration = " "
+			account.agma_contract.save
+			@event = FactoryGirl.create(:event, account: account, schedulable: @lecture_demo, 
+								duration: 51)
+			@lecture_demo.reload
+			
+			should be_valid
+		end
+		
+		it "when 'Max Demos/Day' is blank on contract" do
+			account.agma_contract.demo_max_num_per_day = " "
+			account.agma_contract.save
+			@event = FactoryGirl.create(:event, account: account, schedulable: @lecture_demo, 
+								start_date: event.start_date)
+			@lecture_demo.reload
+			
+			should be_valid
+		end
   end
   
   context "(Invalid)" do
@@ -84,6 +109,28 @@ describe LectureDemo do
   		@lecture_demo.title = "a"*31
   		should_not be_valid
   	end
+		
+		it "when duration is greater than contract's 'Max Duration'" do
+			account.agma_contract.demo_max_duration = 50
+			account.agma_contract.save
+			
+			@event = FactoryGirl.create(:event, account: account, schedulable: @lecture_demo, 
+								duration: 51)
+			@lecture_demo.reload
+			
+			should_not be_valid
+		end
+		
+		it "when than contract's 'Max Demos/Day' is exceeded" do
+			account.agma_contract.demo_max_num_per_day = 1
+			account.agma_contract.save
+			
+			@event = FactoryGirl.create(:event, account: account, schedulable: @lecture_demo,
+								start_date: event.start_date)
+			@lecture_demo.reload
+			
+			should_not be_valid
+		end
   end
   
 	context "(Associations)" do
@@ -97,11 +144,11 @@ describe LectureDemo do
 		
   	describe "event" do
 			it "has one" do
-				lecture_demo.event.should == event
+				lecture_demo.reload.event.should == event
 			end
 			
 			it "deletes associated event" do
-				e = lecture_demo.event
+				e = lecture_demo.reload.event
 				lecture_demo.destroy
 				Event.find_by_id(e.id).should be_nil
 			end
@@ -130,19 +177,19 @@ describe LectureDemo do
 	context "delegated" do
 		let(:e) { lecture_demo.event }
 	  it "start_date" do
-	  	lecture_demo.start_date.should == e.start_date
+	  	lecture_demo.reload.start_date.should == e.start_date
 	  end
 		
 	  it "start_time" do
-	  	lecture_demo.start_time.should == e.start_time
+	  	lecture_demo.reload.start_time.should == e.start_time
 	  end
 		
 	  it "duration" do
-	  	lecture_demo.duration.should == e.duration
+	  	lecture_demo.reload.duration.should == e.duration
 	  end
 		
 	  it "time_range" do
-	  	lecture_demo.time_range.should == e.time_range
+	  	lecture_demo.reload.time_range.should == e.time_range
 	  end
 	end
 	

@@ -12,19 +12,22 @@
 #
 
 class LectureDemo < ActiveRecord::Base
-  attr_accessible :title, :comment, :season_id
-	attr_accessible :location_id, :start_date, :start_time, :duration
+	include ActionView::Helpers::TextHelper
 	
-	belongs_to :account
-	belongs_to :season
+  attr_accessible :title, :comment, :season_id
+	
+	belongs_to :account, inverse_of: :lecture_demos
+	belongs_to :season, inverse_of: :lecture_demos
 	has_one :event, :as => :schedulable, dependent: :destroy
 	has_one :location, :through => :event
 	
 	delegate :start_date, :start_time, :duration, :time_range, to: :event
 	
-	validates :account_id,	presence: true
-	validates :season_id,	presence: true
+	validates :account,	presence: true
+	validates :season,	presence: true
 	validates :title, presence: true, length: { maximum: 30 }
+	validate :duration_less_than_contract_duration
+	validate :max_demos_per_day
 	
 	default_scope lambda { where(:account_id => Account.current_id) }
 	
@@ -45,5 +48,39 @@ class LectureDemo < ActiveRecord::Base
 		end
 		
 		lecture_demos
+	end
+	
+	def event
+		super || build_event(title: title)
+	end
+
+private
+	def duration_less_than_contract_duration
+		if duration.present? && contract && contract.demo_max_duration.present? 
+			max_duration = contract.demo_max_duration
+			if duration > max_duration
+				errors.add(:duration, "can't be more than #{pluralize(max_duration, 'minute')}")
+			end
+		end
+	end
+	
+	def max_demos_per_day
+		if start_date.present? && contract && contract.demo_max_num_per_day.present?
+			max_num = contract.demo_max_num_per_day
+			
+			if new_record?
+				existing_count = Event.where(schedulable_type: 'LectureDemo').for_day(Date.strptime(start_date, '%m/%d/%Y')).count
+			else
+				existing_count = Event.where(schedulable_type: 'LectureDemo').where('id <> :id', id: event.id).for_day(Date.strptime(start_date, '%m/%d/%Y')).count
+			end
+			
+			if existing_count >= max_num
+				errors.add(:base, "No more than #{pluralize(max_num, 'Lecture Demo')} can be scheduled in a day")
+			end
+		end
+	end
+	
+	def contract
+		@contract ||= AgmaContract.first
 	end
 end
