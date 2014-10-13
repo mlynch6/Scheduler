@@ -53,6 +53,12 @@ describe "Rehearsal Week Contract Settings Pages:" do
 	context "#show" do
 	  before do
 		  log_in
+			current_account.agma_contract.rehearsal_start_min = 540
+			current_account.agma_contract.rehearsal_end_min = 1080
+			current_account.agma_contract.rehearsal_max_hrs_per_week = 30
+			current_account.agma_contract.rehearsal_max_hrs_per_day = 6
+			current_account.agma_contract.rehearsal_increment_min = 15
+			current_account.agma_contract.save
 		  click_link 'Setup'
 		  click_link 'Contract Settings'
 			click_link 'Rehearsal Week'
@@ -74,7 +80,7 @@ describe "Rehearsal Week Contract Settings Pages:" do
 			should have_content "6:00 PM"
 			should have_content "30 hours/week"
 			should have_content "6 hours/day"
-			should have_content "30 minutes"
+			should have_content "15 minutes"
 		end
 		
 		describe "displays correct Rehearsal Break data" do

@@ -14,22 +14,26 @@
 #
 
 class Rehearsal < ActiveRecord::Base
-  attr_accessible :title, :comment, :season_id, :piece_id, :scene_id
-	attr_accessible :location_id, :start_date, :start_time, :duration
+	include ActionView::Helpers::TextHelper
 	
-	belongs_to :account
-	belongs_to :season
-	belongs_to :piece
-	belongs_to :scene
+  attr_accessible :title, :comment, :season_id, :piece_id, :scene_id
+	
+	belongs_to :account, 	inverse_of: :rehearsals
+	belongs_to :season, 	inverse_of: :rehearsals
+	belongs_to :piece, 	inverse_of: :rehearsals
+	belongs_to :scene, 	inverse_of: :rehearsals
 	has_one :event, :as => :schedulable, dependent: :destroy
 	has_one :location, :through => :event
 	
-	delegate :start_date, :start_time, :duration, to: :event
+	delegate :start_date, :start_time, :duration, :end_time, to: :event
 	
-	validates :account_id,	presence: true
-	validates :season_id,	presence: true
+	validates :account,	presence: true
+	validates :season,	presence: true
 	validates :title, presence: true, length: { maximum: 30 }
-	validates :piece_id,	presence: true
+	validates :piece,	presence: true
+	validate :check_contracted_start_time
+	validate :check_contracted_end_time
+	validate :check_contract_duration
 	
 	default_scope lambda { where(:account_id => Account.current_id) }
 	
@@ -56,10 +60,11 @@ class Rehearsal < ActiveRecord::Base
 		rehearsals
 	end
 	
-	# validate :check_contracted_start, :if => "start_time.present?"
-# 	validate :check_contracted_end, :if => "start_time.present? && duration.present?"
-# 	validate :check_duration_increments, :if => "start_at.present? && end_at.present?"
 # 	validate :check_company_class_break, :if => "start_date.present? && start_time.present?"
+
+	def event
+		super || build_event(title: title)
+	end
 
   def time_range
 		end_at = event.end_at - break_duration*60
@@ -83,23 +88,37 @@ class Rehearsal < ActiveRecord::Base
 	# 	end
 	# end
 
-# 	# Warnings
-# 	def warnings
-# 		w = super
-#
-# 		emp_max_hr_per_day_msg = warn_when_emp_over_hrs_per_day
-# 		w[:emp_max_hr_per_day] = emp_max_hr_per_day_msg if emp_max_hr_per_day_msg.present?
-#
-# 		emp_max_hr_per_week_msg = warn_when_emp_over_hrs_per_week
-# 		w[:emp_max_hr_per_week] = emp_max_hr_per_week_msg if emp_max_hr_per_week_msg.present?
-#
-# 		return w
-# 	end
-#
 private
+	def check_contracted_start_time
+		if start_time.present? && contract && contract.rehearsal_start_min.present? 
+			contract_start = Time.parse(contract.rehearsal_start_time)
+			rehearsal_start = Time.parse(event.start_time)
+			if rehearsal_start < contract_start
+				errors.add(:start_time, "can't be before #{contract.rehearsal_start_time}")
+			end
+		end
+	end
+	
+	def check_contracted_end_time
+		if end_time.present? && contract && contract.rehearsal_end_min.present? 
+			contract_end = Time.parse(contract.rehearsal_end_time)
+			rehearsal_end = Time.parse(event.end_time)
+			if rehearsal_end > contract_end
+				errors.add(:base, "End Time can't be after #{contract.rehearsal_end_time}")
+			end
+		end
+	end
+
+	def check_contract_duration
+		if duration.present? && contract && contract.rehearsal_increment_min.present? 
+			increment = contract.rehearsal_increment_min
+			if (duration % increment) != 0
+				errors.add(:duration, "must be in increments of #{pluralize(increment, 'minute')}")
+			end
+		end
+	end
 
 	def get_break_record
-		contract = self.account.agma_contract
 		if contract.present?
 			rehearsal_break = contract.rehearsal_breaks.where(duration_min: duration).select('break_min').first
 			rehearsal_break if rehearsal_break.present?
@@ -112,13 +131,11 @@ private
 		@timezone ||= Account.find(Account.current_id).time_zone if Account.current_id
 		@timezone ||= account.time_zone if account
 	end
+	
+	def contract
+		@contract ||= AgmaContract.first
+	end
 
-# 	def check_duration_increments
-# 		if contract.present? && duration.remainder(contract.rehearsal_increment_min) != 0
-# 			errors.add(:duration, "must be in increments of #{contract.rehearsal_increment_min} minutes")
-# 		end
-# 	end
-#
 # 	#Rehearsal cannot start during the break following the company class
 # 	def check_company_class_break
 # 		Account.current_id = account.id
@@ -130,49 +147,6 @@ private
 #
 # 			if break_start <= start_at && start_at < break_end
 # 				errors.add(:start_time, "cannot be during the #{contract.class_break_min} min break following the Company Class")
-# 			end
-# 		end
-# 	end
-#
-# 	def warn_when_emp_over_hrs_per_day
-# 		if contract.present?
-# 			dancers_above_max = []
-#
-# 			Person.agma_members.each do |dancer|
-# 				#Find rehearsals for specified date
-# 				rehearsals = dancer.events.for_daily_calendar(start_at.to_date).where(:events => { :type => 'Rehearsal'})
-# 				total_min = 0
-# 				rehearsals.each do |rehearsal|
-# 					total_min += rehearsal.duration
-# 				end
-#
-# 				dancers_above_max << dancer if total_min > (contract.rehearsal_max_hrs_per_day*60)
-# 			end
-#
-# 			if dancers_above_max.any?
-# 				overtime_list = dancers_above_max.map { |emp| emp.full_name }.join(", ")
-# 				return "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_day} hrs/day: "+overtime_list
-# 			end
-# 		end
-# 	end
-#
-# 	def warn_when_emp_over_hrs_per_week
-# 		if contract.present?
-# 			dancers_above_max = []
-#
-# 			Person.agma_members.each do |dancer|
-# 				#Find rehearsals for specified date
-# 				rehearsals = dancer.events.for_week(start_at.to_date).where(:events => { :type => 'Rehearsal'})
-# 				total_min = 0
-# 				rehearsals.each do |rehearsal|
-# 					total_min += rehearsal.duration
-# 				end
-# 				dancers_above_max << dancer if total_min > (contract.rehearsal_max_hrs_per_week*60)
-# 			end
-#
-# 			if dancers_above_max.any?
-# 				overtime_list = dancers_above_max.map { |emp| emp.full_name }.join(", ")
-# 				return "The following people are over their rehearsal limit of #{contract.rehearsal_max_hrs_per_week} hrs/week: "+overtime_list
 # 			end
 # 		end
 # 	end

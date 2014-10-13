@@ -79,9 +79,12 @@ describe CostumeFitting do
 		it "when duration is a multiple of contract's 'Increment'" do
 			account.agma_contract.costume_increment_min = 15
 			account.agma_contract.save
-			@costume_fitting.event.duration = 30
 			
-			should be_valid
+  		durations = [15, 30, 45]
+  		durations.each do |valid_duration|
+  			@costume_fitting.event.duration = valid_duration
+  			should be_valid
+  		end
 		end
   end
   
@@ -109,9 +112,12 @@ describe CostumeFitting do
 		it "when duration not a multiple of contract's 'Increment'" do
 			account.agma_contract.costume_increment_min = 15
 			account.agma_contract.save
-			@costume_fitting.event.duration = 18
 			
-			should_not be_valid
+  		durations = [10, 20, 25]
+  		durations.each do |invalid_duration|
+  			@costume_fitting.event.duration = invalid_duration
+  			should_not be_valid
+  		end
 		end
   end
   

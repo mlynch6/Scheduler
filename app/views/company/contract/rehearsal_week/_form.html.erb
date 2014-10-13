@@ -1,9 +1,9 @@
 <%= f.input :rehearsal_start_min, wrapper: :horizontal_small,
       collection: @times,
-			hint: 'Class & Rehearsals will start no earlier than this' %>
+			hint: 'Earliest time that a Rehearsal will be called' %>
 <%= f.input :rehearsal_end_min, wrapper: :horizontal_small,
       collection: @times,
-			hint: 'Class & Rehearsals will end no later than this' %>
+			hint: 'Latest time that a Rehearsal will end' %>
 <%= f.input :rehearsal_max_hrs_per_week, as: :append,
 			append_text: 'hours/week',
       field_size: '4',

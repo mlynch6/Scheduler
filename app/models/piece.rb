@@ -21,7 +21,7 @@ class Piece < ActiveRecord::Base
 	has_many :characters, dependent: :destroy
 	has_many :season_pieces, dependent: :destroy
 	has_many :seasons, through: :season_pieces
-	has_many :rehearsals, dependent: :destroy
+	has_many :rehearsals, 	dependent: :destroy, inverse_of: :piece
 
 	validates :name,	presence: true, length: { maximum: 50 },
 			uniqueness: { scope: [:account_id, :choreographer], message: "/Choreographer combination has already been taken" }

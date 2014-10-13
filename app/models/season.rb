@@ -19,8 +19,8 @@ class Season < ActiveRecord::Base
   has_many :season_pieces, dependent: :destroy
 	has_many :pieces, through: :season_pieces
 	has_many :lecture_demos, 		dependent: :destroy, inverse_of: :season
-	has_many :costume_fittings, dependent: :destroy
-	has_many :rehearsals, dependent: :destroy
+	has_many :costume_fittings, dependent: :destroy, inverse_of: :season
+	has_many :rehearsals, 			dependent: :destroy, inverse_of: :season
 	has_many :company_classes, 	dependent: :destroy, inverse_of: :season
   
   validates :name, presence: true, length: { maximum: 30 }

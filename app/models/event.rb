@@ -61,7 +61,9 @@ class Event < ActiveRecord::Base
 	end
 	
 	def end_time(format = :hr12)
-		end_at.try(:in_time_zone, timezone).try(:to_s, format)
+		et = (ActiveSupport::TimeZone[timezone].parse(start_time) + duration.minutes) if start_time.present? && duration.present?
+		et ||= end_at
+		et.try(:to_s, format)
 	end
 	
 	def duration
@@ -77,6 +79,11 @@ class Event < ActiveRecord::Base
 	def event_type
 		schedulable_type.underscore.titleize
 	end
+	
+	# def performance_week?
+	# 	date = Date.strptime(start_date, '%m/%d/%Y')
+	# 	@performance_week ||= Event.where(schedulable_type: 'Performance').for_week(date).exists?
+	# end
 	
 	def self.search(query)
 		#Default show all

@@ -27,7 +27,9 @@ describe Rehearsal do
 											title: 'Rehearsal 1',
 											piece: piece,
 											comment: 'My Description') }
-	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: rehearsal, start_time: '10:15am', duration: 60) }
+	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: rehearsal,
+											start_time: '10:15 am',
+											duration: 60) }
 	
 	before do
 		Account.current_id = account.id
@@ -69,6 +71,64 @@ describe Rehearsal do
   	it "with minimum attributes" do
   		should be_valid
   	end
+		
+		it "has no contract" do
+			account.agma_contract.destroy
+			should be_valid
+		end
+		
+		it "when 'Rehearsal Start' is blank on contract" do
+			account.agma_contract.rehearsal_start_min = " "
+			account.agma_contract.save
+			@rehearsal.event.start_time = '8 am'
+			
+			should be_valid
+		end
+		
+		it "when start_time = contract's 'Rehearsal Start'" do
+			account.agma_contract.rehearsal_start_min = 570	#9:30 AM
+			account.agma_contract.save
+			@rehearsal.event.start_time = '9:30 AM'
+			
+			should be_valid
+		end
+		
+		it "when 'Rehearsal End' is blank on contract" do
+			account.agma_contract.rehearsal_end_min = " "
+			account.agma_contract.save
+			@rehearsal.event.start_time = '6 pm'
+			@rehearsal.event.duration = 60
+			
+			should be_valid
+		end
+		
+		it "when end_time = contract's 'Rehearsal End'" do
+			account.agma_contract.rehearsal_end_min = 1110	#6:30 PM
+			account.agma_contract.save
+			@rehearsal.event.start_time = '6 pm'
+			@rehearsal.event.duration = 30
+			
+			should be_valid
+		end
+		
+		it "when 'Increment' is blank on contract" do
+			account.agma_contract.rehearsal_increment_min = " "
+			account.agma_contract.save
+			@rehearsal.event.duration = 18
+			
+			should be_valid
+		end
+		
+		it "when duration is a multiple of contract's 'Increment'" do
+			account.agma_contract.rehearsal_increment_min = 30
+			account.agma_contract.save
+			
+  		durations = [30, 60, 90]
+  		durations.each do |valid_duration|
+  			@rehearsal.event.duration = valid_duration
+  			should be_valid
+  		end
+		end
   end
   
   context "(Invalid)" do
@@ -96,6 +156,34 @@ describe Rehearsal do
   		@rehearsal.piece_id = " "
   		should_not be_valid
   	end
+		
+		it "when start_time is before contract's 'Rehearsal Start'" do
+			account.agma_contract.rehearsal_start_min = 570	#9:30 AM
+			account.agma_contract.save
+			@rehearsal.event.start_time = '9 AM'
+			
+			should_not be_valid
+		end
+		
+		it "when end_time is after contract's 'Rehearsal End'" do
+			account.agma_contract.rehearsal_end_min = 1110	#6:30 PM
+			account.agma_contract.save
+			@rehearsal.event.start_time = '6 pm'
+			@rehearsal.event.duration = 60
+			
+			should_not be_valid
+		end
+		
+		it "when duration not a multiple of contract's 'Increment'" do
+			account.agma_contract.rehearsal_increment_min = 30
+			account.agma_contract.save
+			
+  		durations = [18, 45]
+  		durations.each do |invalid_duration|
+  			@rehearsal.event.duration = invalid_duration
+  			should_not be_valid
+  		end
+		end
   end
   
 	context "(Associations)" do
@@ -123,7 +211,7 @@ describe Rehearsal do
 		
   	describe "event" do
 			it "has one" do
-				rehearsal.event.should == event
+				rehearsal.reload.event.should == event
 			end
 			
 			it "deletes associated event" do
@@ -154,7 +242,7 @@ describe Rehearsal do
 		
 	  describe "time_range" do
 			it "without Rehearsal Break" do
-		  	rehearsal.time_range.should == "10:15 AM to 11:15 AM"
+		  	rehearsal.reload.time_range.should == "10:15 AM to 11:15 AM"
 			end
 			
 			it "with Rehearsal Break" do
@@ -162,8 +250,7 @@ describe Rehearsal do
 						agma_contract: account.agma_contract, 
 						break_min: 5,
 						duration_min: event.duration)
-				e = Event.find(event.id)
-		  	rehearsal.time_range.should == "10:15 AM to 11:10 AM"
+		  	rehearsal.reload.time_range.should == "10:15 AM to 11:10 AM"
 			end
 	  end
 	end

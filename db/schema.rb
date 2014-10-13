@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141011053113) do
+ActiveRecord::Schema.define(:version => 20141011171016) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -41,11 +41,11 @@ ActiveRecord::Schema.define(:version => 20141011053113) do
 
   create_table "agma_contracts", :force => true do |t|
     t.integer  "account_id",                 :null => false
-    t.integer  "rehearsal_start_min",        :null => false
-    t.integer  "rehearsal_end_min",          :null => false
-    t.integer  "rehearsal_max_hrs_per_week", :null => false
-    t.integer  "rehearsal_max_hrs_per_day",  :null => false
-    t.integer  "rehearsal_increment_min",    :null => false
+    t.integer  "rehearsal_start_min"
+    t.integer  "rehearsal_end_min"
+    t.integer  "rehearsal_max_hrs_per_week"
+    t.integer  "rehearsal_max_hrs_per_day"
+    t.integer  "rehearsal_increment_min"
     t.integer  "class_break_min",            :null => false
     t.integer  "costume_increment_min"
     t.datetime "created_at",                 :null => false
