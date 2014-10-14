@@ -73,14 +73,6 @@ footer {
   color: $gray-light;
 }
 
-/*** CHOSEN ***/
-.chosen-choices {
-	@extend .form-control;
-	box-shadow: none;
-}
-.chosen-container { font-size: $font-size-base; padding-top: 6px; }
-.chosen-container-multi .chosen-choices li.search-field input[type="text"] { height: 25px;}
-
 /*** CUSTOM CLASSES ***/
 .mash-alert {
 	margin-top: 5px;

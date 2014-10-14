@@ -9,7 +9,6 @@ inputs = %w[
 	StringInput
 	TextInput
 	AppendInput
-	ChosenSelectInput
 	CurrencyInput
 	DatePickerInput
 	EmailPrependInput
