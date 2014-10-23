@@ -208,11 +208,11 @@ describe Scene do
 		let!(:scene2) { FactoryGirl.create(:scene, account: account, position: 2) }
 		let!(:scene1) { FactoryGirl.create(:scene, account: account, position: 1) }
 		let!(:scene_wrong_acnt) { FactoryGirl.create(:scene, account: FactoryGirl.create(:account)) }
-		let!(:scene3) { FactoryGirl.create(:scene, account: account, position: 1) }
+		let!(:scene3) { FactoryGirl.create(:scene, account: account, position: 3) }
 		
 		describe "default_scope" do
 			it "returns the records in position order" do
-				Scene.all.should == [scene1, scene3, scene2]
+				Scene.all.should == [scene1, scene2, scene3]
 			end
 		end
 	end

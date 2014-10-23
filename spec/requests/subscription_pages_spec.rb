@@ -68,7 +68,6 @@ describe "Subscription Pages:" do
 	
 	context "#edit" do
 		before do
-			Rails.application.load_seed
 			log_in
 			create_stripe_account(current_account)
 			visit subscriptions_current_path

@@ -43,12 +43,10 @@ Spork.prefork do
 		config.before(:suite) do
 			FactoryGirl.reload
 			DatabaseCleaner.clean_with(:truncation)
-			Rails.application.load_seed
 		end
 		
 		config.before(:each) do
 			DatabaseCleaner.strategy = :transaction
-			reset_email
 		end
 
 		config.before(:each, :js => true) do
@@ -57,6 +55,8 @@ Spork.prefork do
 		
 		config.before(:each) do
 			DatabaseCleaner.start
+			reset_email
+			Rails.application.load_seed
 			Timecop.return
 		end
 		

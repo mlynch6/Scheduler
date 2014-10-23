@@ -23,3 +23,5 @@ doc/
 .idea
 bundler_stubs/
 config/initializers/stripe.rb
+
+config/database.yml

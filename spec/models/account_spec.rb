@@ -691,11 +691,11 @@ describe Account do
     	end
 	  	
 	  	it "changes subscription plan on account" do
-				subscription = FactoryGirl.create(:subscription_plan)
-	  		account.current_subscription_plan = SubscriptionPlan.find(2) #valid stripe subscription
+				plan = SubscriptionPlan.first
+				account.current_subscription_plan = plan
 				account.edit_subscription_plan
 				
-	  		account.reload.current_subscription_plan.id.should == 2
+	  		account.reload.current_subscription_plan.id.should == plan.id
 	  	end
 	  	
 	  	it "changes subscription info on Stripe account" do

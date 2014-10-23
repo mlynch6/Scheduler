@@ -111,7 +111,6 @@ describe "User Pages:" do
 	
   context "#edit" do
 		before do
-			Rails.application.load_seed
 			log_in
 			@person = FactoryGirl.create(:person, account: current_account)
 			@user = FactoryGirl.create(:user, account: current_account, person: @person)
