@@ -27,13 +27,13 @@
 				<tr>
 					<td>
 						<% if can? :update, fitting %>
-							<%= link_to fitting.title, edit_schedule_costume_fitting_path(fitting), :id => "edit_#{fitting.id}" %>
+							<%= link_to fitting.title, schedule_costume_fitting_path(fitting), :id => "edit_#{fitting.id}" %>
             <% else %>
               <%= fitting.title %>
 						<% end %>
           </td>
           <td><%= fitting.start_date %><br /><%= fitting.time_range %></td>
-					<td><%= fitting.location ? fitting.location.name : 'TBD' %></td>
+					<td><%= name_or_tbd(fitting.location) %></td>
 					<td class="mash-col-1-btn">
 						<%= delete_button nil, schedule_costume_fitting_path(fitting), :class => 'btn-xs', :id => "delete_#{fitting.id}" if can? :destroy, fitting %>
 					</td>

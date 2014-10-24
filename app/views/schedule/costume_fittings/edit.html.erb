@@ -2,20 +2,21 @@
 <% provide(:header_current, 'Calendar') %>
 <% provide(:sidebar_current, 'Costume Fittings') %>
 
-<div class="page-header">
-  <h1>Costume Fittings
-    <small>Edit</small>
-  </h1>
-</div>
+<% content_for :page_header do %>
+  <%= @costume_fitting.title %>
+  <small>Edit</small>
+<% end %>
 
-<div class="row">
-  <%= simple_form_for @costume_fitting_form, url: schedule_costume_fitting_path(@costume_fitting), method: :put do |f| %>
-  	<%= show_error_messages @costume_fitting_form %>
-    <%= render 'form', :f => f %>
+<% content_for :tabs do %>
+	<%= render 'schedule/costume_fittings/tabs' %>
+<% end %>
 
-    <%= form_actions do %>
-      <%= f.submit 'Update Costume Fitting', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', schedule_costume_fittings_path, class: 'btn btn-link' if can? :read, CostumeFitting %>
-    <% end %>
+<%= simple_form_for @costume_fitting_form, url: schedule_costume_fitting_path(@costume_fitting), method: :put do |f| %>
+	<%= show_error_messages @costume_fitting_form %>
+  <%= render 'form', :f => f %>
+
+  <%= form_actions do %>
+    <%= f.submit 'Update Costume Fitting', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', schedule_costume_fitting_path(@costume_fitting), class: 'btn btn-link' if can? :read, CostumeFitting %>
   <% end %>
-</div>
+<% end %>

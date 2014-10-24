@@ -38,7 +38,10 @@ en:
         end_date: "End Date"
         comment: "Description"
       costume_fitting:
+        start_date: "Date"
+        start_time: "Time"
         comment: "Description"
+        invitee_ids: "Invitees"
       dropdown:
         comment: "Description"
         active: "Status"

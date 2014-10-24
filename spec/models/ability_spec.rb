@@ -3,7 +3,6 @@ require 'cancan/matchers'
 
 describe Ability do
 	before do
-		Rails.application.load_seed
 		@user = nil
 	end
 	
@@ -254,6 +253,7 @@ describe Ability do
 	context "Schedule Company Classes:" do
 		before do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Company Classes')
+			Account.current_id = @user.account
 			@class = FactoryGirl.create(:company_class, account: @user.account)
 		end
 		
@@ -280,7 +280,7 @@ describe Ability do
 			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @fitting)
 		end
 		
-		it "should be able to manage Costume Fitting Events" do
+		it "should be able to read Costume Fitting Events" do
 			should be_able_to :read, @fitting.event
 		end
 		

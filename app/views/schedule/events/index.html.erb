@@ -38,7 +38,7 @@
     				<tr>
               <td><%= event.time_range %></td>
     					<td>
-    						<% if event.schedulable_type == 'CompanyClass' && can?(:read, event.schedulable)  %>
+    						<% if ['CompanyClass', 'CostumeFitting'].include?(event.schedulable_type) && can?(:read, event.schedulable)  %>
     							<%= link_to event.title, controller: event.schedulable_type.underscore.pluralize, action: 'show', id: event.schedulable_id %>
                 <% else %>
                   <%= event.title %>

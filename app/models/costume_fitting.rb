@@ -20,6 +20,8 @@ class CostumeFitting < ActiveRecord::Base
 	belongs_to :season, 	inverse_of: :costume_fittings
 	has_one :event, :as => :schedulable, dependent: :destroy
 	has_one :location, :through => :event
+	has_many :invitations, :through => :event
+	has_many :invitees, through: :invitations, source: :person
 	
 	delegate :start_date, :start_time, :duration, :time_range, to: :event
 	

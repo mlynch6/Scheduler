@@ -79,8 +79,6 @@ describe "Account Pages:" do
     	let(:company_name) { "New York City Ballet #{Time.now}" }
     	let(:username) { "pmartin#{DateTime.now.seconds_since_midnight}" }
     	before do
-				Rails.application.load_seed
-				
     		fill_in "Company", with: company_name
     		select  "(GMT-08:00) Pacific Time (US & Canada)", from: "Time Zone"
     		fill_in "Phone #", with: "414-543-1000"

@@ -4,10 +4,10 @@ class CostumeFittingForm
 	include ActiveModel::Validations
 	
 	attr_accessor :title, :season_id, :comment
-	attr_accessor :start_date, :start_time, :duration, :location_id
+	attr_accessor :start_date, :start_time, :duration, :location_id, :invitee_ids
 	
 	delegate :title, :season_id, :comment, to: :costume_fitting
-	delegate :start_date, :start_time, :duration, :location_id, to: :event
+	delegate :start_date, :start_time, :duration, :location_id, :invitee_ids, to: :event
 	
 	validate :validate_costume_fitting
 	validate :validate_event
@@ -27,7 +27,7 @@ class CostumeFittingForm
 	
 	def submit(params)
 		costume_fitting.attributes = params.slice(:title, :season_id, :comment)
-		event.attributes = params.slice(:title, :start_date, :start_time, :duration, :location_id)
+		event.attributes = params.slice(:title, :start_date, :start_time, :duration, :location_id, :invitee_ids)
 		
 		if valid?
 			CostumeFitting.transaction do

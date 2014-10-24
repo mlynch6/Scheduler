@@ -87,7 +87,13 @@ Scheduler::Application.routes.draw do
 		resources :rehearsals,				:except => [:show] do
 			post :scenes_by_piece, :on => :collection
 		end
-		resources :costume_fittings,	:except => [:show]
+		resources :costume_fittings do
+			member do
+				get :invitees
+				get 'invitees/edit', 			:action => 'edit_invitees'
+				put :invitees, 						:action => 'update_invitees'
+			end
+		end
 		resources :lecture_demos,			:except => [:show]
 	  resources :events,						:only => [:index, :destroy]
 	  match 'events/:year/:month/:day', to: 'events#index', :via => :get

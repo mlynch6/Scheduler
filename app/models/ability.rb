@@ -77,17 +77,17 @@ private
 	end
 	
 	def schedule_costume_fittings
-		can :read,		Event, schedulable_type: 'CostumeFitting'
+		can :read,			Event, schedulable_type: 'CostumeFitting'
 		can :manage, 		CostumeFitting
 	end
 	
 	def schedule_rehearsals
-		can :read,		Event, schedulable_type: 'Rehearsal'
+		can :read,			Event, schedulable_type: 'Rehearsal'
 		can :manage, 		Rehearsal
 	end
 	
 	def schedule_lecture_demos
-		can :read,		Event, schedulable_type: 'LectureDemo'
+		can :read,			Event, schedulable_type: 'LectureDemo'
 		can :manage, 		LectureDemo
 	end
 	

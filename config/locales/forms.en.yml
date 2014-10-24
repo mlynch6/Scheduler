@@ -44,6 +44,7 @@ en:
         start_date: "Date"
         start_time: "Start Time"
         comment: "Description"
+        invitee_ids: "Invitees"
       employee:
         first_name: "First Name"
         middle_name: "Middle Name"

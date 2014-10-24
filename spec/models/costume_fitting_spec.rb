@@ -14,7 +14,7 @@
 require 'spec_helper'
 
 describe CostumeFitting do
-	let(:account) { FactoryGirl.create(:account) }
+	let(:account) { FactoryGirl.create(:account) }	
 	let(:season) { FactoryGirl.create(:season, account: account) }
 	let(:location) { FactoryGirl.create(:location, account: account) }
 	let(:costume_fitting) { FactoryGirl.create(:costume_fitting,
@@ -22,7 +22,7 @@ describe CostumeFitting do
 											season: season,
 											title: 'Costume Fitting 1',
 											comment: 'My Description') }
-	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: costume_fitting) }
+	let(:event) { FactoryGirl.create(:event, account: account, schedulable: costume_fitting) }
 	
 	before do
 		Account.current_id = account.id
@@ -43,6 +43,8 @@ describe CostumeFitting do
   	it { should respond_to(:season) }
 		it { should respond_to(:event) }
 		it { should respond_to(:location) }
+		it { should respond_to(:invitations) }
+		it { should respond_to(:invitees) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -122,32 +124,50 @@ describe CostumeFitting do
   end
   
 	context "(Associations)" do
-  	it "has one account" do
-			costume_fitting.reload.account.should == account
-		end
-		
-  	it "has one season" do
-			costume_fitting.reload.season.should == season
-		end
-		
-  	describe "event" do
-			it "has one" do
+  	describe "has one" do
+			it "account" do
+				costume_fitting.reload.account.should == account
+			end
+			
+	  	it "season" do
+				costume_fitting.reload.season.should == season
+			end
+			
+			it "event" do
+				event.reload
 				costume_fitting.reload.event.should == event
 			end
 			
-			it "deletes associated event" do
-				e = costume_fitting.event
-				costume_fitting.destroy
-				Event.find_by_id(e.id).should be_nil
-			end
-		end
-		
-		describe "location" do
-	  	it "has one location" do
+	  	it "location" do
 				event.location = location
 				event.save
 				
 				costume_fitting.reload.location.should == location
+			end
+		end
+		
+		describe "has many" do
+			before do
+				3.times do
+					person = FactoryGirl.create(:person, account: account)
+					invite = FactoryGirl.create(:invitation, event: event, person: person)
+				end
+			end
+			
+			it "invitations" do
+				costume_fitting.invitations.count.should == 3
+			end
+			
+			it "invitees" do
+				costume_fitting.invitees.count.should == 3
+			end
+		end
+		
+  	describe "deletes associated" do
+			it "events" do
+				e = costume_fitting.event
+				costume_fitting.destroy
+				Event.find_by_id(e.id).should be_nil
 			end
 		end
   end

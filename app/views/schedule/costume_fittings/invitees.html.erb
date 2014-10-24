@@ -1,0 +1,31 @@
+<% provide :title, "#{@costume_fitting.title} | Invitees" %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, 'Costume Fittings' %>
+
+<% content_for :page_header do %>
+  <%= @costume_fitting.title %>
+  <small>Invitees</small>
+  <div class="pull-right">
+    <%= edit_button 'Edit Invitees', invitees_edit_schedule_costume_fitting_path(@costume_fitting) if can? :update_invitees, @costume_fitting %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/costume_fittings/tabs' %>
+<% end %>
+
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-sm-2 col-md-2">Invitees</div>
+    
+    <% @invitees.in_groups(3, false).each do |people| %>
+      <div class="dtl-text col-sm-3 col-md-3">
+        <ul class="list-unstyled">
+          <% people.each do |person| %>
+            <li><%= person.full_name %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+	</div>
+</div>
