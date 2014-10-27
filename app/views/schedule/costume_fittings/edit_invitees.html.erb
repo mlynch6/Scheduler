@@ -17,6 +17,6 @@
 
   <%= form_actions do %>
     <%= f.submit 'Update Invitees', class: 'btn btn-primary' %>
-    <%= link_to 'Cancel', invitees_schedule_costume_fitting_path(@costume_fitting), class: 'btn btn-link' if can? :read, CostumeFitting %>
+    <%= link_to 'Cancel', invitees_schedule_costume_fitting_path(@costume_fitting), class: 'btn btn-link' if can? :read, @costume_fitting %>
   <% end %>
 <% end %>
