@@ -61,6 +61,7 @@ en:
         start_time: "Start Time"
         end_date: "End Date"
         invitee_ids: "Invitees"
+        musician_ids: "Musicians"
       lecture_demo:
         comment: "Description"
       location:
@@ -77,7 +78,13 @@ en:
       piece:
         avg_length: "Average Length"
       rehearsal:
+        start_date: "Date"
+        start_time: "Time"
         comment: "Description"
+        break_time_range: "Break"
+        break_duration: "Break Duration"
+        musician_ids: "Musicians"
+        artist_ids: "Artists"
       rehearsal_break:
         break_min: "Break Length"
         duration_min: "Rehearsal Length"

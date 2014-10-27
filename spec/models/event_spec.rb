@@ -53,6 +53,12 @@ describe Event do
 		it { should respond_to(:invitations) }
 		it { should respond_to(:invitees) }
 		it { should respond_to(:invitee_ids) }
+		it { should respond_to(:musician_invitations) }
+		it { should respond_to(:musicians) }
+		it { should respond_to(:musician_ids) }
+		it { should respond_to(:artist_invitations) }
+		it { should respond_to(:artists) }
+		it { should respond_to(:artist_ids) }
 	  	
 		it "should not allow access to account_id" do
 			expect do
@@ -152,23 +158,27 @@ describe Event do
 	end
 	
   context "(Associations)" do
-		it "has one account" do
-			event.reload.account.should == account
+		describe "has no" do
+			it "location" do
+				event.reload.location.should be_nil
+			end
 		end
 		
-		it "has no location" do
-			event.reload.location.should be_nil
-		end
+		describe "has one" do
+			it "account" do
+				event.reload.account.should == account
+			end
 		
-		it "has one location" do
-			event.location = location
-			event.save
-			event.reload.location.should == location
+			it "location" do
+				event.location = location
+				event.save
+				event.reload.location.should == location
+			end
 		end
 		
 		describe "invitations" do
-			let!(:second_invite) { FactoryGirl.create(:invitation, event: event) }
-			let!(:first_invite) { FactoryGirl.create(:invitation, event: event) }
+			let!(:second_invite) { FactoryGirl.create(:invitation, account: account, event: event) }
+			let!(:first_invite) { FactoryGirl.create(:invitation, account: account, event: event) }
 	
 			it "has multiple invitations" do
 				event.invitations.count.should == 2
@@ -184,11 +194,63 @@ describe Event do
 		end
 		
 		describe "invitees" do
-			let!(:second_invite) { FactoryGirl.create(:invitation, event: event) }
-			let!(:first_invite) { FactoryGirl.create(:invitation, event: event) }
+			let!(:second_invite) { FactoryGirl.create(:invitation, account: account, event: event) }
+			let!(:first_invite) { FactoryGirl.create(:invitation, account: account, event: event) }
 	
 			it "has multiple invitees" do
 				event.invitees.count.should == 2
+			end
+		end
+		
+		describe "musician_invitations" do
+			let!(:invite1) { FactoryGirl.create(:invitation, :musician, account: account, event: event) }
+			let!(:invite2) { FactoryGirl.create(:invitation, :musician, account: account, event: event) }
+	
+			it "has multiple musician_invitations" do
+				event.musician_invitations.count.should == 2
+			end
+			
+			it "deletes associated musician_invitations" do
+				musician_invitations = event.musician_invitations
+				event.destroy
+				musician_invitations.each do |invitation|
+					Invitation.find_by_id(invitation.id).should be_nil
+				end
+			end
+		end
+		
+		describe "musicians" do
+			let!(:invite1) { FactoryGirl.create(:invitation, :musician, account: account, event: event) }
+			let!(:invite2) { FactoryGirl.create(:invitation, :musician, account: account, event: event) }
+	
+			it "has multiple musicians" do
+				event.musicians.count.should == 2
+			end
+		end
+		
+		describe "artist_invitations" do
+			let!(:invite1) { FactoryGirl.create(:invitation, :artist, account: account, event: event) }
+			let!(:invite2) { FactoryGirl.create(:invitation, :artist, account: account, event: event) }
+	
+			it "has multiple artist_invitations" do
+				event.artist_invitations.count.should == 2
+			end
+			
+			it "deletes associated artist_invitations" do
+				artist_invitations = event.artist_invitations
+				event.destroy
+				artist_invitations.each do |invitation|
+					Invitation.find_by_id(invitation.id).should be_nil
+				end
+			end
+		end
+		
+		describe "artists" do
+			let!(:invite1) { FactoryGirl.create(:invitation, :artist, account: account, event: event) }
+			let!(:invite2) { FactoryGirl.create(:invitation, :artist, account: account, event: event) }
+	
+			it "has multiple artists" do
+				event.artists.count.should == 2
 			end
 		end
   end

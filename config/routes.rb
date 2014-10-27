@@ -84,8 +84,13 @@ Scheduler::Application.routes.draw do
 		resources :company_classes do
 			get :dates, :on => :member
 		end
-		resources :rehearsals,				:except => [:show] do
+		resources :rehearsals do
 			post :scenes_by_piece, :on => :collection
+			member do
+				get :invitees
+				get 'invitees/edit', 			:action => 'edit_invitees'
+				put :invitees, 						:action => 'update_invitees'
+			end
 		end
 		resources :costume_fittings do
 			member do

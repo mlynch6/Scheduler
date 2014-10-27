@@ -1,0 +1,45 @@
+<% provide :title, "#{@rehearsal.title} | Invitees" %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, 'Rehearsals' %>
+
+<% content_for :page_header do %>
+  <%= @rehearsal.title %>
+  <small>Invitees</small>
+  <div class="pull-right">
+    <%= edit_button 'Edit Invitees', invitees_edit_schedule_rehearsal_path(@rehearsal) if can? :update_invitees, @rehearsal %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/rehearsals/tabs' %>
+<% end %>
+
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-sm-2 col-md-2">Musicians</div>
+    
+    <% @musicians.in_groups(3, false).each do |people| %>
+      <div class="dtl-text col-sm-3 col-md-3">
+        <ul class="list-unstyled">
+          <% people.each do |person| %>
+            <li><%= person.full_name %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+	</div>
+  
+	<div class="row">
+		<div class="dtl-label col-sm-2 col-md-2">Artists</div>
+    
+    <% @artists.in_groups(3, false).each do |people| %>
+      <div class="dtl-text col-sm-3 col-md-3">
+        <ul class="list-unstyled">
+          <% people.each do |person| %>
+            <li><%= person.full_name %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+	</div>
+</div>

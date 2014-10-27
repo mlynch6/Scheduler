@@ -149,8 +149,7 @@ describe CostumeFitting do
 		describe "has many" do
 			before do
 				3.times do
-					person = FactoryGirl.create(:person, account: account)
-					invite = FactoryGirl.create(:invitation, event: event, person: person)
+					invite = FactoryGirl.create(:invitation, account: account, event: event)
 				end
 			end
 			

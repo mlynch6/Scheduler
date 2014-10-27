@@ -27,8 +27,8 @@
 	  	<% @rehearsals.each do |rehearsal| %>
 				<tr>
 					<td>
-						<% if can? :update, rehearsal %>
-							<%= link_to rehearsal.title, edit_schedule_rehearsal_path(rehearsal), :id => "edit_#{rehearsal.id}" %>
+						<% if can? :read, rehearsal %>
+							<%= link_to rehearsal.title, schedule_rehearsal_path(rehearsal) %>
             <% else %>
               <%= rehearsal.title %>
 						<% end %>

@@ -37,17 +37,24 @@ describe "Rehearsal Pages:" do
 				rehearsal = FactoryGirl.create(:rehearsal, account: current_account)
 				FactoryGirl.create(:event, :with_location, account: current_account, schedulable: rehearsal)
 			end
-			visit schedule_rehearsals_path(per_page: 3)
 			
+			visit schedule_rehearsals_path(per_page: 3)
 			should have_selector 'div.pagination'
-			Rehearsal.paginate(page: 1, per_page: 3).each do |rehearsal|
+			
+			#check records without pagination because of sort order difference
+			visit schedule_rehearsals_path
+			
+			Account.current_id = current_account.id
+			records = Rehearsal.all
+			records.count.should > 0
+			records.each do |rehearsal|
 				should have_selector 'td', text: rehearsal.title
 				should have_selector 'td', text: rehearsal.piece.name
 				should have_selector 'td', text: rehearsal.start_date
 				should have_selector 'td', text: rehearsal.time_range
 				should have_selector 'td', text: rehearsal.location.name
 				
-				should have_link rehearsal.name, href: edit_schedule_rehearsal_path(rehearsal)
+				should have_link rehearsal.title, href: schedule_rehearsal_path(rehearsal)
 				should have_link 'Delete', href: schedule_rehearsal_path(rehearsal)
 	    end
 		end
@@ -157,17 +164,15 @@ describe "Rehearsal Pages:" do
 			end
 		end
 		
-		context "with valid info", js: true do
+		context "with valid info" do
 			before do
 				@location = FactoryGirl.create(:location, account: current_account)
 				@season = FactoryGirl.create(:season, account: current_account)
 				@piece = FactoryGirl.create(:piece, account: current_account)
-				@piece_with_scene = FactoryGirl.create(:piece, account: current_account)
-				@scene = FactoryGirl.create(:scene, account: current_account, piece: @piece_with_scene)
 				visit new_schedule_rehearsal_path
 	  		
 				fill_in "Title", with: "My Rehearsal"
-				select_from_chosen @piece.name, from: 'Piece'
+				select @piece.name, from: 'Piece'
 				select @season.name, from: 'Season'
 				fill_in 'Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "10:15AM"
@@ -178,10 +183,11 @@ describe "Rehearsal Pages:" do
 				click_button 'Schedule'
 				
 				should have_selector 'div.alert-success'
-				should have_title 'Rehearsals'
+				click_link 'Overview'
+				
 				should have_content 'My Rehearsal'
 				should have_content @piece.name
-				should have_content '01/31/2013'
+				should have_content 'January 31, 2013'
 				should have_content '10:15 AM to 11:15 AM'
 				should have_content 'TBD'
 			end
@@ -191,26 +197,41 @@ describe "Rehearsal Pages:" do
 				click_button 'Schedule'
 				
 				should have_selector 'div.alert-success'
-				should have_title 'Rehearsals'
+				click_link 'Overview'
+				
 				should have_content 'My Rehearsal'
 				should have_content @piece.name
-				should have_content '01/31/2013'
+				should have_content 'January 31, 2013'
 				should have_content '10:15 AM to 11:15 AM'
 				should have_content @location.name
 			end
 			
-			it "displays Scene field when selected Piece has scenes" do
-			pending "Works in GUI"
-				should_not have_select 'Scene'
+			it "displays 'Edit Invitee' view after save" do
+				click_button 'Schedule'
 				
-				select_from_chosen @piece_with_scene.name, from: 'Piece'
-				
-				should have_select "Scene", :visible => true
+				should have_selector 'div.alert-success'
+				should have_title 'My Rehearsal | Edit Invitees'
 			end
+		end
 		
-			it "hides Scene field when selected Piece doesn't have scenes" do
-				should_not have_select 'Scene'
-			end
+		it "displays Scene field when selected Piece has scenes", js: true do
+#		pending "Works in GUI"
+			@piece = FactoryGirl.create(:piece, account: current_account)
+			@scene = FactoryGirl.create(:scene, account: current_account, piece: @piece)
+			visit new_schedule_rehearsal_path
+			
+			select_from_chosen @piece.name, from: 'Piece'
+			
+			should have_select "Scene"
+		end
+		
+		it "hides Scene field when selected Piece doesn't have scenes", js: true do
+			@piece = FactoryGirl.create(:piece, account: current_account)
+			visit new_schedule_rehearsal_path
+			
+			select_from_chosen @piece.name, from: 'Piece'
+			
+			should_not have_select 'Scene'
 		end
 	end
 	
@@ -222,6 +243,7 @@ describe "Rehearsal Pages:" do
 			click_link 'Calendar'
 			click_link 'Rehearsals'
 	  	click_link @rehearsal.title
+			click_link 'Edit'
 		end
 		
 		it "has correct title" do	
@@ -245,7 +267,7 @@ describe "Rehearsal Pages:" do
 			should have_field 'Start Time'
 			should have_field 'Duration'
 			should have_field 'Description'
-			should have_link 'Cancel', href: schedule_rehearsals_path
+			should have_link 'Cancel', href: schedule_rehearsal_path(@rehearsal)
 		end
 		
 	  it "record with error" do
@@ -266,6 +288,57 @@ describe "Rehearsal Pages:" do
 		end
 	end
 	
+	context "#show" do
+		before do
+			log_in
+			@rehearsal = FactoryGirl.create(:rehearsal, account: current_account)
+			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @rehearsal)
+			click_link 'Calendar'
+			click_link 'Rehearsals'
+	  	click_link @rehearsal.title
+		end
+		
+  	it "has correct title" do
+	  	should have_title @rehearsal.title
+		  should have_selector 'h1', text: @rehearsal.title
+		end
+		
+		it "has correct Navigation" do
+			should have_selector 'li.active', text: 'Calendar'
+			should have_selector 'li.active', text: 'Rehearsal'
+			should have_selector 'li.active', text: 'Overview'
+		end
+		
+		it "displays correct data" do
+			should have_content @rehearsal.title
+			should have_content @rehearsal.piece.name
+			should have_content @event.location.name
+			should have_content @rehearsal.comment
+			should have_content @rehearsal.start_date
+			should have_content "9:15 AM to 10:15 AM"
+			should have_content "1 hour"
+		end
+		
+		it "displays correct break" do
+			@break60 = FactoryGirl.create(:rehearsal_break, 
+								agma_contract: current_account.agma_contract,
+								duration_min: 60,
+								break_min: 5)
+			visit schedule_rehearsal_path(@rehearsal)
+			
+			should have_content @rehearsal.break_time_range
+			should have_content "5 minutes"
+		end
+		
+		it "hides break when N/A" do
+			should_not have_content "Break"
+		end
+		
+		it "has links for Super Admin" do
+			should have_link 'Edit'
+		end
+	end
+	
 	context "#destroy" do
 		before do
 			log_in
@@ -280,6 +353,119 @@ describe "Rehearsal Pages:" do
 			should have_title 'Rehearsals'
 			
 			should_not have_content @rehearsal.title
+		end
+	end
+	
+	context "#invitees" do
+		before do
+  		log_in
+			@rehearsal = FactoryGirl.create(:rehearsal, account: current_account)
+			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @rehearsal)
+  		click_link "Calendar"
+	  	click_link "Rehearsals"
+			click_link @rehearsal.title
+			click_link "Invitees"
+		end
+	
+  	it "has correct title" do	
+	  	should have_title "#{@rehearsal.title} | Invitees"
+		  should have_selector 'h1', text: @rehearsal.title
+			should have_selector 'h1 small', text: 'Invitees'
+		end
+	
+		it "has correct Navigation" do
+			should have_selector 'li.active', text: 'Calendar'
+			should have_selector 'li.active', text: 'Rehearsals'
+			should have_selector 'li.active', text: 'Invitees'
+		end
+	
+		it "has correct fields" do
+			should have_selector 'div.dtl-label', text: "Musicians"
+			should have_selector 'div.dtl-label', text: "Artists"
+		end
+  
+		it "lists musicians" do
+			3.times { invitation = FactoryGirl.create(:invitation, :musician, account: current_account, event: @event) }
+			
+			visit invitees_schedule_rehearsal_path(@rehearsal)
+		
+			Account.current_id = current_account.id
+			musicians = @rehearsal.musicians
+			musicians.count.should > 0
+		
+			musicians.each do |person|
+				should have_content person.full_name
+	    end
+		end
+		
+		it "lists artists" do
+			3.times { invitation = FactoryGirl.create(:invitation, :artist, account: current_account, event: @event) }
+		
+			visit invitees_schedule_rehearsal_path(@rehearsal)
+		
+			Account.current_id = current_account.id
+			artists = @rehearsal.artists
+			artists.count.should > 0
+		
+			artists.each do |person|
+				should have_content person.full_name
+	    end
+		end
+	
+		it "has links for Super Admin" do
+			should have_link 'Edit Invitees'
+		end
+	end
+	
+	context "#edit_invitees" do
+		before do
+			log_in
+			@person1 = FactoryGirl.create(:person, account: current_account)
+			@person2 = FactoryGirl.create(:person, account: current_account)
+			@rehearsal = FactoryGirl.create(:rehearsal, account: current_account)
+			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @rehearsal)
+  		click_link "Calendar"
+	  	click_link "Rehearsals"
+			click_link @rehearsal.title
+			click_link "Invitees"
+			click_link 'Edit Invitees'
+		end
+		
+		it "has correct title" do	
+	  	should have_title "#{@rehearsal.title} | Edit Invitees"
+		  should have_selector 'h1', text: @rehearsal.title
+			should have_selector 'h1 small', text: 'Edit Invitees'
+		end
+		
+		it "has correct Navigation" do
+			should have_selector 'li.active', text: 'Calendar'
+			should have_selector 'li.active', text: 'Rehearsals'
+			should have_selector 'li.active', text: 'Invitees'
+		end
+		
+		it "has correct fields on form" do
+			should have_field 'Musicians'
+			should have_field 'Artists'
+			should have_link 'Cancel', href: invitees_schedule_rehearsal_path(@rehearsal)
+		end
+		
+	  it "record with error" do
+			pending 'No fields currently cause errors'
+	  	select "", from: "Invitees"
+	  	click_button 'Update'
+	
+			should have_selector 'div.alert-danger'
+		end
+	 
+		it "record with valid info saves record", js: true do
+			select_from_chosen @person1.name, from: "Musicians"
+			select_from_chosen @person2.name, from: "Artists"
+			click_button 'Update'
+	
+			should have_selector 'div.alert-success'
+			should have_title "#{@rehearsal.title} | Invitees"
+			should have_content @person1.full_name
+			should have_content @person2.full_name
 		end
 	end
 end

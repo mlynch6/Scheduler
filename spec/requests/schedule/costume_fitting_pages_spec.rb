@@ -337,7 +337,7 @@ describe "CostumeFitting Pages:" do
 		end
   
 		it "lists records" do
-			4.times { FactoryGirl.create(:invitation, event: @event) }
+			4.times { FactoryGirl.create(:invitation, account: current_account, event: @event) }
 		
 			visit invitees_schedule_costume_fitting_path(@fitting)
 		

@@ -95,6 +95,9 @@ describe RehearsalBreak do
 			end
          
 			it ">= Max rehearsal time per day (in min)" do
+				contract.rehearsal_max_hrs_per_day = 6
+				contract.save
+				
 				@break.break_min = contract.rehearsal_max_hrs_per_day * 60
 				should_not be_valid
 			end
@@ -102,8 +105,10 @@ describe RehearsalBreak do
 	end
   
 	context "(Associations)" do
-		it "has one agma_contract" do
-			rehearsal_break.reload.agma_contract.should == contract
+		describe "has one" do
+			it "agma_contract" do
+				rehearsal_break.reload.agma_contract.should == contract
+			end
 		end
 	end
   

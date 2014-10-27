@@ -24,6 +24,13 @@ class Rehearsal < ActiveRecord::Base
 	belongs_to :scene, 	inverse_of: :rehearsals
 	has_one :event, :as => :schedulable, dependent: :destroy
 	has_one :location, :through => :event
+
+	has_many :musician_invitations, :through => :event,
+			class_name: 'Invitation', conditions: { role: 'Musician' }
+	has_many :musicians, through: :musician_invitations, source: :person
+	has_many :artist_invitations, :through => :event,
+			class_name: 'Invitation', conditions: { role: 'Artist' }
+	has_many :artists, through: :artist_invitations, source: :person
 	
 	delegate :start_date, :start_time, :duration, :end_time, to: :event
 	
@@ -59,8 +66,6 @@ class Rehearsal < ActiveRecord::Base
 		
 		rehearsals
 	end
-	
-# 	validate :check_company_class_break, :if => "start_date.present? && start_time.present?"
 
 	def event
 		super || build_event(title: title)
@@ -77,16 +82,14 @@ class Rehearsal < ActiveRecord::Base
 		@break_record.present? ? @break_record.break_min : 0
 	end
 
-	# def break_time_range
-	# 	@break_record ||= get_break_record
-	#
-	# 	if @break_record.present?
-	# 		break_start = event.end_at - @break_record.break_min*60
-	# 		return "#{break_start.in_time_zone(account.time_zone).to_s(:hr12)} to #{event.end_time}"
-	# 	else
-	# 		return nil
-	# 	end
-	# end
+	def break_time_range
+		if break_duration == 0
+			return nil
+		else
+			break_start = event.end_at - break_duration*60
+			return "#{break_start.in_time_zone(account.time_zone).to_s(:hr12)} to #{event.end_time}"
+		end
+	end
 
 private
 	def check_contracted_start_time
@@ -135,19 +138,4 @@ private
 	def contract
 		@contract ||= AgmaContract.first
 	end
-
-# 	#Rehearsal cannot start during the break following the company class
-# 	def check_company_class_break
-# 		Account.current_id = account.id
-# 		cclass = CompanyClass.for_daily_calendar(start_at).first
-#
-# 		if contract.present? && cclass.present?
-# 			break_start = cclass.end_at
-# 			break_end = break_start + (contract.class_break_min * 60)
-#
-# 			if break_start <= start_at && start_at < break_end
-# 				errors.add(:start_time, "cannot be during the #{contract.class_break_min} min break following the Company Class")
-# 			end
-# 		end
-# 	end
 end

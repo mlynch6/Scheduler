@@ -1,6 +1,7 @@
 class Schedule::RehearsalsController < ApplicationController
 	load_resource :except => [:new, :create]
 	authorize_resource
+	layout 'tabs', :except => [:index, :new, :create, :destroy]
 
 	def index
 		query = params.except(:action, :controller)
@@ -14,7 +15,7 @@ class Schedule::RehearsalsController < ApplicationController
   def create
 		@rehearsal_form = RehearsalForm.new
 		if @rehearsal_form.submit(params[:rehearsal])
-			redirect_to schedule_rehearsals_path, :notice => "Successfully created the rehearsal."
+			redirect_to invitees_edit_schedule_rehearsal_path(@rehearsal_form.rehearsal), :notice => "Successfully created the rehearsal."
 		else
 			render 'new'
 		end
@@ -33,9 +34,28 @@ class Schedule::RehearsalsController < ApplicationController
 		end
 	end
 	
+	def show
+	end
+	
 	def destroy
 		@rehearsal.destroy
 		redirect_to schedule_rehearsals_path, :notice => "Successfully deleted the rehearsal."
+	end
+	
+	def invitees
+		@artists = @rehearsal.artists
+		@musicians = @rehearsal.musicians
+	end
+	
+	def edit_invitees
+	end
+	
+	def update_invitees
+		if @rehearsal.event.update_attributes(params[:rehearsal])
+			redirect_to invitees_schedule_rehearsal_path(@rehearsal), :notice => "Successfully updated the invitees."
+		else
+			render 'edit'
+		end
 	end
 	
 	def scenes_by_piece

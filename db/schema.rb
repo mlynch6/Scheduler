@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141011171016) do
+ActiveRecord::Schema.define(:version => 20141024012500) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -192,12 +192,15 @@ ActiveRecord::Schema.define(:version => 20141011171016) do
   add_index "events", ["schedulable_id", "schedulable_type"], :name => "index_events_on_schedulable_id_and_schedulable_type"
 
   create_table "invitations", :force => true do |t|
-    t.integer  "event_id",   :null => false
-    t.integer  "person_id",  :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "event_id",                 :null => false
+    t.integer  "person_id",                :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "account_id",               :null => false
+    t.string   "role",       :limit => 20
   end
 
+  add_index "invitations", ["account_id"], :name => "index_invitations_on_account_id"
   add_index "invitations", ["event_id", "person_id"], :name => "index_invitations_on_event_id_and_employee_id", :unique => true
   add_index "invitations", ["event_id"], :name => "index_invitations_on_event_id"
   add_index "invitations", ["person_id"], :name => "index_invitations_on_employee_id"

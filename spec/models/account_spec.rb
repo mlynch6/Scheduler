@@ -166,28 +166,30 @@ describe Account do
   end
   
   context "(Associations)" do
-  	describe "agma_contract" do
-  		before { Account.current_id = account.id }
-			
-			it "has one AGMA contract" do
+		before { Account.current_id = account.id }
+		
+		describe "has one" do
+			it "AGMA contract" do
 				account.agma_contract.should_not be_nil
 			end
 			
-			it "deletes associated AGMA contract" do
+			it "Subscription Plan" do
+				account.current_subscription_plan.should == subscription
+			end
+		end
+		
+		describe "has many" do
+		end
+		
+		describe "deletes associated" do
+			it "AGMA contracts" do
 				p = account.agma_contract
 				account.destroy
 				AgmaContract.find_by_id(p.id).should be_nil
 			end
 		end
-		
-		describe "current_subscription_plan" do
-			it "belongs to a Subscription Plan" do
-				account.current_subscription_plan.should == subscription
-			end
-		end
   	
   	describe "addresses" do
-			before { Account.current_id = account.id }
 			let!(:address1) { FactoryGirl.create(:address, addressable: account) }
 			let!(:address2) { FactoryGirl.create(:address, addressable: account) }
 	
@@ -205,7 +207,6 @@ describe Account do
 		end
 		
 		describe "phones" do
-			before { Account.current_id = account.id }
 			let!(:phone1) { FactoryGirl.create(:phone, phoneable: account) }
 			let!(:phone2) { FactoryGirl.create(:phone, phoneable: account) }
 	
@@ -223,7 +224,6 @@ describe Account do
 		end
   	
   	describe "people" do
-  		before { Account.current_id = account.id }
 			let!(:person1) { FactoryGirl.create(:person, account: account) }
 			let!(:person2) { FactoryGirl.create(:person, account: account) }
 	
@@ -241,7 +241,6 @@ describe Account do
 		end
 		
   	describe "employees" do
-  		before { Account.current_id = account.id }
 			let!(:second_employee) { FactoryGirl.create(:employee, account: account) }
 			let!(:first_employee) { FactoryGirl.create(:employee, account: account) }
 	
@@ -259,7 +258,6 @@ describe Account do
 		end
 		
 		describe "users" do
-  		before { Account.current_id = account.id }
 			let!(:second_user) { FactoryGirl.create(:user, account: account) }
 			let!(:first_user) { FactoryGirl.create(:user, account: account) }
 	
@@ -277,7 +275,6 @@ describe Account do
 		end
 		
 		describe "permissions" do
-  		before { Account.current_id = account.id }
 			let!(:permission1) { FactoryGirl.create(:permission, account: account) }
 			let!(:permission2) { FactoryGirl.create(:permission, account: account) }
 	
@@ -295,7 +292,6 @@ describe Account do
 		end
 		
 		describe "locations" do
-			before { Account.current_id = account.id }
 			let!(:second_location) { FactoryGirl.create(:location, account: account) }
 			let!(:first_location) { FactoryGirl.create(:location, account: account) }
 	
@@ -313,7 +309,6 @@ describe Account do
 		end
 		
 		describe "seasons" do
-			before { Account.current_id = account.id }
 			let!(:second_season) { FactoryGirl.create(:season, account: account) }
 			let!(:first_season) { FactoryGirl.create(:season, account: account) }
 	
@@ -331,7 +326,6 @@ describe Account do
 		end
 		
 		describe "pieces" do
-			before { Account.current_id = account.id }
 			let!(:second_piece) { FactoryGirl.create(:piece, account: account) }
 			let!(:first_piece) { FactoryGirl.create(:piece, account: account) }
 	
@@ -349,7 +343,6 @@ describe Account do
 		end
 		
 		describe "scenes" do
-			before { Account.current_id = account.id }
 			let!(:scene1) { FactoryGirl.create(:scene, account: account) }
 			let!(:scene2) { FactoryGirl.create(:scene, account: account) }
 	
@@ -367,7 +360,6 @@ describe Account do
 		end
 		
 		describe "characters" do
-			before { Account.current_id = account.id }
 			let!(:character1) { FactoryGirl.create(:character, account: account) }
 			let!(:character2) { FactoryGirl.create(:character, account: account) }
 	
@@ -385,7 +377,6 @@ describe Account do
 		end
 		
 		describe "season_pieces" do
-			before { Account.current_id = account.id }
 			let!(:season_piece1) { FactoryGirl.create(:season_piece, account: account) }
 			let!(:season_piece2) { FactoryGirl.create(:season_piece, account: account) }
 	
@@ -403,7 +394,6 @@ describe Account do
 		end
 		
 		describe "casts" do
-			before { Account.current_id = account.id }
 			let!(:cast1) { FactoryGirl.create(:cast, account: account) }
 			let!(:cast2) { FactoryGirl.create(:cast, account: account) }
 	
@@ -421,7 +411,6 @@ describe Account do
 		end
 		
 		describe "castings" do
-			before { Account.current_id = account.id }
 			let!(:casting1) { FactoryGirl.create(:casting, account: account) }
 			let!(:casting2) { FactoryGirl.create(:casting, account: account) }
 	
@@ -439,7 +428,6 @@ describe Account do
 		end
 		
 		describe "events" do
-			before { Account.current_id = account.id }
 			let!(:second_event) { FactoryGirl.create(:event, account: account, start_at: 1.hour.ago) }
 			let!(:first_event) { FactoryGirl.create(:event, account: account, start_at: 1.day.ago) }
 	
@@ -456,8 +444,24 @@ describe Account do
 			end
 		end
 		
+		describe "invitations" do
+			let!(:invitation1) { FactoryGirl.create(:invitation, account: account) }
+			let!(:invitation2) { FactoryGirl.create(:invitation, account: account) }
+	
+			it "has multiple invitations" do
+				account.invitations.count.should == 2
+			end
+			
+			it "deletes associated invitations" do
+				invitations = account.invitations
+				account.destroy
+				invitations.each do |invitation|
+					Invitation.find_by_id(invitation.id).should be_nil
+				end
+			end
+		end
+		
 		describe "lecture_demos" do
-  		before { Account.current_id = account.id }
 			let!(:demo1) { FactoryGirl.create(:lecture_demo, account: account) }
 			let!(:demo2) { FactoryGirl.create(:lecture_demo, account: account) }
 	
@@ -475,7 +479,6 @@ describe Account do
 		end
 		
 		describe "costume_fittings" do
-  		before { Account.current_id = account.id }
 			let!(:fitting1) { FactoryGirl.create(:costume_fitting, account: account) }
 			let!(:fitting2) { FactoryGirl.create(:costume_fitting, account: account) }
 	
@@ -493,7 +496,6 @@ describe Account do
 		end
 		
 		describe "rehearsals" do
-  		before { Account.current_id = account.id }
 			let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account) }
 			let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account) }
 
@@ -511,7 +513,6 @@ describe Account do
 		end
 		
 		describe "company_classes" do
-  		before { Account.current_id = account.id }
 			let!(:company_class1) { FactoryGirl.create(:company_class, account: account) }
 			let!(:company_class2) { FactoryGirl.create(:company_class, account: account) }
 

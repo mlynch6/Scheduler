@@ -1,0 +1,13 @@
+<% klass = ' class="active"'.html_safe %>
+<ul class="nav nav-tabs">
+  <% if can? :read, @rehearsal %>
+  	<li<%= klass if %w[show edit update].include?(params[:action]) %>>
+      <%= icon_link 'Overview', 'asterisk', schedule_rehearsal_path(@rehearsal) %>
+    </li>
+  <% end %>
+  <% if can? :invitees, @rehearsal %>
+  	<li<%= klass if %w[invitees edit_invitees update_invitees].include?(params[:action]) %>>
+      <%= icon_link 'Invitees', 'user', invitees_schedule_rehearsal_path(@rehearsal) %>
+    </li>
+  <% end %>
+</ul>

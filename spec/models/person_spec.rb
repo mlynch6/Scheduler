@@ -244,10 +244,8 @@ describe Person do
 		end
 		
 		describe "invitations" do
-			let(:event1) { FactoryGirl.create(:event, account: account) }
-			let(:event2) { FactoryGirl.create(:event, account: account) }
-			let!(:invite2) { FactoryGirl.create(:invitation, event: event1, person: person) }
-			let!(:invite1) { FactoryGirl.create(:invitation, event: event2, person: person) }
+			let!(:invite2) { FactoryGirl.create(:invitation, account: account, person: person) }
+			let!(:invite1) { FactoryGirl.create(:invitation, account: account, person: person) }
 	
 			it "has multiple invitations" do
 				person.invitations.count.should == 2
@@ -265,9 +263,9 @@ describe Person do
 		describe "events" do
 			let(:event1) { FactoryGirl.create(:event, account: account) }
 			let(:event2) { FactoryGirl.create(:event, account: account) }
-			let!(:invite2) { FactoryGirl.create(:invitation, event: event1, person: person) }
-			let!(:invite1) { FactoryGirl.create(:invitation, event: event2, person: person) }
-			let!(:non_invite) { FactoryGirl.create(:invitation, event: event1) }
+			let!(:invite2) { FactoryGirl.create(:invitation, account: account, event: event1, person: person) }
+			let!(:invite1) { FactoryGirl.create(:invitation, account: account, event: event2, person: person) }
+			let!(:non_invite) { FactoryGirl.create(:invitation, account: account, event: event1) }
 	
 			it "has multiple events" do
 				person.events.count.should == 2

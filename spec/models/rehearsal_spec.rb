@@ -27,7 +27,7 @@ describe Rehearsal do
 											title: 'Rehearsal 1',
 											piece: piece,
 											comment: 'My Description') }
-	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: rehearsal,
+	let(:event) { FactoryGirl.create(:event, account: account, schedulable: rehearsal,
 											start_time: '10:15 am',
 											duration: 60) }
 	
@@ -45,6 +45,8 @@ describe Rehearsal do
 		it { should respond_to(:start_time) }
 		it { should respond_to(:duration) }
 		it { should respond_to(:time_range) }
+		it { should respond_to(:break_duration) }
+		it { should respond_to(:break_time_range) }
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:season) }
@@ -52,6 +54,10 @@ describe Rehearsal do
 		it { should respond_to(:scene) }
 		it { should respond_to(:event) }
 		it { should respond_to(:location) }
+		it { should respond_to(:artist_invitations) }
+		it { should respond_to(:artists) }
+		it { should respond_to(:musician_invitations) }
+		it { should respond_to(:musicians) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -67,7 +73,7 @@ describe Rehearsal do
 		end
   end
 	
-  context "(Valid)" do  	
+  context "(Valid)" do
   	it "with minimum attributes" do
   		should be_valid
   	end
@@ -187,46 +193,72 @@ describe Rehearsal do
   end
   
 	context "(Associations)" do
-  	it "has one account" do
-			rehearsal.reload.account.should == account
+		describe "has no" do
+			it "scene" do
+				rehearsal.reload.scene.should be_nil
+			end
 		end
 		
-  	it "has one season" do
-			rehearsal.reload.season.should == season
-		end
+		describe "has one" do
+	  	it "has one account" do
+				rehearsal.reload.account.should == account
+			end
 		
-  	it "has one piece" do
-			rehearsal.reload.piece.should == piece
-		end
+	  	it "has one season" do
+				rehearsal.reload.season.should == season
+			end
 		
-		it "has no scene" do
-			rehearsal.reload.scene.should be_nil
-		end
+	  	it "has one piece" do
+				rehearsal.reload.piece.should == piece
+			end
 		
-		it "has one scene" do
-			rehearsal.scene = scene
-			rehearsal.save
-			rehearsal.reload.scene.should == scene
-		end
-		
-  	describe "event" do
-			it "has one" do
+			it "has one scene" do
+				rehearsal.scene = scene
+				rehearsal.save
+				rehearsal.reload.scene.should == scene
+			end
+			
+			it "event" do
+				event.reload
 				rehearsal.reload.event.should == event
 			end
 			
-			it "deletes associated event" do
-				e = rehearsal.event
-				rehearsal.destroy
-				Event.find_by_id(e.id).should be_nil
-			end
-		end
-		
-		describe "location" do
-	  	it "has one location" do
+	  	it "location" do
 				event.location = location
 				event.save
 				
 				rehearsal.reload.location.should == location
+			end
+		end
+		
+		describe "has many" do
+			before do
+				3.times { FactoryGirl.create(:invitation, :artist, account: account, event: event) }
+				2.times { FactoryGirl.create(:invitation, :musician, account: account, event: event) }
+			end
+			
+			it "artist_invitations" do
+				rehearsal.artist_invitations.count.should == 3
+			end
+			
+			it "artists" do
+				rehearsal.artists.count.should == 3
+			end
+			
+			it "musician_invitations" do
+				rehearsal.musician_invitations.count.should == 2
+			end
+			
+			it "musicians" do
+				rehearsal.musicians.count.should == 2
+			end
+		end
+		
+  	describe "deletes associated" do
+			it "events" do
+				e = rehearsal.event
+				rehearsal.destroy
+				Event.find_by_id(e.id).should be_nil
 			end
 		end
   end
@@ -242,6 +274,7 @@ describe Rehearsal do
 		
 	  describe "time_range" do
 			it "without Rehearsal Break" do
+				event.reload
 		  	rehearsal.reload.time_range.should == "10:15 AM to 11:15 AM"
 			end
 			
@@ -251,6 +284,36 @@ describe Rehearsal do
 						break_min: 5,
 						duration_min: event.duration)
 		  	rehearsal.reload.time_range.should == "10:15 AM to 11:10 AM"
+			end
+	  end
+		
+	  describe "break_duration" do
+			it "without Rehearsal Break" do
+				event.reload
+		  	rehearsal.reload.break_duration.should == 0
+			end
+			
+			it "with Rehearsal Break" do
+				contract = FactoryGirl.create(:rehearsal_break, 
+						agma_contract: account.agma_contract, 
+						break_min: 5,
+						duration_min: event.duration)
+		  	rehearsal.reload.break_duration.should == 5
+			end
+	  end
+		
+	  describe "break_time_range" do
+			it "without Rehearsal Break" do
+				event.reload
+		  	rehearsal.reload.break_time_range.should be_nil
+			end
+			
+			it "with Rehearsal Break" do
+				contract = FactoryGirl.create(:rehearsal_break, 
+						agma_contract: account.agma_contract, 
+						break_min: 5,
+						duration_min: event.duration)
+		  	rehearsal.reload.break_time_range.should == "11:10 AM to 11:15 AM"
 			end
 	  end
 	end
