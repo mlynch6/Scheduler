@@ -1,6 +1,7 @@
 class Schedule::LectureDemosController < ApplicationController
 	load_resource :except => [:new, :create]
 	authorize_resource
+	layout 'tabs', :except => [:index, :new, :create, :destroy]
 
 	def index
 		query = params.except(:action, :controller)
@@ -33,8 +34,26 @@ class Schedule::LectureDemosController < ApplicationController
 		end
 	end
 	
+	def show
+	end
+	
 	def destroy
 		@lecture_demo.destroy
 		redirect_to schedule_lecture_demos_path, :notice => "Successfully deleted the lecture demonstration."
+	end
+	
+	def invitees
+		@invitees = @lecture_demo.invitees
+	end
+	
+	def edit_invitees
+	end
+	
+	def update_invitees
+		if @lecture_demo.event.update_attributes(params[:lecture_demo])
+			redirect_to invitees_schedule_lecture_demo_path(@lecture_demo), :notice => "Successfully updated the invitees."
+		else
+			render 'edit'
+		end
 	end
 end

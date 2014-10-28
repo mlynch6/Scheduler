@@ -31,8 +31,8 @@
 	  	<% @lecture_demos.each do |demo| %>
 				<tr>
 					<td>
-						<% if can? :update, demo %>
-							<%= link_to demo.title, edit_schedule_lecture_demo_path(demo), :id => "edit_#{demo.id}" %>
+						<% if can? :read, demo %>
+							<%= link_to demo.title, schedule_lecture_demo_path(demo) %>
             <% else %>
               <%= demo.title %>
 						<% end %>

@@ -2,20 +2,21 @@
 <% provide(:header_current, 'Calendar') %>
 <% provide(:sidebar_current, 'Lecture Demos') %>
 
-<div class="page-header">
-  <h1>Lecture Demonstrations
-    <small>Edit</small>
-  </h1>
-</div>
+<% content_for :page_header do %>
+  <%= @lecture_demo.title %>
+  <small>Edit</small>
+<% end %>
 
-<div class="row">
-  <%= simple_form_for @lecture_demo_form, url: schedule_lecture_demo_path(@lecture_demo), method: :put do |f| %>
-  	<%= show_error_messages @lecture_demo_form %>
-    <%= render 'form', :f => f %>
+<% content_for :tabs do %>
+	<%= render 'schedule/lecture_demos/tabs' %>
+<% end %>
 
-    <%= form_actions do %>
-      <%= f.submit 'Update Lecture Demo', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', schedule_lecture_demos_path, class: 'btn btn-link' if can? :read, LectureDemo %>
-    <% end %>
+<%= simple_form_for @lecture_demo_form, url: schedule_lecture_demo_path(@lecture_demo), method: :put do |f| %>
+	<%= show_error_messages @lecture_demo_form %>
+  <%= render 'form', :f => f %>
+
+  <%= form_actions do %>
+    <%= f.submit 'Update Lecture Demo', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', schedule_lecture_demos_path, class: 'btn btn-link' if can? :read, LectureDemo %>
   <% end %>
-</div>
+<% end %>

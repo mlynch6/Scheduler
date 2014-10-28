@@ -12,6 +12,7 @@
   <%= simple_form_for @lecture_demo_form, url: schedule_lecture_demos_path do |f| %>
   	<%= show_error_messages @lecture_demo_form %>
     <%= render 'form', :f => f %>
+    <%= render 'schedule/invitees/form', :f => f %>
 
     <%= form_actions do %>
       <%= f.button :submit %>

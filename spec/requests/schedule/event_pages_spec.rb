@@ -65,8 +65,8 @@ describe "Event Pages:" do
 					should have_link event.title, href: schedule_company_class_path(event.schedulable)
 				# when 'CostumeFitting'
 				# 	should have_link event.title, href: schedule_costume_fitting_path(event.schedulable)
-				# when 'LectureDemo'
-				# 	should have_link event.title, href: schedule_lecture_demo_path(event.schedulable)
+				when 'LectureDemo'
+					should have_link event.title, href: schedule_lecture_demo_path(event.schedulable)
 				when 'Rehearsal'
 					should have_link event.title, href: schedule_rehearsal_path(event.schedulable)
 				end

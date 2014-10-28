@@ -126,6 +126,7 @@ describe "Lecture Demo Pages:" do
 			should have_field 'Start Time'
 			should have_field 'Duration'
 			should have_field 'Description'
+			should have_field 'Invitees'
 			should have_link 'Cancel', href: schedule_lecture_demos_path
 		end
 		
@@ -190,11 +191,12 @@ describe "Lecture Demo Pages:" do
 			click_link 'Calendar'
 			click_link 'Lecture Demos'
 	  	click_link @demo.title
+			click_link 'Edit'
 		end
 		
 		it "has correct title" do	
 	  	should have_title 'Edit Lecture Demonstration'
-			should have_selector 'h1', text: 'Lecture Demonstrations'
+			should have_selector 'h1', text: @demo.title
 			should have_selector 'h1 small', text: 'Edit'
 		end
 		
@@ -232,6 +234,41 @@ describe "Lecture Demo Pages:" do
 		end
 	end
 	
+	context "#show" do
+		before do
+			log_in
+			@demo = FactoryGirl.create(:lecture_demo, account: current_account)
+			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @demo)
+			click_link 'Calendar'
+			click_link 'Lecture Demos'
+	  	click_link @demo.title
+		end
+		
+  	it "has correct title" do
+	  	should have_title @demo.title
+		  should have_selector 'h1', text: @demo.title
+		end
+		
+		it "has correct Navigation" do
+			should have_selector 'li.active', text: 'Calendar'
+			should have_selector 'li.active', text: 'Lecture Demos'
+			should have_selector 'li.active', text: 'Overview'
+		end
+		
+		it "displays correct data" do
+			should have_content @demo.title
+			should have_content @event.location.name
+			should have_content @demo.comment
+			should have_content @demo.start_date
+			should have_content @demo.time_range
+			should have_content "1 hour"
+		end
+		
+		it "has links for Super Admin" do
+			should have_link 'Edit'
+		end
+	end
+	
 	context "#destroy" do
 		before do
 			log_in
@@ -246,6 +283,100 @@ describe "Lecture Demo Pages:" do
 			should have_title 'Lecture Demonstrations'
 			
 			should_not have_content @demo.title
+		end
+	end
+	
+	context "#invitees" do
+		before do
+  		log_in
+			@demo = FactoryGirl.create(:lecture_demo, account: current_account)
+			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @demo)
+			click_link 'Calendar'
+			click_link 'Lecture Demos'
+	  	click_link @demo.title
+			click_link "Invitees"
+		end
+	
+  	it "has correct title" do	
+	  	should have_title "#{@demo.title} | Invitees"
+		  should have_selector 'h1', text: @demo.title
+			should have_selector 'h1 small', text: 'Invitees'
+		end
+	
+		it "has correct Navigation" do
+			should have_selector 'li.active', text: 'Calendar'
+			should have_selector 'li.active', text: 'Lecture Demos'
+			should have_selector 'li.active', text: 'Invitees'
+		end
+	
+		it "has correct fields" do
+			should have_selector 'div.dtl-label', text: "Invitees"
+		end
+  
+		it "lists records" do
+			4.times { FactoryGirl.create(:invitation, account: current_account, event: @event) }
+		
+			visit invitees_schedule_lecture_demo_path(@demo)
+		
+			Account.current_id = current_account.id
+			records = @demo.invitees
+			records.count.should > 0
+		
+			records.each do |person|
+				should have_content person.full_name
+	    end
+		end
+	
+		it "has links for Super Admin" do
+			should have_link 'Edit Invitees'
+		end
+	end
+	
+	context "#edit_invitees" do
+		before do
+			log_in
+			@person = FactoryGirl.create(:person, account: current_account)
+			@demo = FactoryGirl.create(:lecture_demo, account: current_account)
+			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @demo)
+			click_link 'Calendar'
+			click_link 'Lecture Demos'
+	  	click_link @demo.title
+			click_link 'Invitees'
+			click_link 'Edit Invitees'
+		end
+		
+		it "has correct title" do	
+	  	should have_title "#{@demo.title} | Edit Invitees"
+		  should have_selector 'h1', text: @demo.title
+			should have_selector 'h1 small', text: 'Edit Invitees'
+		end
+		
+		it "has correct Navigation" do
+			should have_selector 'li.active', text: 'Calendar'
+			should have_selector 'li.active', text: 'Lecture Demos'
+			should have_selector 'li.active', text: 'Invitees'
+		end
+		
+		it "has correct fields on form" do
+			should have_field 'Invitees'
+			should have_link 'Cancel', href: invitees_schedule_lecture_demo_path(@demo)
+		end
+		
+	  it "record with error" do
+			pending 'No fields currently cause errors'
+	  	select "", from: "Invitees"
+	  	click_button 'Update'
+	
+			should have_selector 'div.alert-danger'
+		end
+	 
+		it "record with valid info saves record", js: true do
+			select_from_chosen @person.name, from: "Invitees"
+			click_button 'Update'
+	
+			should have_selector 'div.alert-success'
+			should have_title "#{@demo.title} | Invitees"
+			should have_content @person.full_name
 		end
 	end
 end

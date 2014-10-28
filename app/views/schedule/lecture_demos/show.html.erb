@@ -1,0 +1,16 @@
+<% provide :title, @lecture_demo.title %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, 'Lecture Demos' %>
+
+<% content_for :page_header do %>
+  <%= @lecture_demo.title %>
+  <div class="pull-right">
+    <%= edit_button 'Edit', edit_schedule_lecture_demo_path(@lecture_demo) if can? :update, @lecture_demo %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/lecture_demos/tabs' %>
+<% end %>
+
+<%= render 'schedule/lecture_demos/detail' %>

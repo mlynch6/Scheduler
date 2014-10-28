@@ -1,0 +1,31 @@
+<% provide :title, "#{@lecture_demo.title} | Invitees" %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, 'Lecture Demos' %>
+
+<% content_for :page_header do %>
+  <%= @lecture_demo.title %>
+  <small>Invitees</small>
+  <div class="pull-right">
+    <%= edit_button 'Edit Invitees', invitees_edit_schedule_lecture_demo_path(@lecture_demo) if can? :update_invitees, @lecture_demo %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/lecture_demos/tabs' %>
+<% end %>
+
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-sm-2 col-md-2">Invitees</div>
+    
+    <% @invitees.in_groups(3, false).each do |people| %>
+      <div class="dtl-text col-sm-3 col-md-3">
+        <ul class="list-unstyled">
+          <% people.each do |person| %>
+            <li><%= person.full_name %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+	</div>
+</div>

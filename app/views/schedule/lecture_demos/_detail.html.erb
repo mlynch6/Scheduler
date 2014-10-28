@@ -1,0 +1,27 @@
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-sm-2 col-md-2"><%= LectureDemo.human_attribute_name(:title) %></div>
+		<div class="dtl-text col-sm-4 col-md-4"><%= @lecture_demo.title %></div>
+    
+		<div class="dtl-label col-sm-2 col-md-2"><%= LectureDemo.human_attribute_name(:location) %></div>
+		<div class="dtl-text col-sm-4 col-md-4"><%= name_or_tbd(@lecture_demo.location) %></div>
+	</div>
+  
+	<div class="row">
+		<div class="dtl-label col-sm-2 col-md-2"><%= LectureDemo.human_attribute_name(:comment) %></div>
+		<div class="dtl-text col-sm-10 col-md-10"><%= simple_format(@lecture_demo.comment) %></div>
+	</div>
+  
+	<div class="row">
+		<div class="dtl-label col-sm-2 col-md-2"><%= LectureDemo.human_attribute_name(:start_date) %></div>
+		<div class="dtl-text col-sm-4 col-md-4"><%= @lecture_demo.start_date(:date_words) %></div>
+	</div>
+  
+	<div class="row">
+		<div class="dtl-label col-sm-2 col-md-2"><%= LectureDemo.human_attribute_name(:start_time) %></div>
+		<div class="dtl-text col-sm-4 col-md-4"><%= @lecture_demo.time_range %></div>
+    
+		<div class="dtl-label col-sm-2 col-md-2"><%= LectureDemo.human_attribute_name(:duration) %></div>
+		<div class="dtl-text col-sm-4 col-md-4"><%= min_to_words(@lecture_demo.duration) %></div>
+	</div>
+</div>

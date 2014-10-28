@@ -63,7 +63,10 @@ en:
         invitee_ids: "Invitees"
         musician_ids: "Musicians"
       lecture_demo:
+        start_date: "Date"
+        start_time: "Time"
         comment: "Description"
+        invitee_ids: "Invitees"
       location:
         active: "Status"
       person:

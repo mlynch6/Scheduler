@@ -1,0 +1,22 @@
+<% provide :title, "#{@lecture_demo.title} | Edit Invitees" %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Lecture Demos') %>
+
+<% content_for :page_header do %>
+  <%= @lecture_demo.title %>
+  <small>Edit Invitees</small>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/lecture_demos/tabs' %>
+<% end %>
+
+<%= simple_form_for @lecture_demo, url: invitees_schedule_lecture_demo_path(@lecture_demo), method: :put do |f| %>
+	<%= show_error_messages @lecture_demo %>
+  <%= render 'schedule/invitees/form', :f => f %>
+
+  <%= form_actions do %>
+    <%= f.submit 'Update Invitees', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', invitees_schedule_lecture_demo_path(@lecture_demo), class: 'btn btn-link' if can? :read, @lecture_demo %>
+  <% end %>
+<% end %>

@@ -22,7 +22,7 @@ describe LectureDemo do
 											season: season,
 											title: 'Lecture Demo 1',
 											comment: 'My Description') }
-	let!(:event) { FactoryGirl.create(:event, account: account, schedulable: lecture_demo) }
+	let(:event) { FactoryGirl.create(:event, account: account, schedulable: lecture_demo) }
 	
 	before do
 		Account.current_id = account.id
@@ -43,6 +43,8 @@ describe LectureDemo do
   	it { should respond_to(:season) }
 		it { should respond_to(:event) }
 		it { should respond_to(:location) }
+		it { should respond_to(:invitations) }
+		it { should respond_to(:invitees) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -134,32 +136,49 @@ describe LectureDemo do
   end
   
 	context "(Associations)" do
-  	it "has one account" do
-			lecture_demo.reload.account.should == account
-		end
+		describe "has one" do
+	  	it "account" do
+				lecture_demo.reload.account.should == account
+			end
 		
-  	it "has one season" do
-			lecture_demo.reload.season.should == season
-		end
-		
-  	describe "event" do
-			it "has one" do
+	  	it "season" do
+				lecture_demo.reload.season.should == season
+			end
+			
+			it "event" do
+				event.reload
 				lecture_demo.reload.event.should == event
 			end
 			
-			it "deletes associated event" do
-				e = lecture_demo.reload.event
-				lecture_demo.destroy
-				Event.find_by_id(e.id).should be_nil
-			end
-		end
-		
-		describe "location" do
-	  	it "has one location" do
+	  	it "location" do
 				event.location = location
 				event.save
 				
 				lecture_demo.reload.location.should == location
+			end
+		end
+		
+		describe "has many" do
+			before do
+				3.times do
+					invite = FactoryGirl.create(:invitation, account: account, event: event)
+				end
+			end
+			
+			it "invitations" do
+				lecture_demo.invitations.count.should == 3
+			end
+			
+			it "invitees" do
+				lecture_demo.invitees.count.should == 3
+			end
+		end
+		
+  	describe "deletes associated" do
+			it "events" do
+				e = lecture_demo.reload.event
+				lecture_demo.destroy
+				Event.find_by_id(e.id).should be_nil
 			end
 		end
   end

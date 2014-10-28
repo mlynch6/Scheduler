@@ -92,14 +92,13 @@ Scheduler::Application.routes.draw do
 				put :invitees, 						:action => 'update_invitees'
 			end
 		end
-		resources :costume_fittings do
+		resources :costume_fittings, :lecture_demos do
 			member do
 				get :invitees
 				get 'invitees/edit', 			:action => 'edit_invitees'
 				put :invitees, 						:action => 'update_invitees'
 			end
 		end
-		resources :lecture_demos,			:except => [:show]
 	  resources :events,						:only => [:index, :destroy]
 	  match 'events/:year/:month/:day', to: 'events#index', :via => :get
 	end
