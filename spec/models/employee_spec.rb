@@ -12,6 +12,8 @@
 #  biography             :text
 #  job_title             :string(50)
 #  agma_artist           :boolean          default(FALSE), not null
+#  musician              :boolean          default(FALSE), not null
+#  instructor            :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'

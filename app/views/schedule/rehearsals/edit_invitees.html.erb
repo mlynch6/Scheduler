@@ -14,6 +14,7 @@
 <%= simple_form_for @rehearsal, url: invitees_schedule_rehearsal_path(@rehearsal), method: :put do |f| %>
 	<%= show_error_messages @rehearsal %>
   
+  <%= render 'schedule/invitees/instructor_form', :f => f %>
   <%= render 'schedule/invitees/musician_form', :f => f %>
   <%= render 'schedule/invitees/artist_form', :f => f %>
 

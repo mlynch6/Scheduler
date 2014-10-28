@@ -12,7 +12,7 @@
 #
 
 class Invitation < ActiveRecord::Base
-	ROLES = ["Artist", "Musician"]
+	ROLES = ["Artist", "Instructor", "Musician"]
 	
 	attr_accessible :role
 	

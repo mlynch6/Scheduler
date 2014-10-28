@@ -380,10 +380,25 @@ describe "Rehearsal Pages:" do
 		end
 	
 		it "has correct fields" do
+			should have_selector 'div.dtl-label', text: "Instructors"
 			should have_selector 'div.dtl-label', text: "Musicians"
 			should have_selector 'div.dtl-label', text: "Artists"
 		end
   
+		it "lists instructors" do
+			3.times { invitation = FactoryGirl.create(:invitation, :instructor, account: current_account, event: @event) }
+			
+			visit invitees_schedule_rehearsal_path(@rehearsal)
+		
+			Account.current_id = current_account.id
+			instructors = @rehearsal.instructors
+			instructors.count.should > 0
+		
+			instructors.each do |person|
+				should have_content person.full_name
+	    end
+		end
+		
 		it "lists musicians" do
 			3.times { invitation = FactoryGirl.create(:invitation, :musician, account: current_account, event: @event) }
 			
@@ -422,6 +437,7 @@ describe "Rehearsal Pages:" do
 			log_in
 			@person1 = FactoryGirl.create(:person, account: current_account)
 			@person2 = FactoryGirl.create(:person, account: current_account)
+			@person3 = FactoryGirl.create(:person, account: current_account)
 			@rehearsal = FactoryGirl.create(:rehearsal, account: current_account)
 			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @rehearsal)
   		click_link "Calendar"
@@ -444,13 +460,14 @@ describe "Rehearsal Pages:" do
 		end
 		
 		it "has correct fields on form" do
+			should have_field 'Instructors'
 			should have_field 'Musicians'
 			should have_field 'Artists'
 			should have_link 'Cancel', href: invitees_schedule_rehearsal_path(@rehearsal)
 		end
 		
 	  it "record with error" do
-			pending 'No fields currently cause errors'
+		pending 'No fields currently cause errors'
 	  	select "", from: "Invitees"
 	  	click_button 'Update'
 	
@@ -458,14 +475,16 @@ describe "Rehearsal Pages:" do
 		end
 	 
 		it "record with valid info saves record", js: true do
-			select_from_chosen @person1.name, from: "Musicians"
-			select_from_chosen @person2.name, from: "Artists"
+			select_from_chosen @person1.name, from: "Instructors"
+			select_from_chosen @person2.name, from: "Musicians"
+			select_from_chosen @person3.name, from: "Artists"
 			click_button 'Update'
 	
 			should have_selector 'div.alert-success'
 			should have_title "#{@rehearsal.title} | Invitees"
 			should have_content @person1.full_name
 			should have_content @person2.full_name
+			should have_content @person3.full_name
 		end
 	end
 end

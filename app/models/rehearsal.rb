@@ -25,12 +25,17 @@ class Rehearsal < ActiveRecord::Base
 	has_one :event, :as => :schedulable, dependent: :destroy
 	has_one :location, :through => :event
 
-	has_many :musician_invitations, :through => :event,
-			class_name: 'Invitation', conditions: { role: 'Musician' }
-	has_many :musicians, through: :musician_invitations, source: :person
 	has_many :artist_invitations, :through => :event,
 			class_name: 'Invitation', conditions: { role: 'Artist' }
 	has_many :artists, through: :artist_invitations, source: :person
+	
+	has_many :instructor_invitations, :through => :event,
+			class_name: 'Invitation', conditions: { role: 'Instructor' }
+	has_many :instructors, through: :instructor_invitations, source: :person
+	
+	has_many :musician_invitations, :through => :event,
+			class_name: 'Invitation', conditions: { role: 'Musician' }
+	has_many :musicians, through: :musician_invitations, source: :person
 	
 	delegate :start_date, :start_time, :duration, :end_time, to: :event
 	

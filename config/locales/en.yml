@@ -86,6 +86,7 @@ en:
         comment: "Description"
         break_time_range: "Break"
         break_duration: "Break Duration"
+        instructor_ids: "Instructors"
         musician_ids: "Musicians"
         artist_ids: "Artists"
       rehearsal_break:

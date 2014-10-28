@@ -69,7 +69,7 @@ describe Invitation do
   	end
 		
   	it "when role is valid" do
-  		roles = ["Artist", "Musician"]
+  		roles = ["Artist", "Instructor", "Musician"]
   		roles.each do |valid_role|
   			@invitation.role = valid_role
   			should be_valid

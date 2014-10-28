@@ -43,6 +43,7 @@ class Schedule::RehearsalsController < ApplicationController
 	end
 	
 	def invitees
+		@instructors = @rehearsal.instructors
 		@artists = @rehearsal.artists
 		@musicians = @rehearsal.musicians
 	end

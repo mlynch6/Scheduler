@@ -26,6 +26,10 @@ FactoryGirl.define do
 			role		'Artist'
 		end
 		
+		trait :instructor do
+			role		'Instructor'
+		end
+		
 		trait :musician do
 			role		'Musician'
 		end

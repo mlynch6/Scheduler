@@ -17,7 +17,7 @@
 
 class Event < ActiveRecord::Base
 	attr_accessible :title, :location_id, :start_date, :start_time, :duration, :comment
-	attr_accessible :invitee_ids, :musician_ids, :artist_ids
+	attr_accessible :invitee_ids, :musician_ids, :artist_ids, :instructor_ids
 	attr_writer :start_date, :start_time, :duration
 
 	belongs_to :account
@@ -26,13 +26,17 @@ class Event < ActiveRecord::Base
 	has_many :invitations, dependent: :destroy
 	has_many :invitees, through: :invitations, source: :person
 	
-	has_many :musician_invitations, dependent: :destroy,
-			class_name: 'Invitation', conditions: { role: 'Musician' }
-	has_many :musicians, through: :musician_invitations, source: :person
-	
 	has_many :artist_invitations, dependent: :destroy,
 			class_name: 'Invitation', conditions: { role: 'Artist' }
 	has_many :artists, through: :artist_invitations, source: :person
+	
+	has_many :instructor_invitations, dependent: :destroy,
+			class_name: 'Invitation', conditions: { role: 'Instructor' }
+	has_many :instructors, through: :instructor_invitations, source: :person
+	
+	has_many :musician_invitations, dependent: :destroy,
+			class_name: 'Invitation', conditions: { role: 'Musician' }
+	has_many :musicians, through: :musician_invitations, source: :person
 
 	before_validation :save_start_at, :if => "@start_date.present? && @start_time.present?"
 	before_validation :save_end_at, :if => "start_at.present? && @duration.present?"

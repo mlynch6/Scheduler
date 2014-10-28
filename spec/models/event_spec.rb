@@ -53,12 +53,15 @@ describe Event do
 		it { should respond_to(:invitations) }
 		it { should respond_to(:invitees) }
 		it { should respond_to(:invitee_ids) }
-		it { should respond_to(:musician_invitations) }
-		it { should respond_to(:musicians) }
-		it { should respond_to(:musician_ids) }
 		it { should respond_to(:artist_invitations) }
 		it { should respond_to(:artists) }
 		it { should respond_to(:artist_ids) }
+		it { should respond_to(:instructor_invitations) }
+		it { should respond_to(:instructors) }
+		it { should respond_to(:instructor_ids) }
+		it { should respond_to(:musician_invitations) }
+		it { should respond_to(:musicians) }
+		it { should respond_to(:musician_ids) }
 	  	
 		it "should not allow access to account_id" do
 			expect do
@@ -251,6 +254,32 @@ describe Event do
 	
 			it "has multiple artists" do
 				event.artists.count.should == 2
+			end
+		end
+		
+		describe "instructor_invitations" do
+			let!(:invite1) { FactoryGirl.create(:invitation, :instructor, account: account, event: event) }
+			let!(:invite2) { FactoryGirl.create(:invitation, :instructor, account: account, event: event) }
+	
+			it "has multiple instructor_invitations" do
+				event.instructor_invitations.count.should == 2
+			end
+			
+			it "deletes associated instructor_invitations" do
+				instructor_invitations = event.instructor_invitations
+				event.destroy
+				instructor_invitations.each do |invitation|
+					Invitation.find_by_id(invitation.id).should be_nil
+				end
+			end
+		end
+		
+		describe "instructors" do
+			let!(:invite1) { FactoryGirl.create(:invitation, :instructor, account: account, event: event) }
+			let!(:invite2) { FactoryGirl.create(:invitation, :instructor, account: account, event: event) }
+	
+			it "has multiple instructors" do
+				event.instructors.count.should == 2
 			end
 		end
   end

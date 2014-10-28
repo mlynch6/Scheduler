@@ -56,6 +56,8 @@ describe Rehearsal do
 		it { should respond_to(:location) }
 		it { should respond_to(:artist_invitations) }
 		it { should respond_to(:artists) }
+		it { should respond_to(:instructor_invitations) }
+		it { should respond_to(:instructors) }
 		it { should respond_to(:musician_invitations) }
 		it { should respond_to(:musicians) }
   	
@@ -234,7 +236,8 @@ describe Rehearsal do
 		describe "has many" do
 			before do
 				3.times { FactoryGirl.create(:invitation, :artist, account: account, event: event) }
-				2.times { FactoryGirl.create(:invitation, :musician, account: account, event: event) }
+				2.times { FactoryGirl.create(:invitation, :instructor, account: account, event: event) }
+				4.times { FactoryGirl.create(:invitation, :musician, account: account, event: event) }
 			end
 			
 			it "artist_invitations" do
@@ -245,12 +248,20 @@ describe Rehearsal do
 				rehearsal.artists.count.should == 3
 			end
 			
+			it "instructor_invitations" do
+				rehearsal.instructor_invitations.count.should == 2
+			end
+			
+			it "instructors" do
+				rehearsal.instructors.count.should == 2
+			end
+			
 			it "musician_invitations" do
-				rehearsal.musician_invitations.count.should == 2
+				rehearsal.musician_invitations.count.should == 4
 			end
 			
 			it "musicians" do
-				rehearsal.musicians.count.should == 2
+				rehearsal.musicians.count.should == 4
 			end
 		end
 		
