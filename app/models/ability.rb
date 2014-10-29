@@ -33,13 +33,16 @@ private
 		can :show, 			Employee, person: { id: @user.person_id }
 		can :manage, 		Address, addressable_type: 'Person', addressable_id: @user.person_id
 		can :manage, 		Phone, phoneable_type: 'Person', phoneable_id: @user.person_id
+		can :read,			:employment
 	end
 	
 	def manage_employees
 		can :read, 			Person
-		can [:create, :read, :update, :activate, :inactivate],		Employee
+		can :manage,		Employee
+		cannot :destroy,Employee
 		can :manage, 		Address, addressable_type: 'Person'
 		can :manage, 		Phone, phoneable_type: 'Person'
+		can [:read, :update],		:employment
 	end
 	
 	def manage_logins

@@ -18,6 +18,9 @@ Scheduler::Application.routes.draw do
   		get 'activate'
   		get 'inactivate'
   	end
+		match 'employment', 				to: 'employment#show', 		:via => :get
+		match 'employment/edit',		to: 'employment#edit', 		:via => :get
+		match 'employment',					to: 'employment#update', 	:via => :put
   end
 	resources :people, 						:only => [] do
 		resources :addresses, 			:except => [:index, :show]

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141024012500) do
+ActiveRecord::Schema.define(:version => 20141028181958) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -170,6 +170,8 @@ ActiveRecord::Schema.define(:version => 20141024012500) do
     t.text     "biography"
     t.string   "job_title",             :limit => 50
     t.boolean  "agma_artist",                         :default => false, :null => false
+    t.boolean  "musician",                            :default => false, :null => false
+    t.boolean  "instructor",                          :default => false, :null => false
   end
 
   add_index "employees", ["account_id"], :name => "index_employees_on_account_id"

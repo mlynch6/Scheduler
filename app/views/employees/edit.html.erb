@@ -2,23 +2,24 @@
 <% provide(:header_current, 'People') %>
 <% provide(:sidebar_current, 'Employees') %>
 
-<div class="page-header">
-  <h1>Employees
-    <small>Edit</small>
-    <div class="pull-right">
-      <%= delete_button 'Delete', @employee, class: 'btn btn-danger', title: 'Delete Employee' if can? :destroy, @employee %>
-    </div>
-  </h1>
-</div>
+<% content_for :page_header do %>
+  <%= @employee.full_name %>
+  <small>Edit</small>
+  <div class="pull-right">
+    <%= delete_button 'Delete', @employee, class: 'btn btn-danger', title: 'Delete Employee' if can? :destroy, @employee %>
+  </div>
+<% end %>
 
-<div class="row">
-  <%= simple_form_for @employee_form, url: employee_path(@employee), method: :put do |f| %>
-  	<%= show_error_messages @employee_form %>
-  	<%= render 'form', :f => f %>
-	
-    <%= form_actions do %>
-      <%= f.submit 'Update Employee', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', employee_path(@employee), class: 'btn btn-link' %>
-    <% end %>
+<% content_for :tabs do %>
+	<%= render 'employees/tabs' %>
+<% end %>
+
+<%= simple_form_for @employee_form, url: employee_path(@employee), method: :put do |f| %>
+	<%= show_error_messages @employee_form %>
+	<%= render 'form', :f => f %>
+
+  <%= form_actions do %>
+    <%= f.submit 'Update Employee', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', employee_path(@employee), class: 'btn btn-link' %>
   <% end %>
-</div>
+<% end %>

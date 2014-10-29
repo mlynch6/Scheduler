@@ -1,8 +1,13 @@
 <% klass = ' class="active"'.html_safe %>
 <ul class="nav nav-tabs">
-	<% if can? :show, @employees %>
-		<li id="overview-tab" <%= klass if params[:controller]=='employees' %>>
+	<% if can? :show, @employee %>
+		<li <%= klass if params[:controller]=='employees' %>>
 			<%= icon_link 'Overview', 'asterisk', employee_path(@employee) %>
+		</li>
+	<% end %>
+	<% if can? :read, :employment %>
+		<li <%= klass if params[:controller]=='employment' %>>
+			<%= icon_link 'Employment', 'briefcase', employee_employment_path(@employee) %>
 		</li>
 	<% end %>
 </ul>

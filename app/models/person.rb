@@ -47,6 +47,8 @@ class Person < ActiveRecord::Base
 	scope :inactive, where(:active => false)
 	scope :employees, joins("INNER JOIN employees ON people.profile_id = employees.id").where(:profile_type => 'Employee')
 	scope :agma_members, employees.where(:employees => { agma_artist: true })
+	scope :musicians, employees.where(:employees => { musician: true })
+	scope :instructors, employees.where(:employees => { instructor: true })
 	
 	def name
 		if suffix.present? && middle_name.present?

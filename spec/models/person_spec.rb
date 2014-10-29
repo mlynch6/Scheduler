@@ -471,5 +471,25 @@ describe Person do
 				people.should == [dancer]
 			end
 		end
+		
+		describe "instructors" do
+			it "returns records with type='Employee' & instructor = true" do
+				teacher = FactoryGirl.create(:person, :instructor, account: account)
+
+				people = Person.instructors
+				people.count.should == 1
+				people.should == [teacher]
+			end
+		end
+		
+		describe "musicians" do
+			it "returns records with type='Employee' & musician = true" do
+				musician = FactoryGirl.create(:person, :musician, account: account)
+
+				people = Person.musicians
+				people.count.should == 1
+				people.should == [musician]
+			end
+		end
 	end
 end

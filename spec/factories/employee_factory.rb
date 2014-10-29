@@ -34,5 +34,13 @@ FactoryGirl.define do
 		trait :agma_artist do
 			agma_artist							true
 		end
+		
+		trait :instructor do
+			instructor							true
+		end
+		
+		trait :musician do
+			musician								true
+		end
 	end
 end

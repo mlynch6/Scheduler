@@ -46,6 +46,8 @@ en:
         comment: "Description"
         active: "Status"
       employee:
+        agma_artist: "AGMA Artist"
+        birth_date: "Birth Date"
         employee_num: "Employee #"
         employment_start_date: "Employment Start Date"
         employment_end_date: "Employment End Date"
@@ -53,7 +55,6 @@ en:
         first_name: "First Name"
         middle_name: "Middle Name"
         last_name: "Last Name"
-        birth_date: "Birth Date"
       event:
         start_at: "Start At"
         end_at: "End At"

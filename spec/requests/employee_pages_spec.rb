@@ -229,10 +229,6 @@ describe "Employee Pages:" do
 			should have_field 'Gender'
 			should have_field 'Birth Date'
 	    should have_field 'Email'
-			should have_field 'Employee #'
-			should have_field 'Employment Start Date'
-			should have_field 'Employment End Date'
-			should have_field 'AGMA Artist'
 			should have_field 'Biography'
 			should have_link 'Cancel', href: employees_path
 		end
@@ -282,18 +278,19 @@ describe "Employee Pages:" do
 			click_link 'People'
 			click_link 'Employees'
 			click_link @person.name
-			click_link @person.full_name
+			click_link 'Edit'
 		end
 		
 		it "has correct title" do	
 	  	should have_title 'Edit Employee'
-			should have_selector 'h1', text: 'Employees'
+			should have_selector 'h1', text: @person.full_name
 			should have_selector 'h1 small', text: 'Edit'
 		end
 		
 		it "has correct Navigation" do
 			should have_selector 'li.active', text: 'People'
 			should have_selector 'li.active', text: 'Employees'
+			should have_selector 'li.active', text: 'Overview'
 		end
 		
 		it "has correct fields on form" do
@@ -306,10 +303,6 @@ describe "Employee Pages:" do
 			should have_field 'Gender'
 			should have_field 'Birth Date'
 	    should have_field 'Email'
-			should have_field 'Employee #'
-			should have_field 'Employment Start Date'
-			should have_field 'Employment End Date'
-			should have_field 'AGMA Artist'
 			should have_field 'Biography'
 			should have_link 'Cancel', href: employee_path(@employee)
 		end
@@ -335,8 +328,7 @@ describe "Employee Pages:" do
 			click_button 'Update'
 	
 			should have_selector 'div.alert-success'
-			should have_title 'Employees'
-			should have_content "#{new_last_name}, #{new_first_name}"
+			should have_title "#{new_first_name} #{new_last_name}"
 			should have_content email
 		end
 		
@@ -363,6 +355,7 @@ describe "Employee Pages:" do
 		it "has correct Navigation" do
 			should have_selector 'li.active', text: 'People'
 			should have_selector 'li.active', text: 'Employees'
+			should have_selector 'li.active', text: 'Overview'
 		end
 		
 		it "has employee info shown" do
@@ -375,16 +368,6 @@ describe "Employee Pages:" do
 			should have_content @person.age
 		  should have_content @person.email
 			should have_content @person.status
-		end
-		
-		it "has employment info shown" do
-			@employee = @person.profile
-			
-			should have_content @employee.employee_num
-			should have_content @employee.employment_start_date
-			should have_content @employee.employment_end_date
-			should have_content @employee.biography
-			should have_content 'AGMA Artist'
 		end
 		
 		describe "has user info shown" do
@@ -482,12 +465,11 @@ describe "Employee Pages:" do
 		end
 		
 		it "has links for Super Admin" do
-			should have_link @person.full_name
-			
-			should have_link 'Overview'
+			should have_link 'Edit'
 			
 			should have_link 'Add Address'
 			should have_link 'Add Phone Number'
+			should have_link 'Add User'
 		end
 	end
 	

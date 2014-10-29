@@ -22,19 +22,19 @@ describe Ability do
 	
 	context "Guest (not logged in):" do
 		it "should be able to manage Static Pages" do
-			should be_able_to(:manage, :static_page)
+			should be_able_to :manage, :static_page
 		end
 		
 		it "should be able to Login" do
-			should be_able_to(:create, :session)
+			should be_able_to :create, :session
 		end
 		
 		it "should be able to Reset Password" do
-			should be_able_to(:manage, :password_reset)
+			should be_able_to :manage, :password_reset
 		end
 		
 		it "should be able to Signup for a new Account" do
-			should be_able_to(:create, Account.new)
+			should be_able_to :create, Account.new
 		end
 	end
 	
@@ -72,6 +72,11 @@ describe Ability do
 			it "should be able to show their own Employee Profile" do
 				employee = @user.person.profile
 				should be_able_to :show, employee
+			end
+			
+			it "should be able to show their own Employee Employment" do
+				employee = @user.person.profile
+				should be_able_to :show, :employment
 			end
 		
 			it "should NOT be able to show other Employee Profiles" do
@@ -131,6 +136,15 @@ describe Ability do
 			should be_able_to :update, @employee
 			should be_able_to :activate, @employee
 			should be_able_to :inactivate, @employee
+		end
+		
+		it "should NOT be able to destroy Employees" do
+			should_not be_able_to :destroy, @employee
+		end
+		
+		it "should be able to read/update Employment" do
+			should be_able_to :read, :employment
+			should be_able_to :update, :employment
 		end
 		
 		context "for Addresses" do 

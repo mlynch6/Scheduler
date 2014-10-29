@@ -1,6 +1,7 @@
 class EmployeesController < ApplicationController
 	load_resource :except => [:new, :create]
 	authorize_resource
+	layout 'tabs', :only => [:show, :edit, :update]
 
   def index
 		params[:status] ||= 'active'
@@ -31,7 +32,7 @@ class EmployeesController < ApplicationController
 	def update
 		@employee_form = EmployeeForm.new(@employee)
 		if @employee_form.submit(params[:employee])
-			redirect_to employees_path, :notice => "Successfully updated the employee."
+			redirect_to employee_path(@employee), :notice => "Successfully updated the employee."
 		else
 			render 'edit'
 		end

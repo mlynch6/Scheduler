@@ -1,0 +1,22 @@
+<% provide(:title, "#{@employee.full_name} | Edit Employment") %>
+<% provide(:header_current, 'People') %>
+<% provide(:sidebar_current, 'Employees') %>
+
+<% content_for :page_header do %>
+  <%= @employee.full_name %>
+  <small>Edit Employment</small>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'employees/tabs' %>
+<% end %>
+
+<%= simple_form_for @employee, url: employee_employment_path(@employee), method: :put do |f| %>
+	<%= show_error_messages @employee %>
+	<%= render 'form', :f => f %>
+
+  <%= form_actions do %>
+    <%= f.button :submit %>
+    <%= link_to 'Cancel', employee_employment_path(@employee), class: 'btn btn-link' %>
+  <% end %>
+<% end %>
