@@ -16,7 +16,7 @@
 	<%= render 'form', :f => f %>
 
   <%= form_actions do %>
-    <%= f.button :submit %>
+    <%= f.submit 'Update Employment', class: 'btn btn-primary' %>
     <%= link_to 'Cancel', employee_employment_path(@employee), class: 'btn btn-link' %>
   <% end %>
 <% end %>

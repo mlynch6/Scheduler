@@ -229,7 +229,6 @@ describe "Employee Pages:" do
 			should have_field 'Gender'
 			should have_field 'Birth Date'
 	    should have_field 'Email'
-			should have_field 'Biography'
 			should have_link 'Cancel', href: employees_path
 		end
 		
@@ -303,7 +302,6 @@ describe "Employee Pages:" do
 			should have_field 'Gender'
 			should have_field 'Birth Date'
 	    should have_field 'Email'
-			should have_field 'Biography'
 			should have_link 'Cancel', href: employee_path(@employee)
 		end
 		

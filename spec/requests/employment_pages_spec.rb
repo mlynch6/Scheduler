@@ -31,7 +31,6 @@ describe "Employment Pages:" do
 			should have_content @employee.employee_num
 			should have_content @employee.employment_start_date
 			should have_content @employee.employment_end_date
-			should have_content @employee.biography
 		end
 		
 		it "has AGMA Artist shown" do

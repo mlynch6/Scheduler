@@ -78,6 +78,11 @@ describe Ability do
 				employee = @user.person.profile
 				should be_able_to :show, :employment
 			end
+			
+			it "should be able to show their own Employee Biography" do
+				employee = @user.person.profile
+				should be_able_to :show, :biography
+			end
 		
 			it "should NOT be able to show other Employee Profiles" do
 				other_employee = FactoryGirl.create(:person, account: @user.account).profile
@@ -145,6 +150,11 @@ describe Ability do
 		it "should be able to read/update Employment" do
 			should be_able_to :read, :employment
 			should be_able_to :update, :employment
+		end
+		
+		it "should be able to read/update Biography" do
+			should be_able_to :read, :biography
+			should be_able_to :update, :biography
 		end
 		
 		context "for Addresses" do 

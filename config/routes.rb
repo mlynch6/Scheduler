@@ -21,6 +21,9 @@ Scheduler::Application.routes.draw do
 		match 'employment', 				to: 'employment#show', 		:via => :get
 		match 'employment/edit',		to: 'employment#edit', 		:via => :get
 		match 'employment',					to: 'employment#update', 	:via => :put
+		match 'biography', 					to: 'biography#show', 		:via => :get
+		match 'biography/edit',			to: 'biography#edit', 		:via => :get
+		match 'biography',					to: 'biography#update', 	:via => :put
   end
 	resources :people, 						:only => [] do
 		resources :addresses, 			:except => [:index, :show]

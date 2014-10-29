@@ -10,4 +10,9 @@
 			<%= icon_link 'Employment', 'briefcase', employee_employment_path(@employee) %>
 		</li>
 	<% end %>
+	<% if can? :read, :biography %>
+		<li <%= klass if params[:controller]=='biography' %>>
+			<%= icon_link 'Biography', 'book', employee_biography_path(@employee) %>
+		</li>
+	<% end %>
 </ul>

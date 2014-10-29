@@ -34,6 +34,7 @@ private
 		can :manage, 		Address, addressable_type: 'Person', addressable_id: @user.person_id
 		can :manage, 		Phone, phoneable_type: 'Person', phoneable_id: @user.person_id
 		can :read,			:employment
+		can :read,			:biography
 	end
 	
 	def manage_employees
@@ -43,6 +44,7 @@ private
 		can :manage, 		Address, addressable_type: 'Person'
 		can :manage, 		Phone, phoneable_type: 'Person'
 		can [:read, :update],		:employment
+		can [:read, :update],		:biography
 	end
 	
 	def manage_logins
