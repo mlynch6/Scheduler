@@ -9,11 +9,13 @@ class Schedule::CompanyClassesController < ApplicationController
 	end
 
 	def new
-		@company_class_form = CompanyClassForm.new
+		@company_class = CompanyClass.new(season_id: current_season.id)
+		@company_class_form = CompanyClassForm.new(@company_class)
 	end
 	
 	def create
-		@company_class_form = CompanyClassForm.new
+		@company_class = CompanyClass.new(season_id: current_season.id)
+		@company_class_form = CompanyClassForm.new(@company_class)
 		if @company_class_form.submit(params[:company_class])
 			redirect_to schedule_company_classes_path, :notice => "Successfully created the company class."
 		else

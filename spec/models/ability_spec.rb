@@ -294,6 +294,10 @@ describe Ability do
 		it "should be able to manage Company Classes" do
 			should be_able_to :manage, CompanyClass
 		end
+		
+		it "should be able to set Current Season" do
+			should be_able_to :create, :current_season
+		end
 	end
 	
 	context "Schedule Costume Fittings:" do
@@ -315,6 +319,10 @@ describe Ability do
 		
 		it "should be able to manage Costume Fittings" do
 			should be_able_to :manage, CostumeFitting
+		end
+		
+		it "should be able to set Current Season" do
+			should be_able_to :create, :current_season
 		end
 	end
 	
@@ -338,6 +346,10 @@ describe Ability do
 		it "should be able to manage Rehearsals" do
 			should be_able_to :manage, Rehearsal
 		end
+		
+		it "should be able to set Current Season" do
+			should be_able_to :create, :current_season
+		end
 	end
 	
 	context "Schedule Lecture Demos:" do
@@ -360,6 +372,10 @@ describe Ability do
 		
 		it "should be able to manage Lecture Demos" do
 			should be_able_to :manage, LectureDemo
+		end
+		
+		it "should be able to set Current Season" do
+			should be_able_to :create, :current_season
 		end
 	end
 	

@@ -3,10 +3,12 @@
 <%= f.input :location_id, 
       collection: Location.active, 
       include_blank: true %>
-<%= f.input :season_id, 
-      collection: Season.all, 
-      include_blank: true,
-      required: true  %>
+<%= f.input :season_id, as: :static_control,
+      text: @costume_fitting.season.name,
+      required: true %>
+<span id="season_start_date" class="hidden"><%= @costume_fitting.season.start_dt %></span>
+<span id="season_end_date" class="hidden"><%= @costume_fitting.season.end_dt %></span>
+
 <%= f.input :start_date, as: :date_picker,
       required: true  %>
 

@@ -9,11 +9,13 @@ class Schedule::CostumeFittingsController < ApplicationController
 	end
 
 	def new
-		@costume_fitting_form = CostumeFittingForm.new
+		@costume_fitting = CostumeFitting.new(season_id: current_season.id)
+		@costume_fitting_form = CostumeFittingForm.new(@costume_fitting)
 	end
 
   def create
-		@costume_fitting_form = CostumeFittingForm.new
+		@costume_fitting = CostumeFitting.new(season_id: current_season.id)
+		@costume_fitting_form = CostumeFittingForm.new(@costume_fitting)
 		if @costume_fitting_form.submit(params[:costume_fitting])
 			redirect_to schedule_costume_fittings_path, :notice => "Successfully created the costume fitting."
 		else

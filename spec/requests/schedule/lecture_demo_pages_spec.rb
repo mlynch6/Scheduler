@@ -102,6 +102,7 @@ describe "Lecture Demo Pages:" do
   context "#new" do
 		before do
 			log_in
+			@season = FactoryGirl.create(:season, account: current_account)
 			click_link 'Calendar'
 			click_link 'Lecture Demos'
 			click_link 'Add Lecture Demo'
@@ -121,7 +122,6 @@ describe "Lecture Demo Pages:" do
 		it "has correct fields on form" do
 	    should have_field 'Title'
 			should have_field 'Location'
-			should have_field 'Season'
 			should have_field 'Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'
@@ -148,11 +148,9 @@ describe "Lecture Demo Pages:" do
 		context "with valid info" do
 			before do
 				@location = FactoryGirl.create(:location, account: current_account)
-				@season = FactoryGirl.create(:season, account: current_account)
 				visit new_schedule_lecture_demo_path
 	  		
 				fill_in "Title", with: "Dance Dialogues"
-				select @season.name, from: 'Season'
 				fill_in 'Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "10:15AM"
 				fill_in 'Duration', with: 60
@@ -208,7 +206,6 @@ describe "Lecture Demo Pages:" do
 		it "has correct fields on form" do
 	    should have_field 'Title'
 			should have_field 'Location'
-			should have_field 'Season'
 			should have_field 'Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'

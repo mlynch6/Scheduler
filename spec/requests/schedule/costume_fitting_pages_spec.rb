@@ -109,6 +109,7 @@ describe "CostumeFitting Pages:" do
   context "#new" do
 		before do
 			log_in
+			@season = FactoryGirl.create(:season, account: current_account)
 			click_link 'Calendar'
 			click_link 'Costume Fittings'
 			click_link 'Add Costume Fitting'
@@ -128,7 +129,6 @@ describe "CostumeFitting Pages:" do
 		it "has correct fields on form" do
 	    should have_field 'Title'
 			should have_field 'Location'
-			should have_field 'Season'
 			should have_field 'Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'
@@ -155,12 +155,10 @@ describe "CostumeFitting Pages:" do
 		context "with valid info" do
 			before do
 				@location = FactoryGirl.create(:location, account: current_account)
-				@season = FactoryGirl.create(:season, account: current_account)
 				@person = FactoryGirl.create(:person, account: current_account)
 				visit new_schedule_costume_fitting_path
 	  		
 				fill_in "Title", with: "Costume Fitting for Nutcracker"
-				select @season.name, from: 'Season'
 				fill_in 'Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "10:15AM"
 				fill_in 'Duration', with: 60
@@ -230,7 +228,6 @@ describe "CostumeFitting Pages:" do
 		it "has correct fields on form" do
 	    should have_field 'Title'
 			should have_field 'Location'
-			should have_field 'Season'
 			should have_field 'Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'

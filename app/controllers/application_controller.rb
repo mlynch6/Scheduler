@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 	check_authorization
   helper :link
+	helper_method :current_user, :current_season
   
 	before_filter :https_redirect
   around_filter :scope_current_account
@@ -17,7 +18,11 @@ private
 	def current_user
 		@current_user ||= User.unscoped.find(session[:user_id]) if session[:user_id]
 	end
-	helper_method :current_user
+	
+	def current_season
+		@current_season ||= Season.find(session[:current_season_id]) if session[:current_season_id]
+		@current_season ||= Season.first
+	end
 	
 	def scope_current_account
 		Account.current_id = current_user.account_id if current_user

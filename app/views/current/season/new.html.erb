@@ -1,0 +1,26 @@
+<% provide(:title, 'Set Current Season') %>
+<% provide(:header_current, 'Home') %>
+
+<div class="page-header">
+  <h1>Current Season
+    <small>Set</small>
+  </h1>
+</div>
+
+<div class="row">
+	<%= form_tag current_season_index_path, method: :post, class: 'form-horizontal' do %>
+    <div class="form-group">
+      <%= label_tag :season_id, 'Season', class: 'control-label required col-sm-3 col-md-3"' %>
+      <div class="col-sm-6 col-md-6">
+    		<%= select_tag :season_id, 
+              options_from_collection_for_select(Season.all, :id, :name),
+              class: 'form-control' %>
+      </div>
+    </div>
+	
+    <%= form_actions do %>
+      <%= submit_tag 'Set Current Season', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', dashboard_path, class: 'btn btn-link' if can? :read, :dashboard %>
+    <% end %>
+  <% end %>
+</div>

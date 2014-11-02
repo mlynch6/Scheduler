@@ -120,6 +120,7 @@ describe "Rehearsal Pages:" do
   context "#new" do
 		before do
 			log_in
+			@season = FactoryGirl.create(:season, account: current_account)
 			click_link 'Calendar'
 			click_link 'Rehearsals'
 			click_link 'Add Rehearsal'
@@ -141,7 +142,6 @@ describe "Rehearsal Pages:" do
 			should have_select 'Piece'
 			should have_select 'Scene'
 			should have_select 'Location'
-			should have_select 'Season'
 			should have_field 'Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'
@@ -173,7 +173,6 @@ describe "Rehearsal Pages:" do
 	  		
 				fill_in "Title", with: "My Rehearsal"
 				select @piece.name, from: 'Piece'
-				select @season.name, from: 'Season'
 				fill_in 'Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "10:15AM"
 				fill_in 'Duration', with: 60
@@ -262,7 +261,6 @@ describe "Rehearsal Pages:" do
 			should have_select 'Piece'
 			should have_select 'Scene'
 			should have_select 'Location'
-			should have_select 'Season'
 			should have_field 'Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'
@@ -435,9 +433,9 @@ describe "Rehearsal Pages:" do
 	context "#edit_invitees" do
 		before do
 			log_in
-			@person1 = FactoryGirl.create(:person, account: current_account)
-			@person2 = FactoryGirl.create(:person, account: current_account)
-			@person3 = FactoryGirl.create(:person, account: current_account)
+			@instructor = FactoryGirl.create(:person, :instructor, account: current_account)
+			@musician = FactoryGirl.create(:person, :musician, account: current_account)
+			@person = FactoryGirl.create(:person, account: current_account)
 			@rehearsal = FactoryGirl.create(:rehearsal, account: current_account)
 			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @rehearsal)
   		click_link "Calendar"
@@ -475,16 +473,16 @@ describe "Rehearsal Pages:" do
 		end
 	 
 		it "record with valid info saves record", js: true do
-			select_from_chosen @person1.name, from: "Instructors"
-			select_from_chosen @person2.name, from: "Musicians"
-			select_from_chosen @person3.name, from: "Artists"
+			select_from_chosen @instructor.name, from: "Instructors"
+			select_from_chosen @musician.name, from: "Musicians"
+			select_from_chosen @person.name, from: "Artists"
 			click_button 'Update'
 	
 			should have_selector 'div.alert-success'
 			should have_title "#{@rehearsal.title} | Invitees"
-			should have_content @person1.full_name
-			should have_content @person2.full_name
-			should have_content @person3.full_name
+			should have_content @instructor.full_name
+			should have_content @musician.full_name
+			should have_content @person.full_name
 		end
 	end
 end

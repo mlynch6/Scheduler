@@ -27,9 +27,11 @@
   	<table class="table table-hover">
   		<thead>
   	  	<tr>
-  	  		<th width="25%"><%= event_date.strftime('%^A') %> <%= content_tag :small, event_date.to_s(:date_words) %></th>
-  	  		<th width="50%"><small>Title</small></th>
-          <th width="25%"><small>Location</small></th>
+  	  		<th width="20%"><%= event_date.strftime('%^A') %> <%= content_tag :small, event_date.to_s(:date_words) %></th>
+  	  		<th width="35%"><small>Title</small></th>
+          <th width="15%"><small>Location</small></th>
+          <th width="15%"><small>Instructors</small></th>
+          <th width="15%"><small>Musicians</small></th>
   	  	</tr>
   	  </thead>
   	  <tbody>
@@ -46,6 +48,8 @@
                 <br /><%= content_tag :span, event.event_type, class: 'text-muted' %>
               </td>
     					<td><%= event.location.name if event.location %></td>
+              <td><%= event.instructors.map { |person| person.last_name }.join(', ') %></td>
+              <td><%= event.musicians.map { |person| person.last_name }.join(', ') %></td>
     				</tr>
     			<% end %>
         <% else %>

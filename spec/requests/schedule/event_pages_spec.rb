@@ -24,6 +24,8 @@ describe "Event Pages:" do
 			should have_selector 'th', text: Time.zone.today.strftime('%^A %B %-d, %Y')
 			should have_selector 'th', text: "Title"
 			should have_selector 'th', text: "Location"
+			should have_selector 'th', text: "Instructors"
+			should have_selector 'th', text: "Musicians"
 		end
 		
 		it "without records" do
@@ -31,24 +33,13 @@ describe "Event Pages:" do
 			should_not have_selector 'div.pagination'
 		end
 	  
-		it "lists records" do
+		it "lists Company Class records" do
 			@date = Date.new(2014,4,3)
 			company_class = FactoryGirl.create(:company_class, account: current_account,
 													start_date: (@date-2.days).to_s,
 													end_date: @date+2.days,
 													monday: true, tuesday: true, wednesday: true, thursday: true,
 													friday: true, saturday: true, sunday: true )
-			
-			fitting = FactoryGirl.create(:costume_fitting, account: current_account)
-			event = FactoryGirl.create(:event, account: current_account, schedulable: fitting, 
-													start_date: @date.to_s)
-			demo = FactoryGirl.create(:lecture_demo, account: current_account)
-			event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: demo, 
-													start_date: @date.to_s)
-			rehearsal = FactoryGirl.create(:rehearsal, account: current_account)
-			event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: rehearsal, 
-													start_date: @date.to_s)
-			
 			visit schedule_events_path+"/2014/4/3"
 			
 			Account.current_id = current_account.id
@@ -56,20 +47,83 @@ describe "Event Pages:" do
 				should have_selector 'td', text: event.time_range
 				should have_selector 'td', text: event.title
 				should have_selector 'td', text: event.event_type
-				if event.location
-					should have_selector 'td', text: event.location.name
+				should have_selector 'td', text: event.location.name if event.location
+				event.instructors.each do |instructor|
+					should have_selector 'td', text: instructor.last_name
+				end
+				event.musicians.each do |musician|
+					should have_selector 'td', text: musician.last_name
 				end
 				
-				case event.schedulable_type
-				when 'CompanyClass'
-					should have_link event.title, href: schedule_company_class_path(event.schedulable)
-				# when 'CostumeFitting'
-				# 	should have_link event.title, href: schedule_costume_fitting_path(event.schedulable)
-				when 'LectureDemo'
-					should have_link event.title, href: schedule_lecture_demo_path(event.schedulable)
-				when 'Rehearsal'
-					should have_link event.title, href: schedule_rehearsal_path(event.schedulable)
-				end
+				should have_link event.title, href: schedule_company_class_path(event.schedulable)
+			end
+		end
+		
+		it "lists Costume Fitting records" do
+			@date = Date.new(2014,4,3)
+			fitting = FactoryGirl.create(:costume_fitting, account: current_account)
+			event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: fitting, 
+													start_date: @date.to_s)
+			visit schedule_events_path+"/2014/4/3"
+			
+			Account.current_id = current_account.id
+			Event.for_day(@date).each do |event|
+				should have_selector 'td', text: event.time_range
+				should have_selector 'td', text: event.title
+				should have_selector 'td', text: event.event_type
+				should have_selector 'td', text: event.location.name
+				should have_link event.title, href: schedule_costume_fitting_path(event.schedulable)
+	    end
+		end
+		
+		it "lists Lecture Demo records" do
+			@date = Date.new(2014,4,3)
+			demo = FactoryGirl.create(:lecture_demo, account: current_account)
+			event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: demo, 
+													start_date: @date.to_s)
+			visit schedule_events_path+"/2014/4/3"
+			
+			Account.current_id = current_account.id
+			Event.for_day(@date).each do |event|
+				should have_selector 'td', text: event.time_range
+				should have_selector 'td', text: event.title
+				should have_selector 'td', text: event.event_type
+				should have_selector 'td', text: event.location.name
+				should have_link event.title, href: schedule_lecture_demo_path(event.schedulable)
+	    end
+		end
+		
+		it "lists Rehearsal records" do
+			@date = Date.new(2014,4,3)
+			rehearsal = FactoryGirl.create(:rehearsal, account: current_account)
+			event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: rehearsal, 
+													start_date: @date.to_s)
+			
+			instructor1 = FactoryGirl.create(:person, :instructor, account: current_account)
+			instructor2 = FactoryGirl.create(:person, :instructor, account: current_account)
+			invite1 = FactoryGirl.create(:invitation, :instructor, account: current_account, event: event, person: instructor1)
+			invite2 = FactoryGirl.create(:invitation, :instructor, account: current_account, event: event, person: instructor2)
+			
+			musician1 = FactoryGirl.create(:person, :musician, account: current_account)
+			musician2 = FactoryGirl.create(:person, :musician, account: current_account)
+			FactoryGirl.create(:invitation, :musician, account: current_account, event: event, person: musician1)
+			FactoryGirl.create(:invitation, :musician, account: current_account, event: event, person: musician2)
+			
+			visit schedule_events_path+"/2014/4/3"
+
+			Account.current_id = current_account.id
+			Event.for_day(@date).each do |event|
+				should have_selector 'td', text: event.time_range
+				should have_selector 'td', text: event.title
+				should have_selector 'td', text: event.event_type
+				should have_selector 'td', text: event.location.name
+				
+				should have_selector 'td', text: instructor1.last_name
+				should have_selector 'td', text: instructor2.last_name
+				should have_selector 'td', text: musician1.last_name
+				should have_selector 'td', text: musician2.last_name
+				
+				should have_link event.title, href: schedule_rehearsal_path(event.schedulable)
 	    end
 		end
 		

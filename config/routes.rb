@@ -109,6 +109,10 @@ Scheduler::Application.routes.draw do
 	  match 'events/:year/:month/:day', to: 'events#index', :via => :get
 	end
 	
+	namespace :current do
+		resources :season,							:only => [:new, :create]
+	end
+	
 	namespace :admin do
 		resources :accounts,						:only => [:index, :edit, :update, :destroy]
 		resources :subscription_plans,	:except => [:show]

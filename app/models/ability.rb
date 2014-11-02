@@ -79,21 +79,25 @@ private
 	def schedule_company_classes
 		can [:read, :destroy],		Event, schedulable_type: 'CompanyClass'
 		can :manage, 		CompanyClass
+		can :create, 		:current_season
 	end
 	
 	def schedule_costume_fittings
 		can :read,			Event, schedulable_type: 'CostumeFitting'
 		can :manage, 		CostumeFitting
+		can :create, 		:current_season
 	end
 	
 	def schedule_rehearsals
 		can :read,			Event, schedulable_type: 'Rehearsal'
 		can :manage, 		Rehearsal
+		can :create, 		:current_season
 	end
 	
 	def schedule_lecture_demos
 		can :read,			Event, schedulable_type: 'LectureDemo'
 		can :manage, 		LectureDemo
+		can :create, 		:current_season
 	end
 	
 	def manage_casts

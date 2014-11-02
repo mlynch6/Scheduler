@@ -52,6 +52,9 @@
         <% if can? :show, current_user.person.profile %>
           <li><%= link_to 'My Profile', employee_path(current_user.person.profile) %></li>
         <% end %>
+        <% if can? :create, :current_season %>
+          <li><%= link_to 'Set Current Season', new_current_season_path %></li>
+        <% end %>
         <% if can? :create, :password %>
           <li><%= link_to 'Change Password', new_password_path %></li>
         <% end %>

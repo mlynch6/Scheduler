@@ -4,10 +4,11 @@
       collection: Location.active, 
       include_blank: true, 
       required: true %>
-<%= f.input :season_id, 
-      collection: Season.all, 
-      include_blank: true, 
-      required: true  %>
+<%= f.input :season_id, as: :static_control,
+      text: @company_class.season.name,
+      required: true %>
+<span id="season_start_date" class="hidden"><%= @company_class.season.start_dt %></span>
+<span id="season_end_date" class="hidden"><%= @company_class.season.end_dt %></span>
 
 <%= f.input :start_date, required: true do %>
   <div class="col-sm-4 col-md-4">

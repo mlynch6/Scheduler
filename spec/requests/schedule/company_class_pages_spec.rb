@@ -96,6 +96,7 @@ describe "Company Class Pages:" do
   context "#new" do
 		before do
 			log_in
+			@season = FactoryGirl.create(:season, account: current_account)
 			click_link 'Calendar'
 			click_link 'Company Classes'
 			click_link 'Add Company Class'
@@ -115,7 +116,6 @@ describe "Company Class Pages:" do
 		it "has correct fields on form" do
 	    should have_field 'Title'
 			should have_field 'Location'
-			should have_field 'Season'
 			should have_field 'Start Date'
 			should have_field 'Start Time'
 			should have_field 'Duration'
@@ -154,7 +154,6 @@ describe "Company Class Pages:" do
 	  		
 				fill_in "Title", with: "Daily Company Class"
 				select @location.name, from: "Location"
-				select @season.name, from: 'Season'
 				fill_in 'Start Date', with: "01/31/2013"
 				fill_in 'Start Time', with: "10:15AM"
 				fill_in 'Duration', with: 60

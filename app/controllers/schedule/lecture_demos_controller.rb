@@ -9,11 +9,13 @@ class Schedule::LectureDemosController < ApplicationController
 	end
 
 	def new
-		@lecture_demo_form = LectureDemoForm.new
+		@lecture_demo = LectureDemo.new(season_id: current_season.id)
+		@lecture_demo_form = LectureDemoForm.new(@lecture_demo)
 	end
 
   def create
-		@lecture_demo_form = LectureDemoForm.new
+		@lecture_demo = LectureDemo.new(season_id: current_season.id)
+		@lecture_demo_form = LectureDemoForm.new(@lecture_demo)
 		if @lecture_demo_form.submit(params[:lecture_demo])
 			redirect_to schedule_lecture_demos_path, :notice => "Successfully created the lecture demonstration."
 		else

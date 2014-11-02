@@ -9,11 +9,13 @@ class Schedule::RehearsalsController < ApplicationController
 	end
 
 	def new
-		@rehearsal_form = RehearsalForm.new
+		@rehearsal = Rehearsal.new(season_id: current_season.id)
+		@rehearsal_form = RehearsalForm.new(@rehearsal)
 	end
 
   def create
-		@rehearsal_form = RehearsalForm.new
+		@rehearsal = Rehearsal.new(season_id: current_season.id)
+		@rehearsal_form = RehearsalForm.new(@rehearsal)
 		if @rehearsal_form.submit(params[:rehearsal])
 			redirect_to invitees_edit_schedule_rehearsal_path(@rehearsal_form.rehearsal), :notice => "Successfully created the rehearsal."
 		else
