@@ -17,7 +17,7 @@ class Schedule::LectureDemosController < ApplicationController
 		@lecture_demo = LectureDemo.new(season_id: current_season.id)
 		@lecture_demo_form = LectureDemoForm.new(@lecture_demo)
 		if @lecture_demo_form.submit(params[:lecture_demo])
-			redirect_to schedule_lecture_demos_path, :notice => "Successfully created the lecture demonstration."
+			redirect_to new_schedule_event_invitee_path(@lecture_demo_form.event), :notice => "Successfully created the lecture demonstration."
 		else
 			render 'new'
 		end
@@ -42,20 +42,5 @@ class Schedule::LectureDemosController < ApplicationController
 	def destroy
 		@lecture_demo.destroy
 		redirect_to schedule_lecture_demos_path, :notice => "Successfully deleted the lecture demonstration."
-	end
-	
-	def invitees
-		@invitees = @lecture_demo.invitees
-	end
-	
-	def edit_invitees
-	end
-	
-	def update_invitees
-		if @lecture_demo.event.update_attributes(params[:lecture_demo])
-			redirect_to invitees_schedule_lecture_demo_path(@lecture_demo), :notice => "Successfully updated the invitees."
-		else
-			render 'edit'
-		end
 	end
 end

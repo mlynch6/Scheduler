@@ -1,0 +1,36 @@
+<% provide :title, "#{@event.schedulable.title} | Invitees" %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, @event.schedulable_type.underscore.pluralize.titleize %>
+
+<% content_for :page_header do %>
+  <%= @event.schedulable.title %>
+  <small>Invitees</small>
+  <div class="pull-right">
+    <%= edit_button 'Edit Invitees', new_schedule_event_invitee_path(@event) if can? :create, :invitees %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+  <% if @event.schedulable_type == 'CompanyClass' %>
+	  <%= render "schedule/events/tabs" %>
+  <% else %>
+    <%= render "schedule/#{@event.schedulable_type.underscore.pluralize}/tabs", resource: @event.schedulable %>
+  <% end %>
+<% end %>
+
+<div class="dtl-form">
+	<div class="row">
+    <% if %w[CompanyClass Rehearsal].include? @event.schedulable_type %>
+      <%= render "detail", label: 'Instructors', invitees: @instructors %>
+    <% end %>
+    <% if %w[CompanyClass Rehearsal].include? @event.schedulable_type %>
+      <%= render "detail", label: 'Musicians', invitees: @musicians %>
+    <% end %>
+    <% if %w[CompanyClass Rehearsal].include? @event.schedulable_type %>
+      <%= render "detail", label: 'Artists', invitees: @artists %>
+    <% end %>
+    <% if %w[CostumeFitting LectureDemo].include? @event.schedulable_type %>
+      <%= render "detail", label: 'Invitees', invitees: @invitees %>
+    <% end %>
+	</div>
+</div>

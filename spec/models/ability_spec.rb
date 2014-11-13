@@ -281,9 +281,8 @@ describe Ability do
 			@class = FactoryGirl.create(:company_class, account: @user.account)
 		end
 		
-		it "should be able to read/destroy Company Class Events" do
-			should be_able_to :read, @class.events.first
-			should be_able_to :destroy, @class.events.first
+		it "should be able to manage Company Class Events" do
+			should be_able_to :manage, @class.events.first
 		end
 		
 		it "should NOT be able to manage other types of Events" do

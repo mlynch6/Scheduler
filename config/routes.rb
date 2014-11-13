@@ -92,21 +92,14 @@ Scheduler::Application.routes.draw do
 		end
 		resources :rehearsals do
 			post :scenes_by_piece, :on => :collection
-			member do
-				get :invitees
-				get 'invitees/edit', 			:action => 'edit_invitees'
-				put :invitees, 						:action => 'update_invitees'
-			end
 		end
-		resources :costume_fittings, :lecture_demos do
-			member do
-				get :invitees
-				get 'invitees/edit', 			:action => 'edit_invitees'
-				put :invitees, 						:action => 'update_invitees'
-			end
+		resources :costume_fittings
+		resources :lecture_demos
+	  resources :events,						:except => [:new, :create] do
+			resources :invitees, 				:only => [:index, :new, :create], :path_names => { :new => 'change' }
 		end
-	  resources :events,						:only => [:index, :destroy]
 	  match 'events/:year/:month/:day', to: 'events#index', :via => :get
+		resources :selected_events,		:only => [:create]
 	end
 	
 	namespace :current do

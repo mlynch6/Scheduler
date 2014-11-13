@@ -22,7 +22,7 @@
 		<div class="dtl-text col-sm-4 col-md-4"><%= @company_class.time_range %></div>
     
 		<div class="dtl-label col-sm-2 col-md-2"><%= CompanyClass.human_attribute_name(:duration) %></div>
-		<div class="dtl-text col-sm-4 col-md-4"><%= @company_class.duration %> minutes</div>
+		<div class="dtl-text col-sm-4 col-md-4"><%= min_to_words(@company_class.duration) %></div>
 	</div>
   
 	<div class="row">

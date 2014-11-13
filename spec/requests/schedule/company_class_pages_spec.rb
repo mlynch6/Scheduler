@@ -128,6 +128,11 @@ describe "Company Class Pages:" do
 			should have_unchecked_field 'Sat'
 			should have_unchecked_field 'Sun'
 			should have_field 'Description'
+			
+			should have_field 'Instructors'
+			should have_field 'Musicians'
+			should have_field 'Artists'
+			
 			should have_link 'Cancel', href: schedule_company_classes_path
 		end
 		
@@ -170,7 +175,9 @@ describe "Company Class Pages:" do
 			
 			it "creates new Company Class" do
 				should have_selector 'div.alert-success'
-				should have_title 'Company Classes'
+				should have_title 'Dates'
+				
+				click_link 'Overview'
 				should have_content 'Daily Company Class'
 				should have_content '01/31/2013'
 				should have_content '10:15 AM to 11:15 AM'
@@ -271,7 +278,7 @@ describe "Company Class Pages:" do
 			should have_content @company_class.comment
 			should have_content '10/01/2014 to 10/15/2014'
 			should have_content '9:15 AM to 10:15 AM'
-			should have_content "#{@company_class.duration} minutes"
+			should have_content "1 hour"
 			should have_content @company_class.days_of_week
 		end
 		
@@ -297,7 +304,7 @@ describe "Company Class Pages:" do
 		end
 		
   	it "has correct title" do	
-	  	should have_title @company_class.title
+	  	should have_title "#{@company_class.title} | Dates"
 		  should have_selector 'h1', text: @company_class.title
 			should have_selector 'h1 small', text: 'Dates'
 		end
@@ -310,8 +317,9 @@ describe "Company Class Pages:" do
 		it "has correct table headers" do
 			should have_selector 'th', text: "Date"
 			should have_selector 'th', text: "Time"
-			should have_selector 'th', text: "Duration"
 			should have_selector 'th', text: "Location"
+			should have_selector 'th', text: "Instructor"
+			should have_selector 'th', text: "Musician"
 		end
 		
 		it "without records" do
@@ -323,12 +331,32 @@ describe "Company Class Pages:" do
 	  
 		it "lists records" do
 			Account.current_id = current_account.id
+			@event = @company_class.events.first
+			instructor1 = FactoryGirl.create(:person, :instructor, account: current_account)
+			instructor2 = FactoryGirl.create(:person, :instructor, account: current_account)
+			invite1 = FactoryGirl.create(:invitation, :instructor, account: current_account, event: @event, person: instructor1)
+			invite2 = FactoryGirl.create(:invitation, :instructor, account: current_account, event: @event, person: instructor2)
+			
+			musician1 = FactoryGirl.create(:person, :musician, account: current_account)
+			musician2 = FactoryGirl.create(:person, :musician, account: current_account)
+			FactoryGirl.create(:invitation, :musician, account: current_account, event: @event, person: musician1)
+			FactoryGirl.create(:invitation, :musician, account: current_account, event: @event, person: musician2)
+			
+			click_link 'Dates'
 			@company_class.events.each do |event|
 				should have_selector 'td', text: event.start_at.strftime('%B %-d, %Y')
 				should have_selector 'td', text: event.start_at.strftime('%A')
 				should have_selector 'td', text: event.time_range
-				should have_selector 'td', text: event.duration
-				should have_selector 'td', text: event.location.name
+				should have_selector 'td', text: "1 hour"
+				should have_selector 'td', text: event.location.name if event.location
+				
+				event.instructors.each do |instructor|
+					should have_selector 'td', text: instructor.last_name
+				end
+				
+				event.musicians.each do |musician|
+					should have_selector 'td', text: musician.last_name
+				end
 				
 				should have_link 'Delete', href: schedule_event_path(event)
 	    end

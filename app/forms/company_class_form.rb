@@ -10,6 +10,7 @@ class CompanyClassForm
 	attr_accessor :title, :season_id, :comment
 	attr_accessor :start_date, :start_time, :duration, :end_date, :location_id
 	attr_accessor :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday
+	attr_accessor :instructor_ids, :musician_ids, :artist_ids
 	
 	delegate :title, :season_id, :comment, to: :company_class
 	delegate :start_date, :start_time, :duration, :end_date, :location_id, to: :company_class
@@ -29,10 +30,14 @@ class CompanyClassForm
 		company_class.attributes = params.slice(:title, :season_id, :comment, 
 					:start_date, :start_time, :duration, :end_date, :location_id, 
 					:monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday)
+		invitee_attributes = params.slice(:instructor_ids, :musician_ids, :artist_ids)
 		
 		if valid?
 			CompanyClass.transaction do
 				company_class.save!
+				company_class.events.each do |event|
+					event.update_attributes!(invitee_attributes)
+				end
 			end
 			true
 		else

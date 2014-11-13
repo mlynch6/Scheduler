@@ -42,7 +42,8 @@ class CompanyClass < ActiveRecord::Base
 	validates :start_date, presence: true, timeliness: { type: :date }
 	validates :start_time, presence: true, timeliness: { type: :time }
 	validates :duration,	presence: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than => 1440 }
-	validates :end_date, presence: true, timeliness: { type: :date }
+	validates_date :end_date, :on_or_after => :start_date, :on_or_after_message => "must be on or after the Start Date"
+	validates :end_date, presence: true
 	validates :location_id,	presence: true
 	validates :monday, :inclusion => { :in => [true, false] }
 	validates :tuesday, :inclusion => { :in => [true, false] }

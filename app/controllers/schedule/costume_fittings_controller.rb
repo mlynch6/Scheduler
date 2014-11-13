@@ -43,19 +43,4 @@ class Schedule::CostumeFittingsController < ApplicationController
 		@costume_fitting.destroy
 		redirect_to schedule_costume_fittings_path, :notice => "Successfully deleted the costume fitting."
 	end
-	
-	def invitees
-		@invitees = @costume_fitting.invitees
-	end
-	
-	def edit_invitees
-	end
-	
-	def update_invitees
-		if @costume_fitting.event.update_attributes(params[:costume_fitting])
-			redirect_to invitees_schedule_costume_fitting_path(@costume_fitting), :notice => "Successfully updated the invitees."
-		else
-			render 'edit'
-		end
-	end
 end

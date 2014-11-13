@@ -123,18 +123,25 @@ describe CompanyClass do
   		should_not be_valid
   	end
 		
-  	it "when start_date is invalid" do
-  		dts = ["abc", "2/31/2012"]
-  		dts.each do |invalid_date|
-  			@company_class.start_date = invalid_date
-  			should_not be_valid
-  		end
+		context "when start_date" do
+			it "is blank" do
+	  		@company_class.start_date = " "
+	  		should_not be_valid
+	  	end
+		
+	  	it "is invalid" do
+	  		dts = ["abc", "2/31/2012"]
+	  		dts.each do |invalid_date|
+	  			@company_class.start_date = invalid_date
+	  			should_not be_valid
+	  		end
+			end
 		end
 	
   	it "when start_time is invalid" do
   		@company_class.start_time = "abc"
   		should_not be_valid
-  	end
+  	end	
   	
   	context "when duration" do
 			it "is blank" do
@@ -161,12 +168,25 @@ describe CompanyClass do
 	  	end
 		end
 		
-  	it "when end_date is invalid" do
-  		dts = ["abc", "2/31/2012"]
-  		dts.each do |invalid_date|
-  			@company_class.end_date = invalid_date
-  			should_not be_valid
-  		end
+		context "when end_date" do
+			it "is blank" do
+	  		@company_class.end_date = " "
+	  		should_not be_valid
+	  	end
+		
+	  	it "is invalid" do
+	  		dts = ["abc", "2/31/2012"]
+	  		dts.each do |invalid_date|
+	  			@company_class.end_date = invalid_date
+	  			should_not be_valid
+	  		end
+			end
+		
+			it "is before start_date" do
+				@company_class.start_date = Time.zone.today.to_s
+				@company_class.end_date = Time.zone.today - 2.days
+		  	should_not be_valid
+		  end
 		end
 		
   	it "when location_id is blank" do

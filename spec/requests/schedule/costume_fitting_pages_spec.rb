@@ -133,7 +133,6 @@ describe "CostumeFitting Pages:" do
 			should have_field 'Start Time'
 			should have_field 'Duration'
 			should have_field 'Description'
-			should have_field 'Invitees'
 			should have_link 'Cancel', href: schedule_costume_fittings_path
 		end
 		
@@ -186,19 +185,6 @@ describe "CostumeFitting Pages:" do
 				should have_content '10:15 AM to 11:15 AM'
 				should have_content @location.name
 			end
-			
-			it "creates new Costume Fitting with Invitees", js: true do
-				select @location.name, from: "Location"
-				select_from_chosen @person.name, from: "Invitees"
-				click_button 'Schedule'
-				
-				should have_selector 'div.alert-success'
-				should have_title 'Costume Fittings'
-				should have_content 'Costume Fitting for Nutcracker'
-				should have_content '01/31/2013'
-				should have_content '10:15 AM to 11:15 AM'
-				should have_content @location.name
-			end
 		end
 	end
 	
@@ -232,7 +218,6 @@ describe "CostumeFitting Pages:" do
 			should have_field 'Start Time'
 			should have_field 'Duration'
 			should have_field 'Description'
-			should_not have_field 'Invitees'
 			should have_link 'Cancel', href: schedule_costume_fitting_path(@fitting)
 		end
 		
@@ -303,100 +288,6 @@ describe "CostumeFitting Pages:" do
 			should have_title 'Costume Fittings'
 			
 			should_not have_content @fitting.title
-		end
-	end
-	
-	context "#invitees" do
-		before do
-  		log_in
-			@fitting = FactoryGirl.create(:costume_fitting, account: current_account)
-			@event = FactoryGirl.create(:event, account: current_account, schedulable: @fitting)
-  		click_link "Calendar"
-	  	click_link "Costume Fittings"
-			click_link @fitting.title
-			click_link "Invitees"
-		end
-	
-  	it "has correct title" do	
-	  	should have_title "#{@fitting.title} | Invitees"
-		  should have_selector 'h1', text: @fitting.title
-			should have_selector 'h1 small', text: 'Invitees'
-		end
-	
-		it "has correct Navigation" do
-			should have_selector 'li.active', text: 'Calendar'
-			should have_selector 'li.active', text: 'Costume Fittings'
-			should have_selector 'li.active', text: 'Invitees'
-		end
-	
-		it "has correct fields" do
-			should have_selector 'div.dtl-label', text: "Invitees"
-		end
-  
-		it "lists records" do
-			4.times { FactoryGirl.create(:invitation, account: current_account, event: @event) }
-		
-			visit invitees_schedule_costume_fitting_path(@fitting)
-		
-			Account.current_id = current_account.id
-			records = @fitting.invitees
-			records.count.should > 0
-		
-			records.each do |person|
-				should have_content person.full_name
-	    end
-		end
-	
-		it "has links for Super Admin" do
-			should have_link 'Edit Invitees'
-		end
-	end
-	
-	context "#edit_invitees" do
-		before do
-			log_in
-			@person = FactoryGirl.create(:person, account: current_account)
-			@fitting = FactoryGirl.create(:costume_fitting, account: current_account)
-			@event = FactoryGirl.create(:event, :with_location, account: current_account, schedulable: @fitting)
-			click_link 'Calendar'
-			click_link 'Costume Fittings'
-	  	click_link @fitting.title
-			click_link 'Invitees'
-			click_link 'Edit Invitees'
-		end
-		
-		it "has correct title" do	
-	  	should have_title "#{@fitting.title} | Edit Invitees"
-		  should have_selector 'h1', text: @fitting.title
-			should have_selector 'h1 small', text: 'Edit Invitees'
-		end
-		
-		it "has correct Navigation" do
-			should have_selector 'li.active', text: 'Calendar'
-			should have_selector 'li.active', text: 'Costume Fittings'
-			should have_selector 'li.active', text: 'Invitees'
-		end
-		
-		it "has correct fields on form" do
-			should have_field 'Invitees'
-			should have_link 'Cancel', href: invitees_schedule_costume_fitting_path(@fitting)
-		end
-		
-	  it "record with error" do
-			pending 'No fields currently cause errors'
-	  	select "", from: "Invitees"
-	  	click_button 'Update'
-	
-			should have_selector 'div.alert-danger'
-		end
-	 
-		it "record with valid info saves record", js: true do
-			select_from_chosen @person.name, from: "Invitees"
-			click_button 'Update'
-	
-			should have_selector 'div.alert-success'
-			should have_title "#{@fitting.title} | Invitees"
-			should have_content @person.full_name
 		end
 	end
 end

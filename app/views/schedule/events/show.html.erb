@@ -1,0 +1,17 @@
+<% provide :title, "#{@event.schedulable.title}" %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, @event.schedulable.class.to_s.pluralize.titleize %>
+
+<% content_for :page_header do %>
+  <%= @event.schedulable.title %>
+  <small><%= @event.start_date(:date_words) %></small>
+  <div class="pull-right">
+    <%= edit_button 'Edit', edit_schedule_event_path(@event) if can? :update, @event %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/events/tabs' %>
+<% end %>
+
+<%= render 'schedule/events/detail' %>

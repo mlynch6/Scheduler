@@ -1,5 +1,7 @@
 class Schedule::EventsController < ApplicationController
-	load_and_authorize_resource
+	load_resource except: [:edit_multiple, :edit_location, :update_location]
+	authorize_resource
+	layout 'tabs', :only => [:show]
 
 	def index
 		params[:year] ||= Time.zone.today.year
@@ -21,6 +23,9 @@ class Schedule::EventsController < ApplicationController
 		query[:date] = @event_date
 		@events = @events.search(query)
 		@events_by_date = @events.group_by { |e| e.start_at.to_date }
+	end
+	
+	def show
 	end
 	
 	def destroy

@@ -1,4 +1,4 @@
-<% provide :title, @company_class.title %>
+<% provide :title, "#{@company_class.title} | Dates" %>
 <% provide :header_current, 'Calendar' %>
 <% provide :sidebar_current, 'Company Classes' %>
 
@@ -11,45 +11,50 @@
 	<%= render 'schedule/company_classes/tabs' %>
 <% end %>
 
-<%= render :layout => 'layouts/shared/info-block' do %>
-  Changes will be highlighted
-<% end %>
-
 <div class="row">
+  <%= form_tag schedule_selected_events_path do %>
 	<table class="table table-hover">
 		<thead>
 	  	<tr>
+        <th class="mash-col-1-btn">&nbsp;</th>
 	  		<th>Date</th>
 	  		<th>Time</th>
-        <th>Duration</th>
         <th>Location</th>
+        <th>Instructor</th>
+        <th>Musician</th>
 	  		<th class="mash-col-1-btn">&nbsp;</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
 	  	<% @events.each do |event| %>
 				<tr>
+          <td><%= check_box_tag "event_ids[]", event.id, nil, id: "event_ids_#{event.id}" %></td>
           <td>
-            <%= event.start_date(:date_words) %><br />
+            <%= link_to event.start_date(:date_words), schedule_event_path(event), :id => "show_#{event.id}" %><br />
             <span class="text-muted"><%= event.start_date(:dayofweek) %></span>
           </td>
-          <td<%= ' class="warning"'.html_safe if event.time_range != @company_class.time_range %>>
-            <%= event.time_range %>
+          <td>
+            <%= event.time_range %><br />
+            <span class="text-muted"><%= min_to_words(event.duration) %></span>
           </td>
-          <td<%= ' class="warning"'.html_safe if event.duration != @company_class.duration %>>
-            <%= event.duration %> minutes
-          </td>
-					<td<%= ' class="warning"'.html_safe if event.location_id != @company_class.location_id %>>
-            <%= event.location.name %>
-          </td>
+					<td><%= event.location.name %></td>
+          <td><%= event.instructors.map { |person| person.last_name }.join(', ') %></td>
+          <td><%= event.musicians.map { |person| person.last_name }.join(', ') %></td>
 					<td class="mash-col-1-btn">
-						<%= delete_button nil, schedule_event_path(event), :class => 'btn-xs', :id => "delete_#{event.id}" if can? :destroy, event %>
+            <%= delete_button nil, schedule_event_path(event), :class => 'btn-xs', :id => "delete_#{event.id}" if can? :destroy, event %>
 					</td>
 				</tr>
 			<% end %>
       <% if @events.size == 0 %>
-        <tr><td colspan="4">None found</td></tr>
+        <tr><td colspan="7">None found</td></tr>
       <% end %>
 		</tbody>
 	</table>
+    <% if @events.size > 0 %>
+      For checked dates: &nbsp; 
+      <%= submit_tag "Edit Location", class: "btn btn-info" %>
+      <%= submit_tag "Edit Instructor", class: "btn btn-info" %>
+      <%= submit_tag "Edit Musician", class: "btn btn-info" %>
+    <% end %>
+  <% end %>
 </div>

@@ -4,10 +4,10 @@ class LectureDemoForm
 	include ActiveModel::Validations
 	
 	attr_accessor :title, :season_id, :comment
-	attr_accessor :start_date, :start_time, :duration, :location_id, :invitee_ids
+	attr_accessor :start_date, :start_time, :duration, :location_id
 	
 	delegate :title, :season_id, :comment, to: :lecture_demo
-	delegate :start_date, :start_time, :duration, :location_id, :invitee_ids, to: :event
+	delegate :start_date, :start_time, :duration, :location_id, to: :event
 	
 	validate :validate_lecture_demo
 	validate :validate_event
@@ -27,7 +27,7 @@ class LectureDemoForm
 	
 	def submit(params)
 		lecture_demo.attributes = params.slice(:title, :season_id, :comment)
-		event.attributes = params.slice(:title, :start_date, :start_time, :duration, :location_id, :invitee_ids)
+		event.attributes = params.slice(:title, :start_date, :start_time, :duration, :location_id)
 		
 		if valid?
 			LectureDemo.transaction do

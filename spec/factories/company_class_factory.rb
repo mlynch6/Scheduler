@@ -45,5 +45,25 @@ FactoryGirl.define do
 			# association :location
 			company_class.location = FactoryGirl.create(:location, account: company_class.account) unless company_class.location
 		end
+		
+		trait :daily do
+			monday			true
+			tuesday			true
+			wednesday		true
+			thursday		true
+			friday			true
+			saturday		true
+			sunday			true
+		end
+		
+		trait :weekdays do
+			monday			true
+			tuesday			true
+			wednesday		true
+			thursday		true
+			friday			true
+			saturday		false
+			sunday			false
+		end
 	end
 end

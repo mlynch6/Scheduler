@@ -1,0 +1,38 @@
+<% provide :title, "#{@event.schedulable.title} | Edit Invitees" %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, @event.schedulable_type.underscore.pluralize.titleize %>
+
+<% content_for :page_header do %>
+  <%= @event.schedulable.title %>
+  <small>Edit Invitees</small>
+<% end %>
+
+<% content_for :tabs do %>
+  <% if @event.schedulable_type == 'CompanyClass' %>
+	  <%= render "schedule/events/tabs" %>
+  <% else %>
+    <%= render "schedule/#{@event.schedulable_type.underscore.pluralize}/tabs", resource: @event.schedulable %>
+  <% end %>
+<% end %>
+
+<%= simple_form_for @event, url: schedule_event_invitees_path(@event), method: :post do |f| %>
+	<%= show_error_messages @event %>
+  
+  <% if %w[CompanyClass Rehearsal].include? @event.schedulable_type %>
+    <%= render 'schedule/invitees/instructor_form', :f => f %>
+  <% end %>
+  <% if %w[CompanyClass Rehearsal].include? @event.schedulable_type %>
+   <%= render 'schedule/invitees/musician_form', :f => f %>
+  <% end %>
+  <% if %w[CompanyClass Rehearsal].include? @event.schedulable_type %>
+    <%= render 'schedule/invitees/artist_form', :f => f %>
+  <% end %>
+  <% if %w[CostumeFitting LectureDemo].include? @event.schedulable_type %>
+    <%= render 'schedule/invitees/form', :f => f %>
+  <% end %>
+
+  <%= form_actions do %>
+    <%= f.submit 'Update Invitees', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', schedule_event_invitees_path(@event), class: 'btn btn-link' if can? :read, :invitees %>
+  <% end %>
+<% end %>

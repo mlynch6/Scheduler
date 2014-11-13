@@ -17,7 +17,7 @@ class Schedule::RehearsalsController < ApplicationController
 		@rehearsal = Rehearsal.new(season_id: current_season.id)
 		@rehearsal_form = RehearsalForm.new(@rehearsal)
 		if @rehearsal_form.submit(params[:rehearsal])
-			redirect_to invitees_edit_schedule_rehearsal_path(@rehearsal_form.rehearsal), :notice => "Successfully created the rehearsal."
+			redirect_to new_schedule_event_invitee_path(@rehearsal_form.event), :notice => "Successfully created the rehearsal."
 		else
 			render 'new'
 		end
@@ -42,23 +42,6 @@ class Schedule::RehearsalsController < ApplicationController
 	def destroy
 		@rehearsal.destroy
 		redirect_to schedule_rehearsals_path, :notice => "Successfully deleted the rehearsal."
-	end
-	
-	def invitees
-		@instructors = @rehearsal.instructors
-		@artists = @rehearsal.artists
-		@musicians = @rehearsal.musicians
-	end
-	
-	def edit_invitees
-	end
-	
-	def update_invitees
-		if @rehearsal.event.update_attributes(params[:rehearsal])
-			redirect_to invitees_schedule_rehearsal_path(@rehearsal), :notice => "Successfully updated the invitees."
-		else
-			render 'edit'
-		end
 	end
 	
 	def scenes_by_piece

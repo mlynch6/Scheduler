@@ -40,6 +40,9 @@ en:
         start_time: "Start Time"
         end_date: "End Date"
         comment: "Description"
+        instructor_ids: "Instructors"
+        musician_ids: "Musicians"
+        artist_ids: "Artists"
       costume_fitting:
         start_date: "Date"
         start_time: "Start Time"

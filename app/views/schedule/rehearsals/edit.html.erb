@@ -8,7 +8,7 @@
 <% end %>
 
 <% content_for :tabs do %>
-	<%= render 'schedule/rehearsals/tabs' %>
+	<%= render 'schedule/rehearsals/tabs', resource: @rehearsal %>
 <% end %>
 
 <%= simple_form_for @rehearsal_form, url: schedule_rehearsal_path(@rehearsal), method: :put do |f| %>

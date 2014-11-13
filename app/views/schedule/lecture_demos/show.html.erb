@@ -10,7 +10,7 @@
 <% end %>
 
 <% content_for :tabs do %>
-	<%= render 'schedule/lecture_demos/tabs' %>
+	<%= render 'schedule/lecture_demos/tabs', resource: @lecture_demo %>
 <% end %>
 
 <%= render 'schedule/lecture_demos/detail' %>

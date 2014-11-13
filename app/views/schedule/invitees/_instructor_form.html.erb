@@ -1,3 +1,4 @@
 <%= f.input :instructor_ids, as: :chosen_select, 
       collection: Person.active.instructors,
-      input_html: { multiple: true } %>
+      input_html: { multiple: true },
+      label: 'Instructors' %>

@@ -24,8 +24,8 @@ describe "Event Pages:" do
 			should have_selector 'th', text: Time.zone.today.strftime('%^A %B %-d, %Y')
 			should have_selector 'th', text: "Title"
 			should have_selector 'th', text: "Location"
-			should have_selector 'th', text: "Instructors"
-			should have_selector 'th', text: "Musicians"
+			should have_selector 'th', text: "Instructor"
+			should have_selector 'th', text: "Musician"
 		end
 		
 		it "without records" do
@@ -35,11 +35,9 @@ describe "Event Pages:" do
 	  
 		it "lists Company Class records" do
 			@date = Date.new(2014,4,3)
-			company_class = FactoryGirl.create(:company_class, account: current_account,
+			company_class = FactoryGirl.create(:company_class, :daily, account: current_account,
 													start_date: (@date-2.days).to_s,
-													end_date: @date+2.days,
-													monday: true, tuesday: true, wednesday: true, thursday: true,
-													friday: true, saturday: true, sunday: true )
+													end_date: @date+2.days )
 			visit schedule_events_path+"/2014/4/3"
 			
 			Account.current_id = current_account.id
@@ -130,11 +128,9 @@ describe "Event Pages:" do
 		describe "can search" do
 			before do
 				@date = Date.new(2014,4,10)
-				company_class = FactoryGirl.create(:company_class, account: current_account,
+				company_class = FactoryGirl.create(:company_class, :daily, account: current_account,
 														start_date: (@date-6.days).to_s,
-														end_date: @date+5.days,
-														monday: true, tuesday: true, wednesday: true, thursday: true,
-														friday: true, saturday: true, sunday: true )
+														end_date: @date+5.days )
 			
 				visit schedule_events_path+"/2014/4/10"
 			end
@@ -185,15 +181,59 @@ describe "Event Pages:" do
 		end
 	end
 	
+	context "#show" do
+		before do
+			log_in
+			@date = Date.new(2014,4,10)
+			@location = FactoryGirl.create(:location, account: current_account)
+			@company_class = FactoryGirl.create(:company_class, :daily, account: current_account,
+													start_date: @date.to_s,
+													end_date: @date+5.days,
+													duration: 60,
+													location: @location )
+			Account.current_id = current_account.id
+			@event = @company_class.events.first
+			click_link "Calendar"
+			click_link "Company Classes"
+			click_link @company_class.title
+			click_link "Dates"
+			click_link "April 10, 2014"
+		end
+		
+  	it "has correct title" do
+	  	should have_title @company_class.title
+		  should have_selector 'h1', text: @company_class.title
+			should have_selector 'h1 small', text: 'April 10, 2014'
+		end
+		
+		it "has correct Navigation" do
+			should have_selector 'li.active', text: 'Calendar'
+			should have_selector 'li.active', text: 'Company Classes'
+			should have_selector 'li.active', text: 'Overview'
+		end
+		
+		it "displays correct data" do
+			should have_content @event.title
+			should have_content @location.name
+			should have_content @company_class.comment
+			should have_content 'April 10, 2014'
+			should have_content @event.time_range
+			should have_content "1 hour"
+			should have_content @event.comment
+		end
+		
+		it "has links for Super Admin" do
+			should have_link 'Edit'
+		end
+	end
+	
 	context "#destroy" do
 		before do
 			log_in
 			@date = Date.new(2014,4,10)
-			@company_class = FactoryGirl.create(:company_class, account: current_account,
+			@company_class = FactoryGirl.create(:company_class, :daily, account: current_account,
 													start_date: @date.to_s,
-													end_date: @date+5.days,
-													monday: true, tuesday: true, wednesday: true, thursday: true,
-													friday: true, saturday: true, sunday: true )
+													end_date: @date+5.days )
 			Account.current_id = current_account.id
 			@event = @company_class.events.first
 			click_link "Calendar"

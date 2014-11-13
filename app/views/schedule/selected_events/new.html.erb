@@ -1,0 +1,46 @@
+<% @parent = @events.first.schedulable %>
+<% provide :title, "#{@parent.title} | #{params[:commit]}" %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, @parent.class.to_s.pluralize.titleize %>
+
+<div class="page-header">
+  <h1><%= @parent.title %>
+    <small><%= params[:commit] %></small>
+  </h1>
+</div>
+
+<div class="row">
+  <%= simple_form_for :event, url: schedule_selected_events_path do |f| %>
+  
+    <div class="row">
+      <% @events.in_groups(4, false).each do |events| %>
+        <div class="dtl-text col-sm-3 col-md-3">
+          <ul class="list-unstyled">
+            <% events.each do |event| %>
+              <li>
+                <small class="text-muted"><%= event.start_date(:dayofweek) %></small>
+                <%= event.start_date(:date_words) %> 
+                <%= hidden_field_tag "event_ids[]", event.id %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+    
+    <% if params[:commit] == "Edit Location" %>
+      <%= f.input :location_id, 
+            collection: Location.active, 
+            include_blank: true %>
+    <% elsif params[:commit] == "Edit Instructor" %>
+      <%= render 'schedule/invitees/instructor_form', :f => f %>
+    <% elsif params[:commit] == "Edit Musician" %>
+      <%= render 'schedule/invitees/musician_form', :f => f %>
+    <% end %>
+
+    <%= form_actions do %>
+      <%= submit_tag 'Update', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', dates_schedule_company_class_path(@parent), class: 'btn btn-link' if can? :read, @parent %>
+    <% end %>
+  <% end %>
+</div>

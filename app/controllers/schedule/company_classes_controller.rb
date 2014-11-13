@@ -17,7 +17,7 @@ class Schedule::CompanyClassesController < ApplicationController
 		@company_class = CompanyClass.new(season_id: current_season.id)
 		@company_class_form = CompanyClassForm.new(@company_class)
 		if @company_class_form.submit(params[:company_class])
-			redirect_to schedule_company_classes_path, :notice => "Successfully created the company class."
+			redirect_to dates_schedule_company_class_path(@company_class_form.company_class), :notice => "Successfully created the company class."
 		else
 			render 'new'
 		end
@@ -45,12 +45,4 @@ class Schedule::CompanyClassesController < ApplicationController
 	def dates
 		@events = @company_class.events
 	end
-	
-	# def scenes_by_piece
-	# 	@scenes = params[:piece_id].present? ? Piece.find(params[:piece_id]).scenes : []
-	#
-	# 	respond_to do |format|
-	# 		format.js
-	# 	end
-	# end
 end

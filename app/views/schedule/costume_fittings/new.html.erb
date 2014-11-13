@@ -12,7 +12,6 @@
   <%= simple_form_for @costume_fitting_form, url: schedule_costume_fittings_path do |f| %>
   	<%= show_error_messages @costume_fitting_form %>
     <%= render 'form', :f => f %>
-    <%= render 'schedule/invitees/form', :f => f %>
     
     <%= form_actions do %>
       <%= f.button :submit %>

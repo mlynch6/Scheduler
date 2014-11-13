@@ -61,8 +61,12 @@ en:
         start_date: "Date"
         start_time: "Start Time"
         end_date: "End Date"
+        time_range: "Time"
+        comment: "Notes"
         invitee_ids: "Invitees"
+        instructor_ids: "Instructors"
         musician_ids: "Musicians"
+        artist_ids: "Artists"
       lecture_demo:
         start_date: "Date"
         start_time: "Time"

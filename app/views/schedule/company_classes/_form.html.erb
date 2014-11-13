@@ -61,3 +61,10 @@
 
 <%= f.input :comment, as: :text,
       input_html: { rows: 5 } %>
+      
+<fieldset>
+  <legend>Invitees:</legend>
+  <%= render 'schedule/invitees/instructor_form', :f => f %>
+  <%= render 'schedule/invitees/musician_form', :f => f %>
+  <%= render 'schedule/invitees/artist_form', :f => f %>
+</fieldset>
