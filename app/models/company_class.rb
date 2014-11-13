@@ -57,7 +57,7 @@ class CompanyClass < ActiveRecord::Base
 # 	validate :check_contracted_end, :if => "start_time.present? && duration.present?"
 # 	validate :check_duration_increments, :if => "start_at.present? && end_at.present?"
 
-	default_scope lambda { order('company_classes.start_at ASC').where(:account_id => Account.current_id) }
+	default_scope lambda { where(:account_id => Account.current_id) }
 	
 	def start_date
 		@start_date || start_at.try(:in_time_zone, timezone).try(:to_date).try(:to_s, :default)

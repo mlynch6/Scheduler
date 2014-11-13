@@ -5,7 +5,7 @@ class Schedule::CompanyClassesController < ApplicationController
 
 	def index
 		query = params.except(:action, :controller)
-		@company_classes = @company_classes.search(query).paginate(page: params[:page], per_page: params[:per_page])
+		@company_classes = @company_classes.search(query).order("company_classes.start_at DESC").paginate(page: params[:page], per_page: params[:per_page])
 	end
 
 	def new

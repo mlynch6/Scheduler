@@ -5,7 +5,7 @@ class Schedule::LectureDemosController < ApplicationController
 
 	def index
 		query = params.except(:action, :controller)
-		@lecture_demos = @lecture_demos.joins(:event).search(query).order("events.start_at ASC").paginate(page: params[:page], per_page: params[:per_page])
+		@lecture_demos = @lecture_demos.joins(:event).search(query).order("events.start_at DESC").paginate(page: params[:page], per_page: params[:per_page])
 	end
 
 	def new
