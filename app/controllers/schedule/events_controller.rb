@@ -1,6 +1,5 @@
 class Schedule::EventsController < ApplicationController
-	load_resource except: [:edit_multiple, :edit_location, :update_location]
-	authorize_resource
+	load_and_authorize_resource
 	layout 'tabs', :only => [:show]
 
 	def index
