@@ -1,11 +1,11 @@
-<% provide(:title, 'Contract Settings | Company Class') %>
+<% provide(:title, 'Contract Settings | Costume Fittings') %>
 <% provide(:header_current, 'Setup') %>
 <% provide(:sidebar_current, 'Contract') %>
 
 <% content_for :page_header do %>
   Contract Settings
   <div class="pull-right">
-    <%= edit_button 'Edit Company Class Settings', company_contract_company_class_edit_path if can? :update, :contract_company_class %>
+    <%= edit_button 'Edit Costume Fitting Settings', edit_company_contract_costume_fitting_path if can? :update, :contract_costume_fitting %>
   </div>
 <% end %>
 
@@ -13,4 +13,4 @@
 	<%= render 'company/contract/tabs' %>
 <% end %>
 
-<%= render 'company/contract/company_class/detail' %>
+<%= render 'company/contract/costume_fittings/detail' %>

@@ -3,7 +3,7 @@ Scheduler::Application.routes.draw do
 	match 'login' => 'sessions#new'
 	match 'logout' =>'sessions#destroy'
 	match 'signup' => 'accounts#new'
-	get 'dashboard', to: 'dashboards#index'
+	resource :dashboard,					:only => [:show]
 	resources :password_resets,		:except => [:show, :destroy]
 	
 	resources :accounts do
@@ -18,12 +18,8 @@ Scheduler::Application.routes.draw do
   		get 'activate'
   		get 'inactivate'
   	end
-		match 'employment', 				to: 'employment#show', 		:via => :get
-		match 'employment/edit',		to: 'employment#edit', 		:via => :get
-		match 'employment',					to: 'employment#update', 	:via => :put
-		match 'biography', 					to: 'biography#show', 		:via => :get
-		match 'biography/edit',			to: 'biography#edit', 		:via => :get
-		match 'biography',					to: 'biography#update', 	:via => :put
+		resource :employment, 			:only => [:show, :edit, :update]
+		resource :biography, 				:only => [:show, :edit, :update]
   end
 	resources :people, 						:only => [] do
 		resources :addresses, 			:except => [:index, :show]
@@ -57,31 +53,16 @@ Scheduler::Application.routes.draw do
 	match 'pricing' => 'static_pages#pricing'
 	match 'contact' => 'static_pages#contact'
 	
-	match 'subscriptions/current' => 'subscriptions#show'
-	match 'subscriptions/edit' => 'subscriptions#edit'
-	match 'subscriptions/update' => 'subscriptions#update'
-	match 'subscriptions/cancel' => 'subscriptions#destroy'
-	
-	match 'payments/edit' => 'payments#edit'
-	match 'payments/update' => 'payments#update'
+	resource :subscriptions, 					:only => [:show, :edit, :update, :destroy]
+	resource :payments, 							:only => [:edit, :update]
 	
 	namespace :company do
-		namespace :contract do
-			match 'rehearsal_week', 		to: 'rehearsal_week#show', 	:via => :get
-			match 'company_class', 			to: 'company_class#show', 	:via => :get
-			match 'costume_fitting', 		to: 'costume_fitting#show',	:via => :get
-			match 'lecture_demo', 			to: 'lecture_demo#show', 		:via => :get
-			
-			match 'rehearsal_week/edit', 	to: 'rehearsal_week#edit', 			:via => :get
-			match 'rehearsal_week', 			to: 'rehearsal_week#update', 		:via => :put
-			match 'company_class/edit', 	to: 'company_class#edit', 			:via => :get
-			match 'company_class', 				to: 'company_class#update', 		:via => :put
-			match 'costume_fitting/edit', to: 'costume_fitting#edit', 		:via => :get
-			match 'costume_fitting', 			to: 'costume_fitting#update', 	:via => :put
-			match 'lecture_demo/edit', 		to: 'lecture_demo#edit', 				:via => :get
-			match 'lecture_demo', 				to: 'lecture_demo#update', 			:via => :put
-			
+		namespace :contract do	
+			resource :rehearsal_week, 		:only => [:show, :edit, :update]
 			resources :rehearsal_breaks, 	:only => [:new, :create, :destroy]
+			resource :company_class, 			:only => [:show, :edit, :update]
+			resource :costume_fitting, 		:only => [:show, :edit, :update]
+			resource :lecture_demo, 			:only => [:show, :edit, :update]
 		end
 		resources :publish_casts,				:only => [:update]
 	end

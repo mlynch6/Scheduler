@@ -14,13 +14,13 @@
 	<div class="mash-body">
     <p class="muted">Fill out the form below to change your subscription credit card.</p>
 
-    <%= simple_form_for @account, :url => payments_update_path, :as => 'payment', :html => { :id => 'edit_payment' } do |f| %>
+    <%= simple_form_for @account, :url => payments_path, :as => 'payment', :html => { :id => 'edit_payment' } do |f| %>
     	<%= show_error_messages @account %>
     	<%= render 'form', :f => f, account: @account %>
 		
       <%= form_actions do %>
         <%= f.submit 'Update Payment', class: 'btn btn-primary' %>
-        <%= link_to 'Cancel', subscriptions_current_path, class: 'btn btn-link' if can? :read, :subscription %>
+        <%= link_to 'Cancel', subscriptions_path, class: 'btn btn-link' if can? :read, :subscription %>
     	<% end %>
     <% end %>
   </div>

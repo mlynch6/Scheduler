@@ -6,7 +6,7 @@
   <%= @employee.full_name %>
   <small>Biography</small>
   <div class="pull-right">
-    <%= edit_button 'Edit Biography', employee_biography_edit_path(@employee) if can? :update, :biography %>
+    <%= edit_button 'Edit Biography', edit_employee_biography_path(@employee) if can? :update, :biography %>
   </div>
 <% end %>
 

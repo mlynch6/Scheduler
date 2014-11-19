@@ -77,11 +77,13 @@ describe Warnings do
 			before do
 				@contract.rehearsal_max_hrs_per_week = 30
 				@contract.save
-				@warning = Warnings::ArtistOverHoursPerWeek.new(Time.zone.today)
+				
+				@dt = Date.new(2014,11,14)
+				@warning = Warnings::ArtistOverHoursPerWeek.new(@dt)
 			end
 			
 			it "#start_date should return the warning's date" do
-				@warning.start_date.should == Time.zone.today
+				@warning.start_date.should == @dt
 			end
 			
 			it "#artists should return the AGMA Artists who are over the rehearsal hours for the week" do

@@ -1,4 +1,4 @@
-class EmploymentController < ApplicationController
+class EmploymentsController < ApplicationController
 	load_and_authorize_resource :employee
 	authorize_resource :employment, :class => false
 	layout 'tabs'

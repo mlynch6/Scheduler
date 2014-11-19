@@ -16,7 +16,7 @@ class SubscriptionsController < ApplicationController
 		@account.current_subscription_plan_id = params[:account][:current_subscription_plan_id]
 		
 		if @account.edit_subscription_plan
-			redirect_to subscriptions_current_path, :notice => "Successfully updated your Subscription"
+			redirect_to subscriptions_path, :notice => "Successfully updated your Subscription"
 		else
 			form_setup
 			render 'edit'
@@ -28,7 +28,7 @@ class SubscriptionsController < ApplicationController
   		redirect_to account_path(@account), :notice => "Your subscription has been canceled."
   	else
 	  	show_stripe_errors
-	  	redirect_to subscriptions_current_path
+	  	redirect_to subscriptions_path
 	  end
 	end
 	

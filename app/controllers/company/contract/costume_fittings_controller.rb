@@ -1,4 +1,4 @@
-class Company::Contract::CostumeFittingController < ApplicationController
+class Company::Contract::CostumeFittingsController < ApplicationController
 	before_filter :get_resource
 	layout 'tabs'
 	

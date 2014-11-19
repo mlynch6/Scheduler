@@ -1,4 +1,4 @@
-class Company::Contract::LectureDemoController < ApplicationController
+class Company::Contract::LectureDemosController < ApplicationController
 	before_filter :get_resource
 	layout 'tabs'
 	

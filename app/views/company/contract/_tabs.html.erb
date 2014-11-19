@@ -1,22 +1,22 @@
 <% klass = ' class="active"'.html_safe %>
 <ul class="nav nav-tabs">
   <% if can? :read, :contract_rehearsal_week %>
-  	<li<%= klass if params[:controller]=='company/contract/rehearsal_week' %>>
+  	<li<%= klass if params[:controller]=='company/contract/rehearsal_weeks' %>>
       <%= link_to 'Rehearsal Week', company_contract_rehearsal_week_path %>
     </li>
   <% end %>
   <% if can? :read, :contract_company_class %>
-  	<li<%= klass if params[:controller]=='company/contract/company_class' %>>
+  	<li<%= klass if params[:controller]=='company/contract/company_classes' %>>
       <%= link_to 'Company Class', company_contract_company_class_path %>
     </li>
   <% end %>
 	<% if can? :read, :contract_costume_fitting %>
-    <li<%= klass if params[:controller]=='company/contract/costume_fitting' %>>
+    <li<%= klass if params[:controller]=='company/contract/costume_fittings' %>>
       <%= link_to 'Costume Fittings', company_contract_costume_fitting_path %>
     </li>
   <% end %>
   <% if can? :read, :contract_lecture_demo %>
-    <li<%= klass if params[:controller]=='company/contract/lecture_demo' %>>
+    <li<%= klass if params[:controller]=='company/contract/lecture_demos' %>>
       <%= link_to 'Lecture Demos', company_contract_lecture_demo_path %>
     </li>
   <% end %>

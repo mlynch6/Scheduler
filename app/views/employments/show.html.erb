@@ -6,7 +6,7 @@
   <%= @employee.full_name %>
   <small>Employment</small>
   <div class="pull-right">
-    <%= edit_button 'Edit Employment', employee_employment_edit_path(@employee) if can? :update, :employment %>
+    <%= edit_button 'Edit Employment', edit_employee_employment_path(@employee) if can? :update, :employment %>
   </div>
 <% end %>
 
@@ -14,4 +14,4 @@
 	<%= render 'employees/tabs' %>
 <% end %>
 
-<%= render 'employment/detail' %>
+<%= render 'employments/detail' %>

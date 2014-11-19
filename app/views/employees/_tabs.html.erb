@@ -6,12 +6,12 @@
 		</li>
 	<% end %>
 	<% if can? :read, :employment %>
-		<li <%= klass if params[:controller]=='employment' %>>
+		<li <%= klass if params[:controller]=='employments' %>>
 			<%= icon_link 'Employment', 'briefcase', employee_employment_path(@employee) %>
 		</li>
 	<% end %>
 	<% if can? :read, :biography %>
-		<li <%= klass if params[:controller]=='biography' %>>
+		<li <%= klass if params[:controller]=='biographies' %>>
 			<%= icon_link 'Biography', 'book', employee_biography_path(@employee) %>
 		</li>
 	<% end %>

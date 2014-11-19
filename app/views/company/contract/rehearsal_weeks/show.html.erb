@@ -5,7 +5,7 @@
 <% content_for :page_header do %>
   Contract Settings
   <div class="pull-right">
-    <%= edit_button 'Edit Rehearsal Week Settings', company_contract_rehearsal_week_edit_path if can? :update, :contract_rehearsal_week %>
+    <%= edit_button 'Edit Rehearsal Week Settings', edit_company_contract_rehearsal_week_path if can? :update, :contract_rehearsal_week %>
   </div>
 <% end %>
 
@@ -18,4 +18,4 @@
   Rehearsal Weeks need not be consecutive.
 <% end %>
 
-<%= render 'company/contract/rehearsal_week/detail' %>
+<%= render 'company/contract/rehearsal_weeks/detail' %>

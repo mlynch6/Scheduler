@@ -3,7 +3,7 @@
 		<div class="dtl-label col-md-4"><%= Account.human_attribute_name(:current_subscription_plan) %></div>
 		<div class="dtl-text col-md-8">
       <% if can? :update, :subscription %>
-    		<%= link_to @account.current_subscription_plan.name , subscriptions_edit_path %>
+    		<%= link_to @account.current_subscription_plan.name , edit_subscriptions_path %>
       <% else %>
         <%= @account.current_subscription_plan.name %>
     	<% end %>

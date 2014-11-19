@@ -7,7 +7,7 @@ class PaymentsController < ApplicationController
 	
 	def update
 		if @account.save_with_payment
-			redirect_to subscriptions_current_path, :notice => "Successfully updated your Payment Method"
+			redirect_to subscriptions_path, :notice => "Successfully updated your Payment Method"
 		else
 			render 'edit'
 		end

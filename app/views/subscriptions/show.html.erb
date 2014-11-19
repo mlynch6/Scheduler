@@ -6,7 +6,7 @@
   <h1>My Account
     <small>Subscription</small>
     <div class="pull-right">
-      <%= icon_link 'Change Payment Method', 'credit-card', payments_edit_path, class: 'btn btn-default' if can? :update, :payment %>
+      <%= icon_link 'Change Payment Method', 'credit-card', edit_payments_path, class: 'btn btn-default' if can? :update, :payment %>
     </div>
   </h1>
 </div>

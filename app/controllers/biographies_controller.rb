@@ -1,4 +1,4 @@
-class BiographyController < ApplicationController
+class BiographiesController < ApplicationController
 	load_and_authorize_resource :employee
 	authorize_resource :biography, :class => false
 	layout 'tabs'
