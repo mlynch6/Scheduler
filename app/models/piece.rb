@@ -17,11 +17,11 @@ class Piece < ActiveRecord::Base
 	attr_accessible :name, :choreographer, :music, :composer, :avg_length
 
 	belongs_to :account
-	has_many :events, dependent: :destroy
 	has_many :scenes, dependent: :destroy
 	has_many :characters, dependent: :destroy
 	has_many :season_pieces, dependent: :destroy
 	has_many :seasons, through: :season_pieces
+	has_many :rehearsals, 	dependent: :destroy, inverse_of: :piece
 
 	validates :name,	presence: true, length: { maximum: 50 },
 			uniqueness: { scope: [:account_id, :choreographer], message: "/Choreographer combination has already been taken" }

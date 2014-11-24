@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140910190235) do
+ActiveRecord::Schema.define(:version => 20141028181958) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name",                         :limit => 100, :null => false
@@ -41,15 +41,17 @@ ActiveRecord::Schema.define(:version => 20140910190235) do
 
   create_table "agma_contracts", :force => true do |t|
     t.integer  "account_id",                 :null => false
-    t.integer  "rehearsal_start_min",        :null => false
-    t.integer  "rehearsal_end_min",          :null => false
-    t.integer  "rehearsal_max_hrs_per_week", :null => false
-    t.integer  "rehearsal_max_hrs_per_day",  :null => false
-    t.integer  "rehearsal_increment_min",    :null => false
+    t.integer  "rehearsal_start_min"
+    t.integer  "rehearsal_end_min"
+    t.integer  "rehearsal_max_hrs_per_week"
+    t.integer  "rehearsal_max_hrs_per_day"
+    t.integer  "rehearsal_increment_min"
     t.integer  "class_break_min",            :null => false
-    t.integer  "costume_increment_min",      :null => false
+    t.integer  "costume_increment_min"
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+    t.integer  "demo_max_duration"
+    t.integer  "demo_max_num_per_day"
   end
 
   add_index "agma_contracts", ["account_id"], :name => "index_agma_contracts_on_account_id", :unique => true
@@ -109,6 +111,42 @@ ActiveRecord::Schema.define(:version => 20140910190235) do
   add_index "characters", ["account_id"], :name => "index_characters_on_account_id"
   add_index "characters", ["piece_id"], :name => "index_characters_on_piece_id"
 
+  create_table "company_classes", :force => true do |t|
+    t.integer  "account_id",                                   :null => false
+    t.integer  "season_id",                                    :null => false
+    t.string   "title",       :limit => 30,                    :null => false
+    t.text     "comment"
+    t.datetime "start_at",                                     :null => false
+    t.integer  "duration",                                     :null => false
+    t.date     "end_date",                                     :null => false
+    t.integer  "location_id",                                  :null => false
+    t.boolean  "monday",                    :default => false, :null => false
+    t.boolean  "tuesday",                   :default => false, :null => false
+    t.boolean  "wednesday",                 :default => false, :null => false
+    t.boolean  "thursday",                  :default => false, :null => false
+    t.boolean  "friday",                    :default => false, :null => false
+    t.boolean  "saturday",                  :default => false, :null => false
+    t.boolean  "sunday",                    :default => false, :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
+  end
+
+  add_index "company_classes", ["account_id"], :name => "index_company_classes_on_account_id"
+  add_index "company_classes", ["location_id"], :name => "index_company_classes_on_location_id"
+  add_index "company_classes", ["season_id"], :name => "index_company_classes_on_season_id"
+
+  create_table "costume_fittings", :force => true do |t|
+    t.integer  "account_id",               :null => false
+    t.integer  "season_id",                :null => false
+    t.string   "title",      :limit => 30, :null => false
+    t.text     "comment"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "costume_fittings", ["account_id"], :name => "index_costume_fittings_on_account_id"
+  add_index "costume_fittings", ["season_id"], :name => "index_costume_fittings_on_season_id"
+
   create_table "dropdowns", :force => true do |t|
     t.string   "dropdown_type", :limit => 30,                   :null => false
     t.string   "name",          :limit => 30,                   :null => false
@@ -132,49 +170,54 @@ ActiveRecord::Schema.define(:version => 20140910190235) do
     t.text     "biography"
     t.string   "job_title",             :limit => 50
     t.boolean  "agma_artist",                         :default => false, :null => false
+    t.boolean  "musician",                            :default => false, :null => false
+    t.boolean  "instructor",                          :default => false, :null => false
   end
 
   add_index "employees", ["account_id"], :name => "index_employees_on_account_id"
 
-  create_table "event_series", :force => true do |t|
+  create_table "events", :force => true do |t|
+    t.integer  "account_id",                     :null => false
+    t.integer  "schedulable_id",                 :null => false
+    t.string   "schedulable_type",               :null => false
+    t.string   "title",            :limit => 30, :null => false
+    t.integer  "location_id"
+    t.datetime "start_at",                       :null => false
+    t.datetime "end_at",                         :null => false
+    t.text     "comment"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "events", ["account_id"], :name => "index_events_on_account_id"
+  add_index "events", ["location_id"], :name => "index_events_on_location_id"
+  add_index "events", ["schedulable_id", "schedulable_type"], :name => "index_events_on_schedulable_id_and_schedulable_type"
+
+  create_table "invitations", :force => true do |t|
+    t.integer  "event_id",                 :null => false
+    t.integer  "person_id",                :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
     t.integer  "account_id",               :null => false
-    t.string   "period",     :limit => 20, :null => false
-    t.date     "start_date",               :null => false
-    t.date     "end_date",                 :null => false
+    t.string   "role",       :limit => 20
+  end
+
+  add_index "invitations", ["account_id"], :name => "index_invitations_on_account_id"
+  add_index "invitations", ["event_id", "person_id"], :name => "index_invitations_on_event_id_and_employee_id", :unique => true
+  add_index "invitations", ["event_id"], :name => "index_invitations_on_event_id"
+  add_index "invitations", ["person_id"], :name => "index_invitations_on_employee_id"
+
+  create_table "lecture_demos", :force => true do |t|
+    t.integer  "account_id",               :null => false
+    t.integer  "season_id",                :null => false
+    t.string   "title",      :limit => 30, :null => false
+    t.text     "comment"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
   end
 
-  add_index "event_series", ["account_id"], :name => "index_event_series_on_account_id"
-
-  create_table "events", :force => true do |t|
-    t.integer  "account_id",                                         :null => false
-    t.string   "title",           :limit => 30,                      :null => false
-    t.string   "type",            :limit => 20, :default => "Event", :null => false
-    t.integer  "location_id",                                        :null => false
-    t.datetime "start_at",                                           :null => false
-    t.datetime "end_at",                                             :null => false
-    t.integer  "piece_id"
-    t.integer  "event_series_id"
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
-  end
-
-  add_index "events", ["account_id"], :name => "index_events_on_account_id"
-  add_index "events", ["event_series_id"], :name => "index_events_on_event_series_id"
-  add_index "events", ["location_id"], :name => "index_events_on_location_id"
-  add_index "events", ["piece_id"], :name => "index_events_on_piece_id"
-
-  create_table "invitations", :force => true do |t|
-    t.integer  "event_id",   :null => false
-    t.integer  "person_id",  :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "invitations", ["event_id", "person_id"], :name => "index_invitations_on_event_id_and_employee_id", :unique => true
-  add_index "invitations", ["event_id"], :name => "index_invitations_on_event_id"
-  add_index "invitations", ["person_id"], :name => "index_invitations_on_employee_id"
+  add_index "lecture_demos", ["account_id"], :name => "index_lecture_demos_on_account_id"
+  add_index "lecture_demos", ["season_id"], :name => "index_lecture_demos_on_season_id"
 
   create_table "locations", :force => true do |t|
     t.integer  "account_id",                                 :null => false
@@ -255,6 +298,22 @@ ActiveRecord::Schema.define(:version => 20140910190235) do
 
   add_index "rehearsal_breaks", ["agma_contract_id", "duration_min"], :name => "index_rehearsal_breaks_on_agma_contract_id_and_duration_min", :unique => true
   add_index "rehearsal_breaks", ["agma_contract_id"], :name => "index_rehearsal_breaks_on_agma_contract_id"
+
+  create_table "rehearsals", :force => true do |t|
+    t.integer  "account_id",               :null => false
+    t.integer  "season_id",                :null => false
+    t.string   "title",      :limit => 30, :null => false
+    t.integer  "piece_id",                 :null => false
+    t.integer  "scene_id"
+    t.text     "comment"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "rehearsals", ["account_id"], :name => "index_rehearsals_on_account_id"
+  add_index "rehearsals", ["piece_id"], :name => "index_rehearsals_on_piece_id"
+  add_index "rehearsals", ["scene_id"], :name => "index_rehearsals_on_scene_id"
+  add_index "rehearsals", ["season_id"], :name => "index_rehearsals_on_season_id"
 
   create_table "scenes", :force => true do |t|
     t.integer  "account_id",                :null => false

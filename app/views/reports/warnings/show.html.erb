@@ -1,0 +1,23 @@
+<% provide(:title, 'Warnings Report') %>
+<% provide(:header_current, 'Reports') %>
+<% provide(:sidebar_current, 'Warnings') %>
+
+<div class="page-header">
+  <h1>Warnings Report</h1>
+</div>
+
+<%= render 'search_form' %>
+
+<div class="row">
+<% if start_date %>
+
+  <% panel_title = start_date.to_s(:date_words) + ("to #{end_date.to_s(:date_words)}" if end_date != start_date).to_s %>
+  <%= render :layout => 'layouts/shared/panel-block', locals: { panel_title: panel_title } do %>
+  
+    <%= render 'rehearsal_max_hrs_per_day_table', warnings: @rehearsal_week_artist_over_hours_per_day %>
+
+    <%= render 'rehearsal_max_hrs_per_week_table', warnings: @rehearsal_week_artist_over_hours_per_week %>
+  <% end %>
+  
+<% end %>
+</div>

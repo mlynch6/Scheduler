@@ -7,9 +7,9 @@
 			</li>
 		<% end %>
     
-		<% if can? :read, AgmaContract %>
+		<% if can? :read, :contract_rehearsal_week %>
 			<li<%= klass if yield(:sidebar_current) == "Contract" %>>
-				<%= link_to "Contract Settings", agma_contract_path(AgmaContract.first) %>
+				<%= link_to "Contract Settings", company_contract_rehearsal_week_path %>
 			</li>
 		<% end %>
 				

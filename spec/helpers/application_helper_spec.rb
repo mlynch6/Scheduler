@@ -52,4 +52,10 @@ describe ApplicationHelper do
 			readable_klass(nil).should == ''
 		end
 	end
+	
+	context 'bootstrap_icon' do
+		it "returns html for bootstrap glyphicon" do
+  		bootstrap_icon('bell').should == '<span class="glyphicon glyphicon-bell"></span>'
+		end
+	end
 end

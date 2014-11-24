@@ -1,6 +1,0 @@
-<div id="event_<%= event.id %>" class="cal-event cal-blue" <%= calculate_offset(event.start_at, event.duration).html_safe %> data-toggle="modal" data-target="#modal_<%= event.id %>">
-	<div class="title"><%= event.title %></div>
-	<div class="time"><%= "#{event.start_time} to #{event.end_time}" %></div>
-</div>
-
-<%= render 'modal', event: event %>

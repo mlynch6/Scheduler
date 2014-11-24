@@ -12,6 +12,8 @@
 #  biography             :text
 #  job_title             :string(50)
 #  agma_artist           :boolean          default(FALSE), not null
+#  musician              :boolean          default(FALSE), not null
+#  instructor            :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'
@@ -41,6 +43,8 @@ describe Employee do
 		it { should respond_to(:biography) }
 		it { should respond_to(:job_title) }
 		it { should respond_to(:agma_artist) }
+		it { should respond_to(:musician) }
+		it { should respond_to(:instructor) }
   	
   	it { should respond_to(:account) }
   	
@@ -99,6 +103,16 @@ describe Employee do
 			@employee.agma_artist = " "
 			should_not be_valid
 		end
+		
+  	it "musician is blank" do
+			@employee.musician = " "
+			should_not be_valid
+		end
+		
+  	it "instructor is blank" do
+			@employee.instructor = " "
+			should_not be_valid
+		end
   end
   
   context "(Associations)" do
@@ -139,6 +153,24 @@ describe Employee do
 			employee.save
 			
 			employee.agma_artist.should be_true
+	  end
+		
+		it "musician" do
+	  	employee.musician.should be_false
+			
+			employee.musician = true
+			employee.save
+			
+			employee.musician.should be_true
+	  end
+		
+		it "instructor" do
+	  	employee.instructor.should be_false
+			
+			employee.instructor = true
+			employee.save
+			
+			employee.instructor.should be_true
 	  end
 		
 		context "delegated" do

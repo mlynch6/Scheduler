@@ -1,0 +1,15 @@
+<div class="search-row hidden-print">
+  <%= form_tag schedule_events_path+@event_date.strftime('/%Y/%-m/%-d'), method: 'get', class: 'form-inline', id: 'event_search' do %>
+		<div class="form-group">
+      <%= label :range, 'Daily/Weekly', class: 'sr-only' %>
+      <%= select_tag :range,
+          options_for_select([['Day', 'day'], ['Week', 'week']], params[:range]),
+          class: 'form-control submit-on-change'
+        %>
+    </div>
+    <%= content_tag :button, content_tag(:span, nil, class: 'glyphicon glyphicon-search'), 
+          name: nil, 
+          class: 'btn btn-info',
+          title: 'Search' %>
+  <% end %>
+</div>

@@ -227,7 +227,6 @@ describe User do
 		end
 		
 		describe "has_role?" do
-			before { Rails.application.load_seed }
 			let!(:role) { Dropdown.of_type('UserRole').find_by_name('Manage Employees') }
 			let!(:permission) { FactoryGirl.create(:permission, account: account, user: user, role: role) }
 			

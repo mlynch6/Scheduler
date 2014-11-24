@@ -1,0 +1,16 @@
+<% provide :title, @company_class.title %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, 'Company Classes' %>
+
+<% content_for :page_header do %>
+  <%= @company_class.title %>
+  <div class="pull-right">
+    <%= edit_button 'Edit', edit_schedule_company_class_path(@company_class) if can? :update, @company_class %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/company_classes/tabs' %>
+<% end %>
+
+<%= render 'schedule/company_classes/detail' %>

@@ -53,5 +53,26 @@ FactoryGirl.define do
 				p.profile.save
 			end
 		end
+		
+		trait :artist do
+			after_create do |p| 
+				p.profile.agma_artist = true
+				p.profile.save
+			end
+		end
+		
+		trait :instructor do
+			after_create do |p| 
+				p.profile.instructor = true
+				p.profile.save
+			end
+		end
+		
+		trait :musician do
+			after_create do |p| 
+				p.profile.musician = true
+				p.profile.save
+			end
+		end
 	end
 end

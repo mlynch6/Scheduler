@@ -3,7 +3,6 @@ require 'cancan/matchers'
 
 describe Ability do
 	before do
-		Rails.application.load_seed
 		@user = nil
 	end
 	
@@ -23,19 +22,19 @@ describe Ability do
 	
 	context "Guest (not logged in):" do
 		it "should be able to manage Static Pages" do
-			should be_able_to(:manage, :static_page)
+			should be_able_to :manage, :static_page
 		end
 		
 		it "should be able to Login" do
-			should be_able_to(:create, :session)
+			should be_able_to :create, :session
 		end
 		
 		it "should be able to Reset Password" do
-			should be_able_to(:manage, :password_reset)
+			should be_able_to :manage, :password_reset
 		end
 		
 		it "should be able to Signup for a new Account" do
-			should be_able_to(:create, Account.new)
+			should be_able_to :create, Account.new
 		end
 	end
 	
@@ -73,6 +72,16 @@ describe Ability do
 			it "should be able to show their own Employee Profile" do
 				employee = @user.person.profile
 				should be_able_to :show, employee
+			end
+			
+			it "should be able to show their own Employee Employment" do
+				employee = @user.person.profile
+				should be_able_to :show, :employment
+			end
+			
+			it "should be able to show their own Employee Biography" do
+				employee = @user.person.profile
+				should be_able_to :show, :biography
 			end
 		
 			it "should NOT be able to show other Employee Profiles" do
@@ -132,6 +141,20 @@ describe Ability do
 			should be_able_to :update, @employee
 			should be_able_to :activate, @employee
 			should be_able_to :inactivate, @employee
+		end
+		
+		it "should NOT be able to destroy Employees" do
+			should_not be_able_to :destroy, @employee
+		end
+		
+		it "should be able to read/update Employment" do
+			should be_able_to :read, :employment
+			should be_able_to :update, :employment
+		end
+		
+		it "should be able to read/update Biography" do
+			should be_able_to :read, :biography
+			should be_able_to :update, :biography
 		end
 		
 		context "for Addresses" do 
@@ -226,6 +249,26 @@ describe Ability do
 			should be_able_to :update, AgmaContract
 		end
 		
+		it "should be able to read/update AGMA Contract's Rehearsal Week" do
+			should be_able_to :read, :contract_rehearsal_week
+			should be_able_to :update, :contract_rehearsal_week
+		end
+		
+		it "should be able to read/update AGMA Contract's Company Class" do
+			should be_able_to :read, :contract_company_class
+			should be_able_to :update, :contract_company_class
+		end
+		
+		it "should be able to read/update AGMA Contract's Costume Fittings" do
+			should be_able_to :read, :contract_costume_fitting
+			should be_able_to :update, :contract_costume_fitting
+		end
+		
+		it "should be able to read/update AGMA Contract's Lecture Demos" do
+			should be_able_to :read, :contract_lecture_demo
+			should be_able_to :update, :contract_lecture_demo
+		end
+		
 		it "should be able to manage Rehearsal Breaks" do
 			should be_able_to :manage, RehearsalBreak
 		end
@@ -234,12 +277,12 @@ describe Ability do
 	context "Schedule Company Classes:" do
 		before do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Company Classes')
-			Account.current_id = @user.account_id
+			Account.current_id = @user.account
 			@class = FactoryGirl.create(:company_class, account: @user.account)
 		end
 		
-		it "should be able to read Company Class Events" do
-			should be_able_to :read, @class
+		it "should be able to manage Company Class Events" do
+			should be_able_to :manage, @class.events.first
 		end
 		
 		it "should NOT be able to manage other types of Events" do
@@ -250,6 +293,14 @@ describe Ability do
 		it "should be able to manage Company Classes" do
 			should be_able_to :manage, CompanyClass
 		end
+		
+		it "should be able to set Current Season" do
+			should be_able_to :create, :current_season
+		end
+		
+		it "should be able to generate the Warnings Report" do
+			should be_able_to :read, :warnings_report
+		end
 	end
 	
 	context "Schedule Costume Fittings:" do
@@ -257,10 +308,11 @@ describe Ability do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Costume Fittings')
 			Account.current_id = @user.account_id
 			@fitting = FactoryGirl.create(:costume_fitting, account: @user.account)
+			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @fitting)
 		end
 		
-		it "should be able to manage Costume Fitting Events" do
-			should be_able_to :manage, @fitting
+		it "should be able to read Costume Fitting Events" do
+			should be_able_to :read, @fitting.event
 		end
 		
 		it "should NOT be able to read other types of Events" do
@@ -271,6 +323,14 @@ describe Ability do
 		it "should be able to manage Costume Fittings" do
 			should be_able_to :manage, CostumeFitting
 		end
+		
+		it "should be able to set Current Season" do
+			should be_able_to :create, :current_season
+		end
+		
+		it "should be able to generate the Warnings Report" do
+			should be_able_to :read, :warnings_report
+		end
 	end
 	
 	context "Schedule Rehearsals:" do
@@ -278,10 +338,11 @@ describe Ability do
 			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Rehearsals')
 			Account.current_id = @user.account_id
 			@rehearsal = FactoryGirl.create(:rehearsal, account: @user.account)
+			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @rehearsal)
 		end
 		
 		it "should be able to manage Rehearsal Events" do
-			should be_able_to :manage, @rehearsal
+			should be_able_to :read, @rehearsal.event
 		end
 		
 		it "should NOT be able to read other types of Events" do
@@ -291,6 +352,45 @@ describe Ability do
 		
 		it "should be able to manage Rehearsals" do
 			should be_able_to :manage, Rehearsal
+		end
+		
+		it "should be able to set Current Season" do
+			should be_able_to :create, :current_season
+		end
+		
+		it "should be able to generate the Warnings Report" do
+			should be_able_to :read, :warnings_report
+		end
+	end
+	
+	context "Schedule Lecture Demos:" do
+		before do
+			@user = FactoryGirl.create(:user, :with_role, role_name: 'Schedule Lecture Demos')
+			Account.current_id = @user.account_id
+			@demo = FactoryGirl.create(:lecture_demo, account: @user.account)
+			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @demo)
+		end
+		
+		it "should be able to read Lecture Demo Events" do
+			should be_able_to :read, @demo.event
+		end
+		
+		it "should NOT be able to read other types of Events" do
+			@other_type = FactoryGirl.create(:costume_fitting, account: @user.account)
+			@event = FactoryGirl.create(:event, account: @user.account, schedulable: @other_type)
+			should_not be_able_to :read, @event
+		end
+		
+		it "should be able to manage Lecture Demos" do
+			should be_able_to :manage, LectureDemo
+		end
+		
+		it "should be able to set Current Season" do
+			should be_able_to :create, :current_season
+		end
+		
+		it "should be able to generate the Warnings Report" do
+			should be_able_to :read, :warnings_report
 		end
 	end
 	

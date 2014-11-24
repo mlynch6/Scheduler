@@ -30,6 +30,7 @@ describe Location do
   	
   	it { should respond_to(:account) }
   	it { should respond_to(:events) }
+		it { should respond_to(:company_classes) }
   	
   	it { should respond_to(:activate) }
   	it { should respond_to(:inactivate) }
@@ -81,8 +82,8 @@ describe Location do
 		end
 		
 		describe "events" do
-			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, location: location) }
-			let!(:first_event) { FactoryGirl.create(:rehearsal, account: account, location: location) }
+			let!(:event1) { FactoryGirl.create(:event, account: account, location: location) }
+			let!(:event2) { FactoryGirl.create(:event, account: account, location: location) }
 	
 			it "has multiple events" do
 				location.events.count.should == 2
@@ -93,6 +94,23 @@ describe Location do
 				location.destroy
 				events.each do |event|
 					Event.find_by_id(event.id).should be_nil
+				end
+			end
+		end
+		
+		describe "company_classes" do
+			let!(:company_class1) { FactoryGirl.create(:company_class, account: account, location: location) }
+			let!(:company_class2) { FactoryGirl.create(:company_class, account: account, location: location) }
+	
+			it "has multiple company_classes" do
+				location.company_classes.count.should == 2
+			end
+			
+			it "deletes associated company_classes" do
+				company_classes = location.company_classes
+				location.destroy
+				company_classes.each do |company_class|
+					CompanyClass.find_by_id(company_class.id).should be_nil
 				end
 			end
 		end

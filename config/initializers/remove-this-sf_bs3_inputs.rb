@@ -8,14 +8,6 @@ inputs = %w[
 	RangeInput
 	StringInput
 	TextInput
-	AppendInput
-	ChosenSelectInput
-	CurrencyInput
-	DatePickerInput
-	EmailPrependInput
-	PasswordPrependInput
-	PhonePrependInput
-	TimePrependInput
 	]
 
 inputs.each do |input_type|

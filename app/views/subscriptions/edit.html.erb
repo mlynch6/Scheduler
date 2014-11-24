@@ -16,19 +16,19 @@
     	The new subscription will be charged to your current credit card.
     </p>
 
-  	<%= simple_form_for @account, :url => subscriptions_update_path do |f| %>
+  	<%= simple_form_for @account, :url => subscriptions_path do |f| %>
   		<%= show_error_messages @account %>
   		<%= render 'form', :f => f %>
 	
       <%= form_actions do %>
         <%= f.submit 'Update Subscription', class: 'btn btn-primary' %>
-        <%= link_to 'Cancel', subscriptions_current_path, class: 'btn btn-link' if can? :read, :subscription %>
+        <%= link_to 'Cancel', subscriptions_path, class: 'btn btn-link' if can? :read, :subscription %>
   		<% end %>
   	<% end %>
 
     <% if can? :destroy, :subscription %>
     	<h2>Cancel Your Subscription</h2>
-    	<%= link_to 'Cancel Subscription', subscriptions_cancel_path, class:'col-md-offset-3 btn btn-danger' %>
+    	<%= link_to 'Cancel Subscription', subscriptions_path, method: :delete, class:'col-md-offset-3 btn btn-danger' %>
     <% end %>
   </div>
 </div>

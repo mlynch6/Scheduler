@@ -1,0 +1,13 @@
+<div class="dtl-form">
+	<div class="row">
+		<div class="dtl-label col-sm-4 col-md-4"><%= AgmaContract.human_attribute_name(:demo_max_duration) %></div>
+		<div class="dtl-text col-sm-2 col-md-2"><%= "#{@agma_contract.demo_max_duration} minutes" if @agma_contract.demo_max_duration.present? %></div>
+    <div class="dtl-text col-sm-6 col-md-6 help-block">Maximum duration for the Lecture Demonstration</div>
+	</div>
+	
+	<div class="row">
+		<div class="dtl-label col-sm-4 col-md-4"><%= AgmaContract.human_attribute_name(:demo_max_num_per_day) %></div>
+		<div class="dtl-text col-sm-2 col-md-2"><%= "#{@agma_contract.demo_max_num_per_day} per day" if @agma_contract.demo_max_num_per_day.present? %></div>
+    <div class="dtl-text col-sm-6 col-md-6 help-block">Maximum number of Lecture Demonstrations in any one day</div>
+	</div>
+</div>

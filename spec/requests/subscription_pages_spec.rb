@@ -35,7 +35,7 @@ describe "Subscription Pages:" do
 		
 		it "does not display Next Payment Date when subscription is canceled" do
 			current_account.cancel_subscription
-			visit subscriptions_current_path
+			visit subscriptions_path
 			
 	  	should_not have_content (Time.zone.today + 30.days).strftime('%B %-d, %Y')
 		end
@@ -51,7 +51,7 @@ describe "Subscription Pages:" do
 		
 		it "shows Stripe error" do
 			current_account.cancel_subscription
-			visit subscriptions_current_path
+			visit subscriptions_path
 			
 			should have_selector 'div.alert-danger'
 		end
@@ -68,10 +68,11 @@ describe "Subscription Pages:" do
 	
 	context "#edit" do
 		before do
-			Rails.application.load_seed
 			log_in
 			create_stripe_account(current_account)
-			visit subscriptions_current_path
+			click_link 'Home'
+			click_link "My Account"
+			click_link "Subscription"
 			click_link current_account.current_subscription_plan.name
 		end
 		
@@ -93,7 +94,7 @@ describe "Subscription Pages:" do
 		
 		it "has correct fields on form" do
 			should have_select 'Subscription'
-			should have_link 'Cancel', href: subscriptions_current_path
+			should have_link 'Cancel', href: subscriptions_path
 		end
 		
 		it "has links" do
@@ -117,7 +118,10 @@ describe "Subscription Pages:" do
 		before do
 			log_in
 			create_stripe_account(current_account)
-			visit subscriptions_edit_path
+			click_link 'Home'
+			click_link "My Account"
+			click_link "Subscription"
+			click_link current_account.current_subscription_plan.name
 			click_link "Cancel Subscription"
 		end
 		

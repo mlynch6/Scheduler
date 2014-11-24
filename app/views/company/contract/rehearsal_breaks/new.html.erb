@@ -1,0 +1,21 @@
+<% provide(:title, "Contract Settings | Add Rehearsal Break") %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Contract') %>
+
+<div class="page-header">
+  <h1>Contract Settings
+    <small>Add Rehearsal Breaks</small>
+  </h1>
+</div>
+
+<div class="row">
+  <%= simple_form_for @rehearsal_break, url: company_contract_rehearsal_breaks_path do |f| %>
+  	<%= show_error_messages @rehearsal_break %>
+  	<%= render 'form', :f => f %>
+
+    <%= form_actions do %>
+      <%= f.submit 'Create Rehearsal Break', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', company_contract_rehearsal_week_path, class: 'btn btn-link' if can? :read, :contract_rehearsal_week %>
+  	<% end %>
+  <% end %>
+</div>

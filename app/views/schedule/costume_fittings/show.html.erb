@@ -1,0 +1,16 @@
+<% provide :title, @costume_fitting.title %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, 'Costume Fittings' %>
+
+<% content_for :page_header do %>
+  <%= @costume_fitting.title %>
+  <div class="pull-right">
+    <%= edit_button 'Edit', edit_schedule_costume_fitting_path(@costume_fitting) if can? :update, @costume_fitting %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/costume_fittings/tabs', resource: @costume_fitting %>
+<% end %>
+
+<%= render 'schedule/costume_fittings/detail' %>

@@ -2,34 +2,30 @@
 <% provide(:header_current, 'People') %>
 <% provide(:sidebar_current, 'Employees') %>
 
-<div class="page-header">
-  <h1><%= yield(:title) %>
-    <small><%= @employee.status %></small>
-  </h1>
-</div>
+<% content_for :page_header do %>
+  <%= yield(:title) %>
+  <small><%= @employee.status %></small>
+  <div class="pull-right">
+    <%= edit_button 'Edit', edit_employee_path(@employee) if can? :update, @employee %>
+  </div>
+<% end %>
 
-<div class="row mash-show">
-  <%= render 'employees/tabs' %>
-  <div class="mash-body">
-    <div class="row">
-      <div class="col-md-8"><%= render 'employees/detail' %></div>
-      <div class="col-md-4"><%= render 'employment_panel' %></div>
-      
-      <div class="col-md-4">
-        <%= render 'addresses/table', parent: @employee.person, addresses: @employee.addresses %>
-      </div>
+<% content_for :tabs do %>
+	<%= render 'employees/tabs' %>
+<% end %>
 
-      <div class="col-md-4">
-        <%= render 'phones/table', parent: @employee.person, phones: @employee.phones %>
-      </div>
-      
-      <div class="col-md-4">
-        <%= render 'employees/user_panel' %>
-      </div>
-    
-      <div class="col-md-12">
-        <%= render 'employees/biography_panel' %>
-      </div>
-    </div>
-  </div><!-- mash-body -->
+<div class="row">
+  <div class="col-md-12"><%= render 'employees/detail' %></div>
+  
+  <div class="col-md-4">
+    <%= render 'addresses/table', parent: @employee.person, addresses: @employee.addresses %>
+  </div>
+
+  <div class="col-md-4">
+    <%= render 'phones/table', parent: @employee.person, phones: @employee.phones %>
+  </div>
+  
+  <div class="col-md-4">
+    <%= render 'employees/user_panel' %>
+  </div>
 </div>

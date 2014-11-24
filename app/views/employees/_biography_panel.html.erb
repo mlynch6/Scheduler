@@ -1,9 +1,0 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Biography</h3>
-  </div><!-- panel-heading -->
-
-  <div class="panel-body">
-  	<%= @employee.biography.gsub(/\n/, '<br/>').html_safe if @employee.biography.present? %>
-  </div><!-- panel-body -->
-</div>

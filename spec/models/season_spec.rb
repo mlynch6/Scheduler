@@ -36,6 +36,10 @@ describe Season do
   	it { should respond_to(:account) }
   	it { should respond_to(:season_pieces) }
   	it { should respond_to(:pieces) }
+		it { should respond_to(:lecture_demos) }
+		it { should respond_to(:costume_fittings) }
+		it { should respond_to(:rehearsals) }
+		it { should respond_to(:company_classes) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -135,6 +139,74 @@ describe Season do
 	
 			it "has multiple pieces" do
 				season.pieces.count.should == 2
+			end
+		end
+		
+		describe "lecture_demos" do
+			let!(:demo1) { FactoryGirl.create(:lecture_demo, account: account, season: season) }
+			let!(:demo2) { FactoryGirl.create(:lecture_demo, account: account, season: season) }
+	
+			it "has multiple lecture_demos" do
+				season.lecture_demos.count.should == 2
+			end
+			
+			it "deletes associated lecture_demos" do
+				demos = season.lecture_demos
+				season.destroy
+				demos.each do |demo|
+					LectureDemo.find_by_id(demo.id).should be_nil
+				end
+			end
+		end
+		
+		describe "costume_fittings" do
+			let!(:fitting1) { FactoryGirl.create(:costume_fitting, account: account, season: season) }
+			let!(:fitting2) { FactoryGirl.create(:costume_fitting, account: account, season: season) }
+	
+			it "has multiple costume_fittings" do
+				season.costume_fittings.count.should == 2
+			end
+			
+			it "deletes associated costume_fittings" do
+				fittings = season.costume_fittings
+				season.destroy
+				fittings.each do |fitting|
+					CostumeFitting.find_by_id(fitting.id).should be_nil
+				end
+			end
+		end
+		
+		describe "rehearsals" do
+			let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account, season: season) }
+			let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account, season: season) }
+	
+			it "has multiple rehearsals" do
+				season.rehearsals.count.should == 2
+			end
+			
+			it "deletes associated rehearsals" do
+				rehearsals = season.rehearsals
+				season.destroy
+				rehearsals.each do |rehearsal|
+					Rehearsal.find_by_id(rehearsal.id).should be_nil
+				end
+			end
+		end
+		
+		describe "company_classes" do
+			let!(:company_class1) { FactoryGirl.create(:company_class, account: account, season: season) }
+			let!(:company_class2) { FactoryGirl.create(:company_class, account: account, season: season) }
+	
+			it "has multiple company_classes" do
+				season.company_classes.count.should == 2
+			end
+			
+			it "deletes associated company_classes" do
+				company_classes = season.company_classes
+				season.destroy
+				company_classes.each do |company_class|
+					CompanyClass.find_by_id(company_class.id).should be_nil
+				end
 			end
 		end
   end

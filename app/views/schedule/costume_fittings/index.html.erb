@@ -1,0 +1,48 @@
+<% provide(:title, 'Costume Fittings') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Costume Fittings') %>
+
+<div class="page-header">
+	 <h1><%= yield(:title) %>
+     <div class="pull-right">
+       <%= new_button "Add Costume Fitting", new_schedule_costume_fitting_path if can? :create, CostumeFitting %>
+     </div>
+   </h1>
+</div>
+
+<%= render 'schedule/costume_fittings/search_form' %>
+
+<div class="row">
+	<table class="table table-striped">
+		<thead>
+	  	<tr>
+	  		<th>Title</th>
+	  		<th>Date</th>
+        <th>Location</th>
+	  		<th class="mash-col-1-btn">&nbsp;</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<% @costume_fittings.each do |fitting| %>
+				<tr>
+					<td>
+						<% if can? :update, fitting %>
+							<%= link_to fitting.title, schedule_costume_fitting_path(fitting), :id => "edit_#{fitting.id}" %>
+            <% else %>
+              <%= fitting.title %>
+						<% end %>
+          </td>
+          <td><%= fitting.start_date %><br /><%= fitting.time_range %></td>
+					<td><%= name_or_tbd(fitting.location) %></td>
+					<td class="mash-col-1-btn">
+						<%= delete_button nil, schedule_costume_fitting_path(fitting), :class => 'btn-xs', :id => "delete_#{fitting.id}" if can? :destroy, fitting %>
+					</td>
+				</tr>
+			<% end %>
+      <% if @costume_fittings.size == 0 %>
+        <tr><td colspan="4">None found</td></tr>
+      <% end %>
+		</tbody>
+	</table>
+	<%= will_paginate(class: 'pagination', previous_label: "&laquo;", next_label: "&raquo;")%>
+</div>

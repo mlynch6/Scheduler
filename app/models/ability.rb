@@ -33,13 +33,18 @@ private
 		can :show, 			Employee, person: { id: @user.person_id }
 		can :manage, 		Address, addressable_type: 'Person', addressable_id: @user.person_id
 		can :manage, 		Phone, phoneable_type: 'Person', phoneable_id: @user.person_id
+		can :read,			:employment
+		can :read,			:biography
 	end
 	
 	def manage_employees
 		can :read, 			Person
-		can [:create, :read, :update, :activate, :inactivate],		Employee
+		can :manage,		Employee
+		cannot :destroy,Employee
 		can :manage, 		Address, addressable_type: 'Person'
 		can :manage, 		Phone, phoneable_type: 'Person'
+		can [:read, :update],		:employment
+		can [:read, :update],		:biography
 	end
 	
 	def manage_logins
@@ -64,22 +69,41 @@ private
 	
 	def manage_agma_contract
 		can [:read, :update], 	AgmaContract
+		can [:read, :update],		:contract_rehearsal_week
+		can [:read, :update],		:contract_company_class
+		can [:read, :update],		:contract_costume_fitting
+		can [:read, :update],		:contract_lecture_demo
 		can :manage, 		RehearsalBreak
 	end
 	
 	def schedule_company_classes
-		can :manage,		Event, type: 'CompanyClass'
+		can :manage,		Event, schedulable_type: 'CompanyClass'
 		can :manage, 		CompanyClass
+		can :create, 		:current_season
+		can [:read, :create], 	:invitees
+		can :manage,		:selected_events
+		can :read, 			:warnings_report
 	end
 	
 	def schedule_costume_fittings
-		can :manage,		Event, type: 'CostumeFitting'
+		can :read,			Event, schedulable_type: 'CostumeFitting'
 		can :manage, 		CostumeFitting
+		can :create, 		:current_season
+		can :read, 			:warnings_report
 	end
 	
 	def schedule_rehearsals
-		can :manage,		Event, type: 'Rehearsal'
+		can :read,			Event, schedulable_type: 'Rehearsal'
 		can :manage, 		Rehearsal
+		can :create, 		:current_season
+		can :read, 			:warnings_report
+	end
+	
+	def schedule_lecture_demos
+		can :read,			Event, schedulable_type: 'LectureDemo'
+		can :manage, 		LectureDemo
+		can :create, 		:current_season
+		can :read, 			:warnings_report
 	end
 	
 	def manage_casts
@@ -111,6 +135,7 @@ private
 		schedule_company_classes
 		schedule_costume_fittings
 		schedule_rehearsals
+		schedule_lecture_demos
 		manage_casts
 	end
 end

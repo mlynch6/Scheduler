@@ -36,7 +36,11 @@ class Account < ActiveRecord::Base
 	has_many :casts, dependent: :destroy
 	has_many :castings, dependent: :destroy
 	has_many :events, dependent: :destroy
-	has_many :event_series, dependent: :destroy
+	has_many :invitations, 			dependent: :destroy, inverse_of: :account
+	has_many :lecture_demos, 		dependent: :destroy, inverse_of: :account
+	has_many :costume_fittings, dependent: :destroy, inverse_of: :account
+	has_many :rehearsals, 			dependent: :destroy, inverse_of: :account
+	has_many :company_classes, dependent: :destroy
   
 	before_validation :set_defaults, :if => "self.new_record?"
 	after_create :create_contract

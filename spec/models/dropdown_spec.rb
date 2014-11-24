@@ -15,13 +15,14 @@
 require 'spec_helper'
 
 describe Dropdown do
+	before do
+		Dropdown.destroy_all
+		@dropdown = FactoryGirl.build(:dropdown, :phone_type)
+	end
+	
 	let!(:dropdown) { FactoryGirl.create(:dropdown,
 										name: 'Artistic Staff',
 										comment: 'Job Description') }
-	
-	before do
-		@dropdown = FactoryGirl.build(:dropdown, :phone_type)
-	end
 	
 	subject { @dropdown }
 	

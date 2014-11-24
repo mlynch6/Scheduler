@@ -37,6 +37,8 @@ label:after { content: " :"; }
 input.append, input.currency, input.date_picker, input.email_prepend, input.password_prepend, 
 input.phone_prepend, input.time_prepend, select.time_zone { @extend .form-control}
 
+.input-group input.date_picker, .input-group input.time_prepend { width: 110px;}
+
 /*** SIGN IN ***/
 .form-signin {
 	margin: 0 auto;
@@ -72,14 +74,6 @@ footer {
   border-top: 1px solid $input-border;
   color: $gray-light;
 }
-
-/*** CHOSEN ***/
-.chosen-choices {
-	@extend .form-control;
-	box-shadow: none;
-}
-.chosen-container { font-size: $font-size-base; padding-top: 6px; }
-.chosen-container-multi .chosen-choices li.search-field input[type="text"] { height: 25px;}
 
 /*** CUSTOM CLASSES ***/
 .mash-alert {

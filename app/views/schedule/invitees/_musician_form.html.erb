@@ -1,0 +1,4 @@
+<%= f.input :musician_ids, as: :chosen_select, 
+      collection: Person.active.musicians,
+      input_html: { multiple: true },
+      label: 'Musicians' %>

@@ -1,0 +1,16 @@
+<% provide(:title, 'Contract Settings | Company Class') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Contract') %>
+
+<% content_for :page_header do %>
+  Contract Settings
+  <div class="pull-right">
+    <%= edit_button 'Edit Company Class Settings', edit_company_contract_company_class_path if can? :update, :contract_company_class %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'company/contract/tabs' %>
+<% end %>
+
+<%= render 'company/contract/company_classes/detail' %>

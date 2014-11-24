@@ -1,6 +1,6 @@
 class DashboardsController < ApplicationController
 	authorize_resource :class => false
 	
-	def index
+	def show
   end
 end

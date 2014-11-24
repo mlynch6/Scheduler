@@ -42,4 +42,8 @@ module ApplicationHelper
 	def readable_klass(klass_name)
 		klass_name.blank? ? '' : klass_name.underscore.humanize.titleize
 	end
+	
+	def bootstrap_icon(icon_name)
+		content_tag :span, nil, class: "glyphicon glyphicon-#{icon_name}"
+	end
 end

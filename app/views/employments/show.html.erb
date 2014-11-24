@@ -1,0 +1,17 @@
+<% provide(:title, "#{@employee.full_name} | Employment") %>
+<% provide(:header_current, 'People') %>
+<% provide(:sidebar_current, 'Employees') %>
+
+<% content_for :page_header do %>
+  <%= @employee.full_name %>
+  <small>Employment</small>
+  <div class="pull-right">
+    <%= edit_button 'Edit Employment', edit_employee_employment_path(@employee) if can? :update, :employment %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'employees/tabs' %>
+<% end %>
+
+<%= render 'employments/detail' %>

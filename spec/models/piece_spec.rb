@@ -42,9 +42,9 @@ describe Piece do
   	it { should respond_to(:account) }
   	it { should respond_to(:scenes) }
   	it { should respond_to(:characters) }
-  	it { should respond_to(:events) }
   	it { should respond_to(:season_pieces) }
   	it { should respond_to(:seasons) }
+		it { should respond_to(:rehearsals) }
   	
   	it { should respond_to(:name_w_choreographer) }
   	
@@ -156,24 +156,6 @@ describe Piece do
 			end
 		end
 		
-		describe "events" do
-			before { Account.current_id = account.id }
-			let!(:second_event) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }
-			let!(:first_event) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }
-	
-			it "has multiple events" do
-				account.events.count.should == 2
-			end
-			
-			it "deletes associated events" do
-				events = piece.events
-				piece.destroy
-				events.each do |event|
-					Event.find_by_id(event.id).should be_nil
-				end
-			end
-		end
-		
 		describe "season_pieces" do
 			let!(:sp1) { FactoryGirl.create(:season_piece, account: account, piece: piece) }
 			let!(:sp2) { FactoryGirl.create(:season_piece, account: account, piece: piece) }
@@ -197,6 +179,24 @@ describe Piece do
 	
 			it "has multiple seasons" do
 				piece.seasons.count.should == 2
+			end
+		end
+		
+		describe "rehearsals" do
+  		before { Account.current_id = account.id }
+			let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }
+			let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account, piece: piece) }
+
+			it "has multiple rehearsals" do
+				piece.rehearsals.count.should == 2
+			end
+		
+			it "deletes associated rehearsals" do
+				rehearsals = piece.rehearsals
+				piece.destroy
+				rehearsals.each do |rehearsal|
+					Rehearsal.find_by_id(rehearsal.id).should be_nil
+				end
 			end
 		end
   end

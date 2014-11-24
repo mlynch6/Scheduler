@@ -1,0 +1,11 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <%= bootstrap_icon('cog') %>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <%= icon_link 'Warnings Report', 'warning-sign', reports_warning_path(start_date: @event_date.to_s) %>
+    </li>
+  </ul>
+</div>

@@ -12,6 +12,8 @@
 #  biography             :text
 #  job_title             :string(50)
 #  agma_artist           :boolean          default(FALSE), not null
+#  musician              :boolean          default(FALSE), not null
+#  instructor            :boolean          default(FALSE), not null
 #
 
 FactoryGirl.define do
@@ -31,6 +33,14 @@ FactoryGirl.define do
 		
 		trait :agma_artist do
 			agma_artist							true
+		end
+		
+		trait :instructor do
+			instructor							true
+		end
+		
+		trait :musician do
+			musician								true
 		end
 	end
 end

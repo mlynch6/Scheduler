@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Dashboard Pages:" do
 	subject { page }
   
-  context "#index" do
+  context "#show" do
 		before do
 	  	log_in
 	  	click_link 'Home'

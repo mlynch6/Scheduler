@@ -1,0 +1,27 @@
+<%= f.input :title,
+      required: true %>
+<%= f.input :location_id, 
+      collection: Location.active, 
+      include_blank: true %>
+<%= f.input :season_id, as: :static_control,
+      text: @lecture_demo.season.name,
+      required: true %>
+<span id="season_start_date" class="hidden"><%= @lecture_demo.season.start_dt %></span>
+<span id="season_end_date" class="hidden"><%= @lecture_demo.season.end_dt %></span>
+<%= f.input :start_date, as: :date_picker,
+      required: true  %>
+      
+<%= f.input :start_time, required: true do %>
+  <div class="col-sm-4 col-md-4">
+    <%= f.input_field :start_time, as: :time_prepend  %>
+  </div>
+  
+  <%= f.label :duration, required: true  %>
+  <div class="col-sm-3 col-md-3">
+    <%= f.input_field :duration, as: :append,
+        append_text:'min' %>
+  </div>
+<% end %>
+
+<%= f.input :comment, as: :text,
+      input_html: { rows: 5 } %>

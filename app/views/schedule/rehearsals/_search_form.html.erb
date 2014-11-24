@@ -1,0 +1,39 @@
+<div class="search-row hidden-print">
+  <%= form_tag schedule_rehearsals_path, method: 'get', class: 'form-inline', id: 'rehearsal_search' do %>
+		<div class="form-group">
+      <%= label :title, 'Title', class: 'sr-only' %>
+      <%= text_field_tag :title, 
+            params[:title], 
+            class: 'form-control',
+            placeholder: 'Title' %>
+    </div>
+		<div class="form-group">
+      <%= label :piece, 'Piece', class: 'sr-only' %>
+      <%= select_tag :piece,
+          options_from_collection_for_select(Piece.all, :id, :name, params[:piece]),
+          prompt: 'All Pieces',
+          class: 'form-control submit-on-change'
+        %>
+    </div>
+		<div class="form-group">
+      <%= label :season, 'Season', class: 'sr-only' %>
+      <%= select_tag :season,
+          options_from_collection_for_select(Season.all, :id, :name, params[:season]),
+          prompt: 'All Seasons',
+          class: 'form-control submit-on-change'
+        %>
+    </div>
+		<div class="form-group">
+      <%= label :loc, 'Location', class: 'sr-only' %>
+      <%= select_tag :loc,
+          options_from_collection_for_select(Location.active.all, :id, :name, params[:loc]),
+          prompt: 'All Locations',
+          class: 'form-control submit-on-change'
+        %>
+    </div>
+    <%= content_tag :button, content_tag(:span, nil, class: 'glyphicon glyphicon-search'), 
+          name: nil, 
+          class: 'btn btn-info',
+          title: 'Search' %>
+  <% end %>
+</div>

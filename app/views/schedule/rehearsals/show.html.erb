@@ -1,0 +1,16 @@
+<% provide :title, @rehearsal.title %>
+<% provide :header_current, 'Calendar' %>
+<% provide :sidebar_current, 'Rehearsals' %>
+
+<% content_for :page_header do %>
+  <%= @rehearsal.title %>
+  <div class="pull-right">
+    <%= edit_button 'Edit', edit_schedule_rehearsal_path(@rehearsal) if can? :update, @rehearsal %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/rehearsals/tabs', resource: @rehearsal %>
+<% end %>
+
+<%= render 'schedule/rehearsals/detail' %>

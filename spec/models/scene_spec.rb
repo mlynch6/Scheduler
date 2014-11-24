@@ -38,6 +38,7 @@ describe Scene do
   	it { should respond_to(:piece) }
   	it { should respond_to(:appearances) }
   	it { should respond_to(:characters) }
+		it { should respond_to(:rehearsals) }
   	
   	it "should not allow access to account_id" do
       expect do
@@ -166,6 +167,24 @@ describe Scene do
 				scene.characters.count.should == 2
 			end
 		end
+		
+		describe "rehearsals" do
+  		before { Account.current_id = account.id }
+			let!(:rehearsal1) { FactoryGirl.create(:rehearsal, account: account, piece: piece, scene: scene) }
+			let!(:rehearsal2) { FactoryGirl.create(:rehearsal, account: account, piece: piece, scene: scene) }
+
+			it "has multiple rehearsals" do
+				scene.rehearsals.count.should == 2
+			end
+		
+			it "deletes associated rehearsals" do
+				rehearsals = scene.rehearsals
+				scene.destroy
+				rehearsals.each do |rehearsal|
+					Rehearsal.find_by_id(rehearsal.id).should be_nil
+				end
+			end
+		end
   end
   
 	context "correct value is returned for" do
@@ -189,11 +208,11 @@ describe Scene do
 		let!(:scene2) { FactoryGirl.create(:scene, account: account, position: 2) }
 		let!(:scene1) { FactoryGirl.create(:scene, account: account, position: 1) }
 		let!(:scene_wrong_acnt) { FactoryGirl.create(:scene, account: FactoryGirl.create(:account)) }
-		let!(:scene3) { FactoryGirl.create(:scene, account: account, position: 1) }
+		let!(:scene3) { FactoryGirl.create(:scene, account: account, position: 3) }
 		
 		describe "default_scope" do
 			it "returns the records in position order" do
-				Scene.all.should == [scene1, scene3, scene2]
+				Scene.all.should == [scene1, scene2, scene3]
 			end
 		end
 	end

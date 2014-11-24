@@ -24,6 +24,8 @@ en:
         rehearsal_increment_min: "Rehearsal Increments"
         class_break_min: "Class Break"
         costume_increment_min: "Costume Fitting Increments"
+        demo_max_duration: "Max Duration"
+        demo_max_num_per_day: "Max Demos/Day"
       casting:
         person: "Artist"
       character:
@@ -31,21 +33,21 @@ en:
         is_child: "Child"
         speaking: "Speaking Role"
       company_class:
-        start_at: "Start At"
-        end_at: "End At"
-        start_date: "Date"
+        start_date: "Start Date"
         start_time: "Start Time"
-        employee_ids: "Invitees"
+        end_date: "End Date"
+        comment: "Description"
       costume_fitting:
-        start_at: "Start At"
-        end_at: "End At"
         start_date: "Date"
-        start_time: "Start Time"
-        employee_ids: "Invitees"
+        start_time: "Time"
+        comment: "Description"
+        invitee_ids: "Invitees"
       dropdown:
         comment: "Description"
         active: "Status"
       employee:
+        agma_artist: "AGMA Artist"
+        birth_date: "Birth Date"
         employee_num: "Employee #"
         employment_start_date: "Employment Start Date"
         employment_end_date: "Employment End Date"
@@ -53,13 +55,22 @@ en:
         first_name: "First Name"
         middle_name: "Middle Name"
         last_name: "Last Name"
-        birth_date: "Birth Date"
       event:
         start_at: "Start At"
         end_at: "End At"
         start_date: "Date"
         start_time: "Start Time"
         end_date: "End Date"
+        time_range: "Time"
+        comment: "Notes"
+        invitee_ids: "Invitees"
+        instructor_ids: "Instructors"
+        musician_ids: "Musicians"
+        artist_ids: "Artists"
+      lecture_demo:
+        start_date: "Date"
+        start_time: "Time"
+        comment: "Description"
         invitee_ids: "Invitees"
       location:
         active: "Status"
@@ -75,11 +86,14 @@ en:
       piece:
         avg_length: "Average Length"
       rehearsal:
-        start_at: "Start At"
-        end_at: "End At"
         start_date: "Date"
-        start_time: "Start Time"
-        employee_ids: "Invitees"
+        start_time: "Time"
+        comment: "Description"
+        break_time_range: "Break"
+        break_duration: "Break Duration"
+        instructor_ids: "Instructors"
+        musician_ids: "Musicians"
+        artist_ids: "Artists"
       rehearsal_break:
         break_min: "Break Length"
         duration_min: "Rehearsal Length"

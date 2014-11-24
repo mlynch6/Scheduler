@@ -8,13 +8,19 @@
 	
 	<% if can? :read, Event %>
 		<li<%= class_active if yield(:header_current) == "Calendar" %>>
-			<%= icon_link 'Calendar', 'calendar', events_path %>
+			<%= icon_link 'Calendar', 'calendar', schedule_events_path %>
 		</li>
 	<% end %>
 	
 	<% if can? :index, Employee %>
 		<li<%= class_active if yield(:header_current) == "People" %>>
 			<%= icon_link 'People', 'user', employees_path %>
+		</li>
+	<% end %>
+  
+	<% if can? :read, :warnings_report %>
+		<li<%= class_active if yield(:header_current) == "Reports" %>>
+			<%= icon_link 'Reports', 'file', reports_warning_path %>
 		</li>
 	<% end %>
 	
@@ -51,6 +57,9 @@
       <ul class="dropdown-menu">
         <% if can? :show, current_user.person.profile %>
           <li><%= link_to 'My Profile', employee_path(current_user.person.profile) %></li>
+        <% end %>
+        <% if can? :create, :current_season %>
+          <li><%= link_to 'Set Current Season', new_current_season_path %></li>
         <% end %>
         <% if can? :create, :password %>
           <li><%= link_to 'Change Password', new_password_path %></li>

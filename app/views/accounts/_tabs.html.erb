@@ -8,7 +8,7 @@
   
 	<% if can? :read, :subscription %>
 		<li id="subscription-tab" <%= klass if %w[subscriptions payments].include?(params[:controller]) %>>
-			<%= link_to "Subscription", subscriptions_current_path %>
+			<%= link_to "Subscription", subscriptions_path %>
 		</li>
 	<% end %>
 </ul>

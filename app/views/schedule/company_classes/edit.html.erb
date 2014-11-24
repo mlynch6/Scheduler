@@ -1,0 +1,24 @@
+<% provide(:title, 'Edit Company Class') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Company Classes') %>
+
+<div class="page-header">
+  <h1>Company Classes
+    <small>Edit</small>
+  </h1>
+</div>
+
+<div class="row">
+  <%= simple_form_for @company_class, url: schedule_company_class_path(@company_class), method: :put do |f| %>
+  	<%= show_error_messages @company_class %>
+    
+    <%= f.input :title %>
+    <%= f.input :comment, as: :text,
+          input_html: { rows: 5 } %>
+
+    <%= form_actions do %>
+      <%= f.button :submit %>
+      <%= link_to 'Cancel', schedule_company_class_path(@company_class), class: 'btn btn-link' if can? :read, @company_class %>
+    <% end %>
+  <% end %>
+</div>

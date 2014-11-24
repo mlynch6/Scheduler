@@ -1,0 +1,66 @@
+<% provide(:title, 'Events') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Events') %>
+
+<div class="page-header">
+  <h1><%= yield(:title) %>
+    <div class="btn-toolbar pull-right">
+      <%= render 'schedule/events/gear_menu' %>
+      
+      <div class="btn-group">
+        <% if params[:range] == 'week' %>
+          <%= link_to content_tag(:span, nil, class: 'glyphicon glyphicon-chevron-left'), schedule_events_path+"/"+@previous_day.strftime('%Y/%-m/%-d')+'?range=week', class:"btn btn-default", title: 'Previous' %>
+          <%= link_to 'Today', schedule_events_path(range: 'week'), class:"btn btn-default" %>
+          <%= link_to content_tag(:span, nil, class: 'glyphicon glyphicon-chevron-right'), schedule_events_path+"/"+@next_day.strftime('%Y/%-m/%-d')+'?range=week', class:"btn btn-default", title: 'Next' %>
+        <% else %>
+          <%= link_to content_tag(:span, nil, class: 'glyphicon glyphicon-chevron-left'), schedule_events_path+"/"+@previous_day.strftime('%Y/%-m/%-d'), class:"btn btn-default", title: 'Previous' %>
+          <%= link_to 'Today', schedule_events_path, class:"btn btn-default" %>
+          <%= link_to content_tag(:span, nil, class: 'glyphicon glyphicon-chevron-right'), schedule_events_path+"/"+@next_day.strftime('%Y/%-m/%-d'), class:"btn btn-default", title: 'Next' %>
+        <% end %>
+      </div>
+    </div>
+  </h1>
+</div>
+
+<%= render 'schedule/events/search_form' %>
+
+<div class="row">
+  <% @date_range.each do |event_date| %>
+  	<table class="table table-hover">
+  		<thead>
+  	  	<tr>
+  	  		<th width="20%">
+            <%= event_date.strftime('%^A') %><br/>
+            <small><%= event_date.to_s(:date_words) %></small>
+          </th>
+  	  		<th width="35%"><small>Title</small></th>
+          <th width="15%"><small>Location</small></th>
+          <th width="15%"><small>Instructor</small></th>
+          <th width="15%"><small>Musician</small></th>
+  	  	</tr>
+  	  </thead>
+  	  <tbody>
+        <% if @events_by_date[event_date] %>
+    	  	<% @events_by_date[event_date].each do |event| %>
+    				<tr>
+              <td><%= event.time_range %></td>
+    					<td>
+    						<% if ['CompanyClass', 'CostumeFitting', 'LectureDemo', 'Rehearsal'].include?(event.schedulable_type) && can?(:read, event.schedulable)  %>
+    							<%= link_to event.title, controller: event.schedulable_type.underscore.pluralize, action: 'show', id: event.schedulable_id %>
+                <% else %>
+                  <%= event.title %>
+    						<% end %>
+                <br /><%= content_tag :span, event.event_type, class: 'text-muted' %>
+              </td>
+    					<td><%= event.location.name if event.location %></td>
+              <td><%= event.instructors.map { |person| person.last_name }.join(', ') %></td>
+              <td><%= event.musicians.map { |person| person.last_name }.join(', ') %></td>
+    				</tr>
+    			<% end %>
+        <% else %>
+          <tr><td colspan="3">None found</td></tr>
+        <% end %>
+  		</tbody>
+  	</table>
+  <% end %>
+</div>

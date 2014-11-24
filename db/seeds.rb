@@ -18,10 +18,12 @@ user_roles = [
 	[ "Manage Seasons", "Allows the user to view, add, edit, or delete a Season." ],
 	[ "Manage Pieces", "Allows the user to view, add, edit, or delete a Piece.
 				Allows the user to manage the Piece's Scenes and Characters." ],
-	[ "Manage AGMA Contract", "Allows the user to view or update the AGMA Contract settings." ],
+	[ "Manage AGMA Contract", "Allows the user to view or update the AGMA Contract settings.
+				Allows the user to manage settings related to Rehearsal Weeks, Company Classes, Costume Fittings, and Lecture Demos." ],
 	[ "Schedule Company Classes", "Allows the user to view, add, edit, or delete a Company Class." ],
 	[ "Schedule Costume Fittings", "Allows the user to view, add, edit, or delete a Costume Fitting." ],
 	[ "Schedule Rehearsals", "Allows the user to view, add, edit, or delete a Rehearsal." ],
+	[ "Schedule Lecture Demos", "Allows the user to view, add, edit, or delete a Lecture Demonstration." ],
 	[ "Manage Casts", "Allows the user to view Seasons and Pieces.
 				Allows the user to view, add, or delete a Cast.
 				Allows the user to cast artists to Characters in a Piece.

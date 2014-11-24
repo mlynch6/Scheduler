@@ -1,0 +1,26 @@
+<div class="search-row hidden-print">
+  <%= form_tag reports_warning_path, method: 'get', class: 'form-inline', id: 'warnings_report_search' do %>
+		<div class="form-group">
+      <%= label_tag :start_date, 'Start Date', class: 'sr-only' %>
+      <div class="input-group">
+        <span class="input-group-addon"><%= bootstrap_icon('calendar') %></span>
+        <%= text_field_tag :start_date, 
+              params[:start_date], 
+              class: 'form-control date_picker',
+              placeholder: 'mm/dd/yyyy' %>
+      </div>
+    </div>
+    &nbsp; to &nbsp;
+		<div class="form-group">
+      <%= label_tag :end_date, 'End Date', class: 'sr-only' %>
+      <div class="input-group">
+        <span class="input-group-addon"><%= bootstrap_icon('calendar') %></span>
+        <%= text_field_tag :end_date, 
+              params[:end_date], 
+              class: 'form-control date_picker',
+              placeholder: 'mm/dd/yyyy' %>
+      </div>
+    </div>
+    <%= button_tag 'Generate', name: 'generate', class: 'btn btn-primary' %>
+  <% end %>
+</div>

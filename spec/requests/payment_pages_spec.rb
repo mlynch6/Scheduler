@@ -29,7 +29,7 @@ describe "Payment Pages:" do
 	    should have_select 'card_month'
 	    should have_select 'card_year'
 	    should have_field 'Security Code'
-			should have_link 'Cancel', href: subscriptions_current_path
+			should have_link 'Cancel', href: subscriptions_path
 		end
 		
 		it "has links for Super Admin" do
@@ -42,7 +42,9 @@ describe "Payment Pages:" do
 		before do
 			log_in
 			create_stripe_account(current_account)
-			visit payments_edit_path
+			click_link 'My Account'
+			click_link 'Subscription'
+			click_link 'Change Payment Method'
 		end
   	
 		after do

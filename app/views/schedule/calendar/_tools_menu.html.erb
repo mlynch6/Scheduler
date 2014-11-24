@@ -1,0 +1,23 @@
+<div class="pull-right">
+  <%= gear_dropdown do %>
+		<% if can? :create, CompanyClass %>
+			<li><%= new_link "Add Company Class", new_schedule_company_class_path(date: @date) %></li>
+		<% end %>
+    
+		<% if can? :create, Rehearsal %>
+			<li><%= new_link "Add Rehearsal", new_schedule_rehearsal_path(date: @date) %></li>
+		<% end %>
+		
+		<% if can? :create, CostumeFitting %>
+			<li><%= new_link "Add Costume Fitting", new_schedule_costume_fitting_path(date: @date) %></li>
+		<% end %>
+    
+		<% if can? :create, LectureDemo %>
+			<li><%= new_link "Add Lecture Demo", new_schedule_lecture_demo_path(date: @date) %></li>
+		<% end %>
+		
+		<% if can? :create, Event %>
+			<li><%= new_link "Add Event", new_schedule_event_path(date: @date) %></li>
+		<% end %>
+  <% end %>
+</div>

@@ -1,0 +1,22 @@
+<% provide(:title, 'Edit Costume Fitting') %>
+<% provide(:header_current, 'Calendar') %>
+<% provide(:sidebar_current, 'Costume Fittings') %>
+
+<% content_for :page_header do %>
+  <%= @costume_fitting.title %>
+  <small>Edit</small>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'schedule/costume_fittings/tabs', resource: @costume_fitting %>
+<% end %>
+
+<%= simple_form_for @costume_fitting_form, url: schedule_costume_fitting_path(@costume_fitting), method: :put do |f| %>
+	<%= show_error_messages @costume_fitting_form %>
+  <%= render 'form', :f => f %>
+
+  <%= form_actions do %>
+    <%= f.submit 'Update Costume Fitting', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', schedule_costume_fitting_path(@costume_fitting), class: 'btn btn-link' if can? :read, CostumeFitting %>
+  <% end %>
+<% end %>

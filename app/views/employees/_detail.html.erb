@@ -1,13 +1,7 @@
 <div class="dtl-form" style="margin-bottom:15px;">
   <div class="row">
 		<div class="dtl-label col-sm-3 col-md-3">Name</div>
-		<div class="dtl-text col-sm-9 col-md-9">
-    	<% if can? :update, @employees %>
-    		<%= link_to @employee.full_name, edit_employee_path(@employee) %>
-      <% else %>
-        <%= @employee.full_name %>
-      <% end %>
-    </div>
+		<div class="dtl-text col-sm-9 col-md-9"><%= @employee.full_name %></div>
 	</div>
   
 	<div class="row">

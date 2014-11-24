@@ -1,0 +1,14 @@
+<% klass = ' class="active"'.html_safe %>
+<ul class="nav nav-tabs">
+  <% if can? :read, resource %>
+  	<li<%= klass if params[:controller] == 'schedule/lecture_demos' %>>
+      <%= icon_link 'Overview', 'asterisk', schedule_lecture_demo_path(resource) %>
+    </li>
+  <% end %>
+  
+  <% if can? :create, :invitees %>
+  	<li<%= klass if params[:controller] == 'schedule/invitees' %>>
+      <%= icon_link 'Invitees', 'user', schedule_event_invitees_path(resource.event) %>
+    </li>
+  <% end %>
+</ul>

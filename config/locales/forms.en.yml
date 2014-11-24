@@ -2,6 +2,20 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  helpers:
+    submit:
+      company_class:
+        create: "Schedule"
+        update: "Update Company Class"
+      costume_fitting:
+        create: "Schedule"
+        update: "Update Costume Fitting"
+      lecture_demo:
+        create: "Schedule"
+        update: "Update Lecture Demo"
+      rehearsal:
+        create: "Schedule"
+        update: "Update Rehearsal"
   activemodel:
     attributes:
       account:
@@ -21,6 +35,19 @@ en:
         job_title: "Job Title"
         password_digest: "Password"
         password_confirmation: "Confirm Password"
+      company_class:
+        start_date: "Start Date"
+        start_time: "Start Time"
+        end_date: "End Date"
+        comment: "Description"
+        instructor_ids: "Instructors"
+        musician_ids: "Musicians"
+        artist_ids: "Artists"
+      costume_fitting:
+        start_date: "Date"
+        start_time: "Start Time"
+        comment: "Description"
+        invitee_ids: "Invitees"
       employee:
         first_name: "First Name"
         middle_name: "Middle Name"
@@ -32,3 +59,12 @@ en:
         employment_end_date: "Employment End Date"
         job_title: "Job Title"
         agma_artist: "AGMA Artist"
+      lecture_demo:
+        start_date: "Date"
+        start_time: "Start Time"
+        comment: "Description"
+        invitee_ids: "Invitees"
+      rehearsal:
+        start_date: "Date"
+        start_time: "Start Time"
+        comment: "Description"

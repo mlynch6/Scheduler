@@ -1,0 +1,21 @@
+<% provide(:title, 'Contract Settings | Rehearsal Week') %>
+<% provide(:header_current, 'Setup') %>
+<% provide(:sidebar_current, 'Contract') %>
+
+<% content_for :page_header do %>
+  Contract Settings
+  <div class="pull-right">
+    <%= edit_button 'Edit Rehearsal Week Settings', edit_company_contract_rehearsal_week_path if can? :update, :contract_rehearsal_week %>
+  </div>
+<% end %>
+
+<% content_for :tabs do %>
+	<%= render 'company/contract/tabs' %>
+<% end %>
+
+<%= render :layout => 'layouts/shared/info-block' do %>
+  A Rehearsal Week is a week commencing on Monday and ending on Sunday where no performances are given.
+  Rehearsal Weeks need not be consecutive.
+<% end %>
+
+<%= render 'company/contract/rehearsal_weeks/detail' %>
