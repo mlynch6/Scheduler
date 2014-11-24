@@ -87,6 +87,10 @@ Scheduler::Application.routes.draw do
 		resources :season,							:only => [:new, :create]
 	end
 	
+	namespace :reports do
+		resource :warning, 							:only => [:show]
+	end
+	
 	namespace :admin do
 		resources :accounts,						:only => [:index, :edit, :update, :destroy]
 		resources :subscription_plans,	:except => [:show]

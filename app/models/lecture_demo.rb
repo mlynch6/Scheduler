@@ -70,13 +70,10 @@ private
 		if start_date.present? && contract && contract.demo_max_num_per_day.present?
 			max_num = contract.demo_max_num_per_day
 			
-			if new_record?
-				existing_count = Event.where(schedulable_type: 'LectureDemo').for_day(Date.strptime(start_date, '%m/%d/%Y')).count
-			else
-				existing_count = Event.where(schedulable_type: 'LectureDemo').where('id <> :id', id: event.id).for_day(Date.strptime(start_date, '%m/%d/%Y')).count
-			end
+			demos = Event.where(schedulable_type: 'LectureDemo').for_day(Date.strptime(start_date, '%m/%d/%Y'))
+			demos = demos.where('id <> :id', id: event.id) if !new_record?
 			
-			if existing_count >= max_num
+			if demos.count >= max_num
 				errors.add(:base, "No more than #{pluralize(max_num, 'Lecture Demo')} can be scheduled in a day")
 			end
 		end

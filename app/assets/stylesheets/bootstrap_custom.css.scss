@@ -37,6 +37,8 @@ label:after { content: " :"; }
 input.append, input.currency, input.date_picker, input.email_prepend, input.password_prepend, 
 input.phone_prepend, input.time_prepend, select.time_zone { @extend .form-control}
 
+.input-group input.date_picker, .input-group input.time_prepend { width: 110px;}
+
 /*** SIGN IN ***/
 .form-signin {
 	margin: 0 auto;

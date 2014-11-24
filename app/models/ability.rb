@@ -82,24 +82,28 @@ private
 		can :create, 		:current_season
 		can [:read, :create], 	:invitees
 		can :manage,		:selected_events
+		can :read, 			:warnings_report
 	end
 	
 	def schedule_costume_fittings
 		can :read,			Event, schedulable_type: 'CostumeFitting'
 		can :manage, 		CostumeFitting
 		can :create, 		:current_season
+		can :read, 			:warnings_report
 	end
 	
 	def schedule_rehearsals
 		can :read,			Event, schedulable_type: 'Rehearsal'
 		can :manage, 		Rehearsal
 		can :create, 		:current_season
+		can :read, 			:warnings_report
 	end
 	
 	def schedule_lecture_demos
 		can :read,			Event, schedulable_type: 'LectureDemo'
 		can :manage, 		LectureDemo
 		can :create, 		:current_season
+		can :read, 			:warnings_report
 	end
 	
 	def manage_casts

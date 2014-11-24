@@ -21,7 +21,8 @@ describe "Event Pages:" do
 		end
 		
 		it "has correct table headers" do
-			should have_selector 'th', text: Time.zone.today.strftime('%^A %B %-d, %Y')
+			should have_selector 'th', text: Time.zone.today.strftime('%^A')
+			should have_selector 'th', text: Time.zone.today.strftime('%B %-d, %Y')
 			should have_selector 'th', text: "Title"
 			should have_selector 'th', text: "Location"
 			should have_selector 'th', text: "Instructor"
@@ -178,6 +179,10 @@ describe "Event Pages:" do
 			should have_link 'Previous', href: schedule_events_path+"/2014/3/27?range=week"
 			should have_link 'Today', href: schedule_events_path(range: 'week')
 			should have_link 'Next', href: schedule_events_path+"/2014/4/10?range=week"
+		end
+		
+		it "has links for Super Admin" do
+			should have_link 'Warnings Report'
 		end
 	end
 	

@@ -17,6 +17,12 @@
 			<%= icon_link 'People', 'user', employees_path %>
 		</li>
 	<% end %>
+  
+	<% if can? :read, :warnings_report %>
+		<li<%= class_active if yield(:header_current) == "Reports" %>>
+			<%= icon_link 'Reports', 'file', reports_warning_path %>
+		</li>
+	<% end %>
 	
 	<% if can? :read, Location %>
 		<li<%= class_active if yield(:header_current) == "Setup" %>>

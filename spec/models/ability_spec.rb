@@ -297,6 +297,10 @@ describe Ability do
 		it "should be able to set Current Season" do
 			should be_able_to :create, :current_season
 		end
+		
+		it "should be able to generate the Warnings Report" do
+			should be_able_to :read, :warnings_report
+		end
 	end
 	
 	context "Schedule Costume Fittings:" do
@@ -322,6 +326,10 @@ describe Ability do
 		
 		it "should be able to set Current Season" do
 			should be_able_to :create, :current_season
+		end
+		
+		it "should be able to generate the Warnings Report" do
+			should be_able_to :read, :warnings_report
 		end
 	end
 	
@@ -349,6 +357,10 @@ describe Ability do
 		it "should be able to set Current Season" do
 			should be_able_to :create, :current_season
 		end
+		
+		it "should be able to generate the Warnings Report" do
+			should be_able_to :read, :warnings_report
+		end
 	end
 	
 	context "Schedule Lecture Demos:" do
@@ -375,6 +387,10 @@ describe Ability do
 		
 		it "should be able to set Current Season" do
 			should be_able_to :create, :current_season
+		end
+		
+		it "should be able to generate the Warnings Report" do
+			should be_able_to :read, :warnings_report
 		end
 	end
 	

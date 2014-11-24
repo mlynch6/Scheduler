@@ -1,0 +1,10 @@
+<% klass = ' class="active"'.html_safe %>
+<nav class="navbar navbar-default mash-sub-navbar" role="navigation">
+  <ul class="nav navbar-nav">
+		<% if can? :read, :warnings_report %>
+			<li<%= klass if yield(:sidebar_current) == "Warnings" %>>
+				<%= link_to "Warnings", reports_warning_path %>
+			</li>
+		<% end %>
+  </ul>
+</nav>
