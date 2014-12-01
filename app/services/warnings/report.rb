@@ -35,6 +35,17 @@ module Warnings
 			
 			out if out.present?
 		end
+		
+	  def location_double_booked
+			out = Hash.new
+			
+			(start_date..end_date).to_a.each do |dt|
+				warning = Warnings::LocationDoubleBooked.new(dt)
+				out[dt] = warning.messages if warning.messages.present?
+			end
+			
+			out if out.present?
+		end
 
 	private
 		#Return a Date

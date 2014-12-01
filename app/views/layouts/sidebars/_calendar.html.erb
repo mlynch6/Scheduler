@@ -7,25 +7,25 @@
 			</li>
 		<% end %>
     
-    <% if can? :create, CompanyClass %>
+    <% if can? :read, CompanyClass %>
 		  <li<%= klass if yield(:sidebar_current) == "Company Classes" %>>
         <%= link_to "Company Classes", schedule_company_classes_path %>
       </li>
 		<% end %>
     
-		<% if can? :create, Rehearsal %>
+		<% if can? :read, Rehearsal %>
 			<li<%= klass if yield(:sidebar_current) == "Rehearsals" %>>
         <%= link_to "Rehearsals", schedule_rehearsals_path %>
       </li>
 		<% end %>
 		
-		<% if can? :create, CostumeFitting %>
+		<% if can? :read, CostumeFitting %>
 			<li<%= klass if yield(:sidebar_current) == "Costume Fittings" %>>
         <%= link_to "Costume Fittings", schedule_costume_fittings_path %>
       </li>
 		<% end %>
     
-		<% if can? :create, LectureDemo %>
+		<% if can? :read, LectureDemo %>
 			<li<%= klass if yield(:sidebar_current) == "Lecture Demos" %>>
         <%= link_to "Lecture Demos", schedule_lecture_demos_path %>
       </li>

@@ -6,6 +6,7 @@ class Reports::WarningsController < ApplicationController
 		if params[:start_date].present?
 			set_date_range
 			report = Warnings::Report.new(start_date, end_date)
+			@location_double_booked = report.location_double_booked
 			@rehearsal_week_artist_over_hours_per_day = report.rehearsal_week_artist_over_hours_per_day
 			@rehearsal_week_artist_over_hours_per_week = report.rehearsal_week_artist_over_hours_per_week
 		end

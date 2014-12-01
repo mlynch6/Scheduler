@@ -92,11 +92,6 @@ class Event < ActiveRecord::Base
 		schedulable_type.underscore.titleize
 	end
 	
-	# def performance_week?
-	# 	date = Date.strptime(start_date, '%m/%d/%Y')
-	# 	@performance_week ||= Event.where(schedulable_type: 'Performance').for_week(date).exists?
-	# end
-	
 	def self.search(query)
 		#Default show all
 		events = Event.order('start_at ASC')
