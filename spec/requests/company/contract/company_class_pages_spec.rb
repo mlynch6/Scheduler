@@ -50,6 +50,8 @@ describe "Company Class Contract Settings Pages:" do
 	context "#show" do
 	  before do
 		  log_in
+			current_account.agma_contract.class_break_min = 15
+			current_account.agma_contract.save
 		  click_link 'Setup'
 		  click_link 'Contract Settings'
 			click_link 'Company Class'

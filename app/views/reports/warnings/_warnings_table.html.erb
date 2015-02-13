@@ -1,7 +1,7 @@
 <table class="table table-hover">
   <thead>
     <tr>
-      <th colspan= "2">Rehearsal Week: Artist Over Maximum Rehearsal Hours in a Week</th>
+      <th colspan= "2"><%= title %></th>
     </tr>
   </thead>
   <tbody>
@@ -9,11 +9,16 @@
       <% warnings.each do |dt, messages| %>
         <% messages.each do |msg| %>
           <tr>
-            <td><%= dt.beginning_of_week.to_s %> - <%= dt.end_of_week.to_s %></td>
-            <td><%= msg %></td>
+            <% if defined?(show_week).nil? %>
+              <td><%= dt.to_s %></td>
+            <% else %>
+              <td><%= dt.beginning_of_week.to_s %> - <%= dt.end_of_week.to_s %></td>
+            <% end %>
+            <td><%= simple_format(msg) %></td>
           </tr>
         <% end %>
       <% end %>
+    
     <% else %>
       <tr>
         <td colspan="2">Everything looks great! No warnings found.</td>

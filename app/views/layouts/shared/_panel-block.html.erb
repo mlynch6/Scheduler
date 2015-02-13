@@ -1,7 +1,9 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h2 class="panel-title"><%= panel_title %></h2>
-  </div>
+  <% unless (defined?(panel_title)).nil? %>
+    <div class="panel-heading">
+      <h2 class="panel-title"><%= panel_title %></h2>
+    </div>
+  <% end %>
   <div class="panel-body">
     <%= yield %>
   </div>

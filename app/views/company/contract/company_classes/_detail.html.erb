@@ -1,6 +1,7 @@
 <div class="dtl-form">
 	<div class="row">
-		<div class="dtl-label col-md-4"><%= AgmaContract.human_attribute_name(:class_break_min) %></div>
-		<div class="dtl-text col-md-8"><%= "#{@agma_contract.class_break_min} minutes" if @agma_contract.class_break_min.present? %></div>
+		<div class="dtl-label col-sm-4 col-md-4"><%= AgmaContract.human_attribute_name(:class_break_min) %></div>
+		<div class="dtl-text col-sm-2 col-md-2"><%= "#{@agma_contract.class_break_min} minutes" if @agma_contract.class_break_min.present? %></div>
+    <div class="dtl-text col-sm-6 col-md-6 help-block">Amount of break time following the end of class and the first rehearsal</div>
 	</div>
 </div>

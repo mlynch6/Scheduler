@@ -9,7 +9,7 @@
 #  rehearsal_max_hrs_per_week :integer
 #  rehearsal_max_hrs_per_day  :integer
 #  rehearsal_increment_min    :integer
-#  class_break_min            :integer          not null
+#  class_break_min            :integer
 #  costume_increment_min      :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
@@ -27,8 +27,6 @@ class AgmaContract < ActiveRecord::Base
   belongs_to :account
   has_many :rehearsal_breaks, inverse_of: :agma_contract, dependent: :destroy
   accepts_nested_attributes_for :rehearsal_breaks
-  
-  before_validation :set_defaults, on: :create
 	
   validates :account_id, :uniqueness => true
   validates :rehearsal_start_min,	allow_blank: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than => 1440 }
@@ -37,7 +35,7 @@ class AgmaContract < ActiveRecord::Base
   validates :rehearsal_max_hrs_per_week, allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 168 }
   validates :rehearsal_max_hrs_per_day,	allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 24 }
   validates :rehearsal_increment_min,	allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
-  validates :class_break_min,	presence: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 144 }
+  validates :class_break_min,	allow_blank: true, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 144 }
   validates :costume_increment_min,	allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 144 }
 	validates :demo_max_duration, allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0, :less_than => 1440 }
 	validates :demo_max_num_per_day, allow_blank: true, :numericality => { :only_integer => true, :greater_than => 0 }
@@ -53,11 +51,6 @@ class AgmaContract < ActiveRecord::Base
 	end
 	
 private
-
-  def set_defaults
-		self.class_break_min = 15 if class_break_min.blank?
-	end
-	
 	def rehearsal_end_cannot_be_before_rehearsal_start
     if rehearsal_end_min.present? && rehearsal_start_min.present? && (rehearsal_end_min <= rehearsal_start_min)
 			errors.add(:rehearsal_end_min, "can't be before the Rehearsal Start")
