@@ -235,5 +235,76 @@ describe Warnings do
 				end
 			end
 		end
+		
+		describe "#person_double_booked" do
+			context "with NO messages in date range" do
+				before do
+					@contract.destroy
+					@report = Warnings::Report.new(@start_date, @start_date)
+				end
+			
+				it "should be nil" do
+					@report.person_double_booked.should be_nil
+				end
+			end
+			
+			context "with messages in date range" do
+				before do
+					@end_date = @start_date + 1.day
+					@person = FactoryGirl.create(:person, account: @account)
+					
+					@rehearsal1 = FactoryGirl.create(:rehearsal, account: @account)
+					@event1 = FactoryGirl.create(:event, account: @account,
+								schedulable: @rehearsal1,
+								start_date: @start_date,
+								start_time: '10AM',
+								duration: 60)
+					FactoryGirl.create(:invitation, account: @account, 
+								event: @event1, 
+								person: @person)
+					
+					@rehearsal2 = FactoryGirl.create(:rehearsal, account: @account)
+					@event2 = FactoryGirl.create(:event, account: @account,
+								schedulable: @rehearsal2,
+								start_date: @end_date,
+								start_time: '10AM',
+								duration: 60)
+					FactoryGirl.create(:invitation, account: @account, 
+								event: @event2,
+								person: @person)
+								
+					@rehearsal3 = FactoryGirl.create(:rehearsal, account: @account)
+					@event3 = FactoryGirl.create(:event, account: @account,
+								schedulable: @rehearsal3,
+								start_date: @start_date,
+								start_time: '10:30 AM',
+								duration: 60)
+					FactoryGirl.create(:invitation, account: @account, 
+								event: @event3, 
+								person: @person)
+					
+					@rehearsal4 = FactoryGirl.create(:rehearsal, account: @account)
+					@event4 = FactoryGirl.create(:event, account: @account,
+								schedulable: @rehearsal4,
+								start_date: @end_date,
+								start_time: '10:30 AM',
+								duration: 60)
+					FactoryGirl.create(:invitation, account: @account, 
+								event: @event4, 
+								person: @person)
+					
+					@report = Warnings::Report.new(@start_date, @end_date)
+					@warnings = @report.person_double_booked
+				end
+			
+				it "returns a hash with date and message" do
+					@warnings.size.should == 2
+					
+					@warnings[@start_date].should == Warnings::PersonDoubleBooked.new(@start_date).messages
+					@warnings[@end_date].should == Warnings::PersonDoubleBooked.new(@end_date).messages
+				end
+			end
+		end
+		
 	end
 end

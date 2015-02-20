@@ -46,6 +46,7 @@ describe Event do
 		it { should respond_to(:end_time) }
 		it { should respond_to(:duration) }
 		it { should respond_to(:time_range) }
+		it { should respond_to(:overlaps?) }
 	  	
 		it { should respond_to(:account) }
 		it { should respond_to(:schedulable) }
@@ -363,6 +364,119 @@ describe Event do
 				e = FactoryGirl.create(:event, account: account, schedulable: rehearsal)
 				e.event_type.should == 'Rehearsal'
 		  end
+		end
+		
+		context "overlaps?" do
+			#event is 9AM - 10AM
+			it "returns false when event2 is entirely before the event" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "8 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_false
+			end
+			
+			it "returns false when event2 ends when the event starts" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "8:30 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_false
+			end
+			
+			it "returns true when event2 overlaps the event start" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "8:45 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_true
+			end
+			
+			it "returns true when event2 is a subset of the event with the same start" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "9 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_true
+			end
+			
+			it "returns true when event2 is a subset of the event" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "9:15 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_true
+			end
+			
+			it "returns true when event2 is a subset of the event with the same end" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "9:30 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_true
+			end
+			
+			it "returns true when event2 overlaps the event end" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "9:45 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_true
+			end
+			
+			it "returns false when event2 starts when the event ends" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "10 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_false
+			end
+			
+			it "returns false when event2 is after the event" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "10:15 AM",
+													duration: 30)
+				event.overlaps?(event2).should be_false
+			end
+			
+			it "returns true when event is a subset of event2" do
+				demo2 = FactoryGirl.create(:lecture_demo, account: account)
+				event2 = FactoryGirl.create(:event,
+													account: account,
+													schedulable: demo2,
+													start_date: Date.new(2012,1,1),
+													start_time: "8:30 AM",
+													duration: 120)
+				event.overlaps?(event2).should be_true
+			end
 		end
   end
 	

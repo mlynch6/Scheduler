@@ -47,6 +47,17 @@ module Warnings
 			out if out.present?
 		end
 		
+	  def person_double_booked
+			out = Hash.new
+			
+			(start_date..end_date).to_a.each do |dt|
+				warning = Warnings::PersonDoubleBooked.new(dt)
+				out[dt] = warning.messages if warning.messages.present?
+			end
+			
+			out if out.present?
+		end
+		
 	  def company_class_break_violations
 			out = Hash.new
 			

@@ -92,6 +92,10 @@ class Event < ActiveRecord::Base
 		schedulable_type.underscore.titleize
 	end
 	
+	def overlaps?(event2)
+		(start_at - event2.end_at) * (event2.start_at - end_at) > 0
+	end
+	
 	def self.search(query)
 		#Default show all
 		events = Event.order('start_at ASC')

@@ -241,7 +241,7 @@ describe "Warnings Report Pages:" do
 			end
 			
 			it "has correct table headers" do
-				should have_selector 'th', text: "Location Double Booked"
+				should have_selector 'th', text: "Double Booked: Locations"
 			end
 			
 			it "has warning shown" do
@@ -252,7 +252,47 @@ describe "Warnings Report Pages:" do
 		end
 		
 		context "for Person Double Booked" do
-			pending
+			before do
+				@start_date = Date.new(2014,1,1)
+				@end_date = @start_date + 1.day
+				
+				@person = FactoryGirl.create(:person, account: current_account)
+				@rehearsal1 = FactoryGirl.create(:rehearsal, account: current_account)
+				@event1 = FactoryGirl.create(:event, account: current_account,
+							schedulable: @rehearsal1,
+							start_date: @start_date,
+							start_time: '10:00 AM',
+							duration: 60)
+				FactoryGirl.create(:invitation, account: current_account,
+							event: @event1,
+							person: @person)
+				
+				@rehearsal2 = FactoryGirl.create(:rehearsal, account: current_account)
+				@event2 = FactoryGirl.create(:event, account: current_account,
+							schedulable: @rehearsal2,
+							start_date: @start_date,
+							start_time: '10:30 AM',
+							duration: 60)
+				FactoryGirl.create(:invitation, account: current_account,
+							event: @event2,
+							person: @person)
+				
+				click_link "Warnings"
+				fill_in "start_date", with: '1/1/2014'
+				fill_in "end_date", with: '1/2/2014'
+				click_button 'Generate'
+			end
+			
+			it "has correct table headers" do
+				should have_selector 'th', text: "Double Booked: People"
+			end
+			
+			it "has warning shown" do
+				should have_selector 'td', text: '01/01/2014'
+				should have_selector 'td', text: "#{@person.full_name} is double booked"
+				should have_selector 'td', text: "#{@event1.title} ( #{@event1.time_range} )"
+				should have_selector 'td', text: "#{@event2.title} ( #{@event2.time_range} )"
+			end
 		end
 	end
 end

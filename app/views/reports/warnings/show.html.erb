@@ -15,8 +15,12 @@
   <%= render :layout => 'layouts/shared/panel-block', locals: { panel_title: panel_title } do %>
   
     <%= render 'warnings_table',
-                  title: 'Location Double Booked',
+                  title: 'Double Booked: Locations',
                   warnings: @location_double_booked %>
+    
+    <%= render 'warnings_table',
+                  title: 'Double Booked: People',
+                  warnings: @person_double_booked %>
     
     <% if @contract.class_break_min.present? %>
       <%= render 'warnings_table',
