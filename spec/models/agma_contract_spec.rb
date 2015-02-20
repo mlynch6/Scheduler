@@ -9,7 +9,7 @@
 #  rehearsal_max_hrs_per_week :integer
 #  rehearsal_max_hrs_per_day  :integer
 #  rehearsal_increment_min    :integer
-#  class_break_min            :integer          not null
+#  class_break_min            :integer
 #  costume_increment_min      :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
@@ -180,12 +180,7 @@ describe AgmaContract do
 			end
 		end
   	
-		context "when class_break_min" do
-			it "is blank" do
-				@contract.class_break_min = " "
-				should_not be_valid
-			end
-	  	
+		context "when class_break_min" do	  	
 			it "not an integer" do
 				vals = ["abc", 8.6]
 				vals.each do |invalid_integer|
@@ -365,14 +360,6 @@ describe AgmaContract do
 			@contract.rehearsal_end_min = 960
 			@contract.save
 			account.agma_contract.rehearsal_end_time.should == "4:00 PM"
-		end
-	end
-
-	context "(Defaults)" do
-		let(:account_defaults) { FactoryGirl.create(:account) }
-	  
-		it "defaults the class_break_min to '15'" do
-			account_defaults.agma_contract.class_break_min.should == 15
 		end
 	end
 

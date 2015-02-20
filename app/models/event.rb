@@ -92,10 +92,9 @@ class Event < ActiveRecord::Base
 		schedulable_type.underscore.titleize
 	end
 	
-	# def performance_week?
-	# 	date = Date.strptime(start_date, '%m/%d/%Y')
-	# 	@performance_week ||= Event.where(schedulable_type: 'Performance').for_week(date).exists?
-	# end
+	def overlaps?(event2)
+		(start_at - event2.end_at) * (event2.start_at - end_at) > 0
+	end
 	
 	def self.search(query)
 		#Default show all

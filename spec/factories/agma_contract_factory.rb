@@ -9,7 +9,7 @@
 #  rehearsal_max_hrs_per_week :integer
 #  rehearsal_max_hrs_per_day  :integer
 #  rehearsal_increment_min    :integer
-#  class_break_min            :integer          not null
+#  class_break_min            :integer
 #  costume_increment_min      :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
@@ -20,7 +20,6 @@
 FactoryGirl.define do
 	factory :agma_contract do
 		account
-	 	class_break_min							15
 		
 		trait :complete_record do
 			rehearsal_start_min					540		# 9AM
@@ -28,6 +27,7 @@ FactoryGirl.define do
 			rehearsal_max_hrs_per_week	30
 			rehearsal_max_hrs_per_day		6
 		 	rehearsal_increment_min 		30
+			class_break_min							15
 		 	costume_increment_min				15
 			demo_max_duration						50
 			demo_max_num_per_day				3
