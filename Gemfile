@@ -15,7 +15,6 @@ gem 'cancan'
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
 group :development, :test do
-  gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '~> 2.10.0'
   gem 'guard-rspec', '0.5.5'
 end
@@ -54,8 +53,8 @@ end
 group :production do
 end
 
-# Use postgreSQL for production
-gem 'pg', '~>0.12.2'
+# Use postgreSQL
+gem 'pg', '~>0.14.0'
 gem 'activerecord-postgresql-adapter'
 
 # To use ActiveModel has_secure_password
@@ -74,3 +73,6 @@ gem 'capistrano-bundler'
 
 # To use debugger
 # gem 'debugger'
+
+# To profile performance
+gem 'rack-mini-profiler'

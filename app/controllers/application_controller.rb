@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 	helper_method :current_user, :current_season
   
 	before_filter :https_redirect
+	before_filter :miniprofiler
   around_filter :scope_current_account
   around_filter :account_time_zone, if: :current_user
   
@@ -47,5 +48,9 @@ private
 	
 	def use_https?
 		true # Override in other controllers
+	end
+	
+	def miniprofiler
+		Rack::MiniProfiler.authorize_request if current_user.superadmin?
 	end
 end
