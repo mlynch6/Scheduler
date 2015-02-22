@@ -51,6 +51,6 @@ private
 	end
 	
 	def miniprofiler
-		Rack::MiniProfiler.authorize_request if current_user.superadmin?
+		Rack::MiniProfiler.authorize_request if current_user && current_user.superadmin?
 	end
 end
